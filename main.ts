@@ -1,53 +1,75 @@
+﻿declare var canvas: any;
+declare var gl: any;
+
 function init() {
     canvas = document.getElementById("mycanvas");
     gl = initGl(canvas);
+
     initViewport(canvas, gl);
+
     gl.clearColor(0, 0.5, 0, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+
     resizeCanvas();
 }
+
 function initGl(canvas) {
     var gl;
     try {
-        gl = canvas.getContext("webgl", {
-            alpha: false,
-            antialias: false,
-            depth: false
-        });
-    }
-    catch (e) {
+        gl = canvas.getContext("webgl",
+            {
+                alpha: false,
+                antialias: false,
+                depth: false
+            });
+
+    } catch (e) {
         var msg = "Error creating WebGL Context!: " + e.toString();
         throw Error(msg);
     }
+
     return gl;
 }
+
 function initViewport(canvas, gl) {
     gl.viewport(0, 0, canvas.width, canvas.height);
 }
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
     drawStuff();
 }
+
 window.addEventListener('resize', resizeCanvas, false);
+
 function drawStuff() {
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0.75, 0.7, 0.75, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT);
 }
+
 var projectionMatrix, modelViewMatrix;
+
 function initMatrices() {
     // The transform matrix for the square - translate back in Z for the camera
-    modelViewMatrix = new Float32Array([1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, -3.333, 1]);
+    modelViewMatrix = new Float32Array(
+        [1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, -3.333, 1]);
+
     // The projection matrix (for a 45 degree field of view)
-    projectionMatrix = new Float32Array([2.41421, 0, 0, 0,
-        0, 2.41421, 0, 0,
-        0, 0, -1.002002, -1,
-        0, 0, -0.2002002, 0]);
+    projectionMatrix = new Float32Array(
+        [2.41421, 0, 0, 0,
+            0, 2.41421, 0, 0,
+            0, 0, -1.002002, -1,
+            0, 0, -0.2002002, 0]);
+
 }
+
 // Create the vertex data for a square to be drawn
 function createSquare(gl) {
     var vertexBuffer = gl.createBuffer();
@@ -62,15 +84,14 @@ function createSquare(gl) {
     var square = { buffer: vertexBuffer, vertSize: 3, nVerts: 4, primtype: gl.TRIANGLE_STRIP };
     return square;
 }
+
 function createShader(gl, str, type) {
     var shader;
     if (type === "fragment") {
         shader = gl.createShader(gl.FRAGMENT_SHADER);
-    }
-    else if (type === "vertex") {
+    } else if (type === "vertex") {
         shader = gl.createShader(gl.VERTEX_SHADER);
-    }
-    else {
+    } else {
         return null;
     }
     gl.shaderSource(shader, str);
@@ -81,7 +102,9 @@ function createShader(gl, str, type) {
     }
     return shader;
 }
-var vertexShaderSource = "    attribute vec3 vertexPos;\n" +
+
+var vertexShaderSource =
+    "    attribute vec3 vertexPos;\n" +
     "    uniform mat4 modelViewMatrix;\n" +
     "    uniform mat4 projectionMatrix;\n" +
     "    void main(void) {\n" +
@@ -89,44 +112,56 @@ var vertexShaderSource = "    attribute vec3 vertexPos;\n" +
     "        gl_Position = projectionMatrix * modelViewMatrix * \n" +
     "            vec4(vertexPos, 1.0);\n" +
     "    }\n";
-var fragmentShaderSource = "    void main(void) {\n" +
+
+var fragmentShaderSource =
+    "    void main(void) {\n" +
     "    // Return the pixel color: always output white\n" +
     "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
     "}\n";
+
 var shaderProgram, shaderVertexPositionAttribute, shaderProjectionMatrixUniform, shaderModelViewMatrixUniform;
+
 function initShader(gl) {
     // load and compile the fragment and vertex shader
     //var fragmentShader = getShader(gl, "fragmentShader");
     //var vertexShader = getShader(gl, "vertexShader");
     var fragmentShader = createShader(gl, fragmentShaderSource, "fragment");
     var vertexShader = createShader(gl, vertexShaderSource, "vertex");
+
     // link them together into a new program
     shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
+
     // get pointers to the shader params
     shaderVertexPositionAttribute = gl.getAttribLocation(shaderProgram, "vertexPos");
     gl.enableVertexAttribArray(shaderVertexPositionAttribute);
+
     shaderProjectionMatrixUniform = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     shaderModelViewMatrixUniform = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
+
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
         alert("Could not initialise shaders");
     }
 }
+
 function draw(gl, obj) {
     // clear the background (with black)
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
+
     // set the vertex buffer to be drawn
     gl.bindBuffer(gl.ARRAY_BUFFER, obj.buffer);
+
     // set the shader to use
     gl.useProgram(shaderProgram);
+
     // connect up the shader parameters: vertex position and projection/model matrices
     gl.vertexAttribPointer(shaderVertexPositionAttribute, obj.vertSize, gl.FLOAT, false, 0, 0);
     gl.uniformMatrix4fv(shaderProjectionMatrixUniform, false, projectionMatrix);
     gl.uniformMatrix4fv(shaderModelViewMatrixUniform, false, modelViewMatrix);
+
     // draw the object
     gl.drawArrays(obj.primtype, 0, obj.nVerts);
 }
-//# sourceMappingURL=main.js.map
