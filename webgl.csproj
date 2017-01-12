@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -27,6 +27,7 @@
     <Content Include="index.css" />
     <Content Include="main.js" />
     <Content Include="web.config" />
+    <Content Include="webglRenderer.js" />
     <Content Include="webpack.config.js" />
   </ItemGroup>
   <ItemGroup>
@@ -39,8 +40,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="lib\typings\webgl\webgl.d.ts" />
     <TypeScriptCompile Include="main.ts" />
+    <TypeScriptCompile Include="webglRenderer.ts" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
