@@ -25,9 +25,8 @@
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <Content Include="index.css" />
-    <Content Include="main.js" />
+    <Content Include="index.html" />
     <Content Include="web.config" />
-    <Content Include="webglRenderer.js" />
     <Content Include="webpack.config.js" />
   </ItemGroup>
   <ItemGroup>
@@ -41,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="main.ts" />
-    <TypeScriptCompile Include="webglRenderer.ts" />
+    <TypeScriptCompile Include="WebGLRenderer.ts" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

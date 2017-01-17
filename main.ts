@@ -1,17 +1,20 @@
-﻿/// <reference path="webglRenderer.ts" />
-import { iWebglRenderer, WebglRenderer } from "./webglRenderer";
+﻿import { IWebGLRenderer, WebGLRenderer } from "./WebGLRenderer";
 
 document.addEventListener("DOMContentLoaded", () => {
     //create renderer
-    const renderer: iWebglRenderer = new WebglRenderer("mycanvas");
+    const renderer: IWebGLRenderer = new WebGLRenderer("mycanvas");
 
     //setup resize event to resize context from renderer
     var resizeCanvas = () => {
         renderer.canvas.width = window.innerWidth;
-        renderer.canvas.height = window.innerHeight;;
-        return null;
+        renderer.canvas.height = window.innerHeight;
     };
 
-    window.addEventListener('resize', resizeCanvas, false);
+    window.addEventListener("resize", resizeCanvas, false);
     resizeCanvas();
+    renderer.addSquareToScene();
+
+    while (true) {
+        renderer.draw();
+    }
 }, false);
