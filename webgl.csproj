@@ -37,6 +37,7 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+    <Content Include="webgl.sln.DotSettings" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="main.ts" />
