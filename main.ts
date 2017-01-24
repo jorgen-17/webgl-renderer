@@ -14,7 +14,5 @@ document.addEventListener("DOMContentLoaded", () => {
     resizeCanvas();
     renderer.addSquareToScene();
 
-    while (true) {
-        renderer.draw();
-    }
+    renderer.draw();
 }, false);

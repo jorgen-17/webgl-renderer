@@ -45,6 +45,7 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.initGl();
         this.initViewport();
         this.initShaders();
+        this.initMatrices();
         this.scene = new Array<I2DShape>();
 
         this.glContext.clearColor(0, 0.5, 0, 0.5);
