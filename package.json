@@ -1,0 +1,28 @@
+{
+  "name": "webgl",
+  "version": "0.0.1",
+  "description": "webGl renderering engine",
+  "main": "index.html",
+  "dependencies": {
+    "source-map-loader": "^0.1.6",
+    "ts-loader": "^2.0.0",
+    "webpack": "^2.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^2.1.5",
+    "webpack-dev-server": "^2.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/typedefJorge/webgl.git"
+  },
+  "author": "typedefjorge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/typedefJorge/webgl/issues"
+  },
+  "homepage": "https://github.com/typedefJorge/webgl#readme"
+}

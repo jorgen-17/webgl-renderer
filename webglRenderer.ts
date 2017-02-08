@@ -21,9 +21,9 @@ export class WebGLRenderer implements IWebGLRenderer {
     "    uniform mat4 modelViewMatrix;\n" +
     "    uniform mat4 projectionMatrix;\n" +
     "    void main(void) {\n" +
-    "		// Return the transformed and projected vertex value\n" +
+    "        // Return the transformed and projected vertex value\n" +
     "        gl_Position = projectionMatrix * modelViewMatrix * \n" +
-    "            vec4(vertexPos, 1.0);\n" +
+    "        vec4(vertexPos, 1.0);\n" +
     "    }\n";
 
     fragmentShaderSource: string =
