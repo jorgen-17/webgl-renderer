@@ -6,24 +6,23 @@
 }
 
 export interface IWebGLRenderer {
-    canvas: HTMLCanvasElement;
-    glContext: WebGLRenderingContext;
+    canvasWidth: number;
+    canvasHeight: number;
+    gl: WebGLRenderingContext;
     addSquareToScene: () => void;
     draw: () => void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer {
-    canvas: HTMLCanvasElement;
-    glContext: WebGLRenderingContext;
+    canvasWidth: number;
+    canvasHeight: number;
+    gl: WebGLRenderingContext;
 
     vertexShaderSource: string =
     "    attribute vec3 vertexPos;\n" +
-    "    uniform mat4 modelViewMatrix;\n" +
-    "    uniform mat4 projectionMatrix;\n" +
     "    void main(void) {\n" +
     "        // Return the transformed and projected vertex value\n" +
-    "        gl_Position = projectionMatrix * modelViewMatrix * \n" +
-    "        vec4(vertexPos, 1.0);\n" +
+    "        gl_Position = vec4(vertexPos, 1.0);\n" +
     "    }\n";
 
     fragmentShaderSource: string =
@@ -40,38 +39,21 @@ export class WebGLRenderer implements IWebGLRenderer {
     shaderModelViewMatrixUniform: WebGLUniformLocation;
     scene: Array<I2DShape>;
 
-    constructor(canvasId: string) {
-        this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-        this.initGl();
+    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+        this.gl = gl;
         this.initViewport();
         this.initShaders();
         this.initMatrices();
         this.scene = new Array<I2DShape>();
 
-        this.glContext.clearColor(0, 0.5, 0, 0.5);
-        this.glContext.clear(this.glContext.COLOR_BUFFER_BIT);
-    }
-
-    private initGl(): void {
-        let gl: WebGLRenderingContext;
-        try {
-            gl = this.canvas.getContext("webgl",
-                {
-                    alpha: false,
-                    antialias: false,
-                    depth: false
-                });
-
-        } catch (e) {
-            const msg = `Error creating WebGL Context!: ${e.toString()}`;
-            throw Error(msg);
-        }
-
-        this.glContext = gl;
+        this.gl.clearColor(0, 0.5, 0, 0.5);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     }
 
     private initViewport() {
-        this.glContext.viewport(0, 0, this.canvas.width, this.canvas.height);
+        this.gl.viewport(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
     private initShaders() {
@@ -80,37 +62,52 @@ export class WebGLRenderer implements IWebGLRenderer {
         const vertexShader = this.createShader(this.vertexShaderSource, "vertex");
 
         // link them together into a new program
-        this.shaderProgram = this.glContext.createProgram();
-        this.glContext.attachShader(this.shaderProgram, vertexShader);
-        this.glContext.attachShader(this.shaderProgram, fragmentShader);
-        this.glContext.linkProgram(this.shaderProgram);
+        let shader: WebGLProgram | null = this.gl.createProgram();
+        if(shader === null)
+        {
+            throw Error("Could not create shader program");
+        }
+        this.shaderProgram = shader;
+        this.gl.attachShader(this.shaderProgram, vertexShader);
+        this.gl.attachShader(this.shaderProgram, fragmentShader);
+        this.gl.linkProgram(this.shaderProgram);
 
         // get pointers to the shader params
-        this.shaderVertexPositionAttribute = this.glContext.getAttribLocation(this.shaderProgram, "vertexPos");
-        this.glContext.enableVertexAttribArray(this.shaderVertexPositionAttribute);
+        this.shaderVertexPositionAttribute = this.gl.getAttribLocation(this.shaderProgram, "vertexPos");
+        this.gl.enableVertexAttribArray(this.shaderVertexPositionAttribute);
 
-        this.shaderProjectionMatrixUniform = this.glContext.getUniformLocation(this.shaderProgram, "projectionMatrix");
-        this.shaderModelViewMatrixUniform = this.glContext.getUniformLocation(this.shaderProgram, "modelViewMatrix");
+        let shaderProjectionMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "projectionMatrix");
+        if(shaderProjectionMatrixUniform === null)
+        {
+            throw Error("Could not create shader projection matrix uniform");
+        }
+        this.shaderProjectionMatrixUniform = shaderProjectionMatrixUniform;
+        let shaderModelViewMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "modelViewMatrix");
+        if(shaderModelViewMatrixUniform === null)
+        {
+            throw Error("Could not create shader model view matrix uniform");
+        }
+        this.shaderModelViewMatrixUniform = shaderModelViewMatrixUniform;
 
-        if (!this.glContext.getProgramParameter(this.shaderProgram, this.glContext.LINK_STATUS)) {
-            alert("Could not initialise shaders");
+        if (!this.gl.getProgramParameter(this.shaderProgram, this.gl.LINK_STATUS)) {
+            throw Error("Could not initialise shaders");
         }
     }
 
-    private createShader(str, type) {
-        let shader: WebGLShader;
+    private createShader(str, type): WebGLShader | null {
+        let shader: WebGLShader | null;
         if (type === "fragment") {
-            shader = this.glContext.createShader(this.glContext.FRAGMENT_SHADER);
+            shader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
         } else if (type === "vertex") {
-            shader = this.glContext.createShader(this.glContext.VERTEX_SHADER);
+            shader = this.gl.createShader(this.gl.VERTEX_SHADER);
         } else {
             return null;
         }
 
-        this.glContext.shaderSource(shader, str);
-        this.glContext.compileShader(shader);
-        if (!this.glContext.getShaderParameter(shader, this.glContext.COMPILE_STATUS)) {
-            alert(this.glContext.getShaderInfoLog(shader));
+        this.gl.shaderSource(shader, str);
+        this.gl.compileShader(shader);
+        if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+            alert(this.gl.getShaderInfoLog(shader));
             return null;
         }
         return shader;
@@ -134,39 +131,43 @@ export class WebGLRenderer implements IWebGLRenderer {
     }
 
     public addSquareToScene() {
-        const vertexBuffer = this.glContext.createBuffer();
-        this.glContext.bindBuffer(this.glContext.ARRAY_BUFFER, vertexBuffer);
+        const vertexBuffer: WebGLBuffer | null = this.gl.createBuffer();
+        if(vertexBuffer === null)
+        {
+            throw Error('could not create gl buffer');
+        }
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
         var verts = [
             .5, .5, 0.0,
             -.5, .5, 0.0,
             .5, -.5, 0.0,
             -.5, -.5, 0.0
         ];
-        this.glContext.bufferData(this.glContext.ARRAY_BUFFER, new Float32Array(verts), this.glContext.STATIC_DRAW);
-        const square = { buffer: vertexBuffer, vertSize: 3, nVerts: 4, primtype: this.glContext.TRIANGLE_STRIP };
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
+        const square: I2DShape = { buffer: vertexBuffer, vertSize: 3, nVerts: 4, primtype: this.gl.TRIANGLE_STRIP };
         this.scene.push(square);
     }
 
     public draw() {
         // clear the background (with black)
-        this.glContext.clearColor(0.0, 0.0, 0.0, 1.0);
-        this.glContext.clear(this.glContext.COLOR_BUFFER_BIT);
+        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
 
         for (let shape of this.scene) {
             // set the vertex buffer to be drawn
-            this.glContext.bindBuffer(this.glContext.ARRAY_BUFFER, shape.buffer);
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shape.buffer);
 
             // set the shader to use
-            this.glContext.useProgram(this.shaderProgram);
+            this.gl.useProgram(this.shaderProgram);
 
             // connect up the shader parameters: vertex position and projection/model matrices
-            this.glContext.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertSize, this.glContext.FLOAT, false, 0, 0);
-            this.glContext.uniformMatrix4fv(this.shaderProjectionMatrixUniform, false, this.projectionMatrix);
-            this.glContext.uniformMatrix4fv(this.shaderModelViewMatrixUniform, false, this.modelViewMatrix);
+            this.gl.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertSize, this.gl.FLOAT, false, 0, 0);
+            this.gl.uniformMatrix4fv(this.shaderProjectionMatrixUniform, false, this.projectionMatrix);
+            this.gl.uniformMatrix4fv(this.shaderModelViewMatrixUniform, false, this.modelViewMatrix);
 
             // draw the object
-            this.glContext.drawArrays(shape.primtype, 0, shape.nVerts);
+            this.gl.drawArrays(shape.primtype, 0, shape.nVerts);
         }
         
     }

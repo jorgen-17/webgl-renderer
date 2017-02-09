@@ -1,13 +1,14 @@
 ﻿import { IWebGLRenderer, WebGLRenderer } from "./WebGLRenderer";
+import { ContextWrangler } from "./ContextWrangler"
 
 document.addEventListener("DOMContentLoaded", () => {
-    //create renderer
-    const renderer: IWebGLRenderer = new WebGLRenderer("mycanvas");
+    let canvas = document.getElementById("mycanvas") as HTMLCanvasElement;
+    let gl = ContextWrangler.getContext(canvas);
+    const renderer: IWebGLRenderer = new WebGLRenderer(canvas.width, canvas.height, gl);
 
-    //setup resize event to resize context from renderer
     var resizeCanvas = () => {
-        renderer.canvas.width = window.innerWidth;
-        renderer.canvas.height = window.innerHeight;
+        renderer.canvasWidth = window.innerWidth;
+        renderer.canvasHeight = window.innerHeight;
     };
 
     window.addEventListener("resize", resizeCanvas, false);

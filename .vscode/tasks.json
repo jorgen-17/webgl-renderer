@@ -3,8 +3,8 @@
     "command": "${workspaceRoot}/node_modules/.bin/webpack",
     "isShellCommand": true,
     "args": [
-        // "--display-modules",
-        // "--progress",
+        "--display-modules",
+        "--progress",
         "--display-error-details"
     ],
     "echoCommand": true,
