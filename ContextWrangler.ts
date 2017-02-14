@@ -2,7 +2,7 @@ export class ContextWrangler
 {
     static getContext (canvas: HTMLCanvasElement): WebGLRenderingContext 
     {
-        let gl: WebGLRenderingContext | null = null;
+        let gl: WebGLRenderingContext | null;
         try
         {
             gl = canvas.getContext("webgl",

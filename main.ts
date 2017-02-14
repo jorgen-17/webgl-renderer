@@ -1,5 +1,6 @@
 ﻿import { IWebGLRenderer, WebGLRenderer } from "./WebGLRenderer";
-import { ContextWrangler } from "./ContextWrangler"
+import { ContextWrangler } from "./ContextWrangler";
+import { ShapeFactory } from "./ShapeFactory";
 
 document.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("mycanvas") as HTMLCanvasElement;
@@ -13,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("resize", resizeCanvas, false);
     resizeCanvas();
-    renderer.addSquareToScene();
+    renderer.addShapeToScene(ShapeFactory.createSquare(gl));
 
     renderer.draw();
 }, false);

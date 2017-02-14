@@ -1,15 +1,10 @@
-﻿export interface I2DShape {
-    buffer: WebGLBuffer;
-    vertSize: number;
-    nVerts: number;
-    primtype: number;
-}
+﻿import { I2DShape } from "./I2DShape";
 
 export interface IWebGLRenderer {
     canvasWidth: number;
     canvasHeight: number;
     gl: WebGLRenderingContext;
-    addSquareToScene: () => void;
+    addShapeToScene: (shape: I2DShape) => void;
     draw: () => void;
 }
 
@@ -21,13 +16,12 @@ export class WebGLRenderer implements IWebGLRenderer {
     vertexShaderSource: string =
     "    attribute vec3 vertexPos;\n" +
     "    void main(void) {\n" +
-    "        // Return the transformed and projected vertex value\n" +
     "        gl_Position = vec4(vertexPos, 1.0);\n" +
     "    }\n";
 
     fragmentShaderSource: string =
     "    void main(void) {\n" +
-    "    // Return the pixel color: always output white\n" +
+    "    //white\n" +
     "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
     "}\n";
 
@@ -35,8 +29,6 @@ export class WebGLRenderer implements IWebGLRenderer {
     modelViewMatrix: Float32Array;
     shaderProgram: WebGLShader; 
     shaderVertexPositionAttribute: number;
-    shaderProjectionMatrixUniform: WebGLUniformLocation;
-    shaderModelViewMatrixUniform: WebGLUniformLocation;
     scene: Array<I2DShape>;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext) {
@@ -45,7 +37,6 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.gl = gl;
         this.initViewport();
         this.initShaders();
-        this.initMatrices();
         this.scene = new Array<I2DShape>();
 
         this.gl.clearColor(0, 0.5, 0, 0.5);
@@ -76,19 +67,6 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.shaderVertexPositionAttribute = this.gl.getAttribLocation(this.shaderProgram, "vertexPos");
         this.gl.enableVertexAttribArray(this.shaderVertexPositionAttribute);
 
-        let shaderProjectionMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "projectionMatrix");
-        if(shaderProjectionMatrixUniform === null)
-        {
-            throw Error("Could not create shader projection matrix uniform");
-        }
-        this.shaderProjectionMatrixUniform = shaderProjectionMatrixUniform;
-        let shaderModelViewMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "modelViewMatrix");
-        if(shaderModelViewMatrixUniform === null)
-        {
-            throw Error("Could not create shader model view matrix uniform");
-        }
-        this.shaderModelViewMatrixUniform = shaderModelViewMatrixUniform;
-
         if (!this.gl.getProgramParameter(this.shaderProgram, this.gl.LINK_STATUS)) {
             throw Error("Could not initialise shaders");
         }
@@ -113,39 +91,8 @@ export class WebGLRenderer implements IWebGLRenderer {
         return shader;
     }
 
-    private initMatrices() {
-        // The transform matrix for the square - translate back in Z for the camera
-        this.modelViewMatrix = new Float32Array(
-            [1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, -3.333, 1]);
-
-        // The projection matrix (for a 45 degree field of view)
-        this.projectionMatrix = new Float32Array(
-            [2.41421, 0, 0, 0,
-                0, 2.41421, 0, 0,
-                0, 0, -1.002002, -1,
-                0, 0, -0.2002002, 0]);
-
-    }
-
-    public addSquareToScene() {
-        const vertexBuffer: WebGLBuffer | null = this.gl.createBuffer();
-        if(vertexBuffer === null)
-        {
-            throw Error('could not create gl buffer');
-        }
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        var verts = [
-            .5, .5, 0.0,
-            -.5, .5, 0.0,
-            .5, -.5, 0.0,
-            -.5, -.5, 0.0
-        ];
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
-        const square: I2DShape = { buffer: vertexBuffer, vertSize: 3, nVerts: 4, primtype: this.gl.TRIANGLE_STRIP };
-        this.scene.push(square);
+    public addShapeToScene(shape: I2DShape) {
+        this.scene.push(shape);
     }
 
     public draw() {
@@ -163,8 +110,6 @@ export class WebGLRenderer implements IWebGLRenderer {
 
             // connect up the shader parameters: vertex position and projection/model matrices
             this.gl.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertSize, this.gl.FLOAT, false, 0, 0);
-            this.gl.uniformMatrix4fv(this.shaderProjectionMatrixUniform, false, this.projectionMatrix);
-            this.gl.uniformMatrix4fv(this.shaderModelViewMatrixUniform, false, this.modelViewMatrix);
 
             // draw the object
             this.gl.drawArrays(shape.primtype, 0, shape.nVerts);
