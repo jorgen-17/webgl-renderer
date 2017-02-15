@@ -1,8 +1,9 @@
-import { I2DShape } from "./I2DShape";
+import { Shape, Point3d } from "./Shapes";
 
 export class ShapeFactory
 {
-    static createSquare(gl: WebGLRenderingContext): I2DShape {
+    static createSquare(gl: WebGLRenderingContext): Shape
+    {
         const vertexBuffer: WebGLBuffer | null = gl.createBuffer();
         if(vertexBuffer === null)
         {
@@ -16,6 +17,11 @@ export class ShapeFactory
             -.5, -.5, 0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
-        return { buffer: vertexBuffer, vertSize: 3, nVerts: 4, primtype: gl.TRIANGLE_STRIP };
+        return new Shape(vertexBuffer, 3, 4, gl.TRIANGLE_STRIP);
     };
+
+    static createPoint(x: number, y: number, z: number): Point3d
+    {
+        return new Point3d(x, y, z);
+    }
 }

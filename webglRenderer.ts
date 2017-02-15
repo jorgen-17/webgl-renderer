@@ -1,24 +1,23 @@
-﻿import { I2DShape } from "./I2DShape";
+﻿import { Shape, Point3d } from "./Shapes";
 
 export interface IWebGLRenderer {
-    canvasWidth: number;
-    canvasHeight: number;
+    setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     gl: WebGLRenderingContext;
-    addShapeToScene: (shape: I2DShape) => void;
+    addShapeToScene: (shape: Shape) => void;
+    addPointToScene: (point: Point3d) => void;
     draw: () => void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer {
-    canvasWidth: number;
-    canvasHeight: number;
     gl: WebGLRenderingContext;
 
     vertexShaderSource: string =
-    "    attribute vec3 vertexPos;\n" +
+    "    attribute vec3 a_position;\n" +
     "    void main(void) {\n" +
-    "        gl_Position = vec4(vertexPos, 1.0);\n" +
+    "        gl_Position = vec4(a_position, 1.0);\n" +
+    "        gl_PointSize = 15.0;\n" +
     "    }\n";
-
+ 
     fragmentShaderSource: string =
     "    void main(void) {\n" +
     "    //white\n" +
@@ -29,25 +28,27 @@ export class WebGLRenderer implements IWebGLRenderer {
     modelViewMatrix: Float32Array;
     shaderProgram: WebGLShader; 
     shaderVertexPositionAttribute: number;
-    scene: Array<I2DShape>;
+    scene: Array<Shape>;
+    points: Array<Point3d>;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
         this.gl = gl;
-        this.initViewport();
+        this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
-        this.scene = new Array<I2DShape>();
+        this.scene = new Array<Shape>();
+        this.points = new Array<Point3d>();
 
         this.gl.clearColor(0, 0.5, 0, 0.5);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     }
 
-    private initViewport() {
-        this.gl.viewport(0, 0, this.canvasWidth, this.canvasHeight);
+    public setViewPortDimensions(newWidth: number, newHeight: number): void
+    {
+        this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    private initShaders() {
+    private initShaders() : void
+    {
         // load and compile the fragment and vertex shader
         const fragmentShader = this.createShader(this.fragmentShaderSource, "fragment");
         const vertexShader = this.createShader(this.vertexShaderSource, "vertex");
@@ -63,13 +64,11 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.gl.attachShader(this.shaderProgram, fragmentShader);
         this.gl.linkProgram(this.shaderProgram);
 
-        // get pointers to the shader params
-        this.shaderVertexPositionAttribute = this.gl.getAttribLocation(this.shaderProgram, "vertexPos");
-        this.gl.enableVertexAttribArray(this.shaderVertexPositionAttribute);
-
         if (!this.gl.getProgramParameter(this.shaderProgram, this.gl.LINK_STATUS)) {
             throw Error("Could not initialise shaders");
         }
+
+        this.gl.useProgram(this.shaderProgram);
     }
 
     private createShader(str, type): WebGLShader | null {
@@ -91,17 +90,23 @@ export class WebGLRenderer implements IWebGLRenderer {
         return shader;
     }
 
-    public addShapeToScene(shape: I2DShape) {
+    public addShapeToScene(shape: Shape) {
         this.scene.push(shape);
     }
 
-    public draw() {
+    public addPointToScene(point: Point3d): void
+    {
+        this.points.push(point);
+    }
+
+    public draw()
+    {
         // clear the background (with black)
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-
-        for (let shape of this.scene) {
+        for (let shape of this.scene)
+        {
             // set the vertex buffer to be drawn
             this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shape.buffer);
 
@@ -109,11 +114,18 @@ export class WebGLRenderer implements IWebGLRenderer {
             this.gl.useProgram(this.shaderProgram);
 
             // connect up the shader parameters: vertex position and projection/model matrices
-            this.gl.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertSize, this.gl.FLOAT, false, 0, 0);
+            this.gl.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertexSize, this.gl.FLOAT, false, 0, 0);
 
             // draw the object
-            this.gl.drawArrays(shape.primtype, 0, shape.nVerts);
+            this.gl.drawArrays(shape.primitiveType, 0, shape.numberOfVerticies);
         }
         
+
+        for(let point of this.points)
+        {
+            var a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+            this.gl.vertexAttrib3f(a_position, point.x, point.y, point.z);
+            this.gl.drawArrays(this.gl.POINTS, 0, 1);
+        }
     }
 }
