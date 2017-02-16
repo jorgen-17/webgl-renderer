@@ -120,7 +120,6 @@ export class WebGLRenderer implements IWebGLRenderer {
             // draw the object
             this.gl.drawArrays(shape.primitiveType, 0, shape.numberOfVerticies);
         }
-        
 
         for(let point of this.points)
         {

@@ -16,9 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("resize", resizeCanvas, false);
     resizeCanvas();
-    renderer.addPointToScene(ShapeFactory.createPoint(0.2, 0.2, 0.0, 2.0));
-    renderer.addPointToScene(ShapeFactory.createPoint(0.4, 0.4, 0.0, 5.0));
-    renderer.addPointToScene(ShapeFactory.createPoint(0.8, 0.8, 0.0, 10.0));
+    
+    const clicksToPoints = (event: MouseEvent): void =>
+    {
+        let x = event.clientX;
+        let y = event.clientY;
+        let rect = canvas.getBoundingClientRect();
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        x = ((x - rect.left) - canvasWidth/2) / (canvasWidth/2);
+        y = (canvasHeight/2 - (y - rect.top))/(canvasHeight/2);
+
+        renderer.addPointToScene(ShapeFactory.createPoint(x, y, 0.0, 5.0));
+    }
+
+    canvas.addEventListener("click", clicksToPoints, false);
 
     const renderLoop = () =>
     {
