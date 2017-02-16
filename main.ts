@@ -16,15 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("resize", resizeCanvas, false);
     resizeCanvas();
-    renderer.addPointToScene(ShapeFactory.createPoint(0.2, 0.2, 0.0));
-    renderer.addPointToScene(ShapeFactory.createPoint(0.4, 0.4, 0.0));
-    renderer.addPointToScene(ShapeFactory.createPoint(0.8, 0.8, 0.0));
+    renderer.addPointToScene(ShapeFactory.createPoint(0.2, 0.2, 0.0, 2.0));
+    renderer.addPointToScene(ShapeFactory.createPoint(0.4, 0.4, 0.0, 5.0));
+    renderer.addPointToScene(ShapeFactory.createPoint(0.8, 0.8, 0.0, 10.0));
 
     const renderLoop = () =>
     {
         renderer.draw();
         window.requestAnimationFrame(renderLoop);
-    } 
+    };
 
     renderLoop();
 }, false);

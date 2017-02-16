@@ -17,11 +17,13 @@ export class Point3d {
     x: number;
     y: number;
     z: number;
+    pointSize: number;
 
-    constructor(x: number, y: number, z: number)
+    constructor(x: number, y: number, z: number, pointSize: number)
     {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.pointSize = pointSize;
     }
 }

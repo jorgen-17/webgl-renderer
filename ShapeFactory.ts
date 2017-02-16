@@ -20,8 +20,8 @@ export class ShapeFactory
         return new Shape(vertexBuffer, 3, 4, gl.TRIANGLE_STRIP);
     };
 
-    static createPoint(x: number, y: number, z: number): Point3d
+    static createPoint(x: number, y: number, z: number, pointSize: number): Point3d
     {
-        return new Point3d(x, y, z);
+        return new Point3d(x, y, z, pointSize);
     }
 }

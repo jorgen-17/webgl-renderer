@@ -13,9 +13,10 @@ export class WebGLRenderer implements IWebGLRenderer {
 
     vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
+    "    attribute float a_pointSize;\n" +
     "    void main(void) {\n" +
     "        gl_Position = vec4(a_position, 1.0);\n" +
-    "        gl_PointSize = 15.0;\n" +
+    "        gl_PointSize = a_pointSize;\n" +
     "    }\n";
  
     fragmentShaderSource: string =
@@ -123,8 +124,10 @@ export class WebGLRenderer implements IWebGLRenderer {
 
         for(let point of this.points)
         {
-            var a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+            let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+            let a_pointSize = this.gl.getAttribLocation(this.shaderProgram, 'a_pointSize');
             this.gl.vertexAttrib3f(a_position, point.x, point.y, point.z);
+            this.gl.vertexAttrib1f(a_pointSize, point.pointSize);
             this.gl.drawArrays(this.gl.POINTS, 0, 1);
         }
     }
