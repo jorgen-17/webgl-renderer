@@ -1,3 +1,5 @@
+import { Color } from "./Color";
+
 export class Shape {
     buffer: WebGLBuffer;
     vertexSize: number;
@@ -18,12 +20,14 @@ export class Point3d {
     y: number;
     z: number;
     pointSize: number;
+    color: Color;
 
-    constructor(x: number, y: number, z: number, pointSize: number)
+    constructor(x: number, y: number, z: number, pointSize: number, color: Color)
     {
         this.x = x;
         this.y = y;
         this.z = z;
         this.pointSize = pointSize;
+        this.color = color;
     }
 }

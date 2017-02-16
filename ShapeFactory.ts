@@ -1,4 +1,5 @@
 import { Shape, Point3d } from "./Shapes";
+import { Color } from "./Color";
 
 export class ShapeFactory
 {
@@ -20,8 +21,8 @@ export class ShapeFactory
         return new Shape(vertexBuffer, 3, 4, gl.TRIANGLE_STRIP);
     };
 
-    static createPoint(x: number, y: number, z: number, pointSize: number): Point3d
+    static createPoint(x: number, y: number, z: number, pointSize: number, color: Color): Point3d
     {
-        return new Point3d(x, y, z, pointSize);
+        return new Point3d(x, y, z, pointSize, color);
     }
 }

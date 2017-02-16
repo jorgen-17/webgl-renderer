@@ -20,9 +20,10 @@ export class WebGLRenderer implements IWebGLRenderer {
     "    }\n";
  
     fragmentShaderSource: string =
+    "    precision mediump float;\n" +
+    "    uniform vec4 u_fragColor;" +
     "    void main(void) {\n" +
-    "    //white\n" +
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+    "    gl_FragColor = u_fragColor;\n" +
     "}\n";
 
     projectionMatrix: Float32Array;
@@ -38,9 +39,6 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.initShaders();
         this.scene = new Array<Shape>();
         this.points = new Array<Point3d>();
-
-        this.gl.clearColor(0, 0.5, 0, 0.5);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -125,8 +123,10 @@ export class WebGLRenderer implements IWebGLRenderer {
         {
             let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
             let a_pointSize = this.gl.getAttribLocation(this.shaderProgram, 'a_pointSize');
+            let u_fragColor = this.gl.getUniformLocation(this.shaderProgram, 'u_fragColor');
             this.gl.vertexAttrib3f(a_position, point.x, point.y, point.z);
             this.gl.vertexAttrib1f(a_pointSize, point.pointSize);
+            this.gl.uniform4f(u_fragColor, point.color.red, point.color.green, point.color.blue, 1.0);
             this.gl.drawArrays(this.gl.POINTS, 0, 1);
         }
     }
