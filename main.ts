@@ -1,7 +1,7 @@
-import { IWebGLRenderer, WebGLRenderer } from "./WebGLRenderer";
-import { ContextWrangler } from "./ContextWrangler";
-import { ShapeFactory } from "./ShapeFactory";
-import { Color } from "./Color";
+import { IWebGLRenderer, WebGLRenderer } from "./src/webglRenderer";
+import { ContextWrangler } from "./src/ContextWrangler";
+import { ShapeFactory } from "./src/ShapeFactory";
+import { Color } from "./src/Color";
 
 document.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("mycanvas") as HTMLCanvasElement;

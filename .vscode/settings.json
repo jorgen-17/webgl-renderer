@@ -7,5 +7,6 @@
     "javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 200,
+    "editor.tabSize": 4,
     "editor.renderWhitespace": "all"
 }

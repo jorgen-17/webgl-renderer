@@ -100,7 +100,6 @@ export class WebGLRenderer implements IWebGLRenderer {
 
     public draw()
     {
-        // clear the background (with black)
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
@@ -115,7 +114,6 @@ export class WebGLRenderer implements IWebGLRenderer {
             // connect up the shader parameters: vertex position and projection/model matrices
             this.gl.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertexSize, this.gl.FLOAT, false, 0, 0);
 
-            // draw the object
             this.gl.drawArrays(shape.primitiveType, 0, shape.numberOfVerticies);
         }
 
