@@ -1,7 +1,7 @@
 import { IWebGLRenderer, WebGLRenderer } from "./src/webglRenderer";
-import { ContextWrangler } from "./src/ContextWrangler";
-import { ShapeFactory } from "./src/ShapeFactory";
-import { Color } from "./src/Color";
+import { ContextWrangler } from "./src/contextWrangler";
+import { ShapeFactory } from "./src/shapeFactory";
+import { Color } from "./src/color";
 
 document.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("mycanvas") as HTMLCanvasElement;
@@ -29,8 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         x = ((x - rect.left) - canvasWidth/2) / (canvasWidth/2);
         y = (canvasHeight/2 - (y - rect.top))/(canvasHeight/2);
 
-        const color = new Color(Math.random(), Math.random(), Math.random());
-        renderer.addPointToScene(ShapeFactory.createPoint(x, y, 0.0, 7.5, color));
+        renderer.addXYPointToScene(x, y,);
     }
 
     canvas.addEventListener("click", clicksToPoints, false);

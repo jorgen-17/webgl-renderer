@@ -1,10 +1,10 @@
-﻿import { Shape, Point3d } from "./Shapes";
+﻿import { Shape, Point3d } from "./shapes";
+import { Float32Vector } from "./vector"
 
 export interface IWebGLRenderer {
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     gl: WebGLRenderingContext;
-    addShapeToScene: (shape: Shape) => void;
-    addPointToScene: (point: Point3d) => void;
+    addXYPointToScene(x: number, y: number): void
     draw: () => void;
 }
 
@@ -16,29 +16,27 @@ export class WebGLRenderer implements IWebGLRenderer {
     "    attribute float a_pointSize;\n" +
     "    void main(void) {\n" +
     "        gl_Position = vec4(a_position, 1.0);\n" +
-    "        gl_PointSize = a_pointSize;\n" +
+    "        gl_PointSize = 10.0;\n" +
     "    }\n";
  
     fragmentShaderSource: string =
     "    precision mediump float;\n" +
     "    uniform vec4 u_fragColor;" +
     "    void main(void) {\n" +
-    "    gl_FragColor = u_fragColor;\n" +
+    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
     "}\n";
 
     projectionMatrix: Float32Array;
     modelViewMatrix: Float32Array;
     shaderProgram: WebGLShader; 
     shaderVertexPositionAttribute: number;
-    scene: Array<Shape>;
-    points: Array<Point3d>;
+    pointsVector: Float32Vector;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext) {
         this.gl = gl;
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
-        this.scene = new Array<Shape>();
-        this.points = new Array<Point3d>();
+        this.pointsVector = new Float32Vector(new Float32Array(0));
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -89,13 +87,9 @@ export class WebGLRenderer implements IWebGLRenderer {
         return shader;
     }
 
-    public addShapeToScene(shape: Shape) {
-        this.scene.push(shape);
-    }
-
-    public addPointToScene(point: Point3d): void
+    public addXYPointToScene(x: number, y: number): void
     {
-        this.points.push(point);
+        this.pointsVector.addArray(new Float32Array([x, y]));
     }
 
     public draw()
@@ -103,29 +97,16 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-        for (let shape of this.scene)
-        {
-            // set the vertex buffer to be drawn
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shape.buffer);
-
-            // set the shader to use
-            this.gl.useProgram(this.shaderProgram);
-
-            // connect up the shader parameters: vertex position and projection/model matrices
-            this.gl.vertexAttribPointer(this.shaderVertexPositionAttribute, shape.vertexSize, this.gl.FLOAT, false, 0, 0);
-
-            this.gl.drawArrays(shape.primitiveType, 0, shape.numberOfVerticies);
-        }
-
-        for(let point of this.points)
+        if(this.pointsVector.size > 0)
         {
             let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
-            let a_pointSize = this.gl.getAttribLocation(this.shaderProgram, 'a_pointSize');
-            let u_fragColor = this.gl.getUniformLocation(this.shaderProgram, 'u_fragColor');
-            this.gl.vertexAttrib3f(a_position, point.x, point.y, point.z);
-            this.gl.vertexAttrib1f(a_pointSize, point.pointSize);
-            this.gl.uniform4f(u_fragColor, point.color.red, point.color.green, point.color.blue, 1.0);
-            this.gl.drawArrays(this.gl.POINTS, 0, 1);
+
+            let vertexBuffer = this.gl.createBuffer();
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, this.pointsVector.arr, this.gl.STATIC_DRAW);
+            this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
+            this.gl.enableVertexAttribArray(a_position);
+            this.gl.drawArrays(this.gl.POINTS, 0, (this.pointsVector.size / 2));
         }
     }
 }

@@ -1,5 +1,5 @@
-import { Shape, Point3d } from "./Shapes";
-import { Color } from "./Color";
+import { Shape, Point3d } from "./shapes";
+import { Color } from "./color";
 
 export class ShapeFactory
 {
