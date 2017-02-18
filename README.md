@@ -4,5 +4,5 @@ getting up and running:
  2. $npm start
  3. go to localhost:8080/webpack-dev-server/index.html
 
-to run tests
+to run tests:
  1. $npm test
