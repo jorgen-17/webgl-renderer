@@ -4,6 +4,7 @@
     "description": "webGl renderering engine",
     "main": "index.html",
     "scripts": {
+        "start": "./node_modules/.bin/webpack-dev-server",
         "test": "./node_modules/.bin/karma start webgl.conf.js"
     },
     "dependencies": {},
