@@ -9,6 +9,13 @@ export class Callbacks
         canvas.height = window.innerHeight;
     }
 
+    static changeRenderMode (event: MouseEvent, renderer: IWebGLRenderer)
+    {
+        const elem = event.srcElement;
+        if(elem === null) return;
+        renderer.setRenderMode(elem.attributes["mode"].nodeValue)
+    }
+
     static clicksToPoints (event: MouseEvent, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void 
     {
         let x = event.clientX;
@@ -20,7 +27,7 @@ export class Callbacks
         x = ((x - rect.left) - canvasWidth/2) / (canvasWidth/2);
         y = (canvasHeight/2 - (y - rect.top))/(canvasHeight/2);
 
-        renderer.addPointToScene(x, y);
+        renderer.addXYPointToScene(x, y);
     }
 
     static renderLoop (renderer: IWebGLRenderer, window: Window): void

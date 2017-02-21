@@ -1,21 +1,22 @@
 ﻿import { Shape, Point3d } from "./shapes";
 import { Float32Vector } from "../utils/vector"
+import { RenderModeMapper } from "./renderModes"
+import { VertexBuffer } from "./vertexBuffer"
 
-export interface IWebGLRenderer {
-    setViewPortDimensions: (newWidth: number, newHeight: number) => void;
+export interface IWebGLRenderer
+{
     gl: WebGLRenderingContext;
-    addPointToScene(x: number, y: number): void
-    addLinePointToScene(x: number, y: number): void
-    addLineStripPointToScene(x: number, y: number): void
-    addLineLoopPointToScene(x: number, y: number): void
-    addTrianglePointToScene(x: number, y: number): void
-    addTriangleStripPointToScene(x: number, y: number): void
-    addTriangleFanPointToScene(x: number, y: number): void
+    glRenderMode: number;
+    setViewPortDimensions: (newWidth: number, newHeight: number) => void;
+    setRenderMode: (renderMode: String) => void;
+    addXYPointToScene(x: number, y: number): void
     draw: () => void;
 }
 
-export class WebGLRenderer implements IWebGLRenderer {
+export class WebGLRenderer implements IWebGLRenderer
+{
     gl: WebGLRenderingContext;
+    glRenderMode: number;
 
     vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
@@ -24,7 +25,7 @@ export class WebGLRenderer implements IWebGLRenderer {
     "        gl_Position = vec4(a_position, 1.0);\n" +
     "        gl_PointSize = 10.0;\n" +
     "    }\n";
- 
+
     fragmentShaderSource: string =
     "    precision mediump float;\n" +
     "    uniform vec4 u_fragColor;" +
@@ -32,23 +33,37 @@ export class WebGLRenderer implements IWebGLRenderer {
     "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
     "}\n";
 
-    projectionMatrix: Float32Array;
-    modelViewMatrix: Float32Array;
-    shaderProgram: WebGLShader; 
-    shaderVertexPositionAttribute: number;
-    pointsVector: Float32Vector;
-    linesVector: Float32Vector;
-    lineStripVector: Float32Vector;
-    lineLoopVector: Float32Vector;
-    trianglesVector: Float32Vector;
-    triangleStripVector: Float32Vector;
-    triangleFanVector: Float32Vector;
+    shaderProgram: WebGLShader;
+    pointsVector: VertexBuffer;
+    linesVector: VertexBuffer;
+    lineStripVector: VertexBuffer;
+    lineLoopVector: VertexBuffer;
+    trianglesVector: VertexBuffer;
+    triangleStripVector: VertexBuffer;
+    triangleFanVector: VertexBuffer;
+    vertexBuffers: Array<VertexBuffer>;
 
-    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext) {
+    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext)
+    {
         this.gl = gl;
+        this.glRenderMode = this.gl.POINTS;
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
-        this.pointsVector = new Float32Vector(new Float32Array(0));
+        this.pointsVector = new VertexBuffer(this.gl.POINTS, new Float32Array(0), this.gl);
+        this.linesVector = new VertexBuffer(this.gl.LINES, new Float32Array(0), this.gl);
+        this.lineStripVector = new VertexBuffer(this.gl.LINE_STRIP, new Float32Array(0), this.gl);
+        this.lineLoopVector = new VertexBuffer(this.gl.LINE_LOOP, new Float32Array(0), this.gl);
+        this.trianglesVector = new VertexBuffer(this.gl.TRIANGLES, new Float32Array(0), this.gl);
+        this.triangleStripVector = new VertexBuffer(this.gl.TRIANGLE_STRIP, new Float32Array(0), this.gl);
+        this.triangleFanVector = new VertexBuffer(this.gl.TRIANGLE_FAN, new Float32Array(0), this.gl);
+        this.vertexBuffers = [
+            this.pointsVector,
+            this.linesVector,
+            this.lineStripVector,
+            this.lineLoopVector,
+            this.trianglesVector,
+            this.triangleStripVector,
+            this.triangleFanVector];
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -56,7 +71,12 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    private initShaders() : void
+    public setRenderMode(renderMode: string): void
+    {
+        this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
+    }
+
+    private initShaders(): void
     {
         // load and compile the fragment and vertex shader
         const fragmentShader = this.createShader(this.fragmentShaderSource, "fragment");
@@ -64,7 +84,7 @@ export class WebGLRenderer implements IWebGLRenderer {
 
         // link them together into a new program
         let shader: WebGLProgram | null = this.gl.createProgram();
-        if(shader === null)
+        if (shader === null)
         {
             throw Error("Could not create shader program");
         }
@@ -73,65 +93,64 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.gl.attachShader(this.shaderProgram, fragmentShader);
         this.gl.linkProgram(this.shaderProgram);
 
-        if (!this.gl.getProgramParameter(this.shaderProgram, this.gl.LINK_STATUS)) {
+        if (!this.gl.getProgramParameter(this.shaderProgram, this.gl.LINK_STATUS))
+        {
             throw Error("Could not initialise shaders");
         }
 
         this.gl.useProgram(this.shaderProgram);
     }
 
-    private createShader(str, type): WebGLShader | null {
+    private createShader(str, type): WebGLShader | null
+    {
         let shader: WebGLShader | null;
-        if (type === "fragment") {
+        if (type === "fragment")
+        {
             shader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
-        } else if (type === "vertex") {
+        } else if (type === "vertex")
+        {
             shader = this.gl.createShader(this.gl.VERTEX_SHADER);
-        } else {
+        } else
+        {
             return null;
         }
 
         this.gl.shaderSource(shader, str);
         this.gl.compileShader(shader);
-        if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+        if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS))
+        {
             alert(this.gl.getShaderInfoLog(shader));
             return null;
         }
         return shader;
     }
 
-    public addPointToScene(x: number, y: number): void
+    public addXYPointToScene(x: number, y: number): void
     {
-        this.pointsVector.addArray(new Float32Array([x, y]));
-    }
-
-    public addLinePointToScene(x: number, y: number): void
-    {
-        this.linesVector.addArray(new Float32Array([x, y]));
-    }
-
-    public addLineStripPointToScene(x: number, y: number): void
-    {
-        this.lineStripVector.addArray(new Float32Array([x, y]));
-    }
-
-    public addLineLoopPointToScene(x: number, y: number): void
-    {
-        this.lineLoopVector.addArray(new Float32Array([x, y]));
-    }
-
-    public addTrianglePointToScene(x: number, y: number): void
-    {
-        this.trianglesVector.addArray(new Float32Array([x, y]));
-    }
-
-    public addTriangleStripPointToScene(x: number, y: number): void
-    {
-        this.triangleStripVector.addArray(new Float32Array([x, y]));
-    }
-
-    public addTriangleFanPointToScene(x: number, y: number): void
-    {
-        this.triangleFanVector.addArray(new Float32Array([x, y]));
+        switch (this.glRenderMode)
+        {
+            case this.gl.POINTS:
+                this.pointsVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.LINES:
+                this.linesVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.LINE_STRIP:
+                this.lineStripVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.LINE_LOOP:
+                this.lineLoopVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.TRIANGLES:
+                this.trianglesVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.TRIANGLE_STRIP:
+                this.triangleStripVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.TRIANGLE_FAN:
+                this.triangleFanVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+        }
     }
 
     public draw()
@@ -139,16 +158,19 @@ export class WebGLRenderer implements IWebGLRenderer {
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-        if(this.pointsVector.size > 0)
+        for(let vb of this.vertexBuffers)
         {
-            let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+            if (vb.verticies.size > 0)
+            {
+                let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
 
-            let vertexBuffer = this.gl.createBuffer();
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-            this.gl.bufferData(this.gl.ARRAY_BUFFER, this.pointsVector.arr, this.gl.STATIC_DRAW);
-            this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
-            this.gl.enableVertexAttribArray(a_position);
-            this.gl.drawArrays(this.gl.POINTS, 0, (this.pointsVector.size / 2));
+                let vertexBuffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, vb.verticies.arr, this.gl.STATIC_DRAW);
+                this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
+                this.gl.enableVertexAttribArray(a_position);
+                this.gl.drawArrays(vb.renderMode, 0, (vb.verticies.size / 2));
+            }
         }
     }
 }

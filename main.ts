@@ -13,6 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => { Callbacks.resizeCanvas(window, renderer, canvas); }, false);
     Callbacks.resizeCanvas(window, renderer, canvas);
 
+    const renderModeButtons = document.getElementsByClassName("render-mode-button");
+    let numberOfButtons = renderModeButtons.length;
+    for(let i = 0; i < numberOfButtons; i++)
+    {
+        const button = renderModeButtons[i];
+        button.addEventListener("click", (event: MouseEvent) => { Callbacks.changeRenderMode(event, renderer) }, false);
+    }
+
     const canvasMouseHandler = new CanvasMouseHandler(false, 
         (event: MouseEvent) => { Callbacks.clicksToPoints(event, canvas, renderer); });
 
