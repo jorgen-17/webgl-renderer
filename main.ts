@@ -1,44 +1,24 @@
-import { IWebGLRenderer, WebGLRenderer } from "./src/webglRenderer";
-import { ContextWrangler } from "./src/contextWrangler";
-import { ShapeFactory } from "./src/shapeFactory";
-import { Color } from "./src/color";
+import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
+import { ContextWrangler } from "./src/utils/contextWrangler";
+import { ShapeFactory } from "./src/graphics/shapeFactory";
+import { Color } from "./src/graphics/color";
+import { CanvasMouseHandler } from "./src/input/canvasMouseHandler"
+import { Callbacks } from "./src/utils/callbacks"
 
 document.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("mycanvas") as HTMLCanvasElement;
     let gl = ContextWrangler.getContext(canvas);
     const renderer: IWebGLRenderer = new WebGLRenderer(canvas.width, canvas.height, gl);
 
-    const resizeCanvas = () =>
-    {
-        renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    };
+    window.addEventListener("resize", () => { Callbacks.resizeCanvas(window, renderer, canvas); }, false);
+    Callbacks.resizeCanvas(window, renderer, canvas);
 
-    window.addEventListener("resize", resizeCanvas, false);
-    resizeCanvas();
-    
-    const clicksToPoints = (event: MouseEvent): void =>
-    {
-        let x = event.clientX;
-        let y = event.clientY;
-        let rect = canvas.getBoundingClientRect();
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
+    const canvasMouseHandler = new CanvasMouseHandler(false, 
+        (event: MouseEvent) => { Callbacks.clicksToPoints(event, canvas, renderer); });
 
-        x = ((x - rect.left) - canvasWidth/2) / (canvasWidth/2);
-        y = (canvasHeight/2 - (y - rect.top))/(canvasHeight/2);
+    canvas.addEventListener("mousedown", canvasMouseHandler.mouseDownHandler, false);
+    canvas.addEventListener("mousemove", canvasMouseHandler.mouseMoveHandler, false);
+    canvas.addEventListener("mouseup", canvasMouseHandler.mouseUpHandler, false);
 
-        renderer.addXYPointToScene(x, y,);
-    }
-
-    canvas.addEventListener("click", clicksToPoints, false);
-
-    const renderLoop = () =>
-    {
-        renderer.draw();
-        window.requestAnimationFrame(renderLoop);
-    };
-
-    renderLoop();
+    Callbacks.renderLoop(renderer, window);
 }, false);

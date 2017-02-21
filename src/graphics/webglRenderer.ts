@@ -1,10 +1,16 @@
 ﻿import { Shape, Point3d } from "./shapes";
-import { Float32Vector } from "./vector"
+import { Float32Vector } from "../utils/vector"
 
 export interface IWebGLRenderer {
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     gl: WebGLRenderingContext;
-    addXYPointToScene(x: number, y: number): void
+    addPointToScene(x: number, y: number): void
+    addLinePointToScene(x: number, y: number): void
+    addLineStripPointToScene(x: number, y: number): void
+    addLineLoopPointToScene(x: number, y: number): void
+    addTrianglePointToScene(x: number, y: number): void
+    addTriangleStripPointToScene(x: number, y: number): void
+    addTriangleFanPointToScene(x: number, y: number): void
     draw: () => void;
 }
 
@@ -31,6 +37,12 @@ export class WebGLRenderer implements IWebGLRenderer {
     shaderProgram: WebGLShader; 
     shaderVertexPositionAttribute: number;
     pointsVector: Float32Vector;
+    linesVector: Float32Vector;
+    lineStripVector: Float32Vector;
+    lineLoopVector: Float32Vector;
+    trianglesVector: Float32Vector;
+    triangleStripVector: Float32Vector;
+    triangleFanVector: Float32Vector;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext) {
         this.gl = gl;
@@ -87,9 +99,39 @@ export class WebGLRenderer implements IWebGLRenderer {
         return shader;
     }
 
-    public addXYPointToScene(x: number, y: number): void
+    public addPointToScene(x: number, y: number): void
     {
         this.pointsVector.addArray(new Float32Array([x, y]));
+    }
+
+    public addLinePointToScene(x: number, y: number): void
+    {
+        this.linesVector.addArray(new Float32Array([x, y]));
+    }
+
+    public addLineStripPointToScene(x: number, y: number): void
+    {
+        this.lineStripVector.addArray(new Float32Array([x, y]));
+    }
+
+    public addLineLoopPointToScene(x: number, y: number): void
+    {
+        this.lineLoopVector.addArray(new Float32Array([x, y]));
+    }
+
+    public addTrianglePointToScene(x: number, y: number): void
+    {
+        this.trianglesVector.addArray(new Float32Array([x, y]));
+    }
+
+    public addTriangleStripPointToScene(x: number, y: number): void
+    {
+        this.triangleStripVector.addArray(new Float32Array([x, y]));
+    }
+
+    public addTriangleFanPointToScene(x: number, y: number): void
+    {
+        this.triangleFanVector.addArray(new Float32Array([x, y]));
     }
 
     public draw()
