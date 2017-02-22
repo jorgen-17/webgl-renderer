@@ -155,7 +155,7 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public draw()
     {
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.gl.clearColor(0.09, 0.09, 0.09, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
         for(let vb of this.vertexBuffers)

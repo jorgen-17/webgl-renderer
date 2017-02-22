@@ -7,6 +7,7 @@ node_modules/**/*
 *.js
 !webpack.config.js
 node_modules/
+npm-debug.log
 
 #bower_components/
 
