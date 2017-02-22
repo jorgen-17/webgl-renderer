@@ -1,6 +1,6 @@
 {
     "name": "webgl-renderer",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "webGl renderering engine",
     "main": "index.html",
     "scripts": {
@@ -26,12 +26,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/typedefJorge/webglRenderer.git"
+        "url": "git+https://github.com/typedefJorge/webgl-renderer.git"
     },
     "author": "typedefjorge",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/typedefJorge/webglRenderer/issues"
+        "url": "https://github.com/typedefJorge/webgl-renderer/issues"
     },
-    "homepage": "https://github.com/typedefJorge/webglRenderer#readme"
+    "homepage": "https://github.com/typedefJorge/webgl-renderer#readme"
 }
