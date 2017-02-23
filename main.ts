@@ -1,6 +1,6 @@
 import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
-import { ShapeFactory } from "./src/graphics/shapeFactory";
+import { ShapeFactory } from "./src/graphics/shapes/shapeFactory";
 import { Color } from "./src/graphics/color";
 import { CanvasMouseHandler } from "./src/input/canvasMouseHandler"
 import { Callbacks } from "./src/utils/callbacks"
@@ -14,10 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
     Callbacks.resizeCanvas(window, renderer, canvas);
 
     const renderModeButtons = document.getElementsByClassName("render-mode-button");
-    let numberOfButtons = renderModeButtons.length;
-    for(let i = 0; i < numberOfButtons; i++)
+    let numberOfModes = renderModeButtons.length;
+    for(let i = 0; i < numberOfModes; i++)
     {
         const button = renderModeButtons[i];
+        button.addEventListener("click", (event: MouseEvent) => { Callbacks.changeRenderMode(event, renderer) }, false);
+    }
+
+    const shapeButtons = document.getElementsByClassName("shape-button");
+    let numberOfShapes = shapeButtons.length;
+    for(let i = 0; i < numberOfShapes; i++)
+    {
+        const button = shapeButtons[i];
         button.addEventListener("click", (event: MouseEvent) => { Callbacks.changeRenderMode(event, renderer) }, false);
     }
 

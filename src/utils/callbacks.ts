@@ -16,6 +16,13 @@ export class Callbacks
         renderer.setRenderMode(elem.attributes["mode"].nodeValue)
     }
 
+    static changeShape (event: MouseEvent, renderer: IWebGLRenderer)
+    {
+        const elem = event.srcElement;
+        if(elem === null) return;
+        renderer.setShape(elem.attributes["shape"].nodeValue);
+    }
+
     static clicksToPoints (event: MouseEvent, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void 
     {
         let x = event.clientX;

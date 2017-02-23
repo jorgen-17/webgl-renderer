@@ -1,15 +1,21 @@
-﻿import { Shape, Point3d } from "./shapes";
-import { Float32Vector } from "../utils/vector"
-import { RenderModeMapper } from "./renderModes"
-import { VertexBuffer } from "./vertexBuffer"
+﻿import { Shape } from "./shapes/shapes";
+import { Float32Vector } from "../utils/vector";
+import { RenderModeMapper } from "./renderModes";
+import { VertexBuffer } from "./vertexBuffer";
+import { DrawingMode } from "./drawingMode";
+import { ShapeMode, ShapeModeMapper } from "./shapes/shapeModes";
 
 export interface IWebGLRenderer
 {
     gl: WebGLRenderingContext;
     glRenderMode: number;
+    shapeMode: ShapeMode;
+    drawingMode: DrawingMode;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     setRenderMode: (renderMode: String) => void;
-    addXYPointToScene(x: number, y: number): void
+    setShape: (shape: String) => void;
+    addXYPointToScene(x: number, y: number): void;
+    addShapeToScene(shape: Shape): void;
     draw: () => void;
 }
 
@@ -17,6 +23,8 @@ export class WebGLRenderer implements IWebGLRenderer
 {
     gl: WebGLRenderingContext;
     glRenderMode: number;
+    shapeMode: ShapeMode;
+    drawingMode: DrawingMode;
 
     vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
@@ -47,6 +55,8 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         this.gl = gl;
         this.glRenderMode = this.gl.POINTS;
+        this.shapeMode = ShapeMode.Points;
+        this.drawingMode = DrawingMode.Verticies;
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
         this.pointsVector = new VertexBuffer(this.gl.POINTS, new Float32Array(0), this.gl);
@@ -73,7 +83,14 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public setRenderMode(renderMode: string): void
     {
+        this.drawingMode = DrawingMode.Verticies;
         this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
+    }
+
+    public setShape (shape: string): void
+    {
+        this.drawingMode = DrawingMode.Shapes;
+        this.shapeMode = ShapeModeMapper.shapeStringToEnum(shape);
     }
 
     private initShaders(): void
@@ -127,6 +144,8 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public addXYPointToScene(x: number, y: number): void
     {
+        if(this.drawingMode !== DrawingMode.Verticies) return;
+
         switch (this.glRenderMode)
         {
             case this.gl.POINTS:
@@ -151,6 +170,11 @@ export class WebGLRenderer implements IWebGLRenderer
                 this.triangleFanVector.verticies.addArray(new Float32Array([x, y]));
                 break;
         }
+    }
+
+    public addShapeToScene(shape: Shape): void
+    {
+
     }
 
     public draw()

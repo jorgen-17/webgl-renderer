@@ -10,11 +10,18 @@ canvas {
     background: #eee;
 }
 
-.container {
+#render-mode-container {
   bottom: 0;
   position: fixed;
   margin: 1em;
   right: 0px;
+}
+
+#shape-mode-container {
+  bottom: 0;
+  position: fixed;
+  margin: 1em;
+  right: 75px;
 }
 
 .buttons {
@@ -27,7 +34,8 @@ canvas {
   margin: 20px auto 0;
   position: relative;
   -webkit-transition: all .1s ease-out;
-          transition: all .1s ease-out;  
+          transition: all .1s ease-out;
+    background-color: #585858;
 }
 
 .buttons:active, 
@@ -47,7 +55,7 @@ canvas {
           transform: translateY(50px);
 }
 
-.container:hover 
+.button-container:hover 
 .buttons:not(:last-child) {
   opacity: 1;
   -webkit-transform: none;
@@ -58,40 +66,20 @@ canvas {
 
 /* Unessential styling for sliding up buttons at differnt speeds */
 
-.buttons:nth-last-child(1) {
+#render-mode-selector-button {
   -webkit-transition-delay: 25ms;
           transition-delay: 25ms;
-  background-image: url('./icons/pencil.svg');
+  background-image: url('./icons/plus.png');
   background-size: contain;
-  background-color: forestgreen;
+  background-color: darkslategray;
 }
 
-#points-button {
-    background-color: firebrick;
-}
-
-#lines-button {
-    background-color: orangered;
-}
-
-#line-strip-button {
-    background-color: goldenrod;
-}
-
-#line-loop-button {
-    background-color: chartreuse;
-}
-
-#triangles-button {
-    background-color: darkturquoise;
-}
-
-#triangles-strip-button {
-    background-color: dodgerblue;
-}
-
-#triangles-fan-button {
-    background-color: indigo;
+#shape-selector-button {
+    -webkit-transition-delay: 25ms;
+    transition-delay: 25ms;
+    background-image: url('./icons/pencil.svg');
+    background-size: contain;
+    background-color: forestgreen;
 }
 
 [tooltip]:before {
@@ -117,3 +105,4 @@ canvas {
   visibility: visible;
   opacity: 1;
 }
+

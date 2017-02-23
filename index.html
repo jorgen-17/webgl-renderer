@@ -9,16 +9,25 @@
 
 <body>
     <canvas id="mycanvas" width="800" height="500"></canvas>
+     <div id="shape-mode-container" class="button-container">
+        <div id="points-shape-button" class="buttons shape-button" tooltip="Points" shape="Points"></div>
+        <div id="lines-shape-button" class="buttons shape-button" tooltip="Lines" shape="Lines"></div>
+        <div id="triangles-shape-button" class="buttons shape-button" tooltip="Triangles" shape="Triangles"></div>
+        <div id="rectangles-shape-button" class="buttons shape-button" tooltip="Rectangles" shape="Rectangles"></div>
+        <div id="hexagon-shape-button" class="buttons shape-button" tooltip="Hexagon" shape="Hexagon"></div>
+        <div id="octogon-shape-button" class="buttons shape-button" tooltip="Octogon" shape="Octogon"></div>
+        <div id="shape-selector-button" class="buttons" tooltip="Choose a Shape"></div>
+    </div>
 
-    <div class="container">
-        <div id="points-button" class="buttons render-mode-button" tooltip="Points" mode="Points"></div>
-        <div id="lines-button" class="buttons render-mode-button" tooltip="Lines" mode="Lines"></div>
-        <div id="line-strip-button" class="buttons render-mode-button" tooltip="Line Strip" mode="LineStrip"></div>
-        <div id="line-loop-button" class="buttons render-mode-button" tooltip="Line Loop" mode="LineLoop"></div>
-        <div id="triangles-button" class="buttons render-mode-button" tooltip="Triangles" mode="Triangles"></div>
-        <div id="triangles-strip-button" class="buttons render-mode-button" tooltip="Triangle Strip" mode="TriangleStrip"></div>
-        <div id="triangles-fan-button" class="buttons render-mode-button" tooltip="Triangle Fan" mode="TriangleFan"></div>
-        <div class="buttons" tooltip="Add Points To Render Mode"></div>
+    <div id="render-mode-container" class="button-container">
+        <div id="points-mode-button" class="buttons render-mode-button" tooltip="Points" mode="Points"></div>
+        <div id="lines-mode-button" class="buttons render-mode-button" tooltip="Lines" mode="Lines"></div>
+        <div id="line-strip-mode-button" class="buttons render-mode-button" tooltip="Line Strip" mode="LineStrip"></div>
+        <div id="line-loop-mode-button" class="buttons render-mode-button" tooltip="Line Loop" mode="LineLoop"></div>
+        <div id="triangles-mode-button" class="buttons render-mode-button" tooltip="Triangles" mode="Triangles"></div>
+        <div id="triangles-strip-mode-button" class="buttons render-mode-button" tooltip="Triangle Strip" mode="TriangleStrip"></div>
+        <div id="triangles-fan-mode-button" class="buttons render-mode-button" tooltip="Triangle Fan" mode="TriangleFan"></div>
+        <div id="render-mode-selector-button" class="buttons" tooltip="Add Points To Render Mode"></div>
     </div>
 </body>
 
