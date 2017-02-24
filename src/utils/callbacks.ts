@@ -1,4 +1,5 @@
 import { IWebGLRenderer } from "../graphics/webglRenderer";
+import * as React from "react"
 
 export class Callbacks 
 {
@@ -9,21 +10,21 @@ export class Callbacks
         canvas.height = window.innerHeight;
     }
 
-    static changeRenderMode (event: MouseEvent, renderer: IWebGLRenderer)
+    static changeRenderMode (event: React.MouseEvent<HTMLDivElement>, renderer: IWebGLRenderer)
     {
-        const elem = event.srcElement;
+        const elem = event.currentTarget;
         if(elem === null) return;
-        renderer.setRenderMode(elem.attributes["mode"].nodeValue)
+        renderer.setRenderMode(elem.attributes["data-mode"].nodeValue)
     }
 
-    static changeShape (event: MouseEvent, renderer: IWebGLRenderer)
+    static changeShape (event: React.MouseEvent<HTMLDivElement>, renderer: IWebGLRenderer)
     {
-        const elem = event.srcElement;
+        const elem = event.currentTarget;
         if(elem === null) return;
-        renderer.setShape(elem.attributes["shape"].nodeValue);
+        renderer.setShape(elem.attributes["data-shape"].nodeValue);
     }
 
-    static clicksToPoints (event: MouseEvent, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void 
+    static clicksToPoints (event: React.MouseEvent<HTMLDivElement>, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void 
     {
         let x = event.clientX;
         let y = event.clientY;

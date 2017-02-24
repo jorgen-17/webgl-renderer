@@ -82,14 +82,14 @@ canvas {
     background-color: forestgreen;
 }
 
-[tooltip]:before {
+[data-tooltip]:before {
   bottom: 25%;
   font-family: arial;
   font-weight: 600;
   border-radius: 2px;
   background: #585858;
   color: #fff;
-  content: attr(tooltip);
+  content: attr(data-tooltip);
   font-size: 12px;
   visibility: hidden;
   opacity: 0;
@@ -100,8 +100,8 @@ canvas {
   white-space: nowrap;
 }
 
-[tooltip]:hover:before,
-[tooltip]:hover:after {
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
   visibility: visible;
   opacity: 1;
 }

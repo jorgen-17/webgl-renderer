@@ -1,4 +1,4 @@
-﻿import { Shape } from "./shapes/shapes";
+﻿import { Shape } from "./shapes/shape";
 import { Float32Vector } from "../utils/vector";
 import { RenderModeMapper } from "./renderModes";
 import { VertexBuffer } from "./vertexBuffer";
