@@ -11,8 +11,9 @@ export class Triangle implements Shape
     primitiveType: number;
     shapeMode: ShapeMode;
 
-    constructor(point1: Point2d, point2: Point2d, point3: Point2d, gl: WebGLRenderingContext)
+    constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
+        
         this.verticies = new Float32Vector(new Float32Array([point1.x, point1.y,
         point2.x, point2.y,
         point3.x, point3.y]));
