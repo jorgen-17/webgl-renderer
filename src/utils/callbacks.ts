@@ -21,10 +21,10 @@ export class Callbacks
     {
         const elem = event.currentTarget;
         if(elem === null) return;
-        renderer.setShape(elem.attributes["data-shape"].nodeValue);
+        renderer.setShape(elem.attributes["data-mode"].nodeValue);
     }
 
-    static clicksToPoints (event: React.MouseEvent<HTMLDivElement>, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void 
+    static clicksToPoints (event: MouseEvent, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void 
     {
         let x = event.clientX;
         let y = event.clientY;
