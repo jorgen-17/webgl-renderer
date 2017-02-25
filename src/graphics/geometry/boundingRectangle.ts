@@ -1,4 +1,4 @@
-import { Point2d } from "./point2d"
+import { Point2d } from "./point2d";
 
 export class BoundingRectangle
 {

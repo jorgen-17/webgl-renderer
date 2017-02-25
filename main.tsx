@@ -4,7 +4,7 @@ import { ModeButtonBar } from "./src/ui/reactComponents/modeButtonBar";
 import { ShapeModeButton, RenderModeButton } from "./src/ui/reactComponents/modeButton";
 import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
-import { ShapeFactory } from "./src/graphics/shapes/shapeFactory";
+import { ShapeFactory } from "./src/graphics/geometry/shapeFactory";
 import { Color } from "./src/graphics/color";
 import { CanvasMouseHandler } from "./src/input/canvasMouseHandler"
 import { Callbacks } from "./src/utils/callbacks"

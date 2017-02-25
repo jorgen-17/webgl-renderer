@@ -15,8 +15,7 @@ export class Triangle implements Shape
     {
         
         this.verticies = new Float32Vector(new Float32Array([point1.x, point1.y,
-        point2.x, point2.y,
-        point3.x, point3.y]));
+        point2.x, point2.y]));
         this.vertexSize = 2;
         this.numberOfVerticies = 3;
         this.primitiveType = gl.TRIANGLES;

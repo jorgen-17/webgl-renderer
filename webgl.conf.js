@@ -11,10 +11,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
         //software under test
-        { pattern: "src/*.ts" },
+        { pattern: "src/**/*.ts" },
 
         // tests
-        { pattern: "spec/vector.spec.ts" },
+        { pattern: "spec/utils/vector.spec.ts" },
+        { pattern: "spec/graphics/geometry/boundingRectangle.spec.ts" },
 
     ],
 

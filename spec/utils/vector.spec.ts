@@ -1,4 +1,4 @@
-import {Float32Vector} from "../src/utils/vector";
+import {Float32Vector} from "../../src/utils/vector";
 
 describe("Float32Vector ", () => {
 
