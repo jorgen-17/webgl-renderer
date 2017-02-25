@@ -1,9 +1,11 @@
 import {Float32Vector} from "../../src/utils/vector";
 
-describe("Float32Vector ", () => {
-
-    describe("constructor ", () => {
-        it("should initialize arr and size correctly", () => {
+describe("Float32Vector ", () =>
+{
+    describe("constructor ", () =>
+    {
+        it("should initialize arr and size correctly", () =>
+        {
             let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
             expect(vec.size).toBe(3);
             expect(vec.arr[0]).toBe(1.0);
@@ -11,9 +13,11 @@ describe("Float32Vector ", () => {
             expect(vec.arr[2]).toBe(3.0);
         });
     });
-    describe("addNumber ", () => {
+    describe("addNumber ", () =>
+    {
         it("should insert a new value in the correct place " +
-        "and double the size of the underlying Float32Array to (size + 1) * 2", () => {
+        "and double the size of the underlying Float32Array to (size + 1) * 2", () =>
+        {
             let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
             vec.addNumber(4.0);
             expect(vec.size).toBe(4);
@@ -30,9 +34,11 @@ describe("Float32Vector ", () => {
             expect(vec.arr.length).toBe(16);
         });
     });
-        describe("addArray ", () => {
+        describe("addArray ", () =>
+        {
         it("should insert new values from Float32Array or Array<number> in the correct place " +
-        "and double the size of the underlying Float32Array to (size + arrToAdd.length) * 2", () => {
+        "and double the size of the underlying Float32Array to (size + arrToAdd.length) * 2", () =>
+        {
             let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
             let float32ArrToAdd = new Float32Array([4.0, 5.0, 6.0]);
             vec.addArray(float32ArrToAdd);

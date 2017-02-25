@@ -16,6 +16,7 @@ module.exports = function(config) {
         // tests
         { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/graphics/geometry/boundingRectangle.spec.ts" },
+        { pattern: "spec/graphics/geometry/midpoint.spec.ts" },
 
     ],
 
