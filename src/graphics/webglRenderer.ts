@@ -50,6 +50,7 @@ export class WebGLRenderer implements IWebGLRenderer
     triangleStripVector: VertexBuffer;
     triangleFanVector: VertexBuffer;
     vertexBuffers: Array<VertexBuffer>;
+    shapeScene: Array<Shape>;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext)
     {
@@ -74,6 +75,7 @@ export class WebGLRenderer implements IWebGLRenderer
             this.trianglesVector,
             this.triangleStripVector,
             this.triangleFanVector];
+        this.shapeScene = [];
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -174,7 +176,7 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public addShapeToScene(shape: Shape): void
     {
-
+        this.shapeScene.push(shape);
     }
 
     public draw()
@@ -194,6 +196,21 @@ export class WebGLRenderer implements IWebGLRenderer
                 this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
                 this.gl.enableVertexAttribArray(a_position);
                 this.gl.drawArrays(vb.renderMode, 0, (vb.verticies.size / 2));
+            }
+        }
+
+        if(this.shapeScene.length > 0)
+        {
+            for(let shape of this.shapeScene)
+            {
+                let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+
+                let vertexBuffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, shape.verticies.arr, this.gl.STATIC_DRAW);
+                this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
+                this.gl.enableVertexAttribArray(a_position);
+                this.gl.drawArrays(shape.primitiveType, 0, (shape.verticies.size / 2));
             }
         }
     }
