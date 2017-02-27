@@ -3,12 +3,12 @@ import { ShapeMode } from "./shapeModes";
 import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 
-export class Triangle implements Shape
+export class Hexagon implements Shape
 {
     verticies: Float32Vector;
     vertexSize: number;
     numberOfVerticies: number;
-    primitiveType: number;
+    glRenderMode: number;
     shapeMode: ShapeMode;
 
     constructor(topLeft: Point2d, topRight: Point2d, bottomLeft: Point2d, bottomRight: Point2d, gl: WebGLRenderingContext)
@@ -20,7 +20,7 @@ export class Triangle implements Shape
         bottomRight.x, bottomRight.y]));
         this.vertexSize = 2;
         this.numberOfVerticies = 6;
-        this.primitiveType = gl.TRIANGLE_STRIP;
+        this.glRenderMode = gl.TRIANGLE_STRIP;
         this.shapeMode = ShapeMode.Hexagons;
     }
 }

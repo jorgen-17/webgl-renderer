@@ -6,6 +6,6 @@ export interface Shape {
     verticies: Float32Vector;
     vertexSize: number;
     numberOfVerticies: number;
-    primitiveType: number;
+    glRenderMode: number;
     shapeMode: ShapeMode;
 }

@@ -3,12 +3,12 @@ import { ShapeMode } from "./shapeModes";
 import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 
-export class Rectangle implements Shape
+export class Line implements Shape
 {
     verticies: Float32Vector;
     vertexSize: number;
     numberOfVerticies: number;
-    primitiveType: number;
+    glRenderMode: number;
     shapeMode: ShapeMode;
 
     constructor(point: Point2d, gl: WebGLRenderingContext)
@@ -16,7 +16,7 @@ export class Rectangle implements Shape
         this.verticies = new Float32Vector(new Float32Array([point.x, point.y]));
         this.vertexSize = 2;
         this.numberOfVerticies = 1;
-        this.primitiveType = gl.TRIANGLE_STRIP;
+        this.glRenderMode = gl.TRIANGLE_STRIP;
         this.shapeMode = ShapeMode.Lines;
     }
 

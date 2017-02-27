@@ -188,14 +188,7 @@ export class WebGLRenderer implements IWebGLRenderer
         {
             if (vb.verticies.size > 0)
             {
-                let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
-
-                let vertexBuffer = this.gl.createBuffer();
-                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-                this.gl.bufferData(this.gl.ARRAY_BUFFER, vb.verticies.arr, this.gl.STATIC_DRAW);
-                this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
-                this.gl.enableVertexAttribArray(a_position);
-                this.gl.drawArrays(vb.renderMode, 0, (vb.verticies.size / 2));
+                this.drawGlArray(vb.verticies, vb.renderMode);
             }
         }
 
@@ -203,15 +196,21 @@ export class WebGLRenderer implements IWebGLRenderer
         {
             for(let shape of this.shapeScene)
             {
-                let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
-
-                let vertexBuffer = this.gl.createBuffer();
-                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-                this.gl.bufferData(this.gl.ARRAY_BUFFER, shape.verticies.arr, this.gl.STATIC_DRAW);
-                this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
-                this.gl.enableVertexAttribArray(a_position);
-                this.gl.drawArrays(shape.primitiveType, 0, (shape.verticies.size / 2));
+                this.drawGlArray(shape.verticies, shape.glRenderMode)
             }
         }
+    }
+
+    //by default use two floats per vertex, since we are only rendering 2d for now
+    private drawGlArray(vector: Float32Vector, renderMode: number, vertexSize: number = 2): void
+    {
+        let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+
+        let vertexBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, vector.arr, this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(a_position, vertexSize, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(a_position);
+        this.gl.drawArrays(renderMode, 0, (vector.size / vertexSize));
     }
 }

@@ -10,7 +10,7 @@ export class Triangle implements Shape
     verticies: Float32Vector;
     vertexSize: number;
     numberOfVerticies: number;
-    primitiveType: number;
+    glRenderMode: number;
     shapeMode: ShapeMode;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
@@ -22,7 +22,7 @@ export class Triangle implements Shape
             boundingRect.bottomRight.x, boundingRect.bottomRight.y]));
         this.vertexSize = 2;
         this.numberOfVerticies = 3;
-        this.primitiveType = gl.TRIANGLES;
+        this.glRenderMode = gl.TRIANGLES;
         this.shapeMode = ShapeMode.Triangles;
     }
 }
