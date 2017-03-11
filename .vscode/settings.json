@@ -8,5 +8,7 @@
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 200,
     "editor.tabSize": 4,
-    "editor.renderWhitespace": "all"
+    "editor.renderWhitespace": "all",
+    "editor.minimap.enabled": true,
+    "files.trimTrailingWhitespace": true
 }

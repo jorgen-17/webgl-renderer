@@ -4,24 +4,38 @@ import { ModeButtonBar } from "./src/ui/reactComponents/modeButtonBar";
 import { ShapeModeButton, RenderModeButton } from "./src/ui/reactComponents/modeButton";
 import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
-import { ShapeFactory } from "./src/graphics/geometry/shapeFactory";
-import { Point2d } from "./src/graphics/geometry/point2d";
-import { Color } from "./src/graphics/color";
 import { CanvasMouseHandler } from "./src/input/canvasMouseHandler";
+import { RenderModeMouseHandler } from "./src/input/renderModeMouseHandlers";
+import { BasicShapeModeMouseHandler } from "./src/input/basicShapeModeMouseHandler";
 import { Callbacks } from "./src/utils/callbacks";
 
 document.addEventListener("DOMContentLoaded", () => {
     let canvas:  HTMLCanvasElement;
     let gl: WebGLRenderingContext;
     let renderer: IWebGLRenderer;
+    let canvasMouseHandler: CanvasMouseHandler;
 
-    const shapeHandler = (event: React.MouseEvent<HTMLDivElement>) => { Callbacks.changeShape(event, renderer) }
-    const renderModeHandler = (event: React.MouseEvent<HTMLDivElement>) => { Callbacks.changeRenderMode(event, renderer) }
+    const renderModeMouseHandler = new RenderModeMouseHandler();
+    const basicShapeModeMouseHandler = new BasicShapeModeMouseHandler();
+    const shapeHandler = (event: React.MouseEvent<HTMLDivElement>) =>
+    {
+        const elem = event.currentTarget;
+        if (elem === null) { return; }
+        renderer.setShape(elem.attributes["data-mode"].nodeValue);
+        canvasMouseHandler.mouseHandler = basicShapeModeMouseHandler;
+    };
+    const renderModeHandler = (event: React.MouseEvent<HTMLDivElement>) =>
+    {
+        const elem = event.currentTarget;
+        if (elem === null) { return; }
+        renderer.setRenderMode(elem.attributes["data-mode"].nodeValue);
+        canvasMouseHandler.mouseHandler = renderModeMouseHandler;
+    };
 
     ReactDOM.render(
         <div>
             <ModeButtonBar
-                baseId="shape-mode" 
+                baseId="shape-mode"
                 mainButtonTooltip="Choose a Shape"
                 mainButtonBaseId="shape-selector">
                 <ShapeModeButton idBase="points-shape" toolTip="Points" mode="Points" clickHandler={shapeHandler}/>
@@ -32,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <ShapeModeButton idBase="octogon-shape" toolTip="Octogon" mode="Octogons" clickHandler={shapeHandler}/>
             </ModeButtonBar>
             <ModeButtonBar
-                baseId="render-mode" 
+                baseId="render-mode"
                 mainButtonTooltip="Add Points To Render Mode"
                 mainButtonBaseId="render-mode-selector">
                 <RenderModeButton idBase="points-mode" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
@@ -54,11 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => { Callbacks.resizeCanvas(window, renderer, canvas); }, false);
     Callbacks.resizeCanvas(window, renderer, canvas);
 
-    const canvasMouseHandler = new CanvasMouseHandler(canvas, renderer);
+    canvasMouseHandler = new CanvasMouseHandler(canvas, renderer, renderModeMouseHandler);
 
-    canvas.addEventListener("mousedown", canvasMouseHandler.mouseDownHandler, false);
-    canvas.addEventListener("mousemove", canvasMouseHandler.mouseMoveHandler, false);
-    canvas.addEventListener("mouseup", canvasMouseHandler.mouseUpHandler, false);
+    canvas.addEventListener("mousedown", (event: MouseEvent) => { canvasMouseHandler.mouseDown(event); } , false);
+    canvas.addEventListener("mousemove", (event: MouseEvent) => { canvasMouseHandler.mouseMove(event); }, false);
+    canvas.addEventListener("mouseup", (event: MouseEvent) => { canvasMouseHandler.mouseUp(event); }, false);
 
     Callbacks.renderLoop(renderer, window);
 }, false);

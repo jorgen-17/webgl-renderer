@@ -1,32 +1,34 @@
 import { IWebGLRenderer } from "../graphics/webglRenderer";
 import * as React from "react";
 
-export class Callbacks 
+export class Callbacks
 {
-    static resizeCanvas (window: Window, renderer: IWebGLRenderer, canvas: HTMLCanvasElement): void
+    public static resizeCanvas (window: Window, renderer: IWebGLRenderer, canvas: HTMLCanvasElement): void
     {
         renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
 
-    static changeRenderMode (event: React.MouseEvent<HTMLDivElement>, renderer: IWebGLRenderer)
+    public static changeRenderMode (event: React.MouseEvent<HTMLDivElement>, renderer: IWebGLRenderer)
     {
         const elem = event.currentTarget;
-        if(elem === null) return;
+        if (elem === null) { return; }
         renderer.setRenderMode(elem.attributes["data-mode"].nodeValue);
+
     }
 
-    static changeShape (event: React.MouseEvent<HTMLDivElement>, renderer: IWebGLRenderer)
+    public static changeShape (event: React.MouseEvent<HTMLDivElement>, renderer: IWebGLRenderer)
     {
         const elem = event.currentTarget;
-        if(elem === null) return;
+        if (elem === null) { return; }
         renderer.setShape(elem.attributes["data-mode"].nodeValue);
+
     }
 
-    static renderLoop (renderer: IWebGLRenderer, window: Window): void
+    public static renderLoop (renderer: IWebGLRenderer, window: Window): void
     {
         renderer.draw();
-        window.requestAnimationFrame(() => { Callbacks.renderLoop(renderer, window) });
+        window.requestAnimationFrame(() => { Callbacks.renderLoop(renderer, window); });
     };
 }
