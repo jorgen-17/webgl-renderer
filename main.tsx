@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <ShapeModeButton idBase="lines-shape" toolTip="Lines" mode="Lines" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="triangles-shape" toolTip="Triangles" mode="Triangles" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="rectangles-shape" toolTip="Rectangles" mode="Rectangles" clickHandler={shapeHandler}/>
-                <ShapeModeButton idBase="hexagon-shape" toolTip="Hexagon" mode="Hexagon" clickHandler={shapeHandler}/>
-                <ShapeModeButton idBase="octogon-shape" toolTip="Octogon" mode="Octogon" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="hexagon-shape" toolTip="Hexagon" mode="Hexagons" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="octogon-shape" toolTip="Octogon" mode="Octogons" clickHandler={shapeHandler}/>
             </ModeButtonBar>
             <ModeButtonBar
                 baseId="render-mode" 

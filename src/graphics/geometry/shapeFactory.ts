@@ -3,6 +3,7 @@ import { ShapeMode } from "./shapeModes";
 import { Triangle } from "./triangle";
 import { Rectangle } from "./rectangle";
 import { Hexagon } from "./hexagon"
+import { Octogon } from "./octogon"
 import { Point3d } from "./point3d";
 import { Point2d } from "./point2d";
 import { Color } from "../color";
@@ -19,6 +20,8 @@ export class ShapeFactory
                 return this.createRectangle(point1, point2, gl);
             case ShapeMode.Hexagons:
                 return this.createHexagon(point1, point2, gl);
+            case ShapeMode.Octogons:
+                return this.createOctogon(point1, point2, gl);
             default:
                 throw Error(`cannot recognize shape type ${shapeMode}`);
         }
@@ -41,6 +44,11 @@ export class ShapeFactory
         // cute baby you know its true
         // love, 
         // - your girlfriend
+    }
+
+    static createOctogon(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext): Octogon
+    {
+        return new Octogon(point1, point2, gl);
     }
 
     static createPoint3d(x: number, y: number, z: number, pointSize: number, color: Color): Point3d

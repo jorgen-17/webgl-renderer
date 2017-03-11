@@ -21,7 +21,7 @@ export class ShapeModeMapper
                 return ShapeMode.Triangles;
             case "Rectangles":
                 return ShapeMode.Rectangles;
-            case "Hexagon":
+            case "Hexagons":
                 return ShapeMode.Hexagons;
             case "Octogons":
                 return ShapeMode.Octogons;
