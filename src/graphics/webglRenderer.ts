@@ -11,22 +11,22 @@ export interface IWebGLRenderer
     glRenderMode: number;
     shapeMode: ShapeMode;
     drawingMode: DrawingMode;
+    draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     setRenderMode: (renderMode: String) => void;
     setShape: (shape: String) => void;
     addXYPointToScene(x: number, y: number): void;
     addShapeToScene(shape: Shape): void;
-    draw: () => void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer
 {
-    gl: WebGLRenderingContext;
-    glRenderMode: number;
-    shapeMode: ShapeMode;
-    drawingMode: DrawingMode;
+    public gl: WebGLRenderingContext;
+    public glRenderMode: number;
+    public shapeMode: ShapeMode;
+    public drawingMode: DrawingMode;
 
-    vertexShaderSource: string =
+    public vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
     "    attribute float a_pointSize;\n" +
     "    void main(void) {\n" +
@@ -34,23 +34,23 @@ export class WebGLRenderer implements IWebGLRenderer
     "        gl_PointSize = 10.0;\n" +
     "    }\n";
 
-    fragmentShaderSource: string =
+    public fragmentShaderSource: string =
     "    precision mediump float;\n" +
     "    uniform vec4 u_fragColor;" +
     "    void main(void) {\n" +
     "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
     "}\n";
 
-    shaderProgram: WebGLShader;
-    pointsVector: VertexBuffer;
-    linesVector: VertexBuffer;
-    lineStripVector: VertexBuffer;
-    lineLoopVector: VertexBuffer;
-    trianglesVector: VertexBuffer;
-    triangleStripVector: VertexBuffer;
-    triangleFanVector: VertexBuffer;
-    vertexBuffers: Array<VertexBuffer>;
-    shapeScene: Array<Shape>;
+    public shaderProgram: WebGLShader;
+    public pointsVector: VertexBuffer;
+    public linesVector: VertexBuffer;
+    public lineStripVector: VertexBuffer;
+    public lineLoopVector: VertexBuffer;
+    public trianglesVector: VertexBuffer;
+    public triangleStripVector: VertexBuffer;
+    public triangleFanVector: VertexBuffer;
+    public vertexBuffers: Array<VertexBuffer>;
+    public shapeScene: Array<Shape>;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext)
     {
@@ -89,10 +89,67 @@ export class WebGLRenderer implements IWebGLRenderer
         this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
     }
 
-    public setShape (shape: string): void
+    public setShape(shape: string): void
     {
         this.drawingMode = DrawingMode.Shapes;
         this.shapeMode = ShapeModeMapper.shapeStringToEnum(shape);
+    }
+
+    public addXYPointToScene(x: number, y: number): void
+    {
+        if (this.drawingMode !== DrawingMode.Verticies) { return; }
+
+        switch (this.glRenderMode)
+        {
+            case this.gl.POINTS:
+                this.pointsVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.LINES:
+                this.linesVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.LINE_STRIP:
+                this.lineStripVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.LINE_LOOP:
+                this.lineLoopVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.TRIANGLES:
+                this.trianglesVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.TRIANGLE_STRIP:
+                this.triangleStripVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+            case this.gl.TRIANGLE_FAN:
+                this.triangleFanVector.verticies.addArray(new Float32Array([x, y]));
+                break;
+        }
+    }
+
+    public addShapeToScene(shape: Shape): void
+    {
+        this.shapeScene.push(shape);
+    }
+
+    public draw()
+    {
+        this.gl.clearColor(0.09, 0.09, 0.09, 1.0);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
+        for (let vb of this.vertexBuffers)
+        {
+            if (vb.verticies.size > 0)
+            {
+                this.drawGlArray(vb.verticies, vb.renderMode);
+            }
+        }
+
+        if (this.shapeScene.length > 0)
+        {
+            for (let shape of this.shapeScene)
+            {
+                this.drawGlArray(shape.verticies, shape.glRenderMode);
+            }
+        }
     }
 
     private initShaders(): void
@@ -144,67 +201,10 @@ export class WebGLRenderer implements IWebGLRenderer
         return shader;
     }
 
-    public addXYPointToScene(x: number, y: number): void
-    {
-        if(this.drawingMode !== DrawingMode.Verticies) return;
-
-        switch (this.glRenderMode)
-        {
-            case this.gl.POINTS:
-                this.pointsVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-            case this.gl.LINES:
-                this.linesVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-            case this.gl.LINE_STRIP:
-                this.lineStripVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-            case this.gl.LINE_LOOP:
-                this.lineLoopVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-            case this.gl.TRIANGLES:
-                this.trianglesVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-            case this.gl.TRIANGLE_STRIP:
-                this.triangleStripVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-            case this.gl.TRIANGLE_FAN:
-                this.triangleFanVector.verticies.addArray(new Float32Array([x, y]));
-                break;
-        }
-    }
-
-    public addShapeToScene(shape: Shape): void
-    {
-        this.shapeScene.push(shape);
-    }
-
-    public draw()
-    {
-        this.gl.clearColor(0.09, 0.09, 0.09, 1.0);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
-        for(let vb of this.vertexBuffers)
-        {
-            if (vb.verticies.size > 0)
-            {
-                this.drawGlArray(vb.verticies, vb.renderMode);
-            }
-        }
-
-        if(this.shapeScene.length > 0)
-        {
-            for(let shape of this.shapeScene)
-            {
-                this.drawGlArray(shape.verticies, shape.glRenderMode)
-            }
-        }
-    }
-
-    //by default use two floats per vertex, since we are only rendering 2d for now
+    // by default use two floats per vertex, since we are only rendering 2d for now
     private drawGlArray(vector: Float32Vector, renderMode: number, vertexSize: number = 2): void
     {
-        let a_position = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
+        let a_position = this.gl.getAttribLocation(this.shaderProgram, "a_position");
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);

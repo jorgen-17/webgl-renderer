@@ -5,11 +5,11 @@ import { Float32Vector } from "../../utils/vector";
 
 export class Line implements Shape
 {
-    verticies: Float32Vector;
-    vertexSize: number;
-    numberOfVerticies: number;
-    glRenderMode: number;
-    shapeMode: ShapeMode;
+    public verticies: Float32Vector;
+    public vertexSize: number;
+    public numberOfVerticies: number;
+    public glRenderMode: number;
+    public shapeMode: ShapeMode;
 
     constructor(point: Point2d, gl: WebGLRenderingContext)
     {

@@ -2,8 +2,8 @@ import { Float32Vector } from "../utils/vector"
 
 export class VertexBuffer
 {
-    renderMode: number;
-    verticies: Float32Vector;
+    public renderMode: number;
+    public verticies: Float32Vector;
 
     constructor(renderMode: number, vertexArray: Float32Array, gl: WebGLRenderingContext)
     {
@@ -20,7 +20,7 @@ export class VertexBuffer
 
     private renderModeValidator(renderMode: number, gl: WebGLRenderingContext): boolean
     {
-        switch(renderMode)
+        switch (renderMode)
         {
             case gl.POINTS:
                 return true;

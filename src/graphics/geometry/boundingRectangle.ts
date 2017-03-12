@@ -2,28 +2,28 @@ import { Point2d } from "./point2d";
 
 export class BoundingRectangle
 {
-    topLeft: Point2d;
-    topRight: Point2d;
-    bottomRight: Point2d;
-    bottomLeft: Point2d;
+    public topLeft: Point2d;
+    public topRight: Point2d;
+    public bottomRight: Point2d;
+    public bottomLeft: Point2d;
 
     constructor(point1: Point2d, point2: Point2d)
     {
-        if(this.isTopLeftBottomRight(point1, point2))
+        if (this.isTopLeftBottomRight(point1, point2))
         {
             this.topLeft = point1;
             this.topRight = {x: point2.x, y: point1.y};
             this.bottomRight = point2;
             this.bottomLeft = {x: point1.x, y: point2.y};
         }
-        else if(this.isBottomRightTopLeft(point1, point2))
+        else if (this.isBottomRightTopLeft(point1, point2))
         {
             this.topLeft = point2;
             this.topRight = {x: point1.x, y: point2.y};
             this.bottomRight = point1;
             this.bottomLeft = {x: point2.x, y: point1.y};
         }
-        else if(this.isBottomLeftTopRight(point1, point2))
+        else if (this.isBottomLeftTopRight(point1, point2))
         {
             this.topLeft =  {x: point1.x, y: point2.y};
             this.topRight = point2;

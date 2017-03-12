@@ -1,7 +1,7 @@
 export class Float32Vector
 {
-    arr: Float32Array;
-    size: number;
+    public arr: Float32Array;
+    public size: number;
 
     constructor(arr: Float32Array)
     {
@@ -9,10 +9,10 @@ export class Float32Vector
         this.size = arr.length;
     }
 
-    addNumber(number: number)
+    public addNumber(number: number)
     {
         const newSize = this.size + 1;
-        if(newSize >= this.arr.length)
+        if (newSize >= this.arr.length)
         {
             let oldArr = this.arr;
             this.arr = new Float32Array(newSize * 2);
@@ -22,10 +22,10 @@ export class Float32Vector
         this.size = newSize;
     }
 
-    addArray(arr: Float32Array | Array<number>)
+    public addArray(arr: Float32Array | Array<number>)
     {
         let newSize = this.size + arr.length;
-        if(newSize >= this.arr.length)
+        if (newSize >= this.arr.length)
         {
             let oldArr = this.arr;
             this.arr = new Float32Array(newSize * 2);

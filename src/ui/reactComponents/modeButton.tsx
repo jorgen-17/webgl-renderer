@@ -5,13 +5,13 @@ export interface IModeButtonProps extends React.Props<any>
     idBase: string;
     additionalClass?: string;
     toolTip: string;
-    mode:string;
+    mode: string;
     clickHandler: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export class ModeButton extends React.Component<IModeButtonProps, {}>
 {
-    render()
+    public render()
     {
         return (
             <div
@@ -27,10 +27,10 @@ export class ModeButton extends React.Component<IModeButtonProps, {}>
 
 export class ShapeModeButton extends ModeButton
 {
-    render()
+    public render()
     {
         return (
-            <ModeButton 
+            <ModeButton
                 idBase={this.props.idBase}
                 additionalClass={`shape-button ${this.props.additionalClass || ""}`}
                 toolTip={this.props.toolTip}
@@ -44,10 +44,10 @@ export class ShapeModeButton extends ModeButton
 
 export class RenderModeButton extends ModeButton
 {
-    render()
+    public render()
     {
         return (
-            <ModeButton 
+            <ModeButton
                 idBase={this.props.idBase}
                 additionalClass={`mode-button ${this.props.additionalClass || ""}`}
                 toolTip={this.props.toolTip}

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { ModeButton, IModeButtonProps } from "./modeButton"
 
 export interface IModeButtonBarProps extends React.Props<any>
 {
@@ -10,7 +9,7 @@ export interface IModeButtonBarProps extends React.Props<any>
 
 export class ModeButtonBar extends React.Component<IModeButtonBarProps, {}>
 {
-    render()
+    public render()
     {
         return (
             <div id={`${this.props.baseId}-container`} className="button-container">

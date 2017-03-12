@@ -10,7 +10,7 @@ export enum ShapeMode
 
 export class ShapeModeMapper
 {
-    static shapeStringToEnum (shape: string): ShapeMode
+    public static shapeStringToEnum (shape: string): ShapeMode
     {
         switch(shape) {
             case "Points":

@@ -1,6 +1,6 @@
 export class ContextWrangler
 {
-    static getContext (canvas: HTMLCanvasElement): WebGLRenderingContext 
+    public static getContext (canvas: HTMLCanvasElement): WebGLRenderingContext
     {
         let gl: WebGLRenderingContext | null;
         try
@@ -12,7 +12,7 @@ export class ContextWrangler
                     depth: false
                 });
 
-        } 
+        }
         catch (e)
         {
             const msg = `Error creating WebGL Context!: ${e.toString()}`;
@@ -26,5 +26,5 @@ export class ContextWrangler
         }
 
         return gl;
-    } 
+    }
 }

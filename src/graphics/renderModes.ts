@@ -1,6 +1,6 @@
 export class RenderModeMapper
 {
-    static renderModeToWebGlConstant (mode: string, gl: WebGLRenderingContext): number
+    public static renderModeToWebGlConstant (mode: string, gl: WebGLRenderingContext): number
     {
         switch(mode) {
             case "Points":

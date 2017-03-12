@@ -1,8 +1,8 @@
 export class Color
 {
-    red: number;
-    green: number;
-    blue: number;
+    public red: number;
+    public green: number;
+    public blue: number;
 
     constructor(red: number, green: number, blue: number)
     {

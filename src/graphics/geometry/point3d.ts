@@ -1,11 +1,11 @@
 import { Color } from "../color";
 
 export class Point3d {
-    x: number;
-    y: number;
-    z: number;
-    pointSize: number;
-    color: Color;
+    public x: number;
+    public y: number;
+    public z: number;
+    public pointSize: number;
+    public color: Color;
 
     constructor(x: number, y: number, z: number, pointSize: number, color: Color)
     {

@@ -7,11 +7,11 @@ import { Midpoint } from "./midpoint";
 
 export class Triangle implements Shape
 {
-    verticies: Float32Vector;
-    vertexSize: number;
-    numberOfVerticies: number;
-    glRenderMode: number;
-    shapeMode: ShapeMode;
+    public verticies: Float32Vector;
+    public vertexSize: number;
+    public numberOfVerticies: number;
+    public glRenderMode: number;
+    public shapeMode: ShapeMode;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
