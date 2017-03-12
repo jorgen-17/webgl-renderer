@@ -1,5 +1,4 @@
 import { Midpoint, ThirdPoints } from "../../../src/graphics/geometry/midpoint";
-import { Point2d } from "../../../src/graphics/geometry/point2d";
 
 describe("Midpoint ", () =>
 {

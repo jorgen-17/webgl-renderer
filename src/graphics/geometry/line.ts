@@ -16,7 +16,7 @@ export class Line implements Shape
         this.verticies = new Float32Vector(new Float32Array([point.x, point.y]));
         this.vertexSize = 2;
         this.numberOfVerticies = 1;
-        this.glRenderMode = gl.TRIANGLE_STRIP;
+        this.glRenderMode = gl.LINE_STRIP;
         this.shapeMode = ShapeMode.Lines;
     }
 

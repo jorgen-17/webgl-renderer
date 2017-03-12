@@ -8,6 +8,7 @@ import { CanvasMouseHandler } from "./src/input/canvasMouseHandler";
 import { RenderModeMouseHandler } from "./src/input/renderModeMouseHandlers";
 import { BasicShapeModeMouseHandler } from "./src/input/basicShapeModeMouseHandler";
 import { Callbacks } from "./src/utils/callbacks";
+import { LineMouseHandler } from "./src/input/lineMouseHandler";
 
 document.addEventListener("DOMContentLoaded", () => {
     let canvas:  HTMLCanvasElement;
@@ -17,12 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const renderModeMouseHandler = new RenderModeMouseHandler();
     const basicShapeModeMouseHandler = new BasicShapeModeMouseHandler();
+    const lineMouseHandler = new LineMouseHandler();
     const shapeHandler = (event: React.MouseEvent<HTMLDivElement>) =>
     {
         const elem = event.currentTarget;
         if (elem === null) { return; }
         renderer.setShape(elem.attributes["data-mode"].nodeValue);
         canvasMouseHandler.mouseHandler = basicShapeModeMouseHandler;
+    };
+    const lineHandler = (event: React.MouseEvent<HTMLDivElement>) =>
+    {
+        const elem = event.currentTarget;
+        if (elem === null) { return; }
+        renderer.setShape(elem.attributes["data-mode"].nodeValue);
+        canvasMouseHandler.mouseHandler = lineMouseHandler;
     };
     const renderModeHandler = (event: React.MouseEvent<HTMLDivElement>) =>
     {
@@ -39,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mainButtonTooltip="Choose a Shape"
                 mainButtonBaseId="shape-selector">
                 <ShapeModeButton idBase="points-shape" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
-                <ShapeModeButton idBase="lines-shape" toolTip="Lines" mode="Lines" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="lines-shape" toolTip="Lines" mode="Lines" clickHandler={lineHandler}/>
                 <ShapeModeButton idBase="triangles-shape" toolTip="Triangles" mode="Triangles" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="rectangles-shape" toolTip="Rectangles" mode="Rectangles" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="hexagon-shape" toolTip="Hexagon" mode="Hexagons" clickHandler={shapeHandler}/>
