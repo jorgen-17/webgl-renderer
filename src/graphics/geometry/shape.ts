@@ -6,5 +6,4 @@ export interface Shape {
     vertexSize: number;
     numberOfVerticies: number;
     glRenderMode: number;
-    shapeMode: ShapeMode;
 }

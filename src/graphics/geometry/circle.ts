@@ -5,7 +5,7 @@ import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint, ThirdPoints } from "../../../src/graphics/geometry/midpoint";
 
-export class Hexagon implements Shape
+export class Circle implements Shape
 {
     private diameter: number;
     private radius: number;
@@ -14,19 +14,17 @@ export class Hexagon implements Shape
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
-    public shapeMode: ShapeMode;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
         this.numberOfVerticies = 50;
         let boundingRect = new BoundingRectangle(point1, point2);
-        this.diameter = boundingRect.topLeft.x - boundingRect.topRight.x;
+        this.diameter = boundingRect.topRight.x - boundingRect.topLeft.x;
         this.radius = this.diameter / 2;
         let vertexArray = this.populateVerticies(boundingRect);
         this.verticies = new Float32Vector(vertexArray);
         this.vertexSize = 2;
         this.glRenderMode = gl.TRIANGLE_FAN;
-        this.shapeMode = ShapeMode.Hexagons;
     }
 
     private populateVerticies(boundingRect: BoundingRectangle): Float32Array

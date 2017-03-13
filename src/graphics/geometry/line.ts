@@ -9,7 +9,6 @@ export class Line implements Shape
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
-    public shapeMode: ShapeMode;
 
     constructor(point: Point2d, gl: WebGLRenderingContext)
     {
@@ -17,7 +16,6 @@ export class Line implements Shape
         this.vertexSize = 2;
         this.numberOfVerticies = 1;
         this.glRenderMode = gl.LINE_STRIP;
-        this.shapeMode = ShapeMode.Lines;
     }
 
     public addVertex(vertex: Point2d): void

@@ -1,5 +1,6 @@
 import { Shape } from "./shape";
 import { ShapeMode } from "./shapeModes";
+import { Circle } from "./circle";
 import { Triangle } from "./triangle";
 import { Rectangle } from "./rectangle";
 import { Hexagon } from "./hexagon";
@@ -14,6 +15,8 @@ export class ShapeFactory
     {
         switch (shapeMode)
         {
+            case ShapeMode.Circles:
+                return this. createCircle(point1, point2, gl);
             case ShapeMode.Triangles:
                 return this.createTriangle(point1, point2, gl);
             case ShapeMode.Rectangles:
@@ -25,6 +28,11 @@ export class ShapeFactory
             default:
                 throw Error(`cannot recognize shape type ${shapeMode}`);
         }
+    }
+
+    public static createCircle(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext): Triangle
+    {
+        return new Circle(point1, point2, gl);
     }
 
     public static createTriangle(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext): Triangle

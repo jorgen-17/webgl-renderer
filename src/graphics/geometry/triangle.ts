@@ -11,7 +11,6 @@ export class Triangle implements Shape
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
-    public shapeMode: ShapeMode;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
@@ -23,6 +22,5 @@ export class Triangle implements Shape
         this.vertexSize = 2;
         this.numberOfVerticies = 3;
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = ShapeMode.Triangles;
     }
 }

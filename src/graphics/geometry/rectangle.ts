@@ -10,7 +10,6 @@ export class Rectangle implements Shape
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
-    public shapeMode: ShapeMode;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
@@ -22,6 +21,5 @@ export class Rectangle implements Shape
         this.vertexSize = 2;
         this.numberOfVerticies = 4;
         this.glRenderMode = gl.TRIANGLE_STRIP;
-        this.shapeMode = ShapeMode.Rectangles;
     }
 }

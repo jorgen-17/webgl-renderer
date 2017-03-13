@@ -2,6 +2,7 @@ export enum ShapeMode
 {
     Points,
     Lines,
+    Circles,
     Triangles,
     Rectangles,
     Hexagons,
@@ -17,6 +18,8 @@ export class ShapeModeMapper
                 return ShapeMode.Points;
             case "Lines":
                 return ShapeMode.Lines;
+            case "Circles":
+                return ShapeMode.Circles;
             case "Triangles":
                 return ShapeMode.Triangles;
             case "Rectangles":

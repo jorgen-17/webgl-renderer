@@ -11,7 +11,6 @@ export class Hexagon implements Shape
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
-    public shapeMode: ShapeMode;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
@@ -21,7 +20,6 @@ export class Hexagon implements Shape
         this.vertexSize = 2;
         this.numberOfVerticies = 6;
         this.glRenderMode = gl.TRIANGLE_FAN;
-        this.shapeMode = ShapeMode.Hexagons;
     }
 
     private populateVerticies(boundingRect: BoundingRectangle): Float32Array
