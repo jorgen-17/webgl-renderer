@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mainButtonBaseId="shape-selector">
                 <ShapeModeButton idBase="points-shape" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
                 <ShapeModeButton idBase="lines-shape" toolTip="Lines" mode="Lines" clickHandler={lineHandler}/>
-                <ShapeModeButton idBase="circles-shape" toolTip="Circles" mode="Circles" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="ellipses-shape" toolTip="Ellipses" mode="Ellipses" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="triangles-shape" toolTip="Triangles" mode="Triangles" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="rectangles-shape" toolTip="Rectangles" mode="Rectangles" clickHandler={shapeHandler}/>
                 <ShapeModeButton idBase="hexagon-shape" toolTip="Hexagon" mode="Hexagons" clickHandler={shapeHandler}/>
