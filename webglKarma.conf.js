@@ -17,7 +17,7 @@ module.exports = function(config) {
         { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/graphics/geometry/boundingRectangle.spec.ts" },
         { pattern: "spec/graphics/geometry/midpoint.spec.ts" },
-
+        { pattern: "spec/graphics/geometry/ellipse.spec.ts" }
     ],
 
 
@@ -32,7 +32,7 @@ module.exports = function(config) {
     reporters: ["dots", "karma-typescript"],
 
 
-    // enable / disable colors in the its 
+    // enable / disable colors in the its
     colors: true,
 
 
@@ -40,7 +40,7 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
     	'PhantomJS',
-        // "Chrome", 
+        // "Chrome",
         // "Firefox"
     ],
 
