@@ -29,23 +29,38 @@ export abstract class Ellipse implements Shape
 
     protected populateVerticies(boundingRect: BoundingRectangle): Float32Array
     {
-        let arr = new Float32Array(this.numberOfVerticies * 2); // 2x the verticies one for x one for y
+        // 2x the verticies one for x one for y
+        let arr = new Float32Array(this.numberOfVerticies * 2);
 
-        let insertionIndex = 0;
         let x = boundingRect.topLeft.x;
-        // divide by half the number of verticies because horizontal symmetry
+        // divide by 2 because of horizontal symmetry
         const xIncrement = (this.horizontalRadius * 2) / (this.numberOfVerticies / 2);
 
+        // manually insert first and last vertex
+        arr[0] = x;
+        arr[1] = boundingRect.topLeft.y - this.verticalRadius;
+        arr[arr.length - 2] = boundingRect.topRight.x;
+        arr[arr.length - 1] = boundingRect.topRight.y - this.verticalRadius;
+
+        // start at 2  because already inserted at 0 and 1
+        let insertionIndex = 2;
+        // ignore the first and last verticies, and divide by half because of horizontal symmetry
+        const numberOfInnerVerticies = (this.numberOfVerticies - 2) / 2;
+        // times 2 because each vertex takes 2 slots in the array, and plus one to offset the first vertex already inserted
+        let symmetryInsertionOffset = (numberOfInnerVerticies * 2);
+
         // divide by half the number of verticies because horizontal symmetry
-        for ( let i = 0; i < this.numberOfVerticies / 2; i++)
+        for ( let i = 0; i < numberOfInnerVerticies; i++)
         {
+            x += xIncrement;
+
             arr[insertionIndex] = x;
+            arr[insertionIndex + symmetryInsertionOffset] = x;
             insertionIndex++;
             let y = this.getYForX(x);
             arr[insertionIndex] = y;
+            arr[insertionIndex + symmetryInsertionOffset] = y;
             insertionIndex++;
-
-            x += xIncrement;
         }
 
         return arr;
@@ -64,7 +79,7 @@ export class HorizontalEllipse extends Ellipse
 
     protected getYForX (x: number): number
     {
-        return 0;
+        return x;
     }
 }
 
@@ -78,6 +93,6 @@ export class VerticalEllipse extends Ellipse
 
     protected getYForX (x: number): number
     {
-        return 0;
+        return x;
     }
 }

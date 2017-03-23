@@ -21,7 +21,7 @@ export class ContextWrangler
 
         if(gl === null)
         {
-            const msg = `Error creating WebGL Context!`;
+            const msg = `Error creating WebGL Context!, gl === null`;
             throw Error(msg);
         }
 
