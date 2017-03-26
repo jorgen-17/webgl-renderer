@@ -16,12 +16,12 @@ export class Ellipse implements Shape
     protected verticalRadius: number;
     private numberOfInnerVerticies;
 
-    constructor(point1: Point2d, point2: Point2d,gl: WebGLRenderingContext, precision: Precision)
+    constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext, precision: Precision)
     {
         let boundingRect = new BoundingRectangle(point1, point2);
         this.horizontalRadius = (boundingRect.topRight.x - boundingRect.topLeft.x) / 2;
         this.verticalRadius = (boundingRect.topLeft.y - boundingRect.bottomLeft.y) / 2;
-        if(precision === Precision.High)
+        if (precision === Precision.High)
         {
             this.numberOfInnerVerticies = 400;
             this.numberOfVerticies = 403;
