@@ -1,7 +1,6 @@
 import { Shape } from "./shape";
 import { ShapeMode } from "./shapeModes";
-import { BoundingRectangle } from "./boundingRectangle";
-import { Ellipse, HorizontalEllipse, VerticalEllipse } from "./ellipse";
+import { Ellipse } from "./ellipse";
 import { Triangle } from "./triangle";
 import { Rectangle } from "./rectangle";
 import { Hexagon } from "./hexagon";
@@ -9,6 +8,7 @@ import { Octogon } from "./octogon";
 import { Point3d } from "./point3d";
 import { Point2d } from "./point2d";
 import { Color } from "../color";
+import { Precision } from "../precision";
 
 export class ShapeFactory
 {
@@ -33,16 +33,7 @@ export class ShapeFactory
 
     public static createEllipse(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext): Ellipse
     {
-        let boundingRect = new BoundingRectangle(point1, point2);
-        let horizontalRadius = boundingRect.topRight.x - boundingRect.topLeft.x / 2;
-        let verticalRadius = boundingRect.topLeft.y - boundingRect.bottomLeft.y / 2;
-        const numberOfVerticies = 400;
-
-        if (horizontalRadius >= verticalRadius)
-        {
-            return new HorizontalEllipse(boundingRect, horizontalRadius, verticalRadius, gl, numberOfVerticies);
-        }
-        return new VerticalEllipse(boundingRect, horizontalRadius, verticalRadius, gl, numberOfVerticies);
+        return new Ellipse(point1, point2, gl, Precision.High);
     }
 
     public static createTriangle(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext): Triangle

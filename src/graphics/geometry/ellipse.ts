@@ -3,8 +3,9 @@ import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "../../../src/graphics/geometry/midpoint";
+import { Precision } from "../precision";
 
-export abstract class Ellipse implements Shape
+export class Ellipse implements Shape
 {
     public verticies: Float32Vector;
     public vertexSize: number;
@@ -13,18 +14,28 @@ export abstract class Ellipse implements Shape
     protected center: Point2d;
     protected horizontalRadius: number;
     protected verticalRadius: number;
+    private numberOfInnerVerticies;
 
-    constructor(boundingRect: BoundingRectangle, horizontalRadius: number, verticalRadius: number,
-         gl: WebGLRenderingContext, numberOfVerticies: number)
+    constructor(point1: Point2d, point2: Point2d,gl: WebGLRenderingContext, precision: Precision)
     {
-        this.numberOfVerticies = numberOfVerticies;
+        let boundingRect = new BoundingRectangle(point1, point2);
+        this.horizontalRadius = (boundingRect.topRight.x - boundingRect.topLeft.x) / 2;
+        this.verticalRadius = (boundingRect.topLeft.y - boundingRect.bottomLeft.y) / 2;
+        if(precision === Precision.High)
+        {
+            this.numberOfInnerVerticies = 400;
+            this.numberOfVerticies = 403;
+        }
+        else if (precision === Precision.Low)
+        {
+            this.numberOfInnerVerticies = 8;
+            this.numberOfVerticies = 11;
+        }
         this.center = Midpoint.between(boundingRect.topLeft, boundingRect.bottomRight);
-        this.horizontalRadius = horizontalRadius;
-        this.verticalRadius = verticalRadius;
         let vertexArray = this.populateVerticies(boundingRect);
         this.verticies = new Float32Vector(vertexArray);
         this.vertexSize = 2;
-        this.glRenderMode = gl.POINTS;
+        this.glRenderMode = gl.TRIANGLE_FAN;
     }
 
     protected populateVerticies(boundingRect: BoundingRectangle): Float32Array
@@ -33,66 +44,43 @@ export abstract class Ellipse implements Shape
         let arr = new Float32Array(this.numberOfVerticies * 2);
 
         let x = boundingRect.topLeft.x;
-        // divide by 2 because of horizontal symmetry
-        const xIncrement = (this.horizontalRadius * 2) / (this.numberOfVerticies / 2);
+        // divide by 2 because of horizontal symmetry, subtract one because of duplicate vertex inserted at middle
+        const xIncrement = (this.horizontalRadius * 2) / ((this.numberOfVerticies - 1) / 2);
 
-        // manually insert first and last vertex
+        // manually insert first, middle, and last vertex
         arr[0] = x;
         arr[1] = boundingRect.topLeft.y - this.verticalRadius;
+        // plus 2 because of first vertex added
+        let symmetryInsertionOffset = this.numberOfInnerVerticies + 2;
+        arr[symmetryInsertionOffset] = boundingRect.topRight.x;
+        arr[symmetryInsertionOffset + 1] = boundingRect.topRight.y - this.verticalRadius;
         arr[arr.length - 2] = boundingRect.topRight.x;
         arr[arr.length - 1] = boundingRect.topRight.y - this.verticalRadius;
 
         // start at 2  because already inserted at 0 and 1
         let insertionIndex = 2;
-        // ignore the first and last verticies, and divide by half because of horizontal symmetry
-        const numberOfInnerVerticies = (this.numberOfVerticies - 2) / 2;
-        // times 2 because each vertex takes 2 slots in the array, and plus one to offset the first vertex already inserted
-        let symmetryInsertionOffset = (numberOfInnerVerticies * 2);
 
         // divide by half the number of verticies because horizontal symmetry
-        for ( let i = 0; i < numberOfInnerVerticies; i++)
+        for ( let i = 0; i < this.numberOfInnerVerticies / 2; i++)
         {
             x += xIncrement;
 
             arr[insertionIndex] = x;
             arr[insertionIndex + symmetryInsertionOffset] = x;
             insertionIndex++;
-            let y = this.getYForX(x);
-            arr[insertionIndex] = y;
-            arr[insertionIndex + symmetryInsertionOffset] = y;
+            let y = this.getYDistanceFromCenterForX(x);
+            arr[insertionIndex] = y + this.center.y;
+            arr[insertionIndex + symmetryInsertionOffset] = + this.center.y - y;
             insertionIndex++;
         }
 
         return arr;
     }
 
-    protected abstract getYForX(x: number): number;
-}
-
-export class HorizontalEllipse extends Ellipse
-{
-    constructor(boundingRect: BoundingRectangle, horizontalRadius: number, verticalRadius: number,
-        gl: WebGLRenderingContext, numberOfVerticies: number)
+    protected getYDistanceFromCenterForX(x: number): number
     {
-        super(boundingRect, horizontalRadius, verticalRadius, gl, numberOfVerticies);
-    }
-
-    protected getYForX (x: number): number
-    {
-        return x;
-    }
-}
-
-export class VerticalEllipse extends Ellipse
-{
-    constructor(boundingRect: BoundingRectangle, horizontalRadius: number, verticalRadius: number,
-        gl: WebGLRenderingContext, numberOfVerticies: number)
-    {
-        super(boundingRect, horizontalRadius, verticalRadius, gl, numberOfVerticies);
-    }
-
-    protected getYForX (x: number): number
-    {
-        return x;
+        let verticalRadiusSquared = Math.pow(this.verticalRadius, 2);
+        return Math.sqrt(verticalRadiusSquared -
+            ((verticalRadiusSquared * Math.pow((x - this.center.x), 2)) / Math.pow(this.horizontalRadius, 2)));
     }
 }
