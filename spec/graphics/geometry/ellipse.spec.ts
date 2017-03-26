@@ -70,32 +70,34 @@ describe("HorizontalEllipse ", () =>
             expect(0.75).toBeCloseTo(horizontalEllipse.verticies.arr[21]); // y11
         });
 
-        xit("when constructed with point(0.0, 0.0) and point(0.5, 1.0) AKA its vertical ellipse", () =>
+        it("when constructed with point(0.0, 0.0) and point(0.5, 1.0) AKA its vertical ellipse", () =>
         {
             const verticalEllipse = new Ellipse({x: 0.0, y: 0.0}, {x: 0.5, y: 1.0}, gl, Precision.Low);
 
-            expect(20).toEqual(verticalEllipse.verticies.size);
+            expect(22).toEqual(verticalEllipse.verticies.size);
 
             expect(0.0).toBeCloseTo(verticalEllipse.verticies.arr[0]); // x1
             expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[1]); // y1
             expect(0.1).toBeCloseTo(verticalEllipse.verticies.arr[2]); // x2
-            expect(0.95).toBeCloseTo(verticalEllipse.verticies.arr[3]); // y2
+            expect(0.9).toBeCloseTo(verticalEllipse.verticies.arr[3]); // y2
             expect(0.2).toBeCloseTo(verticalEllipse.verticies.arr[4]); // x3
-            expect(0.99494).toBeCloseTo(verticalEllipse.verticies.arr[5]); // y3
+            expect(0.98989).toBeCloseTo(verticalEllipse.verticies.arr[5]); // y3
             expect(0.3).toBeCloseTo(verticalEllipse.verticies.arr[6]); // x4
-            expect(0.99494).toBeCloseTo(verticalEllipse.verticies.arr[7]); // y4
+            expect(0.98989).toBeCloseTo(verticalEllipse.verticies.arr[7]); // y4
             expect(0.4).toBeCloseTo(verticalEllipse.verticies.arr[8]); // x5
-            expect(0.95).toBeCloseTo(verticalEllipse.verticies.arr[9]); // y5
-            expect(0.1).toBeCloseTo(verticalEllipse.verticies.arr[10]); // x6
-            expect(0.55).toBeCloseTo(verticalEllipse.verticies.arr[11]); // y6
-            expect(0.2).toBeCloseTo(verticalEllipse.verticies.arr[12]); // x7
-            expect(0.50505).toBeCloseTo(verticalEllipse.verticies.arr[13]); // y7
-            expect(0.3).toBeCloseTo(verticalEllipse.verticies.arr[14]); // x8
-            expect(0.50505).toBeCloseTo(verticalEllipse.verticies.arr[15]); // y8
-            expect(0.4).toBeCloseTo(verticalEllipse.verticies.arr[16]); // x9
-            expect(0.55).toBeCloseTo(verticalEllipse.verticies.arr[17]); // y9
-            expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[18]); // x10
-            expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[19]); // y10
+            expect(0.9).toBeCloseTo(verticalEllipse.verticies.arr[9]); // y5
+            expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[10]); // x6
+            expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[11]); // y6
+            expect(0.1).toBeCloseTo(verticalEllipse.verticies.arr[12]); // x7
+            expect(0.1).toBeCloseTo(verticalEllipse.verticies.arr[13]); // y7
+            expect(0.2).toBeCloseTo(verticalEllipse.verticies.arr[14]); // x8
+            expect(0.0101).toBeCloseTo(verticalEllipse.verticies.arr[15]); // y8
+            expect(0.3).toBeCloseTo(verticalEllipse.verticies.arr[16]); // x9
+            expect(0.0101).toBeCloseTo(verticalEllipse.verticies.arr[17]); // y9
+            expect(0.4).toBeCloseTo(verticalEllipse.verticies.arr[18]); // x10
+            expect(0.1).toBeCloseTo(verticalEllipse.verticies.arr[19]); // y10
+            expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[20]); // x11
+            expect(0.5).toBeCloseTo(verticalEllipse.verticies.arr[21]); // y11
         });
     });
 });
