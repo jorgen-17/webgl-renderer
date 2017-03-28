@@ -3,3 +3,4 @@ on the upcoming versions I would like to add:
 2. Documentation for engine
 3. Colors
 4. Shape preview: so users can see what they are doawring as they are drawing it
+5. add icons for UI menu of drawing app to make it 
