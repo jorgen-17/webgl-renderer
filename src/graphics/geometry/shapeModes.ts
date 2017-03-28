@@ -13,7 +13,7 @@ export class ShapeModeMapper
 {
     public static shapeStringToEnum (shape: string): ShapeMode
     {
-        switch(shape) {
+        switch (shape) {
             case "Points":
                 return ShapeMode.Points;
             case "Lines":
