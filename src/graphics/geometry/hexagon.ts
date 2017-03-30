@@ -24,7 +24,7 @@ export class Hexagon implements Shape
     private populateVerticies(boundingRect: BoundingRectangle): Float32Array
     {
         let arr = new Float32Array(12);
-        var { first, second } = ThirdPoints.between(boundingRect.topLeft, boundingRect.topRight);
+        let { first, second } = ThirdPoints.between(boundingRect.topLeft, boundingRect.topRight);
         arr[0] = first.x;
         arr[1] = first.y;
         arr[2] = second.x;
@@ -32,7 +32,7 @@ export class Hexagon implements Shape
         let mid = Midpoint.between(boundingRect.topRight, boundingRect.bottomRight);
         arr[4] = mid.x;
         arr[5] = mid.y;
-        var { first, second } = ThirdPoints.between(boundingRect.bottomRight, boundingRect.bottomLeft);
+        ({ first, second } = ThirdPoints.between(boundingRect.bottomRight, boundingRect.bottomLeft));
         arr[6] = second.x;
         arr[7] = second.y;
         arr[8] = first.x;
