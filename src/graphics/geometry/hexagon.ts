@@ -1,5 +1,4 @@
 import { Shape } from "./shape";
-import { ShapeMode } from "./shapeModes";
 import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
@@ -30,7 +29,7 @@ export class Hexagon implements Shape
         arr[1] = first.y;
         arr[2] = second.x;
         arr[3] = second.y;
-        var mid = Midpoint.between(boundingRect.topRight, boundingRect.bottomRight);
+        let mid = Midpoint.between(boundingRect.topRight, boundingRect.bottomRight);
         arr[4] = mid.x;
         arr[5] = mid.y;
         var { first, second } = ThirdPoints.between(boundingRect.bottomRight, boundingRect.bottomLeft);
