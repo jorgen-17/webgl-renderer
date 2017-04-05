@@ -1,5 +1,4 @@
 import { Shape } from "./shape";
-import { ShapeMode } from "./shapeModes";
 import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";

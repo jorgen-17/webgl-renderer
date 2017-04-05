@@ -1,4 +1,3 @@
-import { ShapeMode } from "./shapeModes";
 import { Float32Vector } from "../../utils/vector";
 
 export interface Shape {
