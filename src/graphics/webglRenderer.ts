@@ -1,9 +1,10 @@
 ﻿import { Shape } from "./geometry/shape";
 import { Float32Vector } from "../utils/vector";
-import { RenderModeMapper } from "./renderModes";
+import { RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
-import { ShapeMode, ShapeModeMapper } from "./geometry/shapeModes";
+import { ShapeMode } from "./geometry/shapeMode";
+import { ShapeModeMapper } from "./geometry/shapeModeMapper";
 
 export interface IWebGLRenderer
 {

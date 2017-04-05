@@ -1,7 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { ModeButtonBar } from "./src/ui/reactComponents/modeButtonBar";
-import { ShapeModeButton, RenderModeButton } from "./src/ui/reactComponents/modeButton";
+import { ShapeModeButton } from "./src/ui/reactComponents/shapeModeButton";
+import { RenderModeButton } from "./src/ui/reactComponents/renderModeButton";
+import { ColorModeButton } from "./src/ui/reactComponents/colorModeButton";
 import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
 import { CanvasMouseHandler } from "./src/input/canvasMouseHandler";
@@ -44,28 +46,41 @@ document.addEventListener("DOMContentLoaded", () => {
     ReactDOM.render(
         <div>
             <ModeButtonBar
+                baseId="color-mode"
+                mainButtonTooltip="Choose a Color"
+                mainButtonBaseId="color-selector">
+                <ColorModeButton idBase="red" toolTip="Red" mode="Red" clickHandler={renderModeHandler}/>
+                <ColorModeButton idBase="orange" toolTip="Orange" mode="Orange" clickHandler={lineHandler}/>
+                <ColorModeButton idBase="yellow" toolTip="Yellow" mode="Yellow" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="green" toolTip="Green" mode="Green" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="cyan" toolTip="Cyan" mode="Cyan" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="blue" toolTip="Blue" mode="Blue" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="indigo" toolTip="Indigo" mode="Indigo" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="fuscia" toolTip="Fuscia" mode="Fuscia" clickHandler={shapeHandler}/>
+            </ModeButtonBar>
+            <ModeButtonBar
                 baseId="shape-mode"
                 mainButtonTooltip="Choose a Shape"
                 mainButtonBaseId="shape-selector">
-                <ShapeModeButton idBase="points-shape" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
-                <ShapeModeButton idBase="lines-shape" toolTip="Lines" mode="Lines" clickHandler={lineHandler}/>
-                <ShapeModeButton idBase="ellipses-shape" toolTip="Ellipses" mode="Ellipses" clickHandler={shapeHandler}/>
-                <ShapeModeButton idBase="triangles-shape" toolTip="Triangles" mode="Triangles" clickHandler={shapeHandler}/>
-                <ShapeModeButton idBase="rectangles-shape" toolTip="Rectangles" mode="Rectangles" clickHandler={shapeHandler}/>
-                <ShapeModeButton idBase="hexagon-shape" toolTip="Hexagon" mode="Hexagons" clickHandler={shapeHandler}/>
-                <ShapeModeButton idBase="octogon-shape" toolTip="Octogon" mode="Octogons" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="points" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
+                <ShapeModeButton idBase="lines" toolTip="Lines" mode="Lines" clickHandler={lineHandler}/>
+                <ShapeModeButton idBase="ellipses" toolTip="Ellipses" mode="Ellipses" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="triangles" toolTip="Triangles" mode="Triangles" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="rectangles" toolTip="Rectangles" mode="Rectangles" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="hexagon" toolTip="Hexagon" mode="Hexagons" clickHandler={shapeHandler}/>
+                <ShapeModeButton idBase="octogon" toolTip="Octogon" mode="Octogons" clickHandler={shapeHandler}/>
             </ModeButtonBar>
             <ModeButtonBar
                 baseId="render-mode"
                 mainButtonTooltip="Add Points To Render Mode"
                 mainButtonBaseId="render-mode-selector">
-                <RenderModeButton idBase="points-mode" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
-                <RenderModeButton idBase="lines-mode" toolTip="Lines" mode="Lines" clickHandler={renderModeHandler}/>
-                <RenderModeButton idBase="line-strip-mode" toolTip="Line Strip" mode="LineStrip" clickHandler={renderModeHandler}/>
-                <RenderModeButton idBase="line-loop-mode" toolTip="Line Loop" mode="LineLoop" clickHandler={renderModeHandler}/>
-                <RenderModeButton idBase="triangles-mode" toolTip="Triangles" mode="Triangles" clickHandler={renderModeHandler}/>
-                <RenderModeButton idBase="triangles-strip-mode" toolTip="Triangle Strip" mode="TriangleStrip" clickHandler={renderModeHandler}/>
-                <RenderModeButton idBase="triangles-fan-mode" toolTip="Triangle Fan" mode="TriangleFan" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="points" toolTip="Points" mode="Points" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="lines" toolTip="Lines" mode="Lines" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="line-strip" toolTip="Line Strip" mode="LineStrip" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="line-loop" toolTip="Line Loop" mode="LineLoop" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="triangles" toolTip="Triangles" mode="Triangles" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="triangles-strip" toolTip="Triangle Strip" mode="TriangleStrip" clickHandler={renderModeHandler}/>
+                <RenderModeButton idBase="triangles-fan" toolTip="Triangle Fan" mode="TriangleFan" clickHandler={renderModeHandler}/>
             </ModeButtonBar>
         </div>
         , document.getElementById("main")

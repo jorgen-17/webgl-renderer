@@ -1,13 +1,4 @@
-export enum ShapeMode
-{
-    Points,
-    Lines,
-    Ellipses,
-    Triangles,
-    Rectangles,
-    Hexagons,
-    Octogons
-}
+import { ShapeMode } from "./shapeMode";
 
 export class ShapeModeMapper
 {

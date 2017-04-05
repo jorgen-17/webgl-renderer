@@ -1,5 +1,5 @@
 import { Shape } from "./shape";
-import { ShapeMode } from "./shapeModes";
+import { ShapeMode } from "./shapeMode";
 import { Ellipse } from "./ellipse";
 import { Triangle } from "./triangle";
 import { Rectangle } from "./rectangle";

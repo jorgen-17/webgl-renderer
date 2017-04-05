@@ -2,7 +2,7 @@ export class RenderModeMapper
 {
     public static renderModeToWebGlConstant (mode: string, gl: WebGLRenderingContext): number
     {
-        switch(mode) {
+        switch (mode) {
             case "Points":
                 return gl.POINTS;
             case "Lines":

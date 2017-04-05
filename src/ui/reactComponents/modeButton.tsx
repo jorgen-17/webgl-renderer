@@ -24,36 +24,3 @@ export class ModeButton extends React.Component<IModeButtonProps, {}>
         );
     }
 }
-
-export class ShapeModeButton extends ModeButton
-{
-    public render()
-    {
-        return (
-            <ModeButton
-                idBase={this.props.idBase}
-                additionalClass={`shape-button ${this.props.additionalClass || ""}`}
-                toolTip={this.props.toolTip}
-                mode={this.props.mode}
-                clickHandler={this.props.clickHandler}
-            />
-        );
-    }
-}
-
-
-export class RenderModeButton extends ModeButton
-{
-    public render()
-    {
-        return (
-            <ModeButton
-                idBase={this.props.idBase}
-                additionalClass={`mode-button ${this.props.additionalClass || ""}`}
-                toolTip={this.props.toolTip}
-                mode={this.props.mode}
-                clickHandler={this.props.clickHandler}
-            />
-        );
-    }
-}

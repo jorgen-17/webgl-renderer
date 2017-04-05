@@ -1,4 +1,4 @@
-import { Float32Vector } from "../utils/vector"
+import { Float32Vector } from "../utils/vector";
 
 export class VertexBuffer
 {
@@ -7,7 +7,7 @@ export class VertexBuffer
 
     constructor(renderMode: number, vertexArray: Float32Array, gl: WebGLRenderingContext)
     {
-        if(this.renderModeValidator(renderMode, gl))
+        if (this.renderModeValidator(renderMode, gl))
         {
             this.renderMode = renderMode;
             this.verticies = new Float32Vector(vertexArray);
