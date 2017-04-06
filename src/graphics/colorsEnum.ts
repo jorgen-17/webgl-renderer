@@ -7,5 +7,6 @@ export enum Colors
     Cyan,
     Blue,
     Indigo,
-    Fuscia
+    Fuscia,
+    White
 }

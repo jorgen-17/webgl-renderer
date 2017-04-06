@@ -128,6 +128,9 @@ canvas {
     background-color: fuchsia;
 }
 
+#white-color-button {
+    background-color: white;
+}
 
 [data-tooltip]:before {
   bottom: 25%;
