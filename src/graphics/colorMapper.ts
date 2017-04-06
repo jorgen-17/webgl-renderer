@@ -45,7 +45,7 @@ export class ColorMapper
                 return new Color(0.0, 0.0, 1.0);
             case Colors.Indigo:
                 return new Color(0.294, 0.0, 0.510);
-            case Colors.Fuscia:
+            case Colors.Fuchsia:
                 return new Color(1.0, 0.0, 1.0);
             case Colors.White:
                 return new Color(1.0, 1.0, 1.0);
