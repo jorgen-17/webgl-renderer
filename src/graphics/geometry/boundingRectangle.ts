@@ -57,11 +57,4 @@ export class BoundingRectangle
     {
         return point1.x <= point2.x && point1.y <= point2.y;
     }
-
-    // returns whether or not point1 is topRight and point2 is bottomLeft
-    private isTopRightBottomLeft(point1: Point2d, point2: Point2d): boolean
-    {
-        return point1.x >= point2.x && point1.y >= point2.y;
-    }
-
 }

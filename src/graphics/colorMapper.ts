@@ -21,9 +21,9 @@ export class ColorMapper
             case "Indigo":
                 return Colors.Indigo;
             case "Fuscia":
-                return Colors.Fuscia;
+                return Colors.Fuchsia;
             case "White":
-                return Colors.Fuscia;
+                return Colors.White;
             default: throw Error(`could not find color named ${color}`);
         }
     }
