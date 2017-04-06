@@ -30,7 +30,7 @@ export class BoundingRectangle
             this.bottomRight = {x: point2.x, y: point1.y};
             this.bottomLeft = point1;
         }
-        else//only isTopRightBottomLeft possible, no need to test for it
+        else// only isTopRightBottomLeft possible, no need to test for it
         {
             this.topLeft =  {x: point2.x, y: point1.y};
             this.topRight = point1;
@@ -39,26 +39,26 @@ export class BoundingRectangle
         }
     }
 
-    //four possible pattterns for bounding rectangles based off of two points
-    //returns whether or not point1 is topLeft and point2 is bottomRight
+    // four possible pattterns for bounding rectangles based off of two points
+    // returns whether or not point1 is topLeft and point2 is bottomRight
     private isTopLeftBottomRight(point1: Point2d, point2: Point2d): boolean
     {
         return point1.x <= point2.x && point1.y >= point2.y;
     }
 
-    //returns whether or not point1 is bottomRight and point2 is topLeft
+    // returns whether or not point1 is bottomRight and point2 is topLeft
     private isBottomRightTopLeft(point1: Point2d, point2: Point2d): boolean
     {
         return point1.x >= point2.x && point1.y <= point2.y;
     }
 
-    //returns whether or not point1 is bottomLeft and point2 is topRight
+    // returns whether or not point1 is bottomLeft and point2 is topRight
     private isBottomLeftTopRight(point1: Point2d, point2: Point2d): boolean
     {
         return point1.x <= point2.x && point1.y <= point2.y;
     }
 
-    //returns whether or not point1 is topRight and point2 is bottomLeft
+    // returns whether or not point1 is topRight and point2 is bottomLeft
     private isTopRightBottomLeft(point1: Point2d, point2: Point2d): boolean
     {
         return point1.x >= point2.x && point1.y >= point2.y;
