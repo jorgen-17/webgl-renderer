@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <ColorModeButton idBase="cyan" toolTip="Cyan" mode="Cyan" clickHandler={shapeHandler}/>
                 <ColorModeButton idBase="blue" toolTip="Blue" mode="Blue" clickHandler={shapeHandler}/>
                 <ColorModeButton idBase="indigo" toolTip="Indigo" mode="Indigo" clickHandler={shapeHandler}/>
-                <ColorModeButton idBase="fuchsia" toolTip="Fuchsia" mode="Fuchsia" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="fuscia" toolTip="Fuscia" mode="Fuscia" clickHandler={shapeHandler}/>
+                <ColorModeButton idBase="white" toolTip="White" mode="White" clickHandler={shapeHandler}/>
             </ModeButtonBar>
             <ModeButtonBar
                 baseId="shape-mode"

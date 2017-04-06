@@ -22,6 +22,8 @@ export class ColorMapper
                 return Colors.Indigo;
             case "Fuscia":
                 return Colors.Fuchsia;
+            case "White":
+                return Colors.White;
             default: throw Error(`could not find color named ${color}`);
         }
     }
@@ -45,6 +47,8 @@ export class ColorMapper
                 return new Color(0.294, 0.0, 0.510);
             case Colors.Fuchsia:
                 return new Color(1.0, 0.0, 1.0);
+            case Colors.White:
+                return new Color(1.0, 1.0, 1.0);
             default: throw Error(`could not find color ${colorEnum}`);
         }
     }
