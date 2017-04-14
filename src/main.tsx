@@ -48,6 +48,7 @@ class App extends React.Component<{}, {}>
         this.canvas = document.getElementById("mycanvas") as HTMLCanvasElement;
         this.gl = ContextWrangler.getContext(this.canvas);
         this.renderer = new WebGLRenderer(this.canvas.width, this.canvas.height, this.gl);
+        this.renderer.color = "white";
 
         window.addEventListener("resize", () => { Callbacks.resizeCanvas(window, this.renderer, this.canvas); }, false);
         Callbacks.resizeCanvas(window, this.renderer, this.canvas);
