@@ -93,42 +93,41 @@ canvas {
     transition-delay: 25ms;
     background-image: url('./icons/drop.png');
     background-size: contain;
-    background-color: steelblue;
 }
 
-#red-color-button {
+.red-background {
     background-color: red;
 }
 
-#orange-color-button {
+.orange-background {
     background-color: orangered;
 }
 
-#yellow-color-button {
+.yellow-background {
     background-color: yellow;
 }
 
-#green-color-button {
+.green-background {
     background-color: lime;
 }
 
-#cyan-color-button {
+.cyan-background {
     background-color: cyan;
 }
 
-#blue-color-button {
+.blue-background {
     background-color: blue;
 }
 
-#indigo-color-button {
+.indigo-background {
     background-color: indigo;
 }
 
-#fuchsia-color-button {
+.fuchsia-background {
     background-color: fuchsia;
 }
 
-#white-color-button {
+.white-background {
     background-color: white;
 }
 

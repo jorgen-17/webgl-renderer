@@ -1,21 +1,29 @@
+export type RenderMode = "points" |
+                         "lines" |
+                         "lineStrip" |
+                         "lineLoop" |
+                         "triangles" |
+                         "triangleStrip" |
+                         "triangleFan";
+
 export class RenderModeMapper
 {
-    public static renderModeToWebGlConstant (mode: string, gl: WebGLRenderingContext): number
+    public static renderModeToWebGlConstant (mode: RenderMode, gl: WebGLRenderingContext): number
     {
         switch (mode) {
-            case "Points":
+            case "points":
                 return gl.POINTS;
-            case "Lines":
+            case "lines":
                 return gl.LINES;
-            case "LineStrip":
+            case "lineStrip":
                 return gl.LINE_STRIP;
-            case "LineLoop":
+            case "lineLoop":
                 return gl.LINE_LOOP;
-            case "Triangles":
+            case "triangles":
                 return gl.TRIANGLES;
-            case "TriangleStrip":
+            case "triangleStrip":
                 return gl.TRIANGLE_STRIP;
-            case "TriangleFan":
+            case "triangleFan":
                 return gl.TRIANGLE_FAN;
             default: throw Error(`could not find renderMode named ${mode}`);
         }

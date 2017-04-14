@@ -5,6 +5,7 @@ export interface IModeButtonBarProps extends React.Props<any>
     baseId: string;
     mainButtonTooltip: string;
     mainButtonBaseId: string;
+    mainButtonClass?: string;
 }
 
 export class ModeButtonBar extends React.Component<IModeButtonBarProps, {}>
@@ -16,7 +17,7 @@ export class ModeButtonBar extends React.Component<IModeButtonBarProps, {}>
                 {this.props.children}
                 <div
                     id={`${this.props.mainButtonBaseId}-button`}
-                    className="buttons"
+                    className={`buttons ${this.props.mainButtonClass || ""}`}
                     data-tooltip={this.props.mainButtonTooltip}>
                 </div>
             </div>

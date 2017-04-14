@@ -1,6 +1,7 @@
 import * as React from "react";
 
 export interface IModeButtonProps extends React.Props<any>
+
 {
     idBase: string;
     additionalClass?: string;
@@ -8,7 +9,6 @@ export interface IModeButtonProps extends React.Props<any>
     mode: string;
     clickHandler: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
-
 export class ModeButton extends React.Component<IModeButtonProps, {}>
 {
     public render()

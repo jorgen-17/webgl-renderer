@@ -1,21 +1,20 @@
 ﻿import { Shape } from "./geometry/shape";
 import { Float32Vector } from "../utils/vector";
-import { RenderModeMapper } from "./renderModeMapper";
+import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./geometry/shapeMode";
-import { ShapeModeMapper } from "./geometry/shapeModeMapper";
+import { Color, ColorMapper } from "./colorMapper";
+import { RGBColor } from "./rgbColor";
 
 export interface IWebGLRenderer
 {
     gl: WebGLRenderingContext;
-    glRenderMode: number;
-    shapeMode: ShapeMode;
-    drawingMode: DrawingMode;
+    color: Color;
+    shape: ShapeMode;
+    renderMode: RenderMode;
     draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
-    setRenderMode: (renderMode: String) => void;
-    setShape: (shape: String) => void;
     addXYPointToScene(x: number, y: number): void;
     addShapeToScene(shape: Shape): void;
 }
@@ -23,11 +22,13 @@ export interface IWebGLRenderer
 export class WebGLRenderer implements IWebGLRenderer
 {
     public gl: WebGLRenderingContext;
-    public glRenderMode: number;
-    public shapeMode: ShapeMode;
-    public drawingMode: DrawingMode;
-
-    public vertexShaderSource: string =
+    private glRenderMode: number;
+    private shapeMode: ShapeMode;
+    private renderModeStr: RenderMode;
+    private drawingMode: DrawingMode;
+    private colorStr: Color;
+    private rgbColor: RGBColor;
+    private vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
     "    attribute float a_pointSize;\n" +
     "    void main(void) {\n" +
@@ -35,29 +36,29 @@ export class WebGLRenderer implements IWebGLRenderer
     "        gl_PointSize = 10.0;\n" +
     "    }\n";
 
-    public fragmentShaderSource: string =
+    private fragmentShaderSource: string =
     "    precision mediump float;\n" +
     "    uniform vec4 u_fragColor;" +
     "    void main(void) {\n" +
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
-    "}\n";
+    "        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+    "    }\n";
 
-    public shaderProgram: WebGLShader;
-    public pointsVector: VertexBuffer;
-    public linesVector: VertexBuffer;
-    public lineStripVector: VertexBuffer;
-    public lineLoopVector: VertexBuffer;
-    public trianglesVector: VertexBuffer;
-    public triangleStripVector: VertexBuffer;
-    public triangleFanVector: VertexBuffer;
-    public vertexBuffers: Array<VertexBuffer>;
-    public shapeScene: Array<Shape>;
+    private shaderProgram: WebGLShader;
+    private pointsVector: VertexBuffer;
+    private linesVector: VertexBuffer;
+    private lineStripVector: VertexBuffer;
+    private lineLoopVector: VertexBuffer;
+    private trianglesVector: VertexBuffer;
+    private triangleStripVector: VertexBuffer;
+    private triangleFanVector: VertexBuffer;
+    private vertexBuffers: Array<VertexBuffer>;
+    private shapeScene: Array<Shape>;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext)
     {
         this.gl = gl;
         this.glRenderMode = this.gl.POINTS;
-        this.shapeMode = ShapeMode.Points;
+        this.shapeMode = "points";
         this.drawingMode = DrawingMode.Verticies;
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
@@ -84,16 +85,38 @@ export class WebGLRenderer implements IWebGLRenderer
         this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    public setRenderMode(renderMode: string): void
+    public get renderMode(): RenderMode
+    {
+        return this.renderModeStr;
+    }
+
+    public set renderMode(renderMode: RenderMode)
     {
         this.drawingMode = DrawingMode.Verticies;
+        this.renderModeStr = renderMode;
         this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
     }
 
-    public setShape(shape: string): void
+    public get shape(): ShapeMode
+    {
+        return this.shapeMode;
+    }
+
+    public set shape(newShapeMode: ShapeMode)
     {
         this.drawingMode = DrawingMode.Shapes;
-        this.shapeMode = ShapeModeMapper.shapeStringToEnum(shape);
+        this.shapeMode = newShapeMode;
+    }
+
+    public get color(): Color
+    {
+        return this.colorStr;
+    }
+
+    public set color(color: Color)
+    {
+        this.colorStr = color;
+        this.rgbColor = ColorMapper.colorToRGBColor(color);
     }
 
     public addXYPointToScene(x: number, y: number): void

@@ -9,7 +9,7 @@ export class ColorModeButton extends ModeButton
         return (
             <ModeButton
                 idBase={`${this.props.idBase}-color`}
-                additionalClass={`color-button ${this.props.additionalClass || ""}`}
+                additionalClass={`color-button ${this.props.idBase}-background ${this.props.additionalClass || ""}`}
                 toolTip={this.props.toolTip}
                 mode={this.props.mode}
                 clickHandler={this.props.clickHandler}

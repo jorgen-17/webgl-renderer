@@ -1,10 +1,7 @@
-export enum ShapeMode
-{
-    Points,
-    Lines,
-    Ellipses,
-    Triangles,
-    Rectangles,
-    Hexagons,
-    Octogons
-}
+export type ShapeMode = "points" |
+                        "lines" |
+                        "ellipses" |
+                        "triangles" |
+                        "rectangles" |
+                        "hexagons" |
+                        "octogons";

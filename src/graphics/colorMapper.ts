@@ -1,55 +1,39 @@
-import { Colors } from "./colorsEnum";
-import { Color } from "./color";
+import { RGBColor } from "./rgbColor";
+
+export type Color = "red" |
+                    "orange" |
+                    "yellow" |
+                    "green" |
+                    "cyan" |
+                    "blue" |
+                    "indigo" |
+                    "fuchsia" |
+                    "white";
 
 export class ColorMapper
 {
-    public static shapeStringToEnum (color: string): Colors
+    public static colorToRGBColor (color: Color): RGBColor
     {
         switch (color) {
-            case "Red":
-                return Colors.Red;
-            case "Orange":
-                return Colors.Orange;
-            case "Yellow":
-                return Colors.Yellow;
-            case "Green":
-                return Colors.Green;
-            case "Cyan":
-                return Colors.Cyan;
-            case "Blue":
-                return Colors.Blue;
-            case "Indigo":
-                return Colors.Indigo;
-            case "Fuscia":
-                return Colors.Fuchsia;
-            case "White":
-                return Colors.White;
-            default: throw Error(`could not find color named ${color}`);
-        }
-    }
-
-    public static colorEnumToColor (colorEnum: Colors): Color
-    {
-        switch (colorEnum) {
-            case Colors.Red:
-                return new Color(1.0, 0.0, 0.0);
-            case Colors.Orange:
-                return new Color(1.0, 0.271, 0.0);
-            case Colors.Yellow:
-                return new Color(1.0, 1.0, 0.0);
-            case Colors.Green:
-                return new Color(0.0, 1.0, 0.0);
-            case Colors.Cyan:
-                return new Color(0.0, 1.0, 1.0);
-            case Colors.Blue:
-                return new Color(0.0, 0.0, 1.0);
-            case Colors.Indigo:
-                return new Color(0.294, 0.0, 0.510);
-            case Colors.Fuchsia:
-                return new Color(1.0, 0.0, 1.0);
-            case Colors.White:
-                return new Color(1.0, 1.0, 1.0);
-            default: throw Error(`could not find color ${colorEnum}`);
+            case "red":
+                return new RGBColor(1.0, 0.0, 0.0);
+            case "orange":
+                return new RGBColor(1.0, 0.271, 0.0);
+            case "yellow":
+                return new RGBColor(1.0, 1.0, 0.0);
+            case "green":
+                return new RGBColor(0.0, 1.0, 0.0);
+            case "cyan":
+                return new RGBColor(0.0, 1.0, 1.0);
+            case "blue":
+                return new RGBColor(0.0, 0.0, 1.0);
+            case "indigo":
+                return new RGBColor(0.294, 0.0, 0.510);
+            case "fuchsia":
+                return new RGBColor(1.0, 0.0, 1.0);
+            case "white":
+                return new RGBColor(1.0, 1.0, 1.0);
+            default: throw Error(`could not find color ${color}`);
         }
     }
 }

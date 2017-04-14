@@ -1,4 +1,4 @@
-export class Color
+export class RGBColor
 {
     public red: number;
     public green: number;

@@ -13,3 +13,4 @@ on the upcoming versions I would like to add:
 5. Shape preview: so users can see what they are doawring as they are drawing it
 6. add icons for UI menu of drawing app to make it
 7. Point size/Line thickness
+8. Make enums conversion just the string union types

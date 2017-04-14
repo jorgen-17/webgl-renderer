@@ -7,7 +7,7 @@ import { Hexagon } from "./hexagon";
 import { Octogon } from "./octogon";
 import { Point3d } from "./point3d";
 import { Point2d } from "./point2d";
-import { Color } from "../color";
+import { RGBColor } from "../rgbColor";
 import { Precision } from "../precision";
 
 export class ShapeFactory
@@ -16,15 +16,15 @@ export class ShapeFactory
     {
         switch (shapeMode)
         {
-            case ShapeMode.Ellipses:
+            case "ellipses":
                 return this.createEllipse(point1, point2, gl);
-            case ShapeMode.Triangles:
+            case "triangles":
                 return this.createTriangle(point1, point2, gl);
-            case ShapeMode.Rectangles:
+            case "rectangles":
                 return this.createRectangle(point1, point2, gl);
-            case ShapeMode.Hexagons:
+            case "hexagons":
                 return this.createHexagon(point1, point2, gl);
-            case ShapeMode.Octogons:
+            case "octogons":
                 return this.createOctogon(point1, point2, gl);
             default:
                 throw Error(`cannot recognize shape type ${shapeMode}`);
@@ -60,7 +60,7 @@ export class ShapeFactory
         return new Octogon(point1, point2, gl);
     }
 
-    public static createPoint3d(x: number, y: number, z: number, pointSize: number, color: Color): Point3d
+    public static createPoint3d(x: number, y: number, z: number, pointSize: number, color: RGBColor): Point3d
     {
         return new Point3d(x, y, z, pointSize, color);
     }
