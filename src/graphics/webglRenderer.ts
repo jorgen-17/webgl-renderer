@@ -31,16 +31,20 @@ export class WebGLRenderer implements IWebGLRenderer
     private vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
     "    attribute float a_pointSize;\n" +
+    "    attribute vec4 a_color;\n" +
+    "    varying vec4 v_color;\n" +
     "    void main(void) {\n" +
     "        gl_Position = vec4(a_position, 1.0);\n" +
     "        gl_PointSize = 10.0;\n" +
+    "        v_color = a_color;\n" +
     "    }\n";
 
     private fragmentShaderSource: string =
     "    precision mediump float;\n" +
     "    uniform vec4 u_fragColor;" +
+    "    varying vec4 v_color;\n" +
     "    void main(void) {\n" +
-    "        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+    "        gl_FragColor = v_color;\n" +
     "    }\n";
 
     private shaderProgram: WebGLShader;
@@ -126,25 +130,25 @@ export class WebGLRenderer implements IWebGLRenderer
         switch (this.glRenderMode)
         {
             case this.gl.POINTS:
-                this.pointsVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.pointsVector.verticies, x, y);
                 break;
             case this.gl.LINES:
-                this.linesVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.linesVector.verticies, x, y);
                 break;
             case this.gl.LINE_STRIP:
-                this.lineStripVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.lineStripVector.verticies, x, y);
                 break;
             case this.gl.LINE_LOOP:
-                this.lineLoopVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.lineLoopVector.verticies, x, y);
                 break;
             case this.gl.TRIANGLES:
-                this.trianglesVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.trianglesVector.verticies, x, y);
                 break;
             case this.gl.TRIANGLE_STRIP:
-                this.triangleStripVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.triangleStripVector.verticies, x, y);
                 break;
             case this.gl.TRIANGLE_FAN:
-                this.triangleFanVector.verticies.addArray(new Float32Array([x, y]));
+                this.addXYAndColorToVertexBuffer(this.triangleFanVector.verticies, x, y);
                 break;
         }
     }
@@ -174,6 +178,30 @@ export class WebGLRenderer implements IWebGLRenderer
                 this.drawGlArray(shape.verticies, shape.glRenderMode);
             }
         }
+    }
+
+    // by default vertexSize = 2 because we use two floats per vertex...only rendering 2d for now
+    // colorSize = 3 because we use three floats to represent R, G, and B
+    private drawGlArray(vector: Float32Vector, renderMode: number, vertexSize: number = 2, colorSize: number = 3): void
+    {
+        let a_position = this.gl.getAttribLocation(this.shaderProgram, "a_position");
+        let a_color = this.gl.getAttribLocation(this.shaderProgram, "a_color");
+
+        const floatSize = vector.arr.BYTES_PER_ELEMENT;
+
+        let vertexBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, vector.arr, this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(a_position, vertexSize, this.gl.FLOAT, false, floatSize * 5, 0);
+        this.gl.enableVertexAttribArray(a_position);
+        this.gl.vertexAttribPointer(a_color, colorSize, this.gl.FLOAT, false, floatSize * 5, floatSize * 2);
+        this.gl.enableVertexAttribArray(a_color);
+        this.gl.drawArrays(renderMode, 0, (vector.size / (vertexSize + colorSize) ));
+    }
+
+    private addXYAndColorToVertexBuffer(vertexBuffer: Float32Vector, x: number, y: number)
+    {
+        vertexBuffer.addArray(new Float32Array([x, y, this.rgbColor.red, this.rgbColor.green, this.rgbColor.blue]));
     }
 
     private initShaders(): void
@@ -223,18 +251,5 @@ export class WebGLRenderer implements IWebGLRenderer
             return null;
         }
         return shader;
-    }
-
-    // by default use two floats per vertex, since we are only rendering 2d for now
-    private drawGlArray(vector: Float32Vector, renderMode: number, vertexSize: number = 2): void
-    {
-        let a_position = this.gl.getAttribLocation(this.shaderProgram, "a_position");
-
-        let vertexBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, vector.arr, this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(a_position, vertexSize, this.gl.FLOAT, false, 0, 0);
-        this.gl.enableVertexAttribArray(a_position);
-        this.gl.drawArrays(renderMode, 0, (vector.size / vertexSize));
     }
 }

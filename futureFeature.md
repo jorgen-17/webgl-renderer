@@ -5,7 +5,6 @@ on the upcoming versions I would like to add:
     * UI to switch colors
         1. pick your own color
         2. random color every 250 milliseconds
-    * color affects render mode shapes
     * colors apply to all other shapes
 4. make all shapes of same type render from one buffer
 5. Shape preview: so users can see what they are doawring as they are drawing it
