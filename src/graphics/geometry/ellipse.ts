@@ -4,10 +4,12 @@ import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "../../../src/graphics/geometry/midpoint";
 import { Precision } from "../precision";
+import { RGBColor } from "../rgbColor";
 
-export class Ellipse implements Shape
+export class Ellipse extends Shape
 {
     public verticies: Float32Vector;
+    public rgbColor: RGBColor;
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
@@ -18,6 +20,8 @@ export class Ellipse implements Shape
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext, precision: Precision)
     {
+        super();
+
         let boundingRect = new BoundingRectangle(point1, point2);
         this.horizontalRadius = (boundingRect.topRight.x - boundingRect.topLeft.x) / 2;
         this.verticalRadius = (boundingRect.topLeft.y - boundingRect.bottomLeft.y) / 2;
@@ -38,7 +42,7 @@ export class Ellipse implements Shape
         this.glRenderMode = gl.TRIANGLE_FAN;
     }
 
-    protected populateVerticies(boundingRect: BoundingRectangle): Float32Array
+    private populateVerticies(boundingRect: BoundingRectangle): Float32Array
     {
         // 2x the verticies one for x one for y
         let arr = new Float32Array(this.numberOfVerticies * 2);
@@ -77,7 +81,7 @@ export class Ellipse implements Shape
         return arr;
     }
 
-    protected getYDistanceFromCenterForX(x: number): number
+    private getYDistanceFromCenterForX(x: number): number
     {
         let verticalRadiusSquared = Math.pow(this.verticalRadius, 2);
         return Math.sqrt(verticalRadiusSquared -

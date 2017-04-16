@@ -11,7 +11,7 @@ export class LineMouseHandler implements IMouseHandler
     public mouseDownHandler(event: MouseEvent, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void
     {
         let point: Point2d = MouseHelper.clicksToPoints(event, canvas);
-        this.line = new Line(point, renderer.gl);
+        this.line = new Line(point, renderer.getRGBColor(), renderer.gl);
     }
 
     public mouseMoveHandler(mouseIsDown: boolean, event: MouseEvent, canvas: HTMLCanvasElement, renderer: IWebGLRenderer): void

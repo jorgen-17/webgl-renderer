@@ -3,16 +3,20 @@ import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { ThirdPoints } from "../../../src/graphics/geometry/midpoint";
+import { RGBColor } from "../rgbColor";
 
-export class Octogon implements Shape
+export class Octogon extends Shape
 {
     public verticies: Float32Vector;
+    public rgbColor: RGBColor;
     public vertexSize: number;
     public numberOfVerticies: number;
     public glRenderMode: number;
 
     constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
     {
+        super();
+
         let boundingRect = new BoundingRectangle(point1, point2);
         let vertexArray = this.populateVerticies(boundingRect);
         this.verticies = new Float32Vector(vertexArray);

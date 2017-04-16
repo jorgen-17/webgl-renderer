@@ -13,6 +13,7 @@ export interface IWebGLRenderer
     color: Color;
     shape: ShapeMode;
     renderMode: RenderMode;
+    getRGBColor: () => RGBColor;
     draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     addXYPointToScene(x: number, y: number): void;
@@ -121,6 +122,11 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         this.colorStr = color;
         this.rgbColor = ColorMapper.colorToRGBColor(color);
+    }
+
+    public getRGBColor(): RGBColor
+    {
+        return this.rgbColor;
     }
 
     public addXYPointToScene(x: number, y: number): void
