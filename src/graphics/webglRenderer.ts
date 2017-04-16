@@ -181,7 +181,7 @@ export class WebGLRenderer implements IWebGLRenderer
         {
             for (let shape of this.shapeScene)
             {
-                this.drawGlArray(shape.verticies, shape.glRenderMode);
+                this.drawGlArray(shape.verticies, shape.glRenderMode, shape.vertexSize, shape.colorSize);
             }
         }
     }

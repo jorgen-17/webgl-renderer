@@ -1,6 +1,7 @@
 import { Ellipse } from "../../../src/graphics/geometry/ellipse";
 import { ContextWrangler } from "../../../src/utils/contextWrangler";
 import { Precision } from "../../../src/graphics/precision";
+import { RGBColor } from "../../../src/graphics/rgbColor";
 
 describe("HorizontalEllipse ", () =>
 {
@@ -9,10 +10,11 @@ describe("HorizontalEllipse ", () =>
         let canvas = document.createElement("canvas");
         document.body.appendChild(canvas);
         const gl = ContextWrangler.getContext(canvas);
+        const color = new RGBColor(1.0, 1.0, 1.0);
 
         it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
         {
-            const circle = new Ellipse({x: 0.5, y: 0.5}, {x: 1.0, y: 1.0}, gl, Precision.Low);
+            const circle = new Ellipse({x: 0.5, y: 0.5}, {x: 1.0, y: 1.0}, color, gl, Precision.Low);
 
             expect(22).toEqual(circle.verticies.size);
 
@@ -42,7 +44,7 @@ describe("HorizontalEllipse ", () =>
 
         it("when constructed with point(0.0, 0.5) and point(1.0, 1.0) AKA its a real horizontal ellipse", () =>
         {
-            const horizontalEllipse = new Ellipse({x: 0.0, y: 0.5}, {x: 1.0, y: 1.0}, gl, Precision.Low);
+            const horizontalEllipse = new Ellipse({x: 0.0, y: 0.5}, {x: 1.0, y: 1.0}, color, gl, Precision.Low);
 
             expect(22).toEqual(horizontalEllipse.verticies.size);
 
@@ -72,7 +74,7 @@ describe("HorizontalEllipse ", () =>
 
         it("when constructed with point(0.0, 0.0) and point(0.5, 1.0) AKA its vertical ellipse", () =>
         {
-            const verticalEllipse = new Ellipse({x: 0.0, y: 0.0}, {x: 0.5, y: 1.0}, gl, Precision.Low);
+            const verticalEllipse = new Ellipse({x: 0.0, y: 0.0}, {x: 0.5, y: 1.0}, color, gl, Precision.Low);
 
             expect(22).toEqual(verticalEllipse.verticies.size);
 

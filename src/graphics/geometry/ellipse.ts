@@ -8,19 +8,14 @@ import { RGBColor } from "../rgbColor";
 
 export class Ellipse extends Shape
 {
-    public verticies: Float32Vector;
-    public rgbColor: RGBColor;
-    public vertexSize: number;
-    public numberOfVerticies: number;
-    public glRenderMode: number;
-    protected center: Point2d;
-    protected horizontalRadius: number;
-    protected verticalRadius: number;
+    private center: Point2d;
+    private horizontalRadius: number;
+    private verticalRadius: number;
     private numberOfInnerVerticies;
 
-    constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext, precision: Precision)
+    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext, precision: Precision)
     {
-        super();
+        super(rgbColor);
 
         let boundingRect = new BoundingRectangle(point1, point2);
         this.horizontalRadius = (boundingRect.topRight.x - boundingRect.topLeft.x) / 2;
@@ -38,7 +33,6 @@ export class Ellipse extends Shape
         this.center = Midpoint.between(boundingRect.topLeft, boundingRect.bottomRight);
         let vertexArray = this.populateVerticies(boundingRect);
         this.verticies = new Float32Vector(vertexArray);
-        this.vertexSize = 2;
         this.glRenderMode = gl.TRIANGLE_FAN;
     }
 

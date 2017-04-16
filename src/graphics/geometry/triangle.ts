@@ -7,22 +7,17 @@ import { RGBColor } from "../rgbColor";
 
 export class Triangle extends Shape
 {
-    public verticies: Float32Vector;
-    public rgbColor: RGBColor;
-    public vertexSize: number;
-    public numberOfVerticies: number;
-    public glRenderMode: number;
-
-    constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
+    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext)
     {
-        super();
+        super(rgbColor);
 
         const boundingRect = new BoundingRectangle(point1, point2);
         let topPoint = Midpoint.between(boundingRect.topLeft, boundingRect.topRight);
-        this.verticies = new Float32Vector(new Float32Array([boundingRect.bottomLeft.x, boundingRect.bottomLeft.y,
-            topPoint.x, topPoint.y,
-            boundingRect.bottomRight.x, boundingRect.bottomRight.y]));
-        this.vertexSize = 2;
+        let array = new Float32Array(15);
+        this.addXYAndColorToFloat32Array(array, 0, boundingRect.bottomLeft.x, boundingRect.bottomLeft.y);
+        this.addXYAndColorToFloat32Array(array, 5, topPoint.x, topPoint.y);
+        this.addXYAndColorToFloat32Array(array, 10, boundingRect.bottomRight.x, boundingRect.bottomRight.y);
+        this.verticies = new Float32Vector(array);
         this.numberOfVerticies = 3;
         this.glRenderMode = gl.TRIANGLES;
     }

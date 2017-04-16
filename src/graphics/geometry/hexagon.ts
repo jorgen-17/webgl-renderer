@@ -7,20 +7,13 @@ import { RGBColor } from "../rgbColor";
 
 export class Hexagon extends Shape
 {
-    public verticies: Float32Vector;
-    public rgbColor: RGBColor;
-    public vertexSize: number;
-    public numberOfVerticies: number;
-    public glRenderMode: number;
-
-    constructor(point1: Point2d, point2: Point2d, gl: WebGLRenderingContext)
+    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext)
     {
-        super();
+        super(rgbColor);
 
         let boundingRect = new BoundingRectangle(point1, point2);
         let vertexArray = this.populateVerticies(boundingRect);
         this.verticies = new Float32Vector(vertexArray);
-        this.vertexSize = 2;
         this.numberOfVerticies = 6;
         this.glRenderMode = gl.TRIANGLE_FAN;
     }
