@@ -20,23 +20,19 @@ export class Hexagon extends Shape
 
     private populateVerticies(boundingRect: BoundingRectangle): Float32Array
     {
-        let arr = new Float32Array(12);
+        let arr = new Float32Array(30);
+
         let { first, second } = ThirdPoints.between(boundingRect.topLeft, boundingRect.topRight);
-        arr[0] = first.x;
-        arr[1] = first.y;
-        arr[2] = second.x;
-        arr[3] = second.y;
+        this.addXYAndColorToFloat32Array(arr, 0, first.x, first.y);
+        this.addXYAndColorToFloat32Array(arr, 5, second.x, second.y);
         let mid = Midpoint.between(boundingRect.topRight, boundingRect.bottomRight);
-        arr[4] = mid.x;
-        arr[5] = mid.y;
+        this.addXYAndColorToFloat32Array(arr, 10, mid.x, mid.y);
         ({ first, second } = ThirdPoints.between(boundingRect.bottomRight, boundingRect.bottomLeft));
-        arr[6] = second.x;
-        arr[7] = second.y;
-        arr[8] = first.x;
-        arr[9] = first.y;
+        this.addXYAndColorToFloat32Array(arr, 15, second.x, second.y);
+        this.addXYAndColorToFloat32Array(arr, 20, first.x, first.y);
         mid = Midpoint.between(boundingRect.bottomLeft, boundingRect.topLeft);
-        arr[10] = mid.x;
-        arr[11] = mid.y;
+        this.addXYAndColorToFloat32Array(arr, 25, mid.x, mid.y);
+
         return arr;
     }
 }

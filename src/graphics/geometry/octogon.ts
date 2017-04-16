@@ -20,27 +20,21 @@ export class Octogon extends Shape
 
     private populateVerticies(boundingRect: BoundingRectangle): Float32Array
     {
-        let arr = new Float32Array(16);
+        let arr = new Float32Array(40);
+
         let { first, second } = ThirdPoints.between(boundingRect.topLeft, boundingRect.topRight);
-        arr[0] = first.x;
-        arr[1] = first.y;
-        arr[2] = second.x;
-        arr[3] = second.y;
+        this.addXYAndColorToFloat32Array(arr, 0, first.x, first.y);
+        this.addXYAndColorToFloat32Array(arr, 5, second.x, second.y);
         ({ first, second } = ThirdPoints.between(boundingRect.topRight, boundingRect.bottomRight));
-        arr[4] = second.x;
-        arr[5] = second.y;
-        arr[6] = first.x;
-        arr[7] = first.y;
+        this.addXYAndColorToFloat32Array(arr, 10, second.x, second.y);
+        this.addXYAndColorToFloat32Array(arr, 15, first.x, first.y);
         ({ first, second } = ThirdPoints.between(boundingRect.bottomRight, boundingRect.bottomLeft));
-        arr[8] = second.x;
-        arr[9] = second.y;
-        arr[10] = first.x;
-        arr[11] = first.y;
+        this.addXYAndColorToFloat32Array(arr, 20, second.x, second.y);
+        this.addXYAndColorToFloat32Array(arr, 25, first.x, first.y);
         ({ first, second } = ThirdPoints.between(boundingRect.bottomLeft, boundingRect.topLeft));
-        arr[12] = first.x;
-        arr[13] = first.y;
-        arr[14] = second.x;
-        arr[15] = second.y;
+        this.addXYAndColorToFloat32Array(arr, 30, first.x, first.y);
+        this.addXYAndColorToFloat32Array(arr, 35, second.x, second.y);
+
         return arr;
     }
 }
