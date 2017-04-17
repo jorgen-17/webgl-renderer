@@ -47,8 +47,9 @@ export class Ellipse extends Shape
 
         // manually insert first, middle, and last vertex
         this.addXYAndColorToFloat32Array(arr, 0, x, boundingRect.topLeft.y - this.verticalRadius);
-        // plus 5 because of first vertex and color added
-        let symmetryInsertionOffset = this.numberOfInnerVerticies + 5;
+        // insert at half the verticies. times 5 because each vertex takes 5 spaces (x,y,r,g, and b)
+        // and then add 5 since we already inserted the first vertex
+        let symmetryInsertionOffset = ((this.numberOfInnerVerticies / 2) * 5) + 5;
         let endPointX = boundingRect.topRight.x;
         let endPointY = boundingRect.topRight.y - this.verticalRadius;
         this.addXYAndColorToFloat32Array(arr, symmetryInsertionOffset, endPointX, endPointY);

@@ -15,7 +15,7 @@ module.exports = function(config) {
         { pattern: "src/graphics/**/*.ts" },
 
         // tests
-        { pattern: "spec/utils/vectorgraphics/geometry.spec.ts" },
+        { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/graphics/geometry/boundingRectangle.spec.ts" },
         { pattern: "spec/graphics/geometry/midpoint.spec.ts" },
         { pattern: "spec/graphics/geometry/ellipse.spec.ts" }
@@ -24,6 +24,12 @@ module.exports = function(config) {
 
     preprocessors: {
         "**/*.ts": ["karma-typescript"]
+    },
+
+    karmaTypescriptConfig: {
+        coverageOptions: {
+            instrumentation: true // set to false if you need to debug though source ts
+        }
     },
 
 
