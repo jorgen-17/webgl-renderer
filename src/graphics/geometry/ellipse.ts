@@ -38,38 +38,35 @@ export class Ellipse extends Shape
 
     private populateVerticies(boundingRect: BoundingRectangle): Float32Array
     {
-        // 2x the verticies one for x one for y
-        let arr = new Float32Array(this.numberOfVerticies * 2);
+        // 5x the verticies one for x, one for y, one for r, one for g, one for b
+        let arr = new Float32Array(this.numberOfVerticies * 5);
 
         let x = boundingRect.topLeft.x;
         // divide by 2 because of horizontal symmetry, subtract one because of duplicate vertex inserted at middle
         const xIncrement = (this.horizontalRadius * 2) / ((this.numberOfVerticies - 1) / 2);
 
         // manually insert first, middle, and last vertex
-        arr[0] = x;
-        arr[1] = boundingRect.topLeft.y - this.verticalRadius;
-        // plus 2 because of first vertex added
-        let symmetryInsertionOffset = this.numberOfInnerVerticies + 2;
-        arr[symmetryInsertionOffset] = boundingRect.topRight.x;
-        arr[symmetryInsertionOffset + 1] = boundingRect.topRight.y - this.verticalRadius;
-        arr[arr.length - 2] = boundingRect.topRight.x;
-        arr[arr.length - 1] = boundingRect.topRight.y - this.verticalRadius;
+        this.addXYAndColorToFloat32Array(arr, 0, x, boundingRect.topLeft.y - this.verticalRadius);
+        // plus 5 because of first vertex and color added
+        let symmetryInsertionOffset = this.numberOfInnerVerticies + 5;
+        let endPointX = boundingRect.topRight.x;
+        let endPointY = boundingRect.topRight.y - this.verticalRadius;
+        this.addXYAndColorToFloat32Array(arr, symmetryInsertionOffset, endPointX, endPointY);
+        this.addXYAndColorToFloat32Array(arr, arr.length - 5, endPointX, endPointY);
 
-        // start at 2  because already inserted at 0 and 1
-        let insertionIndex = 2;
+        // start at 2  because already inserted at 0 and 1 for x and y and then 2, 3, and 4 for r, g, and b
+        let insertionIndex = 5;
 
         // divide by half the number of verticies because horizontal symmetry
         for ( let i = 0; i < this.numberOfInnerVerticies / 2; i++)
         {
             x += xIncrement;
-
-            arr[insertionIndex] = x;
-            arr[insertionIndex + symmetryInsertionOffset] = x;
-            insertionIndex++;
             let y = this.getYDistanceFromCenterForX(x);
-            arr[insertionIndex] = y + this.center.y;
-            arr[insertionIndex + symmetryInsertionOffset] = + this.center.y - y;
-            insertionIndex++;
+
+            this.addXYAndColorToFloat32Array(arr, insertionIndex, x, y + this.center.y);
+            this.addXYAndColorToFloat32Array(arr, insertionIndex + symmetryInsertionOffset, x, this.center.y - y);
+
+            insertionIndex += 5;
         }
 
         return arr;
