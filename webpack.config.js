@@ -1,22 +1,42 @@
+const webpack = require('webpack');
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+const path = require('path');
+const env = require('yargs').argv.env;
+
+let libraryName = 'webgl-renderer';
+
+let plugins = [];
+let outputFile = "";
+
+if (env === 'build')
+{
+    plugins.push(new UglifyJsPlugin({ minimize: true }));
+    outputFile = libraryName + '.min.js';
+}
+else
+{
+    outputFile = libraryName + '.js';
+}
+
 module.exports = {
     entry: "./src/main.tsx",
     output: {
         filename: "index.js",
-        path: __dirname + "/dist"
+        path: __dirname + "/lib"
     },
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
 
     resolve: {
-        // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
+        modules: [path.resolve('./src')],
+        extensions: [".ts"]
     },
 
     module: {
         loaders: [
             // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-            { test: /\.tsx?$/, loader: "ts-loader" }
+            { test: /\.ts?$/, loader: "ts-loader" }
         ]
     },
 
