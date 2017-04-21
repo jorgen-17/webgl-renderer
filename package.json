@@ -4,8 +4,8 @@
     "description": "webGl renderering engine",
     "main": "index.html",
     "scripts": {
-        "build": "webpack --env build",
-        "dev": "webpack --progress --colors --watch --env dev",
+        "build": "./node_modules/.bin/webpack --env build",
+        "dev": "./node_modules/.bin/webpack --progress --colors --watch --env dev",
         "test": "./node_modules/.bin/karma start webglKarma.conf.js"
     },
     "dependencies": {
