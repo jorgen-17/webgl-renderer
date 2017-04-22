@@ -1,6 +1,6 @@
 {
     "name": "webgl-renderer",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "webGl renderering engine",
     "main": "index.html",
     "scripts": {
