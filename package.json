@@ -1,8 +1,8 @@
 {
     "name": "webgl-renderer",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "webGl renderering engine",
-    "main": "index.html",
+    "main": "lib/webgl-renderer.min.js",
     "scripts": {
         "build": "./node_modules/.bin/webpack --env build",
         "dev": "./node_modules/.bin/webpack --progress --colors --watch --env dev",
