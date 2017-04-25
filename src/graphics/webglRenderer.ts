@@ -4,16 +4,14 @@ import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./geometry/shapeMode";
-import { Color, ColorMapper } from "./colorMapper";
 import { RGBColor } from "./rgbColor";
 
 export interface IWebGLRenderer
 {
     gl: WebGLRenderingContext;
-    color: Color;
+    color: RGBColor;
     shape: ShapeMode;
     renderMode: RenderMode;
-    getRGBColor: () => RGBColor;
     draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     addXYPointToScene(x: number, y: number): void;
@@ -27,7 +25,6 @@ export class WebGLRenderer implements IWebGLRenderer
     private shapeMode: ShapeMode;
     private renderModeStr: RenderMode;
     private drawingMode: DrawingMode;
-    private colorStr: Color;
     private rgbColor: RGBColor;
     private vertexShaderSource: string =
     "    attribute vec3 a_position;\n" +
@@ -113,20 +110,14 @@ export class WebGLRenderer implements IWebGLRenderer
         this.shapeMode = newShapeMode;
     }
 
-    public get color(): Color
-    {
-        return this.colorStr;
-    }
-
-    public set color(color: Color)
-    {
-        this.colorStr = color;
-        this.rgbColor = ColorMapper.colorToRGBColor(color);
-    }
-
-    public getRGBColor(): RGBColor
+    public get color(): RGBColor
     {
         return this.rgbColor;
+    }
+
+    public set color(color: RGBColor)
+    {
+        this.rgbColor = color;
     }
 
     public addXYPointToScene(x: number, y: number): void
