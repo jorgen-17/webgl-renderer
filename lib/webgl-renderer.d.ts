@@ -72,14 +72,12 @@ declare module 'graphics/webglRenderer' {
     import { Shape } from 'graphics/geometry/shape';
     import { RenderMode } from 'graphics/renderModeMapper';
     import { ShapeMode } from 'graphics/geometry/shapeMode';
-    import { Color } from 'graphics/colorMapper';
     import { RGBColor } from 'graphics/rgbColor';
     export interface IWebGLRenderer {
         gl: WebGLRenderingContext;
-        color: Color;
+        color: RGBColor;
         shape: ShapeMode;
         renderMode: RenderMode;
-        getRGBColor: () => RGBColor;
         draw: () => void;
         setViewPortDimensions: (newWidth: number, newHeight: number) => void;
         addXYPointToScene(x: number, y: number): void;
@@ -92,7 +90,6 @@ declare module 'graphics/webglRenderer' {
         private shapeMode;
         private renderModeStr;
         private drawingMode;
-        private colorStr;
         private rgbColor;
         private vertexShaderSource;
         private fragmentShaderSource;
@@ -110,8 +107,7 @@ declare module 'graphics/webglRenderer' {
         setViewPortDimensions(newWidth: number, newHeight: number): void;
         renderMode: RenderMode;
         shape: ShapeMode;
-        color: Color;
-        getRGBColor(): RGBColor;
+        color: RGBColor;
         addXYPointToScene(x: number, y: number): void;
         addShapeToScene(shape: Shape): void;
         addShapesToScene(shape: Array<Shape>): void;
