@@ -84,6 +84,7 @@ declare module 'graphics/webglRenderer' {
         setViewPortDimensions: (newWidth: number, newHeight: number) => void;
         addXYPointToScene(x: number, y: number): void;
         addShapeToScene(shape: Shape): void;
+        addShapesToScene(shape: Array<Shape>): void;
     }
     export class WebGLRenderer implements IWebGLRenderer {
         gl: WebGLRenderingContext;
@@ -113,6 +114,7 @@ declare module 'graphics/webglRenderer' {
         getRGBColor(): RGBColor;
         addXYPointToScene(x: number, y: number): void;
         addShapeToScene(shape: Shape): void;
+        addShapesToScene(shape: Array<Shape>): void;
         draw(): void;
         private drawGlArray(vector, renderMode, vertexSize?, colorSize?);
         private addXYAndColorToVertexBuffer(vertexBuffer, x, y);

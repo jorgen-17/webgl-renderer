@@ -18,6 +18,7 @@ export interface IWebGLRenderer
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     addXYPointToScene(x: number, y: number): void;
     addShapeToScene(shape: Shape): void;
+    addShapesToScene(shape: Array<Shape>): void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer
@@ -162,6 +163,11 @@ export class WebGLRenderer implements IWebGLRenderer
     public addShapeToScene(shape: Shape): void
     {
         this.shapeScene.push(shape);
+    }
+
+    public addShapesToScene(shapes: Array<Shape>): void
+    {
+        Array.prototype.push.apply(this.shapeScene, shapes);
     }
 
     public draw()
