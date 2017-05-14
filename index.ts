@@ -7,6 +7,11 @@ import { Shape } from "./src/graphics/geometry/shape";
 import { ShapeFactory } from "./src/graphics/geometry/shapeFactory";
 import { ShapeMode } from "./src/graphics/geometry/shapeMode";
 import { RenderMode } from "./src/graphics/renderModeMapper";
+import { Ellipse } from "./src/graphics/geometry/ellipse";
+import { Rectangle } from "./src/graphics/geometry/rectangle";
+import { Hexagon } from "./src/graphics/geometry/hexagon";
+import { Octogon } from "./src/graphics/geometry/octogon";
+import { Triangle } from "./src/graphics/geometry/triangle";
 
 export
 {
@@ -18,7 +23,12 @@ export
     ShapeMode,
     RenderMode,
     Shape,
-    ShapeFactory,
+    Ellipse,
+    Triangle,
+    Rectangle,
+    Line,
+    Hexagon,
+    Octogon,
     Point2d,
-    Line
+    ShapeFactory,
 }

@@ -268,10 +268,14 @@ declare module 'webgl-renderer' {
     import { Color, ColorMapper } from 'graphics/colorMapper';
     import { Point2d } from 'graphics/geometry/point2d';
     import { Line } from 'graphics/geometry/line';
+    import { Ellipse } from "graphics/geometry/ellipse";
+    import { Rectangle } from "graphics/geometry/rectangle";
+    import { Hexagon } from "graphics/geometry/hexagon";
+    import { Octogon } from "graphics/geometry/octogon";
+    import { Triangle } from "graphics/geometry/triangle";
     import { Shape } from 'graphics/geometry/shape';
     import { ShapeFactory } from 'graphics/geometry/shapeFactory';
     import { ShapeMode } from 'graphics/geometry/shapeMode';
     import { RenderMode } from 'graphics/renderModeMapper';
-    export { IWebGLRenderer, WebGLRenderer, ContextWrangler, Color, ColorMapper, ShapeMode, RenderMode, Shape, ShapeFactory, Point2d, Line };
-
+    export { IWebGLRenderer, WebGLRenderer, ContextWrangler, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory };
 }
