@@ -12,12 +12,14 @@ import { Rectangle } from "./src/graphics/geometry/rectangle";
 import { Hexagon } from "./src/graphics/geometry/hexagon";
 import { Octogon } from "./src/graphics/geometry/octogon";
 import { Triangle } from "./src/graphics/geometry/triangle";
+import { RGBColor } from "./src/graphics/rgbColor";
 
 export
 {
     IWebGLRenderer,
     WebGLRenderer,
     ContextWrangler,
+    RGBColor,
     Color,
     ColorMapper,
     ShapeMode,

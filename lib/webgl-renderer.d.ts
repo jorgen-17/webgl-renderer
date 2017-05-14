@@ -265,6 +265,7 @@ declare module 'graphics/geometry/shapeFactory' {
 declare module 'webgl-renderer' {
     import { IWebGLRenderer, WebGLRenderer } from 'graphics/webglRenderer';
     import { ContextWrangler } from 'utils/contextWrangler';
+    import { RGBColor } from "graphics/rgbColor";
     import { Color, ColorMapper } from 'graphics/colorMapper';
     import { Point2d } from 'graphics/geometry/point2d';
     import { Line } from 'graphics/geometry/line';
@@ -277,5 +278,5 @@ declare module 'webgl-renderer' {
     import { ShapeFactory } from 'graphics/geometry/shapeFactory';
     import { ShapeMode } from 'graphics/geometry/shapeMode';
     import { RenderMode } from 'graphics/renderModeMapper';
-    export { IWebGLRenderer, WebGLRenderer, ContextWrangler, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory };
+    export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory };
 }
