@@ -5,7 +5,6 @@ import { Triangle } from "./triangle";
 import { Rectangle } from "./rectangle";
 import { Hexagon } from "./hexagon";
 import { Octogon } from "./octogon";
-import { Point3d } from "./point3d";
 import { Point2d } from "./point2d";
 import { RGBColor } from "../rgbColor";
 import { Precision } from "../precision";
