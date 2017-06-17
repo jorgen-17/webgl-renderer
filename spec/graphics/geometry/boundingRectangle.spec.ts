@@ -1,4 +1,4 @@
-import { BoundingRectangle } from "../../../src/graphics/geometry/boundingRectangle";
+import { BoundingRectangle } from "../../../src/graphics/shapes/boundingRectangle";
 
 describe("BoundingRectangle ", () =>
 {

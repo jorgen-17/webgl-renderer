@@ -17,7 +17,7 @@ declare module 'graphics/rgbColor' {
 	}
 
 }
-declare module 'graphics/geometry/shape' {
+declare module 'graphics/shapes/shape' {
 	import { Float32Vector } from 'utils/vector';
 	import { RGBColor } from 'graphics/rgbColor';
 	export abstract class Shape {
@@ -56,14 +56,14 @@ declare module 'graphics/drawingMode' {
 	}
 
 }
-declare module 'graphics/geometry/shapeMode' {
+declare module 'graphics/shapes/shapeMode' {
 	export type ShapeMode = "points" | "lines" | "ellipses" | "triangles" | "rectangles" | "hexagons" | "octogons";
 
 }
 declare module 'graphics/webglRenderer' {
-	import { Shape } from 'graphics/geometry/shape';
+	import { Shape } from 'graphics/shapes/shape';
 	import { RenderMode } from 'graphics/renderModeMapper';
-	import { ShapeMode } from 'graphics/geometry/shapeMode';
+	import { ShapeMode } from 'graphics/shapes/shapeMode';
 	import { RGBColor } from 'graphics/rgbColor';
 	export interface IWebGLRenderer {
 	    color: RGBColor;
@@ -130,16 +130,16 @@ declare module 'graphics/colorMapper' {
 	}
 
 }
-declare module 'graphics/geometry/point2d' {
+declare module 'graphics/shapes/point2d' {
 	export interface Point2d {
 	    x: number;
 	    y: number;
 	}
 
 }
-declare module 'graphics/geometry/line' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/line' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Line extends Shape {
 	    constructor(point: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext);
@@ -147,8 +147,8 @@ declare module 'graphics/geometry/line' {
 	}
 
 }
-declare module 'graphics/geometry/boundingRectangle' {
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/boundingRectangle' {
+	import { Point2d } from 'graphics/shapes/point2d';
 	export class BoundingRectangle {
 	    topLeft: Point2d;
 	    topRight: Point2d;
@@ -168,8 +168,8 @@ declare module 'utils/tuple' {
 	}
 
 }
-declare module 'graphics/geometry/midpoint' {
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/midpoint' {
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { Tuple } from 'utils/tuple';
 	export class Midpoint {
 	    static between(point1: Point2d, point2: Point2d): Point2d;
@@ -186,9 +186,9 @@ declare module 'graphics/precision' {
 	}
 
 }
-declare module 'graphics/geometry/ellipse' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/ellipse' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { Precision } from 'graphics/precision';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Ellipse extends Shape {
@@ -202,27 +202,27 @@ declare module 'graphics/geometry/ellipse' {
 	}
 
 }
-declare module 'graphics/geometry/triangle' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/triangle' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Triangle extends Shape {
 	    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext);
 	}
 
 }
-declare module 'graphics/geometry/rectangle' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/rectangle' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Rectangle extends Shape {
 	    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext);
 	}
 
 }
-declare module 'graphics/geometry/hexagon' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/hexagon' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Hexagon extends Shape {
 	    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext);
@@ -230,9 +230,9 @@ declare module 'graphics/geometry/hexagon' {
 	}
 
 }
-declare module 'graphics/geometry/octogon' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/octogon' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Octogon extends Shape {
 	    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext);
@@ -240,10 +240,10 @@ declare module 'graphics/geometry/octogon' {
 	}
 
 }
-declare module 'graphics/geometry/shapeFactory' {
-	import { Shape } from 'graphics/geometry/shape';
-	import { ShapeMode } from 'graphics/geometry/shapeMode';
-	import { Point2d } from 'graphics/geometry/point2d';
+declare module 'graphics/shapes/shapeFactory' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { ShapeMode } from 'graphics/shapes/shapeMode';
+	import { Point2d } from 'graphics/shapes/point2d';
 	import { RGBColor } from 'graphics/rgbColor';
 	export class ShapeFactory {
 	    static createShape(point1: Point2d, point2: Point2d, shapeMode: ShapeMode, rgbColor: RGBColor, gl: WebGLRenderingContext): Shape;
@@ -259,22 +259,22 @@ declare module 'webgl-renderer' {
 	import { IWebGLRenderer, WebGLRenderer } from 'graphics/webglRenderer';
 	import { ContextWrangler } from 'utils/contextWrangler';
 	import { Color, ColorMapper } from 'graphics/colorMapper';
-	import { Point2d } from 'graphics/geometry/point2d';
-	import { Line } from 'graphics/geometry/line';
-	import { Shape } from 'graphics/geometry/shape';
-	import { ShapeFactory } from 'graphics/geometry/shapeFactory';
-	import { ShapeMode } from 'graphics/geometry/shapeMode';
+	import { Point2d } from 'graphics/shapes/point2d';
+	import { Line } from 'graphics/shapes/line';
+	import { Shape } from 'graphics/shapes/shape';
+	import { ShapeFactory } from 'graphics/shapes/shapeFactory';
+	import { ShapeMode } from 'graphics/shapes/shapeMode';
 	import { RenderMode } from 'graphics/renderModeMapper';
-	import { Ellipse } from 'graphics/geometry/ellipse';
-	import { Rectangle } from 'graphics/geometry/rectangle';
-	import { Hexagon } from 'graphics/geometry/hexagon';
-	import { Octogon } from 'graphics/geometry/octogon';
-	import { Triangle } from 'graphics/geometry/triangle';
+	import { Ellipse } from 'graphics/shapes/ellipse';
+	import { Rectangle } from 'graphics/shapes/rectangle';
+	import { Hexagon } from 'graphics/shapes/hexagon';
+	import { Octogon } from 'graphics/shapes/octogon';
+	import { Triangle } from 'graphics/shapes/triangle';
 	import { RGBColor } from 'graphics/rgbColor';
 	export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory };
 
 }
-declare module 'graphics/geometry/point3d' {
+declare module 'graphics/shapes/point3d' {
 	import { RGBColor } from 'graphics/rgbColor';
 	export class Point3d {
 	    x: number;

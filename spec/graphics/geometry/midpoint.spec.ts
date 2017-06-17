@@ -1,4 +1,4 @@
-import { Midpoint, ThirdPoints } from "../../../src/graphics/geometry/midpoint";
+import { Midpoint, ThirdPoints } from "../../../src/graphics/shapes/midpoint";
 
 describe("Midpoint ", () =>
 {

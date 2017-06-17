@@ -2,7 +2,7 @@ import { Shape } from "./shape";
 import { Point2d } from "./point2d";
 import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
-import { ThirdPoints } from "../../../src/graphics/geometry/midpoint";
+import { ThirdPoints } from "../../../src/graphics/shapes/midpoint";
 import { RGBColor } from "../rgbColor";
 
 export class Octogon extends Shape

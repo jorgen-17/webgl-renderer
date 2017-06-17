@@ -1,17 +1,17 @@
 import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
 import { Color, ColorMapper } from "./src/graphics/colorMapper";
-import { Point2d } from "./src/graphics/geometry/point2d";
-import { Line } from "./src/graphics/geometry/line";
-import { Shape } from "./src/graphics/geometry/shape";
-import { ShapeFactory } from "./src/graphics/geometry/shapeFactory";
-import { ShapeMode } from "./src/graphics/geometry/shapeMode";
+import { Point2d } from "./src/graphics/shapes/point2d";
+import { Line } from "./src/graphics/shapes/line";
+import { Shape } from "./src/graphics/shapes/shape";
+import { ShapeFactory } from "./src/graphics/shapes/shapeFactory";
+import { ShapeMode } from "./src/graphics/shapes/shapeMode";
 import { RenderMode } from "./src/graphics/renderModeMapper";
-import { Ellipse } from "./src/graphics/geometry/ellipse";
-import { Rectangle } from "./src/graphics/geometry/rectangle";
-import { Hexagon } from "./src/graphics/geometry/hexagon";
-import { Octogon } from "./src/graphics/geometry/octogon";
-import { Triangle } from "./src/graphics/geometry/triangle";
+import { Ellipse } from "./src/graphics/shapes/ellipse";
+import { Rectangle } from "./src/graphics/shapes/rectangle";
+import { Hexagon } from "./src/graphics/shapes/hexagon";
+import { Octogon } from "./src/graphics/shapes/octogon";
+import { Triangle } from "./src/graphics/shapes/triangle";
 import { RGBColor } from "./src/graphics/rgbColor";
 
 export

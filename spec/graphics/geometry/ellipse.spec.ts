@@ -1,4 +1,4 @@
-import { Ellipse } from "../../../src/graphics/geometry/ellipse";
+import { Ellipse } from "../../../src/graphics/shapes/ellipse";
 import { ContextWrangler } from "../../../src/utils/contextWrangler";
 import { Precision } from "../../../src/graphics/precision";
 import { RGBColor } from "../../../src/graphics/rgbColor";
