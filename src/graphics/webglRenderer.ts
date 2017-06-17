@@ -18,6 +18,7 @@ export interface IWebGLRenderer
     addXYPointToScene(x: number, y: number): void;
     addShapeToScene(shape: Shape): void;
     addShapesToScene(shape: Array<Shape>): void;
+    removeAllShapes(): void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer
@@ -85,7 +86,7 @@ export class WebGLRenderer implements IWebGLRenderer
             this._trianglesVector,
             this._triangleStripVector,
             this._triangleFanVector];
-        this._shapeScene = [];
+        this._shapeScene = new Array<Shape>();
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -175,6 +176,12 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         Array.prototype.push.apply(this._shapeScene, shapes);
     }
+
+    public removeAllShapes(): void
+    {
+        this._shapeScene = new Array<Shape>();
+    }
+
 
     public draw()
     {

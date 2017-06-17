@@ -1,12 +1,12 @@
 {
     "name": "webgl-renderer",
-    "version": "0.3.8",
+    "version": "0.4.0",
     "description": "webGl renderering engine",
     "main": "lib/webgl-renderer.min.js",
     "scripts": {
         "build": "./node_modules/.bin/webpack --env build",
         "dev": "./node_modules/.bin/webpack --progress --colors --watch --env dev",
-        "test": "./node_modules/.bin/karma start webglKarma.conf.js"
+        "test": "./node_modules/.bin/karma start karma.conf.js"
     },
     "dependencies": {
     },
@@ -19,7 +19,7 @@
         "karma-firefox-launcher": "^1.0.0",
         "karma-typescript": "^3.0.0",
         "source-map-loader": "^0.1.6",
-        "typescript": "^2.3.2",
+        "typescript": "^2.3.4",
         "ts-loader": "^2.0.0",
         "tslint": "^4.5.1",
         "webpack": "^2.4.1",

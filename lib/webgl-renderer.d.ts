@@ -76,6 +76,7 @@ declare module 'graphics/webglRenderer' {
 	    addXYPointToScene(x: number, y: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shape: Array<Shape>): void;
+		removeAllShapes(): void;
 	}
 	export class WebGLRenderer implements IWebGLRenderer {
 	    gl: WebGLRenderingContext;
@@ -106,6 +107,7 @@ declare module 'graphics/webglRenderer' {
 	    addXYPointToScene(x: number, y: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shapes: Array<Shape>): void;
+		removeAllShapes(): void;
 	    draw(): void;
 	    private drawGlArray(vector, renderMode, vertexSize?, colorSize?);
 	    private addXYAndColorToVertexBuffer(vertexBuffer, x, y);
