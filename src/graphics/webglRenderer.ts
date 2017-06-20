@@ -41,12 +41,12 @@ export class WebGLRenderer implements IWebGLRenderer
     private _shapeScene: Array<Shape>;
     private _shaderProgram: WebGLShader;
     private _vertexShaderSource: string =
-    "    attribute vec3 a_position;\n" +
+    "    attribute vec4 a_position;\n" +
     "    attribute float a_pointSize;\n" +
     "    attribute vec4 a_color;\n" +
     "    varying vec4 v_color;\n" +
     "    void main(void) {\n" +
-    "        gl_Position = vec4(a_position, 1.0);\n" +
+    "        gl_Position = a_position;\n" +
     "        gl_PointSize = 10.0;\n" +
     "        v_color = a_color;\n" +
     "    }\n";
