@@ -5,6 +5,7 @@ import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shapes/shapeMode";
 import { RGBColor } from "./rgbColor";
+import { Matrix4 } from "../math/matrix4";
 
 export interface IWebGLRenderer
 {
@@ -30,6 +31,7 @@ export class WebGLRenderer implements IWebGLRenderer
     private _drawingMode: DrawingMode;
     private _backgroundColor: RGBColor;
     private _color: RGBColor;
+    private _viewMatrix: Matrix4;
     private _pointsVector: VertexBuffer;
     private _linesVector: VertexBuffer;
     private _lineStripVector: VertexBuffer;
@@ -44,9 +46,10 @@ export class WebGLRenderer implements IWebGLRenderer
     "    attribute vec4 a_position;\n" +
     "    attribute float a_pointSize;\n" +
     "    attribute vec4 a_color;\n" +
+    "    uniform mat4 u_viewMatrix;\n" +
     "    varying vec4 v_color;\n" +
     "    void main(void) {\n" +
-    "        gl_Position = a_position;\n" +
+    "        gl_Position = u_viewMatrix * a_position;\n" +
     "        gl_PointSize = 10.0;\n" +
     "        v_color = a_color;\n" +
     "    }\n";
@@ -60,8 +63,8 @@ export class WebGLRenderer implements IWebGLRenderer
     "    }\n";
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext,
-        backgroundColor: RGBColor = {red: 0.9, green: 0.9, blue: 0.9},
-        color: RGBColor = {red: 0.0, green: 0.0, blue: 0.0})
+        backgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 },
+        color: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 })
     {
         this.gl = gl;
         this._glRenderMode = this.gl.POINTS;
@@ -69,6 +72,8 @@ export class WebGLRenderer implements IWebGLRenderer
         this._drawingMode = DrawingMode.Verticies;
         this._backgroundColor = backgroundColor;
         this._color = color;
+        this._viewMatrix = new Matrix4();
+        this._viewMatrix.setLookAt(0, 0, 0, 0, 0, -1, 0, 1, 0);
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
         this._pointsVector = new VertexBuffer(this.gl.POINTS, new Float32Array(0), this.gl);
@@ -211,6 +216,12 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         let a_position = this.gl.getAttribLocation(this._shaderProgram, "a_position");
         let a_color = this.gl.getAttribLocation(this._shaderProgram, "a_color");
+        let u_viewMatrix = this.gl.getUniformLocation(this._shaderProgram, "u_viewMatrix");
+
+        if (!u_viewMatrix)
+        {
+            throw "cannot find uniform u_viewMatrix in shader program";
+        }
 
         const floatSize = vector.arr.BYTES_PER_ELEMENT;
 
@@ -221,7 +232,8 @@ export class WebGLRenderer implements IWebGLRenderer
         this.gl.enableVertexAttribArray(a_position);
         this.gl.vertexAttribPointer(a_color, colorSize, this.gl.FLOAT, false, floatSize * 5, floatSize * 2);
         this.gl.enableVertexAttribArray(a_color);
-        this.gl.drawArrays(renderMode, 0, (vector.size / (vertexSize + colorSize) ));
+        this.gl.uniformMatrix4fv(u_viewMatrix, false, this._viewMatrix.elements);
+        this.gl.drawArrays(renderMode, 0, (vector.size / (vertexSize + colorSize)));
     }
 
     private addXYAndColorToVertexBuffer(vertexBuffer: Float32Vector, x: number, y: number)
