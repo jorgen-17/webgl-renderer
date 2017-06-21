@@ -6,6 +6,8 @@ import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shapes/shapeMode";
 import { RGBColor } from "./rgbColor";
 import { Matrix4 } from "../math/matrix4";
+import { Camera } from "./camera";
+import { Point3d } from "./shapes/point3d";
 
 export interface IWebGLRenderer
 {
@@ -31,7 +33,7 @@ export class WebGLRenderer implements IWebGLRenderer
     private _drawingMode: DrawingMode;
     private _backgroundColor: RGBColor;
     private _color: RGBColor;
-    private _viewMatrix: Matrix4;
+    private _camera: Camera;
     private _pointsVector: VertexBuffer;
     private _linesVector: VertexBuffer;
     private _lineStripVector: VertexBuffer;
@@ -72,8 +74,12 @@ export class WebGLRenderer implements IWebGLRenderer
         this._drawingMode = DrawingMode.Verticies;
         this._backgroundColor = backgroundColor;
         this._color = color;
-        this._viewMatrix = new Matrix4();
-        this._viewMatrix.setLookAt(0, 0, 0, 0, 0, -1, 0, 1, 0);
+
+        let eyePosition = new Point3d(0, 0, 0);
+        let lookAtPoint = new Point3d(0, 0, -1);
+        let upPosition = new Point3d(0, 1, 0);
+        this._camera = new Camera(eyePosition, lookAtPoint, upPosition);
+
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
         this._pointsVector = new VertexBuffer(this.gl.POINTS, new Float32Array(0), this.gl);
@@ -232,7 +238,7 @@ export class WebGLRenderer implements IWebGLRenderer
         this.gl.enableVertexAttribArray(a_position);
         this.gl.vertexAttribPointer(a_color, colorSize, this.gl.FLOAT, false, floatSize * 5, floatSize * 2);
         this.gl.enableVertexAttribArray(a_color);
-        this.gl.uniformMatrix4fv(u_viewMatrix, false, this._viewMatrix.elements);
+        this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.getViewMatrix());
         this.gl.drawArrays(renderMode, 0, (vector.size / (vertexSize + colorSize)));
     }
 
