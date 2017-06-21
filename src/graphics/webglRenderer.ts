@@ -8,6 +8,7 @@ import { RGBColor } from "./rgbColor";
 import { Matrix4 } from "../math/matrix4";
 import { Camera } from "./camera";
 import { Point3d } from "./shapes/point3d";
+import { Axis } from "../utils/axis";
 
 export interface IWebGLRenderer
 {
@@ -16,12 +17,14 @@ export interface IWebGLRenderer
     gl: WebGLRenderingContext;
     shape: ShapeMode;
     renderMode: RenderMode;
+    camera: Camera;
     draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     addXYPointToScene(x: number, y: number): void;
     addShapeToScene(shape: Shape): void;
     addShapesToScene(shape: Array<Shape>): void;
     removeAllShapes(): void;
+    translateCamera(eyePosition: Point3d): void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer
@@ -33,7 +36,12 @@ export class WebGLRenderer implements IWebGLRenderer
     private _drawingMode: DrawingMode;
     private _backgroundColor: RGBColor;
     private _color: RGBColor;
+
+    private _eyePosition: Point3d;
+    private _lookAtPoint: Point3d;
+    private _upPosition: Point3d;
     private _camera: Camera;
+
     private _pointsVector: VertexBuffer;
     private _linesVector: VertexBuffer;
     private _lineStripVector: VertexBuffer;
@@ -75,10 +83,10 @@ export class WebGLRenderer implements IWebGLRenderer
         this._backgroundColor = backgroundColor;
         this._color = color;
 
-        let eyePosition = new Point3d(0, 0, 0);
-        let lookAtPoint = new Point3d(0, 0, -1);
-        let upPosition = new Point3d(0, 1, 0);
-        this._camera = new Camera(eyePosition, lookAtPoint, upPosition);
+        this._eyePosition = new Point3d(0, 0, 0);
+        this._lookAtPoint = new Point3d(0, 0, -1);
+        this._upPosition = new Point3d(0, 1, 0);
+        this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
 
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
@@ -148,6 +156,11 @@ export class WebGLRenderer implements IWebGLRenderer
         this._backgroundColor = backgroundColor;
     }
 
+    public get camera(): Camera
+    {
+        return this._camera;
+    }
+
     public addXYPointToScene(x: number, y: number): void
     {
         if (this._drawingMode !== DrawingMode.Verticies) { return; }
@@ -193,6 +206,14 @@ export class WebGLRenderer implements IWebGLRenderer
         this._shapeScene = new Array<Shape>();
     }
 
+    public translateCamera(eyePosition: Point3d): void
+    {
+        this._eyePosition = eyePosition;
+        this._lookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
+        this._upPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
+
+        this.camera.setCameraView(this._eyePosition, this._lookAtPoint, this._upPosition);
+    }
 
     public draw()
     {

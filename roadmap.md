@@ -9,3 +9,4 @@ On the upcoming versions I would like to add:
 5. Shape preview: so users can see what they are drawring as they are drawing it
 6. Point size/Line thickness
 7. Consider making ts matrix adaptation stand alone so others can use it
+8. Add rotate camera method to renderer

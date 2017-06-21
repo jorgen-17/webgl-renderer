@@ -18,4 +18,11 @@ export class Camera
     {
         return this._viewMatrix.elements;
     }
+
+    public setCameraView(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d): void
+    {
+        this._viewMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
+            lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
+            upPosition.x, upPosition.y, upPosition.z);
+    }
 }
