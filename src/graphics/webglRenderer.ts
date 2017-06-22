@@ -74,37 +74,19 @@ export class WebGLRenderer implements IWebGLRenderer
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext,
         backgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 },
-        color: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 })
+        color: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 }, camera: Camera | null = null)
     {
         this.gl = gl;
-        this._glRenderMode = this.gl.POINTS;
-        this._shapeMode = "points";
-        this._drawingMode = DrawingMode.Verticies;
-        this._backgroundColor = backgroundColor;
-        this._color = color;
 
-        this._eyePosition = new Point3d(0, 0, 0);
-        this._lookAtPoint = new Point3d(0, 0, -1);
-        this._upPosition = new Point3d(0, 1, 0);
-        this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+        this.initializeRenderingProperties(backgroundColor, color);
+
+        this.initializeCamera(camera);
 
         this.setViewPortDimensions(canvasWidth, canvasHeight);
         this.initShaders();
-        this._pointsVector = new VertexBuffer(this.gl.POINTS, new Float32Array(0), this.gl);
-        this._linesVector = new VertexBuffer(this.gl.LINES, new Float32Array(0), this.gl);
-        this._lineStripVector = new VertexBuffer(this.gl.LINE_STRIP, new Float32Array(0), this.gl);
-        this._lineLoopVector = new VertexBuffer(this.gl.LINE_LOOP, new Float32Array(0), this.gl);
-        this._trianglesVector = new VertexBuffer(this.gl.TRIANGLES, new Float32Array(0), this.gl);
-        this._triangleStripVector = new VertexBuffer(this.gl.TRIANGLE_STRIP, new Float32Array(0), this.gl);
-        this._triangleFanVector = new VertexBuffer(this.gl.TRIANGLE_FAN, new Float32Array(0), this.gl);
-        this._vertexBuffers = [
-            this._pointsVector,
-            this._linesVector,
-            this._lineStripVector,
-            this._lineLoopVector,
-            this._trianglesVector,
-            this._triangleStripVector,
-            this._triangleFanVector];
+
+        this.initializeVertexBuffers();
+
         this._shapeScene = new Array<Shape>();
     }
 
@@ -235,6 +217,52 @@ export class WebGLRenderer implements IWebGLRenderer
                 this.drawGlArray(shape.verticies, shape.glRenderMode, shape.vertexSize, shape.colorSize);
             }
         }
+    }
+
+    private initializeRenderingProperties(backgroundColor: RGBColor, color: RGBColor)
+    {
+        this._glRenderMode = this.gl.POINTS;
+        this._shapeMode = "points";
+        this._drawingMode = DrawingMode.Verticies;
+        this._backgroundColor = backgroundColor;
+        this._color = color;
+    }
+
+    private initializeCamera(camera: Camera | null)
+    {
+        if (camera)
+        {
+            this._eyePosition = camera.eyePosition;
+            this._lookAtPoint = camera.lookAtPoint;
+            this._upPosition = camera.upPosition;
+            this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+        }
+        else
+        {
+            this._eyePosition = new Point3d(0, 0, 0);
+            this._lookAtPoint = new Point3d(0, 0, -1);
+            this._upPosition = new Point3d(0, 1, 0);
+            this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+        }
+    }
+
+    private initializeVertexBuffers()
+    {
+        this._pointsVector = new VertexBuffer(this.gl.POINTS, new Float32Array(0), this.gl);
+        this._linesVector = new VertexBuffer(this.gl.LINES, new Float32Array(0), this.gl);
+        this._lineStripVector = new VertexBuffer(this.gl.LINE_STRIP, new Float32Array(0), this.gl);
+        this._lineLoopVector = new VertexBuffer(this.gl.LINE_LOOP, new Float32Array(0), this.gl);
+        this._trianglesVector = new VertexBuffer(this.gl.TRIANGLES, new Float32Array(0), this.gl);
+        this._triangleStripVector = new VertexBuffer(this.gl.TRIANGLE_STRIP, new Float32Array(0), this.gl);
+        this._triangleFanVector = new VertexBuffer(this.gl.TRIANGLE_FAN, new Float32Array(0), this.gl);
+        this._vertexBuffers = [
+            this._pointsVector,
+            this._linesVector,
+            this._lineStripVector,
+            this._lineLoopVector,
+            this._trianglesVector,
+            this._triangleStripVector,
+            this._triangleFanVector];
     }
 
     // by default vertexSize = 2 because we use two floats per vertex...only rendering 2d for now

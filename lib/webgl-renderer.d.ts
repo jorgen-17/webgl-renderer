@@ -125,8 +125,14 @@ declare module 'graphics/camera' {
 	import { Point3d } from 'graphics/shapes/point3d';
 	export class Camera {
 	    private _viewMatrix;
+	    private _eyePosition;
+	    private _lookAtPoint;
+	    private _upPosition;
 	    constructor(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d);
 	    getViewMatrix(): Float32Array;
+	    readonly eyePosition: Point3d;
+	    readonly lookAtPoint: Point3d;
+	    readonly upPosition: Point3d;
 	    setCameraView(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d): void;
 	}
 
@@ -185,7 +191,7 @@ declare module 'graphics/webglRenderer' {
 	    private _shaderProgram;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
-	    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext, backgroundColor?: RGBColor, color?: RGBColor);
+	    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext, backgroundColor?: RGBColor, color?: RGBColor, camera?: Camera | null);
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    renderMode: RenderMode;
 	    shape: ShapeMode;
@@ -198,6 +204,9 @@ declare module 'graphics/webglRenderer' {
 	    removeAllShapes(): void;
 	    translateCamera(eyePosition: Point3d): void;
 	    draw(): void;
+	    private initializeRenderingProperties(backgroundColor, color);
+	    private initializeCamera(camera);
+	    private initializeVertexBuffers();
 	    private drawGlArray(vector, renderMode, vertexSize?, colorSize?);
 	    private addXYAndColorToVertexBuffer(vertexBuffer, x, y);
 	    private initShaders();
@@ -361,6 +370,7 @@ declare module 'webgl-renderer' {
 	import { Triangle } from 'graphics/shapes/triangle';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
-	export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory, Camera };
+	import { Point3d } from 'graphics/shapes/point3d';
+	export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, Point3d, ShapeFactory, Camera };
 
 }

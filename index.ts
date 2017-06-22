@@ -14,6 +14,7 @@ import { Octogon } from "./src/graphics/shapes/octogon";
 import { Triangle } from "./src/graphics/shapes/triangle";
 import { RGBColor } from "./src/graphics/rgbColor";
 import { Camera } from "./src/graphics/camera";
+import { Point3d } from "./src/graphics/shapes/point3d";
 
 export
 {
@@ -33,6 +34,7 @@ export
     Hexagon,
     Octogon,
     Point2d,
+    Point3d,
     ShapeFactory,
     Camera
 };
