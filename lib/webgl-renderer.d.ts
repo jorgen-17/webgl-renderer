@@ -60,23 +60,106 @@ declare module 'graphics/shapes/shapeMode' {
 	export type ShapeMode = "points" | "lines" | "ellipses" | "triangles" | "rectangles" | "hexagons" | "octogons";
 
 }
+declare module 'math/vector3' {
+	export class Vector3 {
+	    elements: Float32Array;
+	    constructor(source?: Vector3 | null);
+	    normalize(): this;
+	}
+
+}
+declare module 'math/vector4' {
+	export class Vector4 {
+	    elements: Float32Array;
+	    constructor(source?: Vector4 | null);
+	}
+
+}
+declare module 'math/matrix4' {
+	import { Vector3 } from 'math/vector3';
+	import { Vector4 } from 'math/vector4';
+	export class Matrix4 {
+	    elements: Float32Array;
+	    constructor(source?: Matrix4 | null);
+	    setIdentity(): this;
+	    set(src: any): this | undefined;
+	    multiply(other: any): this;
+	    multiplyVector3(pos: any): Vector3;
+	    multiplyVector4(pos: any): Vector4;
+	    transpose(): this;
+	    setInverseOf(other: any): this;
+	    invert(): this;
+	    setOrtho(left: any, right: any, bottom: any, top: any, near: any, far: any): this;
+	    ortho(left: any, right: any, bottom: any, top: any, near: any, far: any): this;
+	    setFrustum(left: any, right: any, bottom: any, top: any, near: any, far: any): this;
+	    frustum(left: any, right: any, bottom: any, top: any, near: any, far: any): this;
+	    setPerspective(fovy: any, aspect: any, near: any, far: any): this;
+	    perspective(fovy: any, aspect: any, near: any, far: any): this;
+	    setScale(x: any, y: any, z: any): this;
+	    scale(x: any, y: any, z: any): this;
+	    setTranslate(x: any, y: any, z: any): this;
+	    translate(x: any, y: any, z: any): this;
+	    setRotate(angle: any, x: any, y: any, z: any): this;
+	    rotate(angle: any, x: any, y: any, z: any): this;
+	    setLookAt(eyeX: any, eyeY: any, eyeZ: any, centerX: any, centerY: any, centerZ: any, upX: any, upY: any, upZ: any): this;
+	    lookAt(eyeX: any, eyeY: any, eyeZ: any, centerX: any, centerY: any, centerZ: any, upX: any, upY: any, upZ: any): this;
+	    dropShadow(plane: any, light: any): this;
+	    dropShadowDirectionally(normX: any, normY: any, normZ: any, planeX: any, planeY: any, planeZ: any, lightX: any, lightY: any, lightZ: any): this;
+	    private concat(other);
+	}
+
+}
+declare module 'graphics/shapes/point3d' {
+	import { RGBColor } from 'graphics/rgbColor';
+	export class Point3d {
+	    x: number;
+	    y: number;
+	    z: number;
+	    pointSize: number;
+	    color: RGBColor;
+	    constructor(x: number, y: number, z: number, pointSize?: number, color?: RGBColor);
+	}
+
+}
+declare module 'graphics/camera' {
+	import { Point3d } from 'graphics/shapes/point3d';
+	export class Camera {
+	    private _viewMatrix;
+	    constructor(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d);
+	    getViewMatrix(): Float32Array;
+	    setCameraView(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d): void;
+	}
+
+}
+declare module 'utils/axis' {
+	export enum Axis {
+	    x = 0,
+	    y = 1,
+	    z = 2,
+	}
+
+}
 declare module 'graphics/webglRenderer' {
 	import { Shape } from 'graphics/shapes/shape';
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { ShapeMode } from 'graphics/shapes/shapeMode';
 	import { RGBColor } from 'graphics/rgbColor';
+	import { Camera } from 'graphics/camera';
+	import { Point3d } from 'graphics/shapes/point3d';
 	export interface IWebGLRenderer {
 	    color: RGBColor;
 	    backgroundColor: RGBColor;
 	    gl: WebGLRenderingContext;
 	    shape: ShapeMode;
 	    renderMode: RenderMode;
+	    camera: Camera;
 	    draw: () => void;
 	    setViewPortDimensions: (newWidth: number, newHeight: number) => void;
 	    addXYPointToScene(x: number, y: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shape: Array<Shape>): void;
-		removeAllShapes(): void;
+	    removeAllShapes(): void;
+	    translateCamera(eyePosition: Point3d): void;
 	}
 	export class WebGLRenderer implements IWebGLRenderer {
 	    gl: WebGLRenderingContext;
@@ -86,6 +169,10 @@ declare module 'graphics/webglRenderer' {
 	    private _drawingMode;
 	    private _backgroundColor;
 	    private _color;
+	    private _eyePosition;
+	    private _lookAtPoint;
+	    private _upPosition;
+	    private _camera;
 	    private _pointsVector;
 	    private _linesVector;
 	    private _lineStripVector;
@@ -104,10 +191,12 @@ declare module 'graphics/webglRenderer' {
 	    shape: ShapeMode;
 	    color: RGBColor;
 	    backgroundColor: RGBColor;
+	    readonly camera: Camera;
 	    addXYPointToScene(x: number, y: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shapes: Array<Shape>): void;
-		removeAllShapes(): void;
+	    removeAllShapes(): void;
+	    translateCamera(eyePosition: Point3d): void;
 	    draw(): void;
 	    private drawGlArray(vector, renderMode, vertexSize?, colorSize?);
 	    private addXYAndColorToVertexBuffer(vertexBuffer, x, y);
@@ -271,18 +360,7 @@ declare module 'webgl-renderer' {
 	import { Octogon } from 'graphics/shapes/octogon';
 	import { Triangle } from 'graphics/shapes/triangle';
 	import { RGBColor } from 'graphics/rgbColor';
-	export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory };
-
-}
-declare module 'graphics/shapes/point3d' {
-	import { RGBColor } from 'graphics/rgbColor';
-	export class Point3d {
-	    x: number;
-	    y: number;
-	    z: number;
-	    pointSize: number;
-	    color: RGBColor;
-	    constructor(x: number, y: number, z: number, pointSize: number, color: RGBColor);
-	}
+	import { Camera } from 'graphics/camera';
+	export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, ShapeFactory, Camera };
 
 }
