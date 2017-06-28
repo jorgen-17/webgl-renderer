@@ -164,7 +164,7 @@ declare module 'graphics/webglRenderer' {
 	    addXYPointToScene(x: number, y: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shape: Array<Shape>): void;
-	    removeAllShapes(): void;
+	    removeAllVeriticies(): void;
 	    translateCamera(eyePosition: Point3d): void;
 	}
 	export class WebGLRenderer implements IWebGLRenderer {
@@ -187,7 +187,6 @@ declare module 'graphics/webglRenderer' {
 	    private _triangleStripVector;
 	    private _triangleFanVector;
 	    private _vertexBuffers;
-	    private _shapeScene;
 	    private _shaderProgram;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
@@ -198,17 +197,16 @@ declare module 'graphics/webglRenderer' {
 	    color: RGBColor;
 	    backgroundColor: RGBColor;
 	    readonly camera: Camera;
-	    addXYPointToScene(x: number, y: number): void;
+	    addXYPointToScene(x: number, y: number, renderMode?: number, r?: number, g?: number, b?: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shapes: Array<Shape>): void;
-	    removeAllShapes(): void;
+	    removeAllVeriticies(): void;
 	    translateCamera(eyePosition: Point3d): void;
 	    draw(): void;
 	    private initializeRenderingProperties(backgroundColor, color);
 	    private initializeCamera(camera);
 	    private initializeVertexBuffers();
 	    private drawGlArray(vector, renderMode, vertexSize?, colorSize?);
-	    private addXYAndColorToVertexBuffer(vertexBuffer, x, y);
 	    private initShaders();
 	    private createShader(str, type);
 	}

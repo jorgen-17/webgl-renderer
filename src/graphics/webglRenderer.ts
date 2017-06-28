@@ -23,7 +23,7 @@ export interface IWebGLRenderer
     addXYPointToScene(x: number, y: number): void;
     addShapeToScene(shape: Shape): void;
     addShapesToScene(shape: Array<Shape>): void;
-    removeAllShapes(): void;
+    removeAllVeriticies(): void;
     translateCamera(eyePosition: Point3d): void;
 }
 
@@ -50,7 +50,6 @@ export class WebGLRenderer implements IWebGLRenderer
     private _triangleStripVector: VertexBuffer;
     private _triangleFanVector: VertexBuffer;
     private _vertexBuffers: Array<VertexBuffer>;
-    private _shapeScene: Array<Shape>;
     private _shaderProgram: WebGLShader;
     private _vertexShaderSource: string =
     "    attribute vec4 a_position;\n" +
@@ -86,8 +85,6 @@ export class WebGLRenderer implements IWebGLRenderer
         this.initShaders();
 
         this.initializeVertexBuffers();
-
-        this._shapeScene = new Array<Shape>();
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -143,49 +140,66 @@ export class WebGLRenderer implements IWebGLRenderer
         return this._camera;
     }
 
-    public addXYPointToScene(x: number, y: number): void
+    public addXYPointToScene(x: number, y: number, renderMode: number = this._glRenderMode,
+        r: number = this._color.red, g: number = this._color.green, b: number = this._color.blue): void
     {
-        if (this._drawingMode !== DrawingMode.Verticies) { return; }
-
-        switch (this._glRenderMode)
+        switch (renderMode)
         {
             case this.gl.POINTS:
-                this.addXYAndColorToVertexBuffer(this._pointsVector.verticies, x, y);
+                this._pointsVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
             case this.gl.LINES:
-                this.addXYAndColorToVertexBuffer(this._linesVector.verticies, x, y);
+                this._linesVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
             case this.gl.LINE_STRIP:
-                this.addXYAndColorToVertexBuffer(this._lineStripVector.verticies, x, y);
+                this._lineStripVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
             case this.gl.LINE_LOOP:
-                this.addXYAndColorToVertexBuffer(this._lineLoopVector.verticies, x, y);
+                this._lineLoopVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
             case this.gl.TRIANGLES:
-                this.addXYAndColorToVertexBuffer(this._trianglesVector.verticies, x, y);
+                this._trianglesVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
             case this.gl.TRIANGLE_STRIP:
-                this.addXYAndColorToVertexBuffer(this._triangleStripVector.verticies, x, y);
+                this._triangleStripVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
             case this.gl.TRIANGLE_FAN:
-                this.addXYAndColorToVertexBuffer(this._triangleFanVector.verticies, x, y);
+                this._triangleFanVector.verticies.addArray(new Float32Array([x, y, r, g, b]));
                 break;
         }
     }
 
     public addShapeToScene(shape: Shape): void
     {
-        this._shapeScene.push(shape);
+        let vertexIndex = 0;
+        for (let i = 0; i < shape.verticies.arr.length; i += 5) // todo put this in a settings file
+        {
+            const x = shape.verticies.arr[vertexIndex];
+            vertexIndex++;
+            const y = shape.verticies.arr[vertexIndex];
+            vertexIndex++;
+            const r = shape.verticies.arr[vertexIndex];
+            vertexIndex++;
+            const g = shape.verticies.arr[vertexIndex];
+            vertexIndex++;
+            const b = shape.verticies.arr[vertexIndex];
+            vertexIndex++;
+
+            this.addXYPointToScene(x, y, shape.glRenderMode, r, g, b);
+        }
     }
 
     public addShapesToScene(shapes: Array<Shape>): void
     {
-        Array.prototype.push.apply(this._shapeScene, shapes);
+        for (let shape of shapes)
+        {
+            this.addShapeToScene(shape);
+        }
     }
 
-    public removeAllShapes(): void
+    public removeAllVeriticies(): void
     {
-        this._shapeScene = new Array<Shape>();
+        this.initializeVertexBuffers();
     }
 
     public translateCamera(eyePosition: Point3d): void
@@ -207,14 +221,6 @@ export class WebGLRenderer implements IWebGLRenderer
             if (vb.verticies.size > 0)
             {
                 this.drawGlArray(vb.verticies, vb.renderMode);
-            }
-        }
-
-        if (this._shapeScene.length > 0)
-        {
-            for (let shape of this._shapeScene)
-            {
-                this.drawGlArray(shape.verticies, shape.glRenderMode, shape.vertexSize, shape.colorSize);
             }
         }
     }
@@ -289,11 +295,6 @@ export class WebGLRenderer implements IWebGLRenderer
         this.gl.enableVertexAttribArray(a_color);
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.getViewMatrix());
         this.gl.drawArrays(renderMode, 0, (vector.size / (vertexSize + colorSize)));
-    }
-
-    private addXYAndColorToVertexBuffer(vertexBuffer: Float32Vector, x: number, y: number)
-    {
-        vertexBuffer.addArray(new Float32Array([x, y, this._color.red, this._color.green, this._color.blue]));
     }
 
     private initShaders(): void
