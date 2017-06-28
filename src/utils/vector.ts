@@ -3,7 +3,7 @@ export class Float32Vector
     public arr: Float32Array;
     public size: number;
 
-    constructor(arr: Float32Array)
+    constructor(arr: Float32Array = new Float32Array(0))
     {
         this.arr = arr;
         this.size = arr.length;
