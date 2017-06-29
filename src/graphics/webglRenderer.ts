@@ -223,7 +223,7 @@ export class WebGLRenderer implements IWebGLRenderer
             {
                 if (verts.size > 0)
                 {
-                    this.drawGlArray(verts, vb.renderMode);
+                    this.drawGlArray(verts.getTrimmedArray(), vb.renderMode);
                 }
             }
         }
@@ -277,7 +277,7 @@ export class WebGLRenderer implements IWebGLRenderer
 
     // by default vertexSize = 2 because we use two floats per vertex...only rendering 2d for now
     // colorSize = 3 because we use three floats to represent R, G, and B
-    private drawGlArray(vector: Float32Vector, renderMode: number): void
+    private drawGlArray(arr: Float32Array, renderMode: number): void
     {
         let a_position = this.gl.getAttribLocation(this._shaderProgram, "a_position");
         let a_color = this.gl.getAttribLocation(this._shaderProgram, "a_color");
@@ -288,17 +288,17 @@ export class WebGLRenderer implements IWebGLRenderer
             throw "cannot find uniform u_viewMatrix in shader program";
         }
 
-        const floatSize = vector.arr.BYTES_PER_ELEMENT;
+        const floatSize = arr.BYTES_PER_ELEMENT;
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, vector.arr, this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(a_position, Settings.floatsPerPoint, this.gl.FLOAT, false, floatSize * 5, 0);
         this.gl.enableVertexAttribArray(a_position);
         this.gl.vertexAttribPointer(a_color, Settings.floatsPerColor, this.gl.FLOAT, false, floatSize * 5, floatSize * 2);
         this.gl.enableVertexAttribArray(a_color);
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.getViewMatrix());
-        this.gl.drawArrays(renderMode, 0, (vector.size / Settings.floatsPerVertex));
+        this.gl.drawArrays(renderMode, 0, (arr.length / Settings.floatsPerVertex));
     }
 
     private initShaders(): void

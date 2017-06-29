@@ -34,4 +34,9 @@ export class Float32Vector
         this.arr.set(arr, this.size);
         this.size = newSize;
     }
+
+    public getTrimmedArray()
+    {
+        return this.arr.slice(0, this.size);
+    }
 }

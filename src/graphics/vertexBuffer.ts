@@ -29,7 +29,7 @@ export class VertexBuffer
                 `we only accept verticies of ${Settings.floatsPerVertex} floats (x, y, r, g, b)`;
         }
 
-        if (this._topVertexVector.arr.length + vertex.length < Settings.vertexBufferFloatLimit)
+        if (this._topVertexVector.size + vertex.length < Settings.vertexBufferFloatLimit)
         {
             this._topVertexVector.addArray(vertex);
         }
