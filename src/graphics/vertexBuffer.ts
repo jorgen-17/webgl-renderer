@@ -12,6 +12,7 @@ export class VertexBuffer
         {
             this.renderMode = renderMode;
             this._topVertexVector = new Float32Vector();
+            this.verticiesStack = new Array<Float32Vector>();
             this.verticiesStack.push(this._topVertexVector);
         }
         else
