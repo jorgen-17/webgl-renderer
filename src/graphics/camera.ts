@@ -1,4 +1,3 @@
-import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { Point3d } from "./shapes/point3d";
 

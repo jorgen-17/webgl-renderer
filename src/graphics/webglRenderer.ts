@@ -5,10 +5,10 @@ import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shapes/shapeMode";
 import { RGBColor } from "./rgbColor";
-import { Matrix4 } from "../math/matrix4";
 import { Camera } from "./camera";
 import { Point3d } from "./shapes/point3d";
-import { Axis } from "../utils/axis";
+import { DrawingSettings } from "./drawingSettings";
+import { StringDictionary } from "../utils/dictionary";
 
 export interface IWebGLRenderer
 {
@@ -17,6 +17,7 @@ export interface IWebGLRenderer
     gl: WebGLRenderingContext;
     shape: ShapeMode;
     renderMode: RenderMode;
+    pointSize: number;
     camera: Camera;
     draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
@@ -34,14 +35,10 @@ export class WebGLRenderer implements IWebGLRenderer
     private _shapeMode: ShapeMode;
     private _renderModeStr: RenderMode;
     private _drawingMode: DrawingMode;
+    private _pointSize: number;
     private _backgroundColor: RGBColor;
     private _color: RGBColor;
-
-    private _eyePosition: Point3d;
-    private _lookAtPoint: Point3d;
-    private _upPosition: Point3d;
     private _camera: Camera;
-
     private _pointsVector: VertexBuffer;
     private _linesVector: VertexBuffer;
     private _lineStripVector: VertexBuffer;
@@ -54,13 +51,14 @@ export class WebGLRenderer implements IWebGLRenderer
     private _shaderProgram: WebGLShader;
     private _vertexShaderSource: string =
     "    attribute vec4 a_position;\n" +
-    "    attribute float a_pointSize;\n" +
     "    attribute vec4 a_color;\n" +
     "    uniform mat4 u_viewMatrix;\n" +
+    "    uniform float u_pointSize;\n" +
     "    varying vec4 v_color;\n" +
-    "    void main(void) {\n" +
+    "    void main(void)\n" +
+    "    {\n" +
     "        gl_Position = u_viewMatrix * a_position;\n" +
-    "        gl_PointSize = 10.0;\n" +
+    "        gl_PointSize = u_pointSize;\n" +
     "        v_color = a_color;\n" +
     "    }\n";
 
@@ -68,17 +66,17 @@ export class WebGLRenderer implements IWebGLRenderer
     "    precision mediump float;\n" +
     "    uniform vec4 u_fragColor;" +
     "    varying vec4 v_color;\n" +
-    "    void main(void) {\n" +
+    "    void main(void)\n" +
+    "    {\n" +
     "        gl_FragColor = v_color;\n" +
     "    }\n";
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext,
-        backgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 },
-        color: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 }, camera: Camera | null = null)
+        drawingSettings: DrawingSettings, camera: Camera | null = null)
     {
         this.gl = gl;
 
-        this.initializeRenderingProperties(backgroundColor, color);
+        this.initializeDrawingSettings(drawingSettings);
 
         this.initializeCamera(camera);
 
@@ -138,6 +136,16 @@ export class WebGLRenderer implements IWebGLRenderer
         this._backgroundColor = backgroundColor;
     }
 
+    public get pointSize(): number
+    {
+        return this._pointSize;
+    }
+
+    public set pointSize(value: number)
+    {
+        this._pointSize = value;
+    }
+
     public get camera(): Camera
     {
         return this._camera;
@@ -190,16 +198,17 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public translateCamera(eyePosition: Point3d): void
     {
-        this._eyePosition = eyePosition;
-        this._lookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
-        this._upPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
+        let newLookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
+        let newUpPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
 
-        this.camera.setCameraView(this._eyePosition, this._lookAtPoint, this._upPosition);
+        this.camera.setCameraView(eyePosition, newLookAtPoint, newUpPosition);
     }
 
     public draw()
     {
-        this.gl.clearColor(this._backgroundColor.red, this._backgroundColor.green, this._backgroundColor.blue, 1.0);
+        this.gl.clearColor(this._backgroundColor.red,
+            this._backgroundColor.green,
+            this._backgroundColor.blue, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
         for (let vb of this._vertexBuffers)
@@ -219,30 +228,29 @@ export class WebGLRenderer implements IWebGLRenderer
         }
     }
 
-    private initializeRenderingProperties(backgroundColor: RGBColor, color: RGBColor)
+    private initializeDrawingSettings(drawingSettings: DrawingSettings)
     {
-        this._glRenderMode = this.gl.POINTS;
-        this._shapeMode = "points";
-        this._drawingMode = DrawingMode.Verticies;
-        this._backgroundColor = backgroundColor;
-        this._color = color;
+        this._renderModeStr = "points";
+        this._glRenderMode = drawingSettings._glRenderMode || this.gl.POINTS;
+        this._shapeMode = drawingSettings._shapeMode || "points";
+        this._drawingMode = drawingSettings._drawingMode || DrawingMode.Verticies;
+        this._pointSize = drawingSettings._pointSize || 10;
+        this._backgroundColor = drawingSettings._backgroundColor || { red: 0.9, green: 0.9, blue: 0.9 };
+        this._color = drawingSettings._color || { red: 0.0, green: 0.0, blue: 0.0 };
     }
 
     private initializeCamera(camera: Camera | null)
     {
         if (camera)
         {
-            this._eyePosition = camera.eyePosition;
-            this._lookAtPoint = camera.lookAtPoint;
-            this._upPosition = camera.upPosition;
-            this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+            this._camera = camera;
         }
         else
         {
-            this._eyePosition = new Point3d(0, 0, 0);
-            this._lookAtPoint = new Point3d(0, 0, -1);
-            this._upPosition = new Point3d(0, 1, 0);
-            this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+            let eyePosition = new Point3d(0, 0, 0);
+            let lookAtPoint = new Point3d(0, 0, -1);
+            let upPosition = new Point3d(0, 1, 0);
+            this._camera = new Camera(eyePosition, lookAtPoint, upPosition);
         }
     }
 
@@ -255,26 +263,37 @@ export class WebGLRenderer implements IWebGLRenderer
         this._trianglesVector = new VertexBuffer(this.gl.TRIANGLES, new Float32Array(0), this.gl);
         this._triangleStripVector = new VertexBuffer(this.gl.TRIANGLE_STRIP, new Float32Array(0), this.gl);
         this._triangleFanVector = new VertexBuffer(this.gl.TRIANGLE_FAN, new Float32Array(0), this.gl);
-        this._vertexBuffers = [
+        this._vertexBuffers =
+        [
             this._pointsVector,
             this._linesVector,
             this._lineStripVector,
             this._lineLoopVector,
             this._trianglesVector,
             this._triangleStripVector,
-            this._triangleFanVector];
+            this._triangleFanVector
+        ];
     }
 
-    // by default vertexSize = 2 because we use two floats per vertex...only rendering 2d for now
-    // colorSize = 3 because we use three floats to represent R, G, and B
     private drawGlArray(vector: Float32Vector, renderMode: number, vertexSize: number = 2, colorSize: number = 3): void
     {
-        let a_position = this.gl.getAttribLocation(this._shaderProgram, "a_position");
-        let a_color = this.gl.getAttribLocation(this._shaderProgram, "a_color");
-        let u_viewMatrix = this.gl.getUniformLocation(this._shaderProgram, "u_viewMatrix");
+        const pointSizeUniformName = "u_pointSize";
+        const viewMatrixUniformName = "u_viewMatrix";
 
-        if (!u_viewMatrix)
+        const a_position = this.gl.getAttribLocation(this._shaderProgram, "a_position");
+        const a_color = this.gl.getAttribLocation(this._shaderProgram, "a_color");
+        const u_pointSize = this.gl.getUniformLocation(this._shaderProgram, pointSizeUniformName);
+        const u_viewMatrix = this.gl.getUniformLocation(this._shaderProgram, viewMatrixUniformName);
+
+
+        if (!u_pointSize || !u_viewMatrix)
         {
+            const uniformsMap: StringDictionary<WebGLUniformLocation | null> =
+            {
+                pointSizeUniformName: u_pointSize,
+                viewMatrixUniformName: u_viewMatrix
+            };
+            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw "cannot find uniform u_viewMatrix in shader program";
         }
 
@@ -293,16 +312,15 @@ export class WebGLRenderer implements IWebGLRenderer
 
     private addXYAndColorToVertexBuffer(vertexBuffer: Float32Vector, x: number, y: number)
     {
-        vertexBuffer.addArray(new Float32Array([x, y, this._color.red, this._color.green, this._color.blue]));
+        vertexBuffer.addArray(new Float32Array([x, y, this._color.red,
+            this._color.green, this._color.blue]));
     }
 
     private initShaders(): void
     {
-        // load and compile the fragment and vertex shader
         const fragmentShader = this.createShader(this._fragmentShaderSource, "fragment");
         const vertexShader = this.createShader(this._vertexShaderSource, "vertex");
 
-        // link them together into a new program
         let shader: WebGLProgram | null = this.gl.createProgram();
         if (shader === null)
         {
@@ -343,5 +361,23 @@ export class WebGLRenderer implements IWebGLRenderer
             return null;
         }
         return shader;
+    }
+
+    private createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string
+    {
+        let result = `cannot find uniform in shader program`;
+
+
+        result += `Potential culprits:`;
+
+        for (let key in uniformsMap)
+        {
+            if (uniformsMap.hasOwnProperty(key))
+            {
+                result += `\t${key}: ${uniformsMap[key]}`;
+            }
+        }
+
+        return result;
     }
 }
