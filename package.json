@@ -1,6 +1,6 @@
 {
     "name": "webgl-renderer",
-    "version": "0.5.2",
+    "version": "0.5.9",
     "description": "webGl renderering engine",
     "main": "lib/webgl-renderer.min.js",
     "scripts": {
@@ -12,9 +12,9 @@
     "dependencies": {
     },
     "devDependencies": {
-        "@types/jasmine": "^2.5.35",
+        "@types/jasmine": "^2.5.53",
         "dts-generator": "^2.1.0",
-        "jasmine-core": "^2.4.1",
+        "jasmine-core": "^2.6.4",
         "karma": "^1.5.0",
         "karma-jasmine": "^1.1.0",
         "karma-chrome-launcher": "^2.0.0",

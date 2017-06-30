@@ -1,20 +1,42 @@
 import { Float32Vector } from "../utils/vector";
+import { Settings } from "../settings";
 
 export class VertexBuffer
 {
     public renderMode: number;
-    public verticies: Float32Vector;
-
-    constructor(renderMode: number, vertexArray: Float32Array, gl: WebGLRenderingContext)
+    public verticiesStack: Array<Float32Vector>;
+    private _topVertexVector: Float32Vector;
+    constructor(renderMode: number, gl: WebGLRenderingContext)
     {
         if (this.renderModeValidator(renderMode, gl))
         {
             this.renderMode = renderMode;
-            this.verticies = new Float32Vector(vertexArray);
+            this._topVertexVector = new Float32Vector();
+            this.verticiesStack = new Array<Float32Vector>();
+            this.verticiesStack.push(this._topVertexVector);
         }
         else
         {
             throw Error("Cannot initialize vertex buffer of unrecognized gl render mode");
+        }
+    }
+
+    public addVertex(vertex: Float32Array)
+    {
+        if (vertex.length !== Settings.floatsPerVertex)
+        {
+            throw `cannot add vertex repersented by ${vertex.length} floats, ` +
+                `we only accept verticies of ${Settings.floatsPerVertex} floats (x, y, r, g, b)`;
+        }
+
+        if (this._topVertexVector.size + vertex.length < Settings.vertexBufferFloatLimit)
+        {
+            this._topVertexVector.addArray(vertex);
+        }
+        else
+        {
+            this._topVertexVector = new Float32Vector(vertex);
+            this.verticiesStack.push(this._topVertexVector);
         }
     }
 

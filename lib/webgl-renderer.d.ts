@@ -1,10 +1,32 @@
+declare module 'graphics/shapes/point2d' {
+	export interface Point2d {
+	    x: number;
+	    y: number;
+	}
+
+}
+declare module 'graphics/shapes/boundingRectangle' {
+	import { Point2d } from 'graphics/shapes/point2d';
+	export class BoundingRectangle {
+	    topLeft: Point2d;
+	    topRight: Point2d;
+	    bottomRight: Point2d;
+	    bottomLeft: Point2d;
+	    constructor(point1: Point2d, point2: Point2d);
+	    private isTopLeftBottomRight(point1, point2);
+	    private isBottomRightTopLeft(point1, point2);
+	    private isBottomLeftTopRight(point1, point2);
+	}
+
+}
 declare module 'utils/vector' {
 	export class Float32Vector {
 	    arr: Float32Array;
 	    size: number;
-	    constructor(arr: Float32Array);
+	    constructor(arr?: Float32Array);
 	    addNumber(number: number): void;
 	    addArray(arr: Float32Array | Array<number>): void;
+	    getTrimmedArray(): Float32Array;
 	}
 
 }
@@ -32,6 +54,53 @@ declare module 'graphics/shapes/shape' {
 	}
 
 }
+declare module 'utils/tuple' {
+	export interface Tuple<T1, T2> {
+	    first: T1;
+	    second: T2;
+	}
+
+}
+declare module 'graphics/shapes/midpoint' {
+	import { Point2d } from 'graphics/shapes/point2d';
+	import { Tuple } from 'utils/tuple';
+	export class Midpoint {
+	    static between(point1: Point2d, point2: Point2d): Point2d;
+	}
+	export class ThirdPoints {
+	    static between(point1: Point2d, point2: Point2d): Tuple<Point2d, Point2d>;
+	}
+
+}
+declare module 'graphics/precision' {
+	export enum Precision {
+	    Low = 0,
+	    High = 1,
+	}
+
+}
+declare module 'graphics/shapes/ellipse' {
+	import { Shape } from 'graphics/shapes/shape';
+	import { Point2d } from 'graphics/shapes/point2d';
+	import { Precision } from 'graphics/precision';
+	import { RGBColor } from 'graphics/rgbColor';
+	export class Ellipse extends Shape {
+	    private center;
+	    private horizontalRadius;
+	    private verticalRadius;
+	    private numberOfInnerVerticies;
+	    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext, precision: Precision);
+	    private populateVerticies(boundingRect);
+	    private getYDistanceFromCenterForX(x);
+	}
+
+}
+declare module 'utils/contextWrangler' {
+	export class ContextWrangler {
+	    static getContext(canvas: HTMLCanvasElement): WebGLRenderingContext;
+	}
+
+}
 declare module 'graphics/renderModeMapper' {
 	export type RenderMode = "points" | "lines" | "lineStrip" | "lineLoop" | "triangles" | "triangleStrip" | "triangleFan";
 	export class RenderModeMapper {
@@ -39,12 +108,24 @@ declare module 'graphics/renderModeMapper' {
 	}
 
 }
+declare module 'settings' {
+	export let Settings: {
+	    floatsPerPoint: number;
+	    floatsPerColor: number;
+	    floatsPerVertex: number;
+	    vertexBufferFloatLimit: number;
+	    defaultAlpha: number;
+	};
+
+}
 declare module 'graphics/vertexBuffer' {
 	import { Float32Vector } from 'utils/vector';
 	export class VertexBuffer {
 	    renderMode: number;
-	    verticies: Float32Vector;
-	    constructor(renderMode: number, vertexArray: Float32Array, gl: WebGLRenderingContext);
+	    verticiesStack: Array<Float32Vector>;
+	    private _topVertexVector;
+	    constructor(renderMode: number, gl: WebGLRenderingContext);
+	    addVertex(vertex: Float32Array): void;
 	    private renderModeValidator(renderMode, gl);
 	}
 
@@ -137,11 +218,28 @@ declare module 'graphics/camera' {
 	}
 
 }
-declare module 'utils/axis' {
-	export enum Axis {
-	    x = 0,
-	    y = 1,
-	    z = 2,
+declare module 'graphics/drawingSettings' {
+	import { ShapeMode } from 'graphics/shapes/shapeMode';
+	import { RenderMode } from 'graphics/renderModeMapper';
+	import { DrawingMode } from 'graphics/drawingMode';
+	import { RGBColor } from 'graphics/rgbColor';
+	export interface DrawingSettings {
+	    _glRenderMode?: number;
+	    _shapeMode?: ShapeMode;
+	    _renderModeStr?: RenderMode;
+	    _drawingMode?: DrawingMode;
+	    _pointSize?: number;
+	    _backgroundColor?: RGBColor;
+	    _color?: RGBColor;
+	}
+
+}
+declare module 'utils/dictionary' {
+	export interface StringDictionary<T> {
+	    [key: string]: T;
+	}
+	export interface NumberDictionary<T> {
+	    [key: number]: T;
 	}
 
 }
@@ -152,19 +250,21 @@ declare module 'graphics/webglRenderer' {
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { Point3d } from 'graphics/shapes/point3d';
+	import { DrawingSettings } from 'graphics/drawingSettings';
 	export interface IWebGLRenderer {
 	    color: RGBColor;
 	    backgroundColor: RGBColor;
 	    gl: WebGLRenderingContext;
 	    shape: ShapeMode;
 	    renderMode: RenderMode;
+	    pointSize: number;
 	    camera: Camera;
 	    draw: () => void;
 	    setViewPortDimensions: (newWidth: number, newHeight: number) => void;
 	    addXYPointToScene(x: number, y: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shape: Array<Shape>): void;
-	    removeAllShapes(): void;
+	    removeAllVeriticies(): void;
 	    translateCamera(eyePosition: Point3d): void;
 	}
 	export class WebGLRenderer implements IWebGLRenderer {
@@ -173,11 +273,9 @@ declare module 'graphics/webglRenderer' {
 	    private _shapeMode;
 	    private _renderModeStr;
 	    private _drawingMode;
+	    private _pointSize;
 	    private _backgroundColor;
 	    private _color;
-	    private _eyePosition;
-	    private _lookAtPoint;
-	    private _upPosition;
 	    private _camera;
 	    private _pointsVector;
 	    private _linesVector;
@@ -187,36 +285,31 @@ declare module 'graphics/webglRenderer' {
 	    private _triangleStripVector;
 	    private _triangleFanVector;
 	    private _vertexBuffers;
-	    private _shapeScene;
 	    private _shaderProgram;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
-	    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext, backgroundColor?: RGBColor, color?: RGBColor, camera?: Camera | null);
+	    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext, drawingSettings: DrawingSettings, camera?: Camera | null);
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    renderMode: RenderMode;
 	    shape: ShapeMode;
 	    color: RGBColor;
 	    backgroundColor: RGBColor;
+	    pointSize: number;
 	    readonly camera: Camera;
-	    addXYPointToScene(x: number, y: number): void;
+	    addXYPointToScene(x: number, y: number, renderMode?: number, r?: number, g?: number, b?: number): void;
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shapes: Array<Shape>): void;
-	    removeAllShapes(): void;
+	    removeAllVeriticies(): void;
 	    translateCamera(eyePosition: Point3d): void;
 	    draw(): void;
-	    private initializeRenderingProperties(backgroundColor, color);
+	    private initializeDrawingSettings(drawingSettings);
 	    private initializeCamera(camera);
 	    private initializeVertexBuffers();
-	    private drawGlArray(vector, renderMode, vertexSize?, colorSize?);
+	    private drawGlArray(arr, renderMode);
 	    private addXYAndColorToVertexBuffer(vertexBuffer, x, y);
 	    private initShaders();
 	    private createShader(str, type);
-	}
-
-}
-declare module 'utils/contextWrangler' {
-	export class ContextWrangler {
-	    static getContext(canvas: HTMLCanvasElement): WebGLRenderingContext;
+	    private createUniforNotFoundErrorMessage(uniformsMap);
 	}
 
 }
@@ -228,13 +321,6 @@ declare module 'graphics/colorMapper' {
 	}
 
 }
-declare module 'graphics/shapes/point2d' {
-	export interface Point2d {
-	    x: number;
-	    y: number;
-	}
-
-}
 declare module 'graphics/shapes/line' {
 	import { Shape } from 'graphics/shapes/shape';
 	import { Point2d } from 'graphics/shapes/point2d';
@@ -242,61 +328,6 @@ declare module 'graphics/shapes/line' {
 	export class Line extends Shape {
 	    constructor(point: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext);
 	    addVertex(vertex: Point2d): void;
-	}
-
-}
-declare module 'graphics/shapes/boundingRectangle' {
-	import { Point2d } from 'graphics/shapes/point2d';
-	export class BoundingRectangle {
-	    topLeft: Point2d;
-	    topRight: Point2d;
-	    bottomRight: Point2d;
-	    bottomLeft: Point2d;
-	    constructor(point1: Point2d, point2: Point2d);
-	    private isTopLeftBottomRight(point1, point2);
-	    private isBottomRightTopLeft(point1, point2);
-	    private isBottomLeftTopRight(point1, point2);
-	}
-
-}
-declare module 'utils/tuple' {
-	export interface Tuple<T1, T2> {
-	    first: T1;
-	    second: T2;
-	}
-
-}
-declare module 'graphics/shapes/midpoint' {
-	import { Point2d } from 'graphics/shapes/point2d';
-	import { Tuple } from 'utils/tuple';
-	export class Midpoint {
-	    static between(point1: Point2d, point2: Point2d): Point2d;
-	}
-	export class ThirdPoints {
-	    static between(point1: Point2d, point2: Point2d): Tuple<Point2d, Point2d>;
-	}
-
-}
-declare module 'graphics/precision' {
-	export enum Precision {
-	    Low = 0,
-	    High = 1,
-	}
-
-}
-declare module 'graphics/shapes/ellipse' {
-	import { Shape } from 'graphics/shapes/shape';
-	import { Point2d } from 'graphics/shapes/point2d';
-	import { Precision } from 'graphics/precision';
-	import { RGBColor } from 'graphics/rgbColor';
-	export class Ellipse extends Shape {
-	    private center;
-	    private horizontalRadius;
-	    private verticalRadius;
-	    private numberOfInnerVerticies;
-	    constructor(point1: Point2d, point2: Point2d, rgbColor: RGBColor, gl: WebGLRenderingContext, precision: Precision);
-	    private populateVerticies(boundingRect);
-	    private getYDistanceFromCenterForX(x);
 	}
 
 }
@@ -371,6 +402,7 @@ declare module 'webgl-renderer' {
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { Point3d } from 'graphics/shapes/point3d';
-	export { IWebGLRenderer, WebGLRenderer, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, Point3d, ShapeFactory, Camera };
+	import { Settings } from 'settings';
+	export { IWebGLRenderer, WebGLRenderer, Settings, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, Point3d, ShapeFactory, Camera };
 
 }

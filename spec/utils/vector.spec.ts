@@ -43,11 +43,11 @@ describe("Float32Vector ", () =>
             let float32ArrToAdd = new Float32Array([4.0, 5.0, 6.0]);
             vec.addArray(float32ArrToAdd);
             expect(vec.size).toBe(6);
-            //copied ver old elements
+            // copied ver old elements
             expect(vec.arr[0]).toBe(1.0);
             expect(vec.arr[1]).toBe(2.0);
             expect(vec.arr[2]).toBe(3.0);
-            //added new elements from Float32Array
+            // added new elements from Float32Array
             expect(vec.arr[3]).toBe(4.0);
             expect(vec.arr[4]).toBe(5.0);
             expect(vec.arr[5]).toBe(6.0);
@@ -55,24 +55,24 @@ describe("Float32Vector ", () =>
             let arrToAdd = [7.0, 8.0, 9.0];
             vec.addArray(arrToAdd);
             expect(vec.size).toBe(9);
-            //fully copied over old array elements
+            // fully copied over old array elements
             expect(vec.arr[0]).toBe(1.0);
             expect(vec.arr[1]).toBe(2.0);
             expect(vec.arr[2]).toBe(3.0);
             expect(vec.arr[3]).toBe(4.0);
             expect(vec.arr[4]).toBe(5.0);
             expect(vec.arr[5]).toBe(6.0);
-            //added new elements from array
+            // added new elements from array
             expect(vec.arr[6]).toBe(7.0);
             expect(vec.arr[7]).toBe(8.0);
             expect(vec.arr[8]).toBe(9.0);
-            //empty locations in array
+            // empty locations in array
             expect(vec.arr[9]).toBe(0.0);
 
-            arrToAdd = [10.0, 11.0, 12.0, 13.0]
+            arrToAdd = [10.0, 11.0, 12.0, 13.0];
             vec.addArray(arrToAdd);
             expect(vec.size).toBe(13);
             expect(vec.arr.length).toBe(26);
         });
     });
-}); 
+});
