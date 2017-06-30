@@ -6,6 +6,9 @@
     "typescript.referencesCodeLens.enabled": true,
     "typescript.implementationsCodeLens.enabled": true,
     "tsimporter.doubleQuotes":true,
+    "tsimporter.filesToExclude" : [
+        "./lib/**"
+    ],
     "javascript.format.placeOpenBraceOnNewLineForFunctions": true,
     "javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
     "files.autoSave": "afterDelay",

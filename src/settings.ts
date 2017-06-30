@@ -1,6 +1,17 @@
+import { RenderMode } from "./graphics/renderModeMapper";
+import { ShapeMode } from "./graphics/shapes/shapeMode";
+import { DrawingMode } from "./graphics/drawingMode";
+import { RGBColor } from "./graphics/rgbColor";
+
+
 const floatsPerPoint = 2; // x and y
 const floatsPerColor = 3; // r, g, and b
 const floatsPerVertex = floatsPerPoint + floatsPerColor;
+const defaultRenderMode: RenderMode = "points";
+const defaultShapeMode: ShapeMode = "points";
+const defaultDrawingMode: DrawingMode = DrawingMode.Verticies;
+const defaultBackgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 };
+const defaultColor: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 };
 
 export let Settings =
 {
@@ -8,5 +19,11 @@ export let Settings =
     floatsPerColor: floatsPerColor,
     floatsPerVertex: floatsPerVertex,
     vertexBufferFloatLimit: 65000,
-    defaultAlpha: 1.0
+    defaultAlpha: 1.0,
+    defaultRendereMode: defaultRenderMode,
+    defaultShapeMode: defaultShapeMode,
+    defaultDrawingMode: defaultDrawingMode,
+    defaultPointSize: 10,
+    defaultBackgroundColor: defaultBackgroundColor,
+    defaultColor: defaultColor
 };

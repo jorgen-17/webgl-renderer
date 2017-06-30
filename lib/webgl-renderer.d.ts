@@ -108,13 +108,32 @@ declare module 'graphics/renderModeMapper' {
 	}
 
 }
+declare module 'graphics/shapes/shapeMode' {
+	export type ShapeMode = "points" | "lines" | "ellipses" | "triangles" | "rectangles" | "hexagons" | "octogons";
+
+}
+declare module 'graphics/drawingMode' {
+	export enum DrawingMode {
+	    Shapes = 0,
+	    Verticies = 1,
+	}
+
+}
 declare module 'settings' {
+	import { DrawingMode } from 'graphics/drawingMode';
+	import { RGBColor } from 'graphics/rgbColor';
 	export let Settings: {
 	    floatsPerPoint: number;
 	    floatsPerColor: number;
 	    floatsPerVertex: number;
 	    vertexBufferFloatLimit: number;
 	    defaultAlpha: number;
+	    defaultRendereMode: "points";
+	    defaultShapeMode: "points";
+	    defaultDrawingMode: DrawingMode;
+	    defaultPointSize: number;
+	    defaultBackgroundColor: RGBColor;
+	    defaultColor: RGBColor;
 	};
 
 }
@@ -128,17 +147,6 @@ declare module 'graphics/vertexBuffer' {
 	    addVertex(vertex: Float32Array): void;
 	    private renderModeValidator(renderMode, gl);
 	}
-
-}
-declare module 'graphics/drawingMode' {
-	export enum DrawingMode {
-	    Shapes = 0,
-	    Verticies = 1,
-	}
-
-}
-declare module 'graphics/shapes/shapeMode' {
-	export type ShapeMode = "points" | "lines" | "ellipses" | "triangles" | "rectangles" | "hexagons" | "octogons";
 
 }
 declare module 'math/vector3' {
@@ -215,6 +223,7 @@ declare module 'graphics/camera' {
 	    readonly lookAtPoint: Point3d;
 	    readonly upPosition: Point3d;
 	    setCameraView(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d): void;
+	    translateEyePosition(eyePosition: Point3d): void;
 	}
 
 }
@@ -224,9 +233,8 @@ declare module 'graphics/drawingSettings' {
 	import { DrawingMode } from 'graphics/drawingMode';
 	import { RGBColor } from 'graphics/rgbColor';
 	export interface DrawingSettings {
-	    _glRenderMode?: number;
 	    _shapeMode?: ShapeMode;
-	    _renderModeStr?: RenderMode;
+	    _renderMode?: RenderMode;
 	    _drawingMode?: DrawingMode;
 	    _pointSize?: number;
 	    _backgroundColor?: RGBColor;
@@ -249,7 +257,6 @@ declare module 'graphics/webglRenderer' {
 	import { ShapeMode } from 'graphics/shapes/shapeMode';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
-	import { Point3d } from 'graphics/shapes/point3d';
 	import { DrawingSettings } from 'graphics/drawingSettings';
 	export interface IWebGLRenderer {
 	    color: RGBColor;
@@ -265,13 +272,12 @@ declare module 'graphics/webglRenderer' {
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shape: Array<Shape>): void;
 	    removeAllVeriticies(): void;
-	    translateCamera(eyePosition: Point3d): void;
 	}
 	export class WebGLRenderer implements IWebGLRenderer {
 	    gl: WebGLRenderingContext;
 	    private _glRenderMode;
 	    private _shapeMode;
-	    private _renderModeStr;
+	    private _renderMode;
 	    private _drawingMode;
 	    private _pointSize;
 	    private _backgroundColor;
@@ -300,7 +306,6 @@ declare module 'graphics/webglRenderer' {
 	    addShapeToScene(shape: Shape): void;
 	    addShapesToScene(shapes: Array<Shape>): void;
 	    removeAllVeriticies(): void;
-	    translateCamera(eyePosition: Point3d): void;
 	    draw(): void;
 	    private initializeDrawingSettings(drawingSettings);
 	    private initializeCamera(camera);

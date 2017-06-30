@@ -26,7 +26,6 @@ export interface IWebGLRenderer
     addShapeToScene(shape: Shape): void;
     addShapesToScene(shape: Array<Shape>): void;
     removeAllVeriticies(): void;
-    translateCamera(eyePosition: Point3d): void;
 }
 
 export class WebGLRenderer implements IWebGLRenderer
@@ -34,7 +33,7 @@ export class WebGLRenderer implements IWebGLRenderer
     public gl: WebGLRenderingContext;
     private _glRenderMode: number;
     private _shapeMode: ShapeMode;
-    private _renderModeStr: RenderMode;
+    private _renderMode: RenderMode;
     private _drawingMode: DrawingMode;
     private _pointSize: number;
     private _backgroundColor: RGBColor;
@@ -93,13 +92,13 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public get renderMode(): RenderMode
     {
-        return this._renderModeStr;
+        return this._renderMode;
     }
 
     public set renderMode(renderMode: RenderMode)
     {
         this._drawingMode = DrawingMode.Verticies;
-        this._renderModeStr = renderMode;
+        this._renderMode = renderMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
     }
 
@@ -211,14 +210,6 @@ export class WebGLRenderer implements IWebGLRenderer
         this.initializeVertexBuffers();
     }
 
-    public translateCamera(eyePosition: Point3d): void
-    {
-        let newLookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
-        let newUpPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
-
-        this.camera.setCameraView(eyePosition, newLookAtPoint, newUpPosition);
-    }
-
     public draw()
     {
         this.gl.clearColor(this._backgroundColor.red,
@@ -240,13 +231,13 @@ export class WebGLRenderer implements IWebGLRenderer
 
     private initializeDrawingSettings(drawingSettings: DrawingSettings)
     {
-        this._renderModeStr = "points";
-        this._glRenderMode = drawingSettings._glRenderMode || this.gl.POINTS;
-        this._shapeMode = drawingSettings._shapeMode || "points";
-        this._drawingMode = drawingSettings._drawingMode || DrawingMode.Verticies;
-        this._pointSize = drawingSettings._pointSize || 10;
-        this._backgroundColor = drawingSettings._backgroundColor || { red: 0.9, green: 0.9, blue: 0.9 };
-        this._color = drawingSettings._color || { red: 0.0, green: 0.0, blue: 0.0 };
+        this._renderMode = drawingSettings._renderMode || Settings.defaultRendereMode;
+        this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
+        this._shapeMode = drawingSettings._shapeMode || Settings.defaultShapeMode;
+        this._drawingMode = drawingSettings._drawingMode || Settings.defaultDrawingMode;
+        this._pointSize = drawingSettings._pointSize || Settings.defaultPointSize;
+        this._backgroundColor = drawingSettings._backgroundColor || Settings.defaultBackgroundColor;
+        this._color = drawingSettings._color || Settings.defaultColor;
     }
 
     private initializeCamera(camera: Camera | null)

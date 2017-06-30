@@ -5,9 +5,8 @@ import { RGBColor } from "./rgbColor";
 
 export interface DrawingSettings
 {
-    _glRenderMode?: number;
     _shapeMode?: ShapeMode;
-    _renderModeStr?: RenderMode;
+    _renderMode?: RenderMode;
     _drawingMode?: DrawingMode;
     _pointSize?: number;
     _backgroundColor?: RGBColor;

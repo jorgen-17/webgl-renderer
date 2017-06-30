@@ -50,4 +50,12 @@ export class Camera
             lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
             upPosition.x, upPosition.y, upPosition.z);
     }
+
+    public translateEyePosition(eyePosition: Point3d): void
+    {
+        let newLookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
+        let newUpPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
+
+        this.setCameraView(eyePosition, newLookAtPoint, newUpPosition);
+    }
 }
