@@ -37,12 +37,7 @@ export class WebGLRenderer implements IWebGLRenderer
     private _drawingMode: DrawingMode;
     private _backgroundColor: RGBColor;
     private _color: RGBColor;
-
-    private _eyePosition: Point3d;
-    private _lookAtPoint: Point3d;
-    private _upPosition: Point3d;
     private _camera: Camera;
-
     private _pointsVector: VertexBuffer;
     private _linesVector: VertexBuffer;
     private _lineStripVector: VertexBuffer;
@@ -203,18 +198,18 @@ export class WebGLRenderer implements IWebGLRenderer
         this.initializeVertexBuffers();
     }
 
-    public translateCamera(eyePosition: Point3d): void
+    public translateCamera(newEyePosition: Point3d): void
     {
-        this._eyePosition = eyePosition;
-        this._lookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
-        this._upPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
+        const lookAtPoint = new Point3d(newEyePosition.x, newEyePosition.y, newEyePosition.z - 1);
+        const upPosition = new Point3d(newEyePosition.x, newEyePosition.y + 1, newEyePosition.z);
 
-        this.camera.setCameraView(this._eyePosition, this._lookAtPoint, this._upPosition);
+        this.camera.setCameraView(newEyePosition, lookAtPoint, upPosition);
     }
 
     public draw()
     {
-        this.gl.clearColor(this._backgroundColor.red, this._backgroundColor.green, this._backgroundColor.blue, 1.0);
+        this.gl.clearColor(this._backgroundColor.red, this._backgroundColor.green,
+            this._backgroundColor.blue, Settings.defaultAlpha);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
         for (let vb of this._vertexBuffers)
@@ -242,17 +237,14 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         if (camera)
         {
-            this._eyePosition = camera.eyePosition;
-            this._lookAtPoint = camera.lookAtPoint;
-            this._upPosition = camera.upPosition;
-            this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+            this._camera = camera;
         }
         else
         {
-            this._eyePosition = new Point3d(0, 0, 0);
-            this._lookAtPoint = new Point3d(0, 0, -1);
-            this._upPosition = new Point3d(0, 1, 0);
-            this._camera = new Camera(this._eyePosition, this._lookAtPoint, this._upPosition);
+            const eyePosition = new Point3d(0, 0, 0);
+            const lookAtPoint = new Point3d(0, 0, -1);
+            const upPosition = new Point3d(0, 1, 0);
+            this._camera = new Camera(eyePosition, lookAtPoint, upPosition);
         }
     }
 
@@ -289,13 +281,17 @@ export class WebGLRenderer implements IWebGLRenderer
         }
 
         const floatSize = arr.BYTES_PER_ELEMENT;
+        const bytesPerPoint = floatSize * Settings.floatsPerPoint;
+        const bytesPerVertex = floatSize * Settings.floatsPerVertex;
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(a_position, Settings.floatsPerPoint, this.gl.FLOAT, false, floatSize * 5, 0);
+        this.gl.vertexAttribPointer(a_position, Settings.floatsPerPoint, this.gl.FLOAT,
+            false, bytesPerVertex, 0);
         this.gl.enableVertexAttribArray(a_position);
-        this.gl.vertexAttribPointer(a_color, Settings.floatsPerColor, this.gl.FLOAT, false, floatSize * 5, floatSize * 2);
+        this.gl.vertexAttribPointer(a_color, Settings.floatsPerColor, this.gl.FLOAT,
+            false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(a_color);
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.getViewMatrix());
         this.gl.drawArrays(renderMode, 0, (arr.length / Settings.floatsPerVertex));

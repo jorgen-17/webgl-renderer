@@ -7,5 +7,6 @@ export let Settings =
     floatsPerPoint: floatsPerPoint,
     floatsPerColor: floatsPerColor,
     floatsPerVertex: floatsPerVertex,
-    vertexBufferFloatLimit: 65000
+    vertexBufferFloatLimit: 65000,
+    defaultAlpha: 1.0
 };
