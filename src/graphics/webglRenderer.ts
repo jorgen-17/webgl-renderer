@@ -294,7 +294,7 @@ export class WebGLRenderer implements IWebGLRenderer
                 viewMatrixUniformName: u_viewMatrix
             };
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
-            throw "cannot find uniform u_viewMatrix in shader program";
+            throw errorMessage;
         }
 
         const floatSize = arr.BYTES_PER_ELEMENT;
@@ -312,12 +312,6 @@ export class WebGLRenderer implements IWebGLRenderer
         this.gl.enableVertexAttribArray(a_color);
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.getViewMatrix());
         this.gl.drawArrays(renderMode, 0, (arr.length / Settings.floatsPerVertex));
-    }
-
-    private addXYAndColorToVertexBuffer(vertexBuffer: Float32Vector, x: number, y: number)
-    {
-        vertexBuffer.addArray(new Float32Array([x, y, this._color.red,
-            this._color.green, this._color.blue]));
     }
 
     private initShaders(): void
