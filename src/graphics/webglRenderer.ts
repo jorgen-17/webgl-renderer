@@ -231,13 +231,13 @@ export class WebGLRenderer implements IWebGLRenderer
 
     private initializeDrawingSettings(drawingSettings: DrawingSettings)
     {
-        this._renderMode = drawingSettings._renderMode || Settings.defaultRendereMode;
+        this._renderMode = drawingSettings.renderMode || Settings.defaultRendereMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
-        this._shapeMode = drawingSettings._shapeMode || Settings.defaultShapeMode;
-        this._drawingMode = drawingSettings._drawingMode || Settings.defaultDrawingMode;
-        this._pointSize = drawingSettings._pointSize || Settings.defaultPointSize;
-        this._backgroundColor = drawingSettings._backgroundColor || Settings.defaultBackgroundColor;
-        this._color = drawingSettings._color || Settings.defaultColor;
+        this._shapeMode = drawingSettings.shapeMode || Settings.defaultShapeMode;
+        this._drawingMode = drawingSettings.drawingMode || Settings.defaultDrawingMode;
+        this._pointSize = drawingSettings.pointSize || Settings.defaultPointSize;
+        this._backgroundColor = drawingSettings.backgroundColor || Settings.defaultBackgroundColor;
+        this._color = drawingSettings.color || Settings.defaultColor;
     }
 
     private initializeCamera(camera: Camera | null)

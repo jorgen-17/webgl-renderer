@@ -165,12 +165,12 @@ declare module 'graphics/drawingSettings' {
 	import { DrawingMode } from 'graphics/drawingMode';
 	import { RGBColor } from 'graphics/rgbColor';
 	export interface DrawingSettings {
-	    _shapeMode?: ShapeMode;
-	    _renderMode?: RenderMode;
-	    _drawingMode?: DrawingMode;
-	    _pointSize?: number;
-	    _backgroundColor?: RGBColor;
-	    _color?: RGBColor;
+	    shapeMode?: ShapeMode;
+	    renderMode?: RenderMode;
+	    drawingMode?: DrawingMode;
+	    pointSize?: number;
+	    backgroundColor?: RGBColor;
+	    color?: RGBColor;
 	}
 
 }
