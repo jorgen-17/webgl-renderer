@@ -1,6 +1,6 @@
 {
     "name": "webgl-renderer",
-    "version": "0.5.11",
+    "version": "0.5.12",
     "description": "webGl renderering engine",
     "main": "lib/webgl-renderer.min.js",
     "scripts": {

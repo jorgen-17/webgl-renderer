@@ -19,7 +19,7 @@ else
 }
 
 module.exports = {
-    entry: "./src/index.ts",
+    entry: "./index.ts",
     output: {
         filename: outputFile,
         path: __dirname + "/lib",
