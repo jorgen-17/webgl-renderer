@@ -15,13 +15,13 @@ import { Triangle } from "./src/graphics/shapes/triangle";
 import { RGBColor } from "./src/graphics/rgbColor";
 import { Camera } from "./src/graphics/camera";
 import { Point3d } from "./src/graphics/shapes/point3d";
-import { Settings } from "./src/settings";
+import { DrawingSettings } from "./src/graphics/drawingSettings";
 
 export
 {
     IWebGLRenderer,
     WebGLRenderer,
-    Settings,
+    DrawingSettings,
     ContextWrangler,
     RGBColor,
     Color,

@@ -407,7 +407,7 @@ declare module 'webgl-renderer' {
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { Point3d } from 'graphics/shapes/point3d';
-	import { Settings } from 'settings';
-	export { IWebGLRenderer, WebGLRenderer, Settings, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, Point3d, ShapeFactory, Camera };
+	import { DrawingSettings } from 'graphics/drawingSettings';
+	export { IWebGLRenderer, WebGLRenderer, DrawingSettings, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point2d, Point3d, ShapeFactory, Camera };
 
 }
