@@ -1,21 +1,21 @@
 import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
 import { Color, ColorMapper } from "./src/graphics/colorMapper";
-import { Point2d } from "./src/graphics/shapes/point2d";
-import { Line } from "./src/graphics/shapes/line";
-import { Shape } from "./src/graphics/shapes/shape";
-import { ShapeFactory } from "./src/graphics/shapes/shapeFactory";
-import { ShapeMode } from "./src/graphics/shapes/shapeMode";
+import { Line } from "./src/graphics/shapes2d/line";
+import { Shape2d } from "./src/graphics/shapes2d/shape2d";
+import { ShapeFactory } from "./src/graphics/shapes2d/shapeFactory";
+import { ShapeMode } from "./src/graphics/shapes2d/shapeMode";
 import { RenderMode } from "./src/graphics/renderModeMapper";
-import { Ellipse } from "./src/graphics/shapes/ellipse";
-import { Rectangle } from "./src/graphics/shapes/rectangle";
-import { Hexagon } from "./src/graphics/shapes/hexagon";
-import { Octogon } from "./src/graphics/shapes/octogon";
-import { Triangle } from "./src/graphics/shapes/triangle";
+import { Ellipse } from "./src/graphics/shapes2d/ellipse";
+import { Rectangle } from "./src/graphics/shapes2d/rectangle";
+import { Hexagon } from "./src/graphics/shapes2d/hexagon";
+import { Octogon } from "./src/graphics/shapes2d/octogon";
+import { Triangle } from "./src/graphics/shapes2d/triangle";
 import { RGBColor } from "./src/graphics/rgbColor";
 import { Camera } from "./src/graphics/camera";
-import { Point3d } from "./src/graphics/shapes/point3d";
+import { Point3d } from "./src/graphics/shapes2d/point3d";
 import { DrawingSettings } from "./src/graphics/drawingSettings";
+import { Vec3 } from "./src/math/vec3";
 
 export
 {
@@ -28,15 +28,15 @@ export
     ColorMapper,
     ShapeMode,
     RenderMode,
-    Shape,
+    Shape2d,
     Ellipse,
     Triangle,
     Rectangle,
     Line,
     Hexagon,
     Octogon,
-    Point2d,
     Point3d,
     ShapeFactory,
-    Camera
+    Camera,
+    Vec3
 };

@@ -1,15 +1,16 @@
-﻿import { Shape } from "./shapes/shape";
+﻿import { Shape2d } from "./shapes2d/shape2d";
 import { Float32Vector } from "../utils/vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
-import { ShapeMode } from "./shapes/shapeMode";
+import { ShapeMode } from "./shapes2d/shapeMode";
 import { RGBColor } from "./rgbColor";
 import { Camera } from "./camera";
-import { Point3d } from "./shapes/point3d";
+import { Point3d } from "./shapes2d/point3d";
 import { DrawingSettings } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
 import { Settings } from "../settings";
+import { Vec3 } from "../math/vec3";
 
 export interface IWebGLRenderer
 {
@@ -23,8 +24,8 @@ export interface IWebGLRenderer
     draw: () => void;
     setViewPortDimensions: (newWidth: number, newHeight: number) => void;
     addXYPointToScene(x: number, y: number): void;
-    addShapeToScene(shape: Shape): void;
-    addShapesToScene(shape: Array<Shape>): void;
+    addShapeToScene(shape: Shape2d): void;
+    addShapesToScene(shape: Array<Shape2d>): void;
     removeAllVeriticies(): void;
 }
 
@@ -177,7 +178,7 @@ export class WebGLRenderer implements IWebGLRenderer
         }
     }
 
-    public addShapeToScene(shape: Shape): void
+    public addShapeToScene(shape: Shape2d): void
     {
         let vertexIndex = 0;
         for (let i = 0; i < shape.verticies.arr.length; i += Settings.floatsPerVertex)
@@ -197,7 +198,7 @@ export class WebGLRenderer implements IWebGLRenderer
         }
     }
 
-    public addShapesToScene(shapes: Array<Shape>): void
+    public addShapesToScene(shapes: Array<Shape2d>): void
     {
         for (let shape of shapes)
         {
@@ -248,9 +249,9 @@ export class WebGLRenderer implements IWebGLRenderer
         }
         else
         {
-            const eyePosition = new Point3d(0, 0, 0);
-            const lookAtPoint = new Point3d(0, 0, -1);
-            const upPosition = new Point3d(0, 1, 0);
+            const eyePosition = new Vec3(0, 0, 0);
+            const lookAtPoint = new Vec3(0, 0, -1);
+            const upPosition = new Vec3(0, 1, 0);
             this._camera = new Camera(eyePosition, lookAtPoint, upPosition);
         }
     }
@@ -343,10 +344,12 @@ export class WebGLRenderer implements IWebGLRenderer
         if (type === "fragment")
         {
             shader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
-        } else if (type === "vertex")
+        }
+        else if (type === "vertex")
         {
             shader = this.gl.createShader(this.gl.VERTEX_SHADER);
-        } else
+        }
+        else
         {
             return null;
         }

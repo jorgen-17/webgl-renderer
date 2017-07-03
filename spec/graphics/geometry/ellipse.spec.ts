@@ -1,7 +1,8 @@
-import { Ellipse } from "../../../src/graphics/shapes/ellipse";
+import { Ellipse } from "../../../src/graphics/shapes2d/ellipse";
 import { ContextWrangler } from "../../../src/utils/contextWrangler";
 import { Precision } from "../../../src/graphics/precision";
 import { RGBColor } from "../../../src/graphics/rgbColor";
+import { Vec3 } from "../../../src/math/vec3";
 
 describe("HorizontalEllipse ", () =>
 {
@@ -14,7 +15,7 @@ describe("HorizontalEllipse ", () =>
 
         it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
         {
-            const circle = new Ellipse({x: 0.5, y: 0.5}, {x: 1.0, y: 1.0}, color, gl, Precision.Low);
+            const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl, Precision.Low);
 
             expect(55).toEqual(circle.verticies.size);
 
@@ -44,7 +45,7 @@ describe("HorizontalEllipse ", () =>
 
         it("when constructed with point(0.0, 0.5) and point(1.0, 1.0) AKA its a real horizontal ellipse", () =>
         {
-            const horizontalEllipse = new Ellipse({x: 0.0, y: 0.5}, {x: 1.0, y: 1.0}, color, gl, Precision.Low);
+            const horizontalEllipse = new Ellipse(new Vec3(0.0, 0.5), new Vec3(1.0, 1.0), color, gl, Precision.Low);
 
             expect(55).toEqual(horizontalEllipse.verticies.size);
 
@@ -74,7 +75,7 @@ describe("HorizontalEllipse ", () =>
 
         it("when constructed with point(0.0, 0.0) and point(0.5, 1.0) AKA its vertical ellipse", () =>
         {
-            const verticalEllipse = new Ellipse({x: 0.0, y: 0.0}, {x: 0.5, y: 1.0}, color, gl, Precision.Low);
+            const verticalEllipse = new Ellipse(new Vec3(0.0, 0.0), new Vec3(0.5, 1.0), color, gl, Precision.Low);
 
             expect(55).toEqual(verticalEllipse.verticies.size);
 

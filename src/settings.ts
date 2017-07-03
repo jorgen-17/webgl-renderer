@@ -1,10 +1,10 @@
 import { RenderMode } from "./graphics/renderModeMapper";
-import { ShapeMode } from "./graphics/shapes/shapeMode";
+import { ShapeMode } from "./graphics/shapes2d/shapeMode";
 import { DrawingMode } from "./graphics/drawingMode";
 import { RGBColor } from "./graphics/rgbColor";
 
 
-const floatsPerPoint = 2; // x and y
+const floatsPerPoint = 3; // x, y, and z
 const floatsPerColor = 3; // r, g, and b
 const floatsPerVertex = floatsPerPoint + floatsPerColor;
 const defaultRenderMode: RenderMode = "points";

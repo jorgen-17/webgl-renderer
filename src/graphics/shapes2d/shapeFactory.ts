@@ -1,18 +1,18 @@
-import { Shape } from "./shape";
+import { Shape2d } from "./shape2d";
 import { ShapeMode } from "./shapeMode";
 import { Ellipse } from "./ellipse";
 import { Triangle } from "./triangle";
 import { Rectangle } from "./rectangle";
 import { Hexagon } from "./hexagon";
 import { Octogon } from "./octogon";
-import { Point2d } from "./point2d";
 import { RGBColor } from "../rgbColor";
 import { Precision } from "../precision";
+import { Vec3 } from "../../math/vec3";
 
 export class ShapeFactory
 {
-    public static createShape(point1: Point2d, point2: Point2d, shapeMode: ShapeMode,
-        rgbColor: RGBColor, gl: WebGLRenderingContext): Shape
+    public static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
+        rgbColor: RGBColor, gl: WebGLRenderingContext): Shape2d
     {
         switch (shapeMode)
         {
@@ -31,25 +31,25 @@ export class ShapeFactory
         }
     }
 
-    private static createEllipse(point1: Point2d, point2: Point2d, rgbColor: RGBColor,
+    private static createEllipse(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
         gl: WebGLRenderingContext): Ellipse
     {
         return new Ellipse(point1, point2, rgbColor, gl, Precision.High);
     }
 
-    private static createTriangle(point1: Point2d, point2: Point2d, rgbColor: RGBColor,
+    private static createTriangle(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
         gl: WebGLRenderingContext): Triangle
     {
         return new Triangle(point1, point2, rgbColor, gl);
     }
 
-    private static createRectangle(point1: Point2d, point2: Point2d, rgbColor: RGBColor,
+    private static createRectangle(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
         gl: WebGLRenderingContext): Rectangle
     {
         return new Rectangle(point1, point2, rgbColor, gl);
     };
 
-    private static createHexagon(point1: Point2d, point2: Point2d, rgbColor: RGBColor,
+    private static createHexagon(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
         gl: WebGLRenderingContext): Hexagon
     {
         return new Hexagon(point1, point2, rgbColor, gl);
@@ -59,7 +59,7 @@ export class ShapeFactory
         // - your girlfriend
     }
 
-    private static createOctogon(point1: Point2d, point2: Point2d, rgbColor: RGBColor,
+    private static createOctogon(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
         gl: WebGLRenderingContext): Octogon
     {
         return new Octogon(point1, point2, rgbColor, gl);

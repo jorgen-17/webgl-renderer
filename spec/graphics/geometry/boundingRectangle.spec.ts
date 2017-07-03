@@ -1,4 +1,5 @@
-import { BoundingRectangle } from "../../../src/graphics/shapes/boundingRectangle";
+import { BoundingRectangle } from "../../../src/graphics/shapes2d/boundingRectangle";
+import { Vec3 } from "../../../src/math/vec3";
 
 describe("BoundingRectangle ", () =>
 {
@@ -10,7 +11,7 @@ describe("BoundingRectangle ", () =>
             it("when constructed with point(-0.8, 0.1) and point(-0.1, -0.8)", () =>
             {
                 const boundingRect =
-                    new BoundingRectangle({x: -0.8, y: 0.1}, {x: -0.1, y: -0.8});
+                    new BoundingRectangle(new Vec3(-0.8, 0.1), new Vec3(-0.1, -0.8));
                 expect(boundingRect.topLeft).toEqual(jasmine.objectContaining({x: -0.8, y: 0.1}));
                 expect(boundingRect.topRight).toEqual(jasmine.objectContaining({x: -0.1, y: 0.1}));
                 expect(boundingRect.bottomRight).toEqual(jasmine.objectContaining({x: -0.1, y: -0.8}));
@@ -20,7 +21,7 @@ describe("BoundingRectangle ", () =>
             it("when constructed with point(0.8, 0.1) and point(0.1, 0.1)", () =>
             {
                 const boundingRect =
-                    new BoundingRectangle({x: 0.8, y: 0.1}, {x: 0.1, y: 0.8});
+                    new BoundingRectangle(new Vec3(0.8, 0.1), new Vec3(0.1, 0.8));
                 expect(boundingRect.topLeft).toEqual(jasmine.objectContaining({x: 0.1, y: 0.8}));
                 expect(boundingRect.topRight).toEqual(jasmine.objectContaining({x: 0.8, y: 0.8}));
                 expect(boundingRect.bottomRight).toEqual(jasmine.objectContaining({x: 0.8, y: 0.1}));
@@ -30,7 +31,7 @@ describe("BoundingRectangle ", () =>
             it("when constructed with point(-0.8, 0.1) and point(-0.1, 0.8)", () =>
             {
                 const boundingRect =
-                    new BoundingRectangle({x: -0.8, y: 0.1}, {x: -0.1, y: 0.8});
+                    new BoundingRectangle(new Vec3(-0.8, 0.1), new Vec3(-0.1, 0.8));
                 expect(boundingRect.topLeft).toEqual(jasmine.objectContaining({x: -0.8, y: 0.8}));
                 expect(boundingRect.topRight).toEqual(jasmine.objectContaining({x: -0.1, y: 0.8}));
                 expect(boundingRect.bottomRight).toEqual(jasmine.objectContaining({x: -0.1, y: 0.1}));
@@ -40,7 +41,7 @@ describe("BoundingRectangle ", () =>
             it("when constructed with point(0.8, -0.1) and point(0.1, -0.8)", () =>
             {
                 const boundingRect =
-                    new BoundingRectangle({x: 0.8, y: -0.1}, {x: 0.1, y: -0.8});
+                    new BoundingRectangle(new Vec3(0.8, -0.1), new Vec3(0.1, -0.8));
                 expect(boundingRect.topLeft).toEqual(jasmine.objectContaining({x: 0.1, y: -0.1}));
                 expect(boundingRect.topRight).toEqual(jasmine.objectContaining({x: 0.8, y: -0.1}));
                 expect(boundingRect.bottomRight).toEqual(jasmine.objectContaining({x: 0.8, y: -0.8}));

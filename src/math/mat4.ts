@@ -1,13 +1,13 @@
 // adapted to typescript from https://github.com/yukoba/WebGLBook/blob/master/lib/cuon-matrix.js
 
-import { Vector3 } from "./vector3";
-import { Vector4 } from "./vector4";
+import { Vec3 } from "./vec3";
+import { Vec4 } from "./vec4";
 
-export class Matrix4
+export class Mat4
 {
     public elements: Float32Array;
 
-    constructor(source: Matrix4 | null = null)
+    constructor(source: Mat4 | null = null)
     {
         if (source)
         {
@@ -62,7 +62,7 @@ export class Matrix4
     {
         let e = this.elements;
         let p = pos.elements;
-        let v = new Vector3();
+        let v = new Vec3();
         let result = v.elements;
 
         result[0] = p[0] * e[0] + p[1] * e[4] + p[2] * e[8] + e[11];
@@ -76,7 +76,7 @@ export class Matrix4
     {
         let e = this.elements;
         let p = pos.elements;
-        let v = new Vector4();
+        let v = new Vec4();
         let result = v.elements;
 
         result[0] = p[0] * e[0] + p[1] * e[4] + p[2] * e[8] + p[3] * e[12];
@@ -207,7 +207,7 @@ export class Matrix4
 
     public ortho (left, right, bottom, top, near, far)
     {
-        return this.concat(new Matrix4().setOrtho(left, right, bottom, top, near, far));
+        return this.concat(new Mat4().setOrtho(left, right, bottom, top, near, far));
     }
 
     public setFrustum (left, right, bottom, top, near, far)
@@ -258,7 +258,7 @@ export class Matrix4
 
     public frustum (left, right, bottom, top, near, far)
     {
-        return this.concat(new Matrix4().setFrustum(left, right, bottom, top, near, far));
+        return this.concat(new Mat4().setFrustum(left, right, bottom, top, near, far));
     }
 
     public setPerspective (fovy, aspect, near, far)
@@ -315,7 +315,7 @@ export class Matrix4
 
     public perspective (fovy, aspect, near, far)
     {
-        return this.concat(new Matrix4().setPerspective(fovy, aspect, near, far));
+        return this.concat(new Mat4().setPerspective(fovy, aspect, near, far));
     }
 
     public setScale (x, y, z)
@@ -442,7 +442,7 @@ export class Matrix4
 
     public rotate (angle, x, y, z)
     {
-        return this.concat(new Matrix4().setRotate(angle, x, y, z));
+        return this.concat(new Mat4().setRotate(angle, x, y, z));
     }
 
     public setLookAt (eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
@@ -497,12 +497,12 @@ export class Matrix4
 
     public lookAt (eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
     {
-        return this.concat(new Matrix4().setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ));
+        return this.concat(new Mat4().setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ));
     }
 
     public dropShadow (plane, light)
     {
-        let mat = new Matrix4();
+        let mat = new Mat4();
         let e = mat.elements;
 
         let dot = plane[0] * light[0] + plane[1] * light[1] + plane[2] * light[2] + plane[3] * light[3];

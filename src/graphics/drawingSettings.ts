@@ -1,4 +1,4 @@
-import { ShapeMode } from "./shapes/shapeMode";
+import { ShapeMode } from "./shapes2d/shapeMode";
 import { RenderMode } from "./renderModeMapper";
 import { DrawingMode } from "./drawingMode";
 import { RGBColor } from "./rgbColor";

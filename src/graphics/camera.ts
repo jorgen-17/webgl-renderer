@@ -1,20 +1,20 @@
-import { Matrix4 } from "../math/matrix4";
-import { Point3d } from "./shapes/point3d";
+import { Mat4 } from "../math/mat4";
+import { Vec3 } from "../math/vec3";
 
 export class Camera
 {
-    private _viewMatrix: Matrix4;
-    private _eyePosition: Point3d;
-    private _lookAtPoint: Point3d;
-    private _upPosition: Point3d;
+    private _viewMatrix: Mat4;
+    private _eyePosition: Vec3;
+    private _lookAtPoint: Vec3;
+    private _upPosition: Vec3;
 
-    constructor(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d)
+    constructor(eyePosition: Vec3, lookAtPoint: Vec3, upPosition: Vec3)
     {
         this._eyePosition = eyePosition;
         this._lookAtPoint = lookAtPoint;
         this._upPosition = upPosition;
 
-        this._viewMatrix = new Matrix4();
+        this._viewMatrix = new Mat4();
         this._viewMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
             lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
             upPosition.x, upPosition.y, upPosition.z);
@@ -25,22 +25,22 @@ export class Camera
         return this._viewMatrix.elements;
     }
 
-    public get eyePosition(): Point3d
+    public get eyePosition(): Vec3
     {
         return this._eyePosition;
     }
 
-    public get lookAtPoint(): Point3d
+    public get lookAtPoint(): Vec3
     {
         return this._lookAtPoint;
     }
 
-    public get upPosition(): Point3d
+    public get upPosition(): Vec3
     {
         return this._upPosition;
     }
 
-    public setCameraView(eyePosition: Point3d, lookAtPoint: Point3d, upPosition: Point3d): void
+    public setCameraView(eyePosition: Vec3, lookAtPoint: Vec3, upPosition: Vec3): void
     {
         this._eyePosition = eyePosition;
         this._lookAtPoint = lookAtPoint;
@@ -51,10 +51,10 @@ export class Camera
             upPosition.x, upPosition.y, upPosition.z);
     }
 
-    public translateEyePosition(eyePosition: Point3d): void
+    public translateEyePosition(eyePosition: Vec3): void
     {
-        let newLookAtPoint = new Point3d(eyePosition.x, eyePosition.y, eyePosition.z - 1);
-        let newUpPosition = new Point3d(eyePosition.x, eyePosition.y + 1, eyePosition.z);
+        let newLookAtPoint = new Vec3(eyePosition.x, eyePosition.y, eyePosition.z - 1);
+        let newUpPosition = new Vec3(eyePosition.x, eyePosition.y + 1, eyePosition.z);
 
         this.setCameraView(eyePosition, newLookAtPoint, newUpPosition);
     }

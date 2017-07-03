@@ -1,4 +1,5 @@
 import { RGBColor } from "../rgbColor";
+import { Vec3 } from "../../math/vec3";
 
 export class Point3d {
     public x: number;
@@ -7,12 +8,12 @@ export class Point3d {
     public pointSize: number;
     public color: RGBColor;
 
-    constructor(x: number, y: number, z: number, pointSize: number = 5,
+    constructor(location: Vec3, pointSize: number = 5,
         color: RGBColor = new RGBColor(0, 0, 0))
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
         this.pointSize = pointSize;
         this.color = color;
     }
