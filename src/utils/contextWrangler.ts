@@ -7,7 +7,6 @@ export class ContextWrangler
         const isIE = /*@cc_on!@*/false || !!(document as any).documentMode;
         const isEdge = !isIE && !!(window as any).StyleMedia;
         const contextName = (isIE || isEdge) ? "experimental-webgl" : "webgl";
-        console.log(contextName);
 
         try
         {
