@@ -9,9 +9,9 @@ import { Settings } from "../../settings";
 
 export class Ellipse extends Shape2d
 {
-    private static readonly highPrecisionNumberOfInnerVerticies: number = 8;
+    private static readonly highPrecisionNumberOfInnerVerticies: number = 400;
     private static readonly highPrecisionNumberOfVerticies: number = Ellipse.highPrecisionNumberOfInnerVerticies + 3;
-    private static readonly lowPrecisionNumberOfInnerVerticies: number = 400;
+    private static readonly lowPrecisionNumberOfInnerVerticies: number = 8;
     private static readonly lowPrecisionNumberOfVerticies: number = Ellipse.lowPrecisionNumberOfInnerVerticies + 3;
 
     private center: Vec3;

@@ -3,9 +3,14 @@ export class ContextWrangler
     public static getContext (canvas: HTMLCanvasElement): WebGLRenderingContext
     {
         let gl: WebGLRenderingContext | null;
+
+        const isIE = /*@cc_on!@*/false || !!(document as any).documentMode;
+        const isEdge = !isIE && !!(window as any).StyleMedia;
+        const contextName = (isIE || isEdge) ? "experimental-webgl" : "webgl";
+
         try
         {
-            gl = canvas.getContext("webgl",
+            gl = canvas.getContext(contextName,
                 {
                     alpha: false,
                     antialias: false,

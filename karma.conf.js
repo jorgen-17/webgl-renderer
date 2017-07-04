@@ -11,14 +11,13 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
         //software under test
-        { pattern: "src/utils/**/*.ts" },
-        { pattern: "src/graphics/**/*.ts" },
+        { pattern: "src/**/*.ts" },
 
         // tests
         { pattern: "spec/utils/vector.spec.ts" },
-        { pattern: "spec/graphics/shapes/boundingRectangle.spec.ts" },
-        { pattern: "spec/graphics/shapes/midpoint.spec.ts" },
-        { pattern: "spec/graphics/shapes/ellipse.spec.ts" }
+        { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },
+        { pattern: "spec/graphics/shapes2d/midpoint.spec.ts" },
+        { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" }
     ],
 
 
@@ -47,7 +46,9 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
         "Chrome",
-        // "Firefox"
+        "Firefox",
+        "IE",
+        "Edge"
     ],
 
 
