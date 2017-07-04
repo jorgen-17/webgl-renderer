@@ -7,7 +7,7 @@
         "build": "./node_modules/.bin/webpack --env build",
         "dev": "./node_modules/.bin/webpack --progress --colors --watch --env dev",
         "test": "./node_modules/.bin/karma start karma.conf.js",
-        "ci-test": "./node_modules/.bin/karma start karma.conf.js --browsers Chrome,Firefox",
+        "ci-test": "./node_modules/.bin/karma start karma.conf.js --browsers Chrome,Firefox --single-run",
         "type": "./node_modules/.bin/dts-generator --name webgl-renderer --project . --out lib/webgl-renderer.d.ts "
     },
     "dependencies": {
