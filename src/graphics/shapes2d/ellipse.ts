@@ -17,7 +17,6 @@ export class Ellipse extends Shape2d
     private center: Vec3;
     private horizontalRadius: number;
     private verticalRadius: number;
-    private numberOfInnerVerticies;
     private precision: Precision;
 
     constructor(point1: Vec3, point2: Vec3, rgbColor: RGBColor, gl: WebGLRenderingContext, precision: Precision)
@@ -58,17 +57,17 @@ export class Ellipse extends Shape2d
         this.addXYAndColorToFloat32Array(arr, 0, x, (boundingRect.topLeft.y - this.verticalRadius), this.center.z);
         // insert at half the verticies. times 5 because each vertex takes 5 spaces (x,y,r,g, and b)
         // and then add 5 since we already inserted the first vertex
-        let symmetryInsertionOffset = ((this.numberOfInnerVerticies / 2) * Settings.floatsPerVertex) + Settings.floatsPerVertex;
+        let symmetryInsertionOffset = ((numberOfInnerVerticies / 2) * Settings.floatsPerVertex) + Settings.floatsPerVertex;
         let endPointX = boundingRect.topRight.x;
         let endPointY = boundingRect.topRight.y - this.verticalRadius;
         this.addXYAndColorToFloat32Array(arr, symmetryInsertionOffset, endPointX, endPointY, this.center.z);
-        this.addXYAndColorToFloat32Array(arr, arr.length - Settings.floatsPerVertex, endPointX, endPointY, this.center.z);
+        this.addXYAndColorToFloat32Array(arr, (arr.length - Settings.floatsPerVertex), endPointX, endPointY, this.center.z);
 
-        // start at 2  because already inserted at 0 and 1 for x and y and then 2, 3, and 4 for r, g, and b
+        // start at 6 because already inserted a vertex
         let insertionIndex = Settings.floatsPerVertex;
 
         // divide by half the number of verticies because horizontal symmetry
-        for ( let i = 0; i < this.numberOfInnerVerticies / 2; i++)
+        for ( let i = 0; i < numberOfInnerVerticies / 2; i++)
         {
             x += xIncrement;
             let y = this.getYDistanceFromCenterForX(x);

@@ -47,7 +47,7 @@ export class ShapeFactory
         gl: WebGLRenderingContext): Rectangle
     {
         return new Rectangle(point1, point2, rgbColor, gl);
-    };
+    }
 
     private static createHexagon(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
         gl: WebGLRenderingContext): Hexagon
