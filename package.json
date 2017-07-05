@@ -8,12 +8,14 @@
         "dev": "./node_modules/.bin/webpack --progress --colors --watch --env dev",
         "test": "./node_modules/.bin/karma start karma.conf.js",
         "ci-test": "./node_modules/.bin/karma start karma.conf.js --browsers Chrome,Firefox --single-run",
-        "type": "./node_modules/.bin/dts-generator --name webgl-renderer --project . --out lib/webgl-renderer.d.ts "
+        "type": "./node_modules/.bin/dts-generator --name webgl-renderer --project . --out lib/webgl-renderer.d.ts",
+        "cover": "./node_modules/.bin/codecov"
     },
     "dependencies": {
     },
     "devDependencies": {
         "@types/jasmine": "^2.5.53",
+        "codecov": "^2.2.0",
         "dts-generator": "^2.1.0",
         "jasmine-core": "^2.6.4",
         "karma": "^1.7.0",
