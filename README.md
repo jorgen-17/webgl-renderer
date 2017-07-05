@@ -1,6 +1,7 @@
 # webgl-renderer:
 
-![build status](https://circleci.com/gh/typedefJorge/webgl-renderer.svg?style=shield&circle-token=568a288e204a324b76c900ff3d14759a77c2fb58)
+[![CircleCI](https://img.shields.io/circleci/project/github/typedefJorge/webgl-renderer.svg)]()
+[![Codecov](https://img.shields.io/codecov/c/github/typedefJorge/webgl-renderer.svg)]()
 
 Draw 2d colored shapes and lines with full type safety on Chrome, FF, IE, and Edge
 

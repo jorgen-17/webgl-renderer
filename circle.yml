@@ -4,3 +4,5 @@ machine:
 test:
   override:
     - npm run ci-test
+  post:
+    - npm run cover
