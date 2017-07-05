@@ -4,12 +4,13 @@ import { Precision } from "../../../src/graphics/precision";
 import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Vec3 } from "../../../src/math/vec3";
 
-import * as gl from "headless-gl";
-
 describe("HorizontalEllipse ", () =>
 {
     describe("constructor should initialize points correctly ", () =>
     {
+        let canvas = document.createElement("canvas");
+        document.body.appendChild(canvas);
+        const gl = ContextWrangler.getContext(canvas);
         const color = new RGBColor(1.0, 1.0, 1.0);
 
         it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
