@@ -17,6 +17,7 @@
         "@types/jasmine": "^2.5.53",
         "codecov": "^2.2.0",
         "dts-generator": "^2.1.0",
+        "headless-gl": "^3.0.7",
         "jasmine-core": "^2.6.4",
         "karma": "^1.7.0",
         "karma-jasmine": "^1.1.0",
