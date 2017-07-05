@@ -1,6 +1,9 @@
 machine:
   node:
     version: 6.11.0
+-dependencies:
+    pre:
+      - sudo apt-get install -y build-essential libxi-dev libglu1-mesa-dev libglew-dev
 test:
   override:
     - npm run ci-test
