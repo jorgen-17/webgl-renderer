@@ -30,8 +30,15 @@ module.exports = function(config) {
             instrumentation: true // set to false if you need to debug though source ts
         },
         reports: {
-            "html": "coverage-html",
-            json: "coverage-json"
+            "html": {
+                "directory": "coverage",
+                "subdirectory":"html",
+            },
+            json: {
+                "directory": "coverage",
+                "subdirectory":"json",
+                "filename": "cover.json"
+            }
         }
     },
 
