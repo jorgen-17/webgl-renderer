@@ -12,37 +12,35 @@ export class Hexagon extends Shape2d
 
     constructor(point1: Vec3, point2: Vec3, rgbColor: RGBColor, gl: WebGLRenderingContext)
     {
-        super(rgbColor);
+        super(rgbColor, point1, point2);
 
-        let boundingRect = new BoundingRectangle(point1, point2);
-        let vertexArray = this.populateVerticies(boundingRect);
-        this.verticies = new Float32Vector(vertexArray);
+        this.computeVerticies();
+
         this.glRenderMode = gl.TRIANGLE_FAN;
     }
 
-    private populateVerticies(boundingRect: BoundingRectangle): Float32Array
+    protected computeVerticies(): void
     {
         let arr = new Float32Array(Hexagon.numberOfVerticies * Settings.floatsPerVertex);
 
-
-        let { first, second } = ThirdPoints.between(boundingRect.topLeft, boundingRect.topRight);
+        let { first, second } = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.topRight);
 
         let insertionIndex = 0;
         this.addXYAndColorToFloat32Array(arr, insertionIndex, first.x, first.y, first.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
         insertionIndex += Settings.floatsPerVertex;
-        let mid = Midpoint.between(boundingRect.topRight, boundingRect.bottomRight);
+        let mid = Midpoint.between(this.boundingRect.topRight, this.boundingRect.bottomRight);
         this.addXYAndColorToFloat32Array(arr, insertionIndex, mid.x, mid.y, mid.z);
         insertionIndex += Settings.floatsPerVertex;
-        ({ first, second } = ThirdPoints.between(boundingRect.bottomRight, boundingRect.bottomLeft));
+        ({ first, second } = ThirdPoints.between(this.boundingRect.bottomRight, this.boundingRect.bottomLeft));
         this.addXYAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYAndColorToFloat32Array(arr, insertionIndex, first.x, first.y, first.z);
         insertionIndex += Settings.floatsPerVertex;
-        mid = Midpoint.between(boundingRect.bottomLeft, boundingRect.topLeft);
+        mid = Midpoint.between(this.boundingRect.bottomLeft, this.boundingRect.topLeft);
         this.addXYAndColorToFloat32Array(arr, insertionIndex, mid.x, mid.y, mid.z);
 
-        return arr;
+        this.verticies = new Float32Vector(arr);
     }
 }

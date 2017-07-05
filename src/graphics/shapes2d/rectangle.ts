@@ -11,26 +11,29 @@ export class Rectangle extends Shape2d
 
     constructor(point1: Vec3, point2: Vec3, rgbColor: RGBColor, gl: WebGLRenderingContext)
     {
-        super(rgbColor);
+        super(rgbColor, point1, point2);
 
-        const boundingRect = new BoundingRectangle(point1, point2);
+        this.computeVerticies();
 
+        this.glRenderMode = gl.TRIANGLE_STRIP;
+    }
+    protected computeVerticies(): void
+    {
         let array = new Float32Array(Rectangle.numberOfVerticies * Settings.floatsPerVertex);
 
         let insertionIndex = 0;
-        this.addXYAndColorToFloat32Array(array, insertionIndex, boundingRect.topLeft.x,
-            boundingRect.topLeft.y, boundingRect.topLeft.z);
+        this.addXYAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topLeft.x,
+            this.boundingRect.topLeft.y, this.boundingRect.topLeft.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYAndColorToFloat32Array(array, insertionIndex, boundingRect.topRight.x,
-            boundingRect.topRight.y, boundingRect.topRight.z);
+        this.addXYAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topRight.x,
+            this.boundingRect.topRight.y, this.boundingRect.topRight.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYAndColorToFloat32Array(array, insertionIndex, boundingRect.bottomLeft.x,
-            boundingRect.bottomLeft.y, boundingRect.bottomLeft.z);
+        this.addXYAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
+            this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYAndColorToFloat32Array(array, insertionIndex, boundingRect.bottomRight.x,
-            boundingRect.bottomRight.y, boundingRect.bottomRight.z);
+        this.addXYAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomRight.x,
+            this.boundingRect.bottomRight.y, this.boundingRect.bottomRight.z);
 
         this.verticies = new Float32Vector(array);
-        this.glRenderMode = gl.TRIANGLE_STRIP;
     }
 }
