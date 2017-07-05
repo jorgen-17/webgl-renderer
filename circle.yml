@@ -8,7 +8,6 @@ test:
   override:
     - npm run ci-test
   post:
-    - sh ./moveCoverCI.sh
     - npm run cover
 general:
   artifacts:
