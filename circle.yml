@@ -10,3 +10,6 @@ test:
   post:
     - sh ./moveCoverCI.sh
     - npm run cover
+general:
+  artifacts:
+    - "coverage"
