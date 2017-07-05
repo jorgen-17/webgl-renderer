@@ -28,6 +28,10 @@ module.exports = function(config) {
     karmaTypescriptConfig: {
         coverageOptions: {
             instrumentation: true // set to false if you need to debug though source ts
+        },
+        reports: {
+            "html": "coverage-html",
+            json: "coverage-json"
         }
     },
 
