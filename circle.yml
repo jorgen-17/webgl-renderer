@@ -8,5 +8,5 @@ test:
   override:
     - npm run ci-test
   post:
-    - ./moveCoverCi.sh
+    - ./moveCoverCI.sh
     - npm run cover
