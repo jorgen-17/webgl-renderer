@@ -7,7 +7,7 @@ import { Settings } from "../../settings";
 
 export class Rectangle extends Shape2d
 {
-    private static readonly numberOfVerticies: number = 3;
+    private static readonly numberOfVerticies: number = 4;
 
     constructor(point1: Vec3, point2: Vec3, rgbColor: RGBColor, gl: WebGLRenderingContext)
     {

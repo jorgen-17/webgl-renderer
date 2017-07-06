@@ -20,7 +20,8 @@ module.exports = function(config) {
         { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },
         { pattern: "spec/graphics/shapes2d/midpoint.spec.ts" },
         { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/triangle.spec.ts" }
+        { pattern: "spec/graphics/shapes2d/triangle.spec.ts" },
+        { pattern: "spec/graphics/shapes2d/rectangle.spec.ts" }
     ],
 
 

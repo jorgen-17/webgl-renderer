@@ -9,7 +9,6 @@ describe("Triangle ", () =>
 {
     describe("constructor", () =>
     {
-
         const color = new RGBColor(1.0, 1.0, 1.0);
         const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
         gl.setup(x => x.TRIANGLES).returns(() => 4);
