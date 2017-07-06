@@ -10,7 +10,7 @@ import { Point3d } from "./shapes2d/point3d";
 import { DrawingSettings } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
 import { Settings } from "../settings";
-import { Vec3 } from "../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 
 export interface IWebGLRenderer
 {

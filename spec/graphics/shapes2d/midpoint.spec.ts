@@ -1,5 +1,5 @@
 import { Midpoint, ThirdPoints } from "../../../src/graphics/shapes2d/midpoint";
-import { Vec3 } from "../../../src/math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 
 describe("Midpoint ", () =>
 {

@@ -1,7 +1,7 @@
 import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/vector";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export class Line extends Shape2d

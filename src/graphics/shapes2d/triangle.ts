@@ -3,7 +3,7 @@ import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "./midpoint";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export class Triangle extends Shape2d

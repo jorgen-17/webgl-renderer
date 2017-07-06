@@ -4,7 +4,7 @@ import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "./midpoint";
 import { Precision } from "../precision";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export class Ellipse extends Shape2d

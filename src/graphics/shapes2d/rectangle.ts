@@ -2,7 +2,7 @@ import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export class Rectangle extends Shape2d

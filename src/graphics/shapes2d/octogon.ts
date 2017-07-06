@@ -3,7 +3,7 @@ import { Float32Vector } from "../../utils/vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { ThirdPoints } from "./midpoint";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export class Octogon extends Shape2d

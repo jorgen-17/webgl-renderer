@@ -3,7 +3,7 @@ import * as TypeMoq from "typemoq";
 import { Ellipse } from "../../../src/graphics/shapes2d/ellipse";
 import { Precision } from "../../../src/graphics/precision";
 import { RGBColor } from "../../../src/graphics/rgbColor";
-import { Vec3 } from "../../../src/math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Triangle } from "../../../src/graphics/shapes2d/triangle";
 import { ShapeFactory } from "../../../src/graphics/shapes2d/shapeFactory";
 import { Settings } from "../../../src/settings";

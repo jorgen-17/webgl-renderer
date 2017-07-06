@@ -7,7 +7,7 @@ import { Hexagon } from "./hexagon";
 import { Octogon } from "./octogon";
 import { RGBColor } from "../rgbColor";
 import { Precision } from "../precision";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 
 export class ShapeFactory
 {

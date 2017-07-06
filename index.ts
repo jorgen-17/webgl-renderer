@@ -15,7 +15,7 @@ import { RGBColor } from "./src/graphics/rgbColor";
 import { Camera } from "./src/graphics/camera";
 import { Point3d } from "./src/graphics/shapes2d/point3d";
 import { DrawingSettings } from "./src/graphics/drawingSettings";
-import { Vec3 } from "./src/math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 
 export
 {

@@ -1,7 +1,7 @@
 import * as TypeMoq from "typemoq";
 
 import { RGBColor } from "../../../src/graphics/rgbColor";
-import { Vec3 } from "../../../src/math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Triangle } from "../../../src/graphics/shapes2d/triangle";
 
 

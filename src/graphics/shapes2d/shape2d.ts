@@ -1,7 +1,7 @@
 import { Float32Vector } from "../../utils/vector";
 import { RGBColor } from "../rgbColor";
 import { BoundingRectangle } from "./boundingRectangle";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export abstract class Shape2d {

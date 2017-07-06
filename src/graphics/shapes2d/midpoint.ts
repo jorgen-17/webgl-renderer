@@ -1,5 +1,5 @@
 import { Tuple } from "../../utils/tuple";
-import { Vec3 } from "../../math/vec3";
+import { Vec3 } from "cuon-matrix-ts";
 
 export class Midpoint
 {
