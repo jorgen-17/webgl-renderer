@@ -23,7 +23,7 @@ describe("Triangle ", () =>
 
         describe("should initialize vertex positions and color correctly ", () =>
         {
-            it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
+            it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
                 const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.object);
 
@@ -36,14 +36,12 @@ describe("Triangle ", () =>
                 expect(1.0).toBeCloseTo(triangle.verticies.arr[4]); // g1
                 expect(1.0).toBeCloseTo(triangle.verticies.arr[5]); // b1
 
-
                 expect(0.75).toBeCloseTo(triangle.verticies.arr[6]); // x2
                 expect(1).toBeCloseTo(triangle.verticies.arr[7]); // y2
                 expect(0).toBeCloseTo(triangle.verticies.arr[8]); // z2
                 expect(1.0).toBeCloseTo(triangle.verticies.arr[9]); // r2
                 expect(1.0).toBeCloseTo(triangle.verticies.arr[10]); // g2
                 expect(1.0).toBeCloseTo(triangle.verticies.arr[11]); // b2
-
 
                 expect(1).toBeCloseTo(triangle.verticies.arr[12]); // x3
                 expect(0.5).toBeCloseTo(triangle.verticies.arr[13]); // y3
