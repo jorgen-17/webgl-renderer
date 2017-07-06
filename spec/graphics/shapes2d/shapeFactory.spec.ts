@@ -48,11 +48,18 @@ describe("ShapeFactory ", () =>
         expect(6).toBe(octogon.glRenderMode);
         expect(color).toBe(octogon.rgbColor);
     });
+    it("creates ellipse", () =>
+    {
+        const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", color, gl.object);
+        expect(403 * Settings.floatsPerVertex).toBe(ellipse.verticies.size);
+        expect(6).toBe(ellipse.glRenderMode);
+        expect(color).toBe(ellipse.rgbColor);
+    });
     it("creates unknown shape", () =>
     {
         const createShape = () =>
         {
-            const ellipse = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode, color, gl.object);
+            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode, color, gl.object);
         };
 
         expect(createShape).toThrow(new Error("cannot recognize shape type notShape"));
