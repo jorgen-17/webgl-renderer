@@ -10,6 +10,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        { pattern: "node_modules/proxy-polyfill/proxy.min.js"},
+
         //software under test
         { pattern: "src/**/*.ts" },
 
@@ -59,7 +61,7 @@ module.exports = function(config) {
     browsers: [
         "Chrome",
         "Firefox",
-        "IE",
+        // "IE",
         "Edge"
     ],
 

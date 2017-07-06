@@ -25,6 +25,7 @@
         "karma-ie-launcher": "^1.0.0",
         "karma-edge-launcher": "^0.4.1",
         "karma-typescript": "^3.0.4",
+        "proxy-polyfill": "^0.1.7",
         "source-map-loader": "^0.1.6",
         "typemoq": "^1.7.0",
         "typescript": "^2.3.4",

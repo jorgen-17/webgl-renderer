@@ -22,36 +22,36 @@ describe("Triangle ", () =>
             expect(4).toBe(triangle.glRenderMode);
         });
 
-        xdescribe("should initialize vertex positions and color correctly ", () =>
+        describe("should initialize vertex positions and color correctly ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
             {
                 const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.object);
 
-                expect(66).toEqual(triangle.verticies.size);
+                expect(18).toEqual(triangle.verticies.size);
 
                 expect(0.5).toBeCloseTo(triangle.verticies.arr[0]); // x1
-                expect(0.75).toBeCloseTo(triangle.verticies.arr[1]); // y1
-                expect(0.6).toBeCloseTo(triangle.verticies.arr[6]); // x2
-                expect(0.95).toBeCloseTo(triangle.verticies.arr[7]); // y2
-                expect(0.7).toBeCloseTo(triangle.verticies.arr[12]); // x3
-                expect(0.99494).toBeCloseTo(triangle.verticies.arr[13]); // y3
-                expect(0.8).toBeCloseTo(triangle.verticies.arr[18]); // x4
-                expect(0.99494).toBeCloseTo(triangle.verticies.arr[19]); // y4
-                expect(0.9).toBeCloseTo(triangle.verticies.arr[24]); // x5
-                expect(0.95).toBeCloseTo(triangle.verticies.arr[25]); // y5
-                expect(1.0).toBeCloseTo(triangle.verticies.arr[30]); // x6
-                expect(0.75).toBeCloseTo(triangle.verticies.arr[31]); // y6
-                expect(0.6).toBeCloseTo(triangle.verticies.arr[36]); // x7
-                expect(0.55).toBeCloseTo(triangle.verticies.arr[37]); // y7
-                expect(0.7).toBeCloseTo(triangle.verticies.arr[42]); // x8
-                expect(0.50505).toBeCloseTo(triangle.verticies.arr[43]); // y8
-                expect(0.8).toBeCloseTo(triangle.verticies.arr[48]); // x9
-                expect(0.50505).toBeCloseTo(triangle.verticies.arr[49]); // y9
-                expect(0.9).toBeCloseTo(triangle.verticies.arr[54]); // x10
-                expect(0.55).toBeCloseTo(triangle.verticies.arr[55]); // y10
-                expect(1.0).toBeCloseTo(triangle.verticies.arr[60]); // x11
-                expect(0.75).toBeCloseTo(triangle.verticies.arr[61]); // y11
+                expect(0.5).toBeCloseTo(triangle.verticies.arr[1]); // y1
+                expect(0).toBeCloseTo(triangle.verticies.arr[2]); // z1
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[3]); // r1
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[4]); // g1
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[5]); // b1
+
+
+                expect(0.75).toBeCloseTo(triangle.verticies.arr[6]); // x2
+                expect(1).toBeCloseTo(triangle.verticies.arr[7]); // y2
+                expect(0).toBeCloseTo(triangle.verticies.arr[8]); // z2
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[9]); // r2
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[10]); // g2
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[11]); // b2
+
+
+                expect(1).toBeCloseTo(triangle.verticies.arr[12]); // x3
+                expect(0.5).toBeCloseTo(triangle.verticies.arr[13]); // y3
+                expect(0).toBeCloseTo(triangle.verticies.arr[14]); // z3
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[15]); // r3
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[16]); // g3
+                expect(1.0).toBeCloseTo(triangle.verticies.arr[17]); // b3
             });
         });
     });
