@@ -23,7 +23,8 @@ module.exports = function(config) {
         { pattern: "spec/graphics/shapes2d/rectangle.spec.ts" },
         { pattern: "spec/graphics/shapes2d/hexagon.spec.ts" },
         { pattern: "spec/graphics/shapes2d/octogon.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" }
+        { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" },
+        { pattern: "spec/graphics/shapes2d/shapeFactory.spec.ts" }
     ],
 
 

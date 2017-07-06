@@ -16,8 +16,6 @@ export class ShapeFactory
     {
         switch (shapeMode)
         {
-            case "ellipses":
-                return this.createEllipse(point1, point2, rgbColor, gl);
             case "triangles":
                 return this.createTriangle(point1, point2, rgbColor, gl);
             case "rectangles":
@@ -26,15 +24,11 @@ export class ShapeFactory
                 return this.createHexagon(point1, point2, rgbColor, gl);
             case "octogons":
                 return this.createOctogon(point1, point2, rgbColor, gl);
+            case "ellipses":
+                return this.createEllipse(point1, point2, rgbColor, gl);
             default:
                 throw Error(`cannot recognize shape type ${shapeMode}`);
         }
-    }
-
-    private static createEllipse(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
-        gl: WebGLRenderingContext): Ellipse
-    {
-        return new Ellipse(point1, point2, rgbColor, gl, Precision.High);
     }
 
     private static createTriangle(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
@@ -63,5 +57,11 @@ export class ShapeFactory
         gl: WebGLRenderingContext): Octogon
     {
         return new Octogon(point1, point2, rgbColor, gl);
+    }
+
+    private static createEllipse(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
+        gl: WebGLRenderingContext): Ellipse
+    {
+        return new Ellipse(point1, point2, rgbColor, gl, Precision.High);
     }
 }
