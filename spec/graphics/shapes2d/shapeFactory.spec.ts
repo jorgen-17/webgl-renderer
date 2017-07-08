@@ -16,9 +16,9 @@ describe("ShapeFactory ", () =>
 
     const color = new RGBColor(1.0, 1.0, 1.0);
     const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-    gl.setup(x => x.TRIANGLES).returns(() => 4);
-    gl.setup(x => x.TRIANGLE_STRIP).returns(() => 5);
-    gl.setup(x => x.TRIANGLE_FAN).returns(() => 6);
+    gl.setup(x => x.TRIANGLES).returns(() => 0x0004);
+    gl.setup(x => x.TRIANGLE_STRIP).returns(() => 0x0005);
+    gl.setup(x => x.TRIANGLE_FAN).returns(() => 0x0006);
 
     it("creates triangle", () =>
     {

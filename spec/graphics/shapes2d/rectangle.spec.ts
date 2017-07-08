@@ -11,7 +11,7 @@ describe("Rectangle ", () =>
     {
         const color = new RGBColor(1.0, 1.0, 1.0);
         const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-        gl.setup(x => x.TRIANGLE_STRIP).returns(() => 5);
+        gl.setup(x => x.TRIANGLE_STRIP).returns(() => 0x0005);
 
         it("should initialize basic properties correctly", () =>
         {

@@ -72,7 +72,7 @@ export class WebGLRenderer implements IWebGLRenderer
     "    }\n";
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext,
-        drawingSettings: DrawingSettings, camera: Camera | null = null)
+        drawingSettings: DrawingSettings | null = null, camera: Camera | null = null)
     {
         this.gl = gl;
 
@@ -230,15 +230,15 @@ export class WebGLRenderer implements IWebGLRenderer
         }
     }
 
-    private initializeDrawingSettings(drawingSettings: DrawingSettings)
+    private initializeDrawingSettings(drawingSettings: DrawingSettings | null)
     {
-        this._renderMode = drawingSettings.renderMode || Settings.defaultRendereMode;
+        this._renderMode = (drawingSettings && drawingSettings.renderMode) || Settings.defaultRendereMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
-        this._shapeMode = drawingSettings.shapeMode || Settings.defaultShapeMode;
-        this._drawingMode = drawingSettings.drawingMode || Settings.defaultDrawingMode;
-        this._pointSize = drawingSettings.pointSize || Settings.defaultPointSize;
-        this._backgroundColor = drawingSettings.backgroundColor || Settings.defaultBackgroundColor;
-        this._color = drawingSettings.color || Settings.defaultColor;
+        this._shapeMode = (drawingSettings && drawingSettings.shapeMode) || Settings.defaultShapeMode;
+        this._drawingMode = (drawingSettings && drawingSettings.drawingMode) || Settings.defaultDrawingMode;
+        this._pointSize = (drawingSettings && drawingSettings.pointSize) || Settings.defaultPointSize;
+        this._backgroundColor = (drawingSettings && drawingSettings.backgroundColor) || Settings.defaultBackgroundColor;
+        this._color = (drawingSettings && drawingSettings.color) || Settings.defaultColor;
     }
 
     private initializeCamera(camera: Camera | null)

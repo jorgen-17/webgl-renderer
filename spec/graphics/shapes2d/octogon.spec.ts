@@ -11,7 +11,7 @@ describe("Hexagon ", () =>
     {
         const color = new RGBColor(1.0, 1.0, 1.0);
         const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-        gl.setup(x => x.TRIANGLE_FAN).returns(() => 6);
+        gl.setup(x => x.TRIANGLE_FAN).returns(() => 0x0006);
 
         it("should initialize basic properties correctly", () =>
         {
