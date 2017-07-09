@@ -1,4 +1,4 @@
-import * as TypeMoq from "typemoq";
+import { Mock } from "ts-mocks";
 
 import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Vec3 } from "cuon-matrix-ts";
@@ -10,12 +10,16 @@ describe("Hexagon ", () =>
     describe("constructor", () =>
     {
         const color = new RGBColor(1.0, 1.0, 1.0);
-        const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-        gl.setup(x => x.TRIANGLE_FAN).returns(() => 0x0006);
+        const gl = new Mock<WebGLRenderingContext>();
+
+        beforeAll(() =>
+        {
+            gl.setup(x => x.TRIANGLE_FAN).is(0x0006);
+        });
 
         it("should initialize basic properties correctly", () =>
         {
-            const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), color, gl.object);
+            const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), color, gl.Object);
 
             expect(color).toBe(hexagon.rgbColor);
             expect(6).toBe(hexagon.glRenderMode);
@@ -25,7 +29,7 @@ describe("Hexagon ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.object);
+                const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.Object);
 
                 expect(36).toEqual(hexagon.verticies.size);
 

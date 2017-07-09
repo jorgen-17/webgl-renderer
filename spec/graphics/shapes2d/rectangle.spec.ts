@@ -1,4 +1,4 @@
-import * as TypeMoq from "typemoq";
+import { Mock } from "ts-mocks";
 
 import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Vec3 } from "cuon-matrix-ts";
@@ -10,12 +10,16 @@ describe("Rectangle ", () =>
     describe("constructor", () =>
     {
         const color = new RGBColor(1.0, 1.0, 1.0);
-        const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-        gl.setup(x => x.TRIANGLE_STRIP).returns(() => 0x0005);
+        const gl = new Mock<WebGLRenderingContext>();
+
+        beforeAll(() =>
+        {
+            gl.setup(x => x.TRIANGLE_STRIP).is(0x0005);
+        });
 
         it("should initialize basic properties correctly", () =>
         {
-            const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), color, gl.object);
+            const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), color, gl.Object);
 
             expect(color).toBe(rectangle.rgbColor);
             expect(5).toBe(rectangle.glRenderMode);
@@ -25,7 +29,7 @@ describe("Rectangle ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.object);
+                const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.Object);
 
                 expect(24).toEqual(rectangle.verticies.size);
 

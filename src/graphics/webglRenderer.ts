@@ -11,6 +11,7 @@ import { DrawingSettings } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
 import { Settings } from "../settings";
 import { Vec3 } from "cuon-matrix-ts";
+import { ShaderType } from "./shaderType";
 
 export interface IWebGLRenderer
 {
@@ -338,7 +339,7 @@ export class WebGLRenderer implements IWebGLRenderer
         this.gl.useProgram(this._shaderProgram);
     }
 
-    private createShader(str, type): WebGLShader | null
+    private createShader(shaderSource: string, type: ShaderType): WebGLShader | null
     {
         let shader: WebGLShader | null;
         if (type === "fragment")
@@ -354,7 +355,7 @@ export class WebGLRenderer implements IWebGLRenderer
             return null;
         }
 
-        this.gl.shaderSource(shader, str);
+        this.gl.shaderSource(shader, shaderSource);
         this.gl.compileShader(shader);
         if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS))
         {

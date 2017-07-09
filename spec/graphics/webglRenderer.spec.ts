@@ -1,4 +1,5 @@
 import * as TypeMoq from "typemoq";
+import { Mock, Setup } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
 import { Ellipse } from "../../src/graphics/shapes2d/ellipse";
@@ -13,14 +14,19 @@ import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRendere
 
 describe("ShapeFactory ", () =>
 {
-    const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-    WebglRendererTestHelper.setupGlMockFunctions(gl);
+    // const gl = Mock<WebGLRenderingContext>(undefined, TypeMoq.MockBehavior.Loose);
+    const gl = new Mock<WebGLRenderingContext>();
+
+    // const gl = Mock(WebGLRenderingContext);
+    // const gl = Mock2<WebGLRenderingContext>(() => {}), undefined);
+    // WebglRendererTestHelper.setupGlMockFunctions(gl);
 
     let renderer: WebGLRenderer;
 
     beforeEach(() =>
     {
-        renderer = new WebGLRenderer(800, 600, gl.object);
+        WebglRendererTestHelper.setupGlMockFunctions(gl);
+        // renderer = new WebGLRenderer(800, 600, gl.Object);
     });
 
     xit("camera can be passed in and is used", () =>
@@ -40,7 +46,7 @@ describe("ShapeFactory ", () =>
 
     it("adding shapes sends their verticies to webgl", () =>
     {
-        // do the thing
+        expect(true).toBe(true);
     });
 
     xit("changing point size gets passed into webgl", () =>

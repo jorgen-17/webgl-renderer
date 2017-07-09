@@ -1,4 +1,4 @@
-import * as TypeMoq from "typemoq";
+import { Mock } from "ts-mocks";
 
 import { Ellipse } from "../../../src/graphics/shapes2d/ellipse";
 import { Precision } from "../../../src/graphics/precision";
@@ -15,42 +15,46 @@ describe("ShapeFactory ", () =>
     const point2 = new Vec3(1, 1);
 
     const color = new RGBColor(1.0, 1.0, 1.0);
-    const gl = TypeMoq.Mock.ofType<WebGLRenderingContext>(undefined);
-    gl.setup(x => x.TRIANGLES).returns(() => 0x0004);
-    gl.setup(x => x.TRIANGLE_STRIP).returns(() => 0x0005);
-    gl.setup(x => x.TRIANGLE_FAN).returns(() => 0x0006);
+    const gl = new Mock<WebGLRenderingContext>();
+
+    beforeAll(() =>
+    {
+        gl.setup(x => x.TRIANGLES).is(0x0004);
+        gl.setup(x => x.TRIANGLE_STRIP).is(0x0005);
+        gl.setup(x => x.TRIANGLE_FAN).is(0x0006);
+    });
 
     it("creates triangle", () =>
     {
-        const triangle = ShapeFactory.createShape(point1, point2, "triangles", color, gl.object);
+        const triangle = ShapeFactory.createShape(point1, point2, "triangles", color, gl.Object);
         expect(3 * Settings.floatsPerVertex).toBe(triangle.verticies.size);
         expect(4).toBe(triangle.glRenderMode);
         expect(color).toBe(triangle.rgbColor);
     });
     it("creates rectangle", () =>
     {
-        const rectangle = ShapeFactory.createShape(point1, point2, "rectangles", color, gl.object);
+        const rectangle = ShapeFactory.createShape(point1, point2, "rectangles", color, gl.Object);
         expect(4 * Settings.floatsPerVertex).toBe(rectangle.verticies.size);
         expect(5).toBe(rectangle.glRenderMode);
         expect(color).toBe(rectangle.rgbColor);
     });
     it("creates hexagon", () =>
     {
-        const hexagon = ShapeFactory.createShape(point1, point2, "hexagons", color, gl.object);
+        const hexagon = ShapeFactory.createShape(point1, point2, "hexagons", color, gl.Object);
         expect(6 * Settings.floatsPerVertex).toBe(hexagon.verticies.size);
         expect(6).toBe(hexagon.glRenderMode);
         expect(color).toBe(hexagon.rgbColor);
     });
     it("creates octogon", () =>
     {
-        const octogon = ShapeFactory.createShape(point1, point2, "octogons", color, gl.object);
+        const octogon = ShapeFactory.createShape(point1, point2, "octogons", color, gl.Object);
         expect(8 * Settings.floatsPerVertex).toBe(octogon.verticies.size);
         expect(6).toBe(octogon.glRenderMode);
         expect(color).toBe(octogon.rgbColor);
     });
     it("creates ellipse", () =>
     {
-        const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", color, gl.object);
+        const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", color, gl.Object);
         expect(403 * Settings.floatsPerVertex).toBe(ellipse.verticies.size);
         expect(6).toBe(ellipse.glRenderMode);
         expect(color).toBe(ellipse.rgbColor);
@@ -59,7 +63,7 @@ describe("ShapeFactory ", () =>
     {
         const createShape = () =>
         {
-            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode, color, gl.object);
+            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode, color, gl.Object);
         };
 
         expect(createShape).toThrow(new Error("cannot recognize shape type notShape"));

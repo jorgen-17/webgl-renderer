@@ -15,6 +15,8 @@ module.exports = function(config) {
         //software under test
         { pattern: "src/**/*.ts" },
 
+        { pattern: "specHelpers/**/*.ts" },
+
         // tests
         { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },
@@ -25,7 +27,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/shapes2d/octogon.spec.ts" },
         { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" },
         { pattern: "spec/graphics/shapes2d/shapeFactory.spec.ts" },
-        // { pattern: "spec/graphics/webglRenderer.spec.ts" }
+        { pattern: "spec/graphics/webglRenderer.spec.ts" }
     ],
 
 
@@ -35,7 +37,7 @@ module.exports = function(config) {
 
     karmaTypescriptConfig: {
         coverageOptions: {
-            instrumentation: true // set to false if you need to debug though source ts
+            instrumentation: false // set to false if you need to debug though source ts
         },
         reports: {
             "html": {
@@ -66,7 +68,7 @@ module.exports = function(config) {
     browsers: [
         "Chrome",
         "Firefox",
-        // "IE",
+        "IE",
         "Edge"
     ],
 
