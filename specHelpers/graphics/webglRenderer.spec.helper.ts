@@ -1,4 +1,3 @@
-import * as TypeMoq from "typemoq";
 import { Mock } from "ts-mocks";
 
 export class WebglRendererTestHelper
@@ -25,38 +24,37 @@ export class WebglRendererTestHelper
 
         // init viewport
         gl.setup(x => x.viewport).is(
-            (x: number, y: number, width: number, height: number) =>
-            { /* do nothing */ });
+            (x: number, y: number, width: number, height: number) => { /* noop */ });
 
-        // create/init shaders
-        // gl.setup(x => x.createShader(TypeMoq.It.isAnyNumber()));
-        // gl.setup(x => x.getProgramParameter(TypeMoq.It.isAnyObject(WebGLShader),
-        //     TypeMoq.It.isAnyNumber())).is(true);
-        // gl.setup(x => x.shaderSource(TypeMoq.It.isAnyObject(WebGLShader),
-        //     TypeMoq.It.isAnyString()));
-        // gl.setup(x => x.compileShader(TypeMoq.It.isAnyObject(WebGLShader)));
-        // gl.setup(x => x.createProgram()).is(new WebGLProgram());
-        // gl.setup(x => x.attachShader(TypeMoq.It.isAnyObject(WebGLProgram),
-        //     TypeMoq.It.isAnyObject(WebGLShader)));
-        // gl.setup(x => x.linkProgram(TypeMoq.It.isAnyObject(WebGLShader)));
-        // gl.setup(x => x.useProgram(TypeMoq.It.isAnyObject(WebGLShader)));
+        // create shader
+        gl.setup(x => x.createShader).is((type: number) => null);
+        gl.setup(x => x.shaderSource).is((shader: WebGLShader, source: string) => { /* noop */ });
+        gl.setup(x => x.compileShader).is((shader: WebGLShader) => { /* noop */ });
+        gl.setup(x => x.getShaderParameter).is((shader: WebGLShader, pName: number) => true);
+
+        // init shaders
+        const shaderProgram = new Mock<WebGLProgram>();
+        gl.setup(x => x.createProgram).is(() => shaderProgram.Object);
+        gl.setup(x => x.attachShader).is(
+            (program: WebGLProgram, shader: WebGLShader) => { /* noop */});
+        gl.setup(x => x.linkProgram).is((shader: WebGLShader) => { /* noop */});
+        gl.setup(x => x.getProgramParameter).is((shader: WebGLShader, pName: number) => true);
+        gl.setup(x => x.useProgram).is((shader: WebGLShader) => { /* noop */ });
 
         // drawGlArrays
-        // gl.setup(x => x.shaderSource(TypeMoq.It.isAnyObject(WebGLShader),
-        //     TypeMoq.It.isAnyString())).is(1);
-        // gl.setup(x => x.createBuffer()).is(new WebGLBuffer());
-        // gl.setup(x => x.bindBuffer(TypeMoq.It.isAnyNumber(),
-        //     TypeMoq.It.isAnyString()));
-        // gl.setup(x => x.bufferData(TypeMoq.It.isAnyNumber(),
-        //     TypeMoq.It.isAnyNumber(), TypeMoq.It.isAnyNumber()));
-        // gl.setup(x => x.vertexAttribPointer(TypeMoq.It.isAnyNumber(),
-        //     TypeMoq.It.isAnyNumber(), TypeMoq.It.isAnyNumber(),
-        //     TypeMoq.It.isValue<boolean>(false), TypeMoq.It.isAnyNumber(),
-        //     TypeMoq.It.isAnyNumber()));
-        // gl.setup(x => x.enableVertexAttribArray(TypeMoq.It.isAnyNumber()));
-        // gl.setup(x => x.uniformMatrix4fv(TypeMoq.It.isAnyObject(WebGLUniformLocation),
-        //     TypeMoq.It.isValue<boolean>(false), TypeMoq.It.isAny()));
-        // gl.setup(x => x.drawArrays(TypeMoq.It.isAnyNumber(),
-        //     TypeMoq.It.isAnyNumber(), TypeMoq.It.isAnyNumber()));
+        gl.setup(x => x.shaderSource).is((shader: WebGLShader, source: string) => 1);
+        const webglBuffer = new Mock<WebGLBuffer>();
+        gl.setup(x => x.createBuffer).is(() => webglBuffer.Object);
+        gl.setup(x => x.bindBuffer).is((target: number, buffer: WebGLBuffer) => { /* noop */ });
+        gl.setup(x => x.bufferData).is(
+            (target: number, size: number | ArrayBufferView | ArrayBuffer, usage: number) => {/* noop */});
+        gl.setup(x => x.vertexAttribPointer).is(
+            (index: number, size: number, type: number, normalized: boolean,
+            stride: number, offset: number) => { /* noop */ });
+        gl.setup(x => x.enableVertexAttribArray).is((index: number) => { /* noop */ });
+        gl.setup(x => x.uniformMatrix4fv).is(
+            (uniformLocation: WebGLUniformLocation, transpose: boolean,
+            value: Float32Array | number[]) => { /* noop */ });
+        gl.setup(x => x.drawArrays).is((mode: number, first: number, count: number) => { /* noop */ });
     }
 }

@@ -14,19 +14,13 @@ import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRendere
 
 describe("ShapeFactory ", () =>
 {
-    // const gl = Mock<WebGLRenderingContext>(undefined, TypeMoq.MockBehavior.Loose);
     const gl = new Mock<WebGLRenderingContext>();
-
-    // const gl = Mock(WebGLRenderingContext);
-    // const gl = Mock2<WebGLRenderingContext>(() => {}), undefined);
-    // WebglRendererTestHelper.setupGlMockFunctions(gl);
-
     let renderer: WebGLRenderer;
 
     beforeEach(() =>
     {
         WebglRendererTestHelper.setupGlMockFunctions(gl);
-        // renderer = new WebGLRenderer(800, 600, gl.Object);
+        renderer = new WebGLRenderer(800, 600, gl.Object);
     });
 
     xit("camera can be passed in and is used", () =>
