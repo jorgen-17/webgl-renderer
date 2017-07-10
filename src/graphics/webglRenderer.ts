@@ -13,33 +13,13 @@ import { Settings } from "../settings";
 import { Vec3 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
 
-export interface IWebGLRenderer
-{
-    color: RGBColor;
-    backgroundColor: RGBColor;
-    gl: WebGLRenderingContext;
-    shape: ShapeMode;
-    renderMode: RenderMode;
-    pointSize: number;
-    camera: Camera;
-    draw: () => void;
-    setViewPortDimensions: (newWidth: number, newHeight: number) => void;
-    addXYPointToScene(x: number, y: number): void;
-    addShapeToScene(shape: Shape2d): void;
-    addShapesToScene(shape: Array<Shape2d>): void;
-    removeAllVeriticies(): void;
-}
-
-export class WebGLRenderer implements IWebGLRenderer
+export class WebGLRenderer
 {
     public gl: WebGLRenderingContext;
     private _glRenderMode: number;
-    private _shapeMode: ShapeMode;
     private _renderMode: RenderMode;
-    private _drawingMode: DrawingMode;
     private _pointSize: number;
     private _backgroundColor: RGBColor;
-    private _color: RGBColor;
     private _camera: Camera;
     private _pointsVector: VertexBuffer;
     private _linesVector: VertexBuffer;
@@ -99,30 +79,8 @@ export class WebGLRenderer implements IWebGLRenderer
 
     public set renderMode(renderMode: RenderMode)
     {
-        this._drawingMode = DrawingMode.Verticies;
         this._renderMode = renderMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
-    }
-
-    public get shape(): ShapeMode
-    {
-        return this._shapeMode;
-    }
-
-    public set shape(newShapeMode: ShapeMode)
-    {
-        this._drawingMode = DrawingMode.Shapes;
-        this._shapeMode = newShapeMode;
-    }
-
-    public get color(): RGBColor
-    {
-        return this._color;
-    }
-
-    public set color(color: RGBColor)
-    {
-        this._color = color;
     }
 
     public get backgroundColor(): RGBColor
@@ -150,31 +108,31 @@ export class WebGLRenderer implements IWebGLRenderer
         return this._camera;
     }
 
-    public addXYPointToScene(x: number, y: number, renderMode: number = this._glRenderMode,
-        r: number = this._color.red, g: number = this._color.green, b: number = this._color.blue): void
+    public addXYZPointToScene(x: number, y: number, z: number = 0, renderMode: number = this._glRenderMode,
+        r: number = Settings.defaultColor.red, g: number = Settings.defaultColor.green, b: number = Settings.defaultColor.blue): void
     {
         switch (renderMode)
         {
             case this.gl.POINTS:
-                this._pointsVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._pointsVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.LINES:
-                this._linesVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._linesVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.LINE_STRIP:
-                this._lineStripVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._lineStripVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.LINE_LOOP:
-                this._lineLoopVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._lineLoopVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.TRIANGLES:
-                this._trianglesVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._trianglesVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.TRIANGLE_STRIP:
-                this._triangleStripVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._triangleStripVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.TRIANGLE_FAN:
-                this._triangleFanVector.addVertex(new Float32Array([x, y, r, g, b]));
+                this._triangleFanVector.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
         }
     }
@@ -188,6 +146,8 @@ export class WebGLRenderer implements IWebGLRenderer
             vertexIndex++;
             const y = shape.verticies.arr[vertexIndex];
             vertexIndex++;
+            const z = shape.verticies.arr[vertexIndex];
+            vertexIndex++;
             const r = shape.verticies.arr[vertexIndex];
             vertexIndex++;
             const g = shape.verticies.arr[vertexIndex];
@@ -195,7 +155,7 @@ export class WebGLRenderer implements IWebGLRenderer
             const b = shape.verticies.arr[vertexIndex];
             vertexIndex++;
 
-            this.addXYPointToScene(x, y, shape.glRenderMode, r, g, b);
+            this.addXYZPointToScene(x, y, z, shape.glRenderMode, r, g, b);
         }
     }
 
@@ -216,7 +176,7 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         this.gl.clearColor(this._backgroundColor.red,
             this._backgroundColor.green,
-            this._backgroundColor.blue, 1.0);
+            this._backgroundColor.blue, Settings.defaultBackgroundAlpha);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
         for (let vb of this._vertexBuffers)
@@ -235,11 +195,8 @@ export class WebGLRenderer implements IWebGLRenderer
     {
         this._renderMode = (drawingSettings && drawingSettings.renderMode) || Settings.defaultRendereMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
-        this._shapeMode = (drawingSettings && drawingSettings.shapeMode) || Settings.defaultShapeMode;
-        this._drawingMode = (drawingSettings && drawingSettings.drawingMode) || Settings.defaultDrawingMode;
         this._pointSize = (drawingSettings && drawingSettings.pointSize) || Settings.defaultPointSize;
         this._backgroundColor = (drawingSettings && drawingSettings.backgroundColor) || Settings.defaultBackgroundColor;
-        this._color = (drawingSettings && drawingSettings.color) || Settings.defaultColor;
     }
 
     private initializeCamera(camera: Camera | null)

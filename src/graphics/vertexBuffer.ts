@@ -26,7 +26,7 @@ export class VertexBuffer
         if (vertex.length !== Settings.floatsPerVertex)
         {
             throw `cannot add vertex repersented by ${vertex.length} floats, ` +
-                `we only accept verticies of ${Settings.floatsPerVertex} floats (x, y, r, g, b)`;
+                `we only accept verticies of ${Settings.floatsPerVertex} floats (x, y, z, r, g, b)`;
         }
 
         if (this._topVertexVector.size + vertex.length < Settings.vertexBufferFloatLimit)

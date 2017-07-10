@@ -25,5 +25,6 @@ export let Settings =
     defaultDrawingMode: defaultDrawingMode,
     defaultPointSize: 10,
     defaultBackgroundColor: defaultBackgroundColor,
+    defaultBackgroundAlpha: 1,
     defaultColor: defaultColor
 };

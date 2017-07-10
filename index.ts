@@ -1,4 +1,4 @@
-import { IWebGLRenderer, WebGLRenderer } from "./src/graphics/webglRenderer";
+import { WebGLRenderer } from "./src/graphics/webglRenderer";
 import { ContextWrangler } from "./src/utils/contextWrangler";
 import { Color, ColorMapper } from "./src/graphics/colorMapper";
 import { Line } from "./src/graphics/shapes2d/line";
@@ -19,7 +19,6 @@ import { Vec3 } from "cuon-matrix-ts";
 
 export
 {
-    IWebGLRenderer,
     WebGLRenderer,
     DrawingSettings,
     ContextWrangler,

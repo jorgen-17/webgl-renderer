@@ -5,10 +5,7 @@ import { RGBColor } from "./rgbColor";
 
 export interface DrawingSettings
 {
-    shapeMode?: ShapeMode;
     renderMode?: RenderMode;
-    drawingMode?: DrawingMode;
     pointSize?: number;
     backgroundColor?: RGBColor;
-    color?: RGBColor;
 }
