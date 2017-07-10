@@ -10,11 +10,10 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        { pattern: "node_modules/proxy-polyfill/proxy.min.js"},
-
         //software under test
         { pattern: "src/**/*.ts" },
 
+        // test helpers
         { pattern: "specHelpers/**/*.ts" },
 
         // tests
@@ -34,6 +33,7 @@ module.exports = function(config) {
     preprocessors: {
         "**/*.ts": ["karma-typescript"]
     },
+
 
     karmaTypescriptConfig: {
         coverageOptions: {
