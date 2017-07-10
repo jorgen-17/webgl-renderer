@@ -37,6 +37,13 @@ export class Float32Vector
 
     public getTrimmedArray()
     {
-        return this.arr.slice(0, this.size);
+        let trimmedArr = new Float32Array(this.size);
+
+        for (let i = 0; i < trimmedArr.length; i++)
+        {
+            trimmedArr[i] = this.arr[i];
+        }
+
+        return trimmedArr;
     }
 }
