@@ -140,19 +140,19 @@ export class WebGLRenderer
     public addShapeToScene(shape: Shape2d): void
     {
         let vertexIndex = 0;
-        for (let i = 0; i < shape.verticies.arr.length; i += Settings.floatsPerVertex)
+        for (let i = 0; i < shape.verticies.length; i += Settings.floatsPerVertex)
         {
-            const x = shape.verticies.arr[vertexIndex];
+            const x = shape.verticies[vertexIndex];
             vertexIndex++;
-            const y = shape.verticies.arr[vertexIndex];
+            const y = shape.verticies[vertexIndex];
             vertexIndex++;
-            const z = shape.verticies.arr[vertexIndex];
+            const z = shape.verticies[vertexIndex];
             vertexIndex++;
-            const r = shape.verticies.arr[vertexIndex];
+            const r = shape.verticies[vertexIndex];
             vertexIndex++;
-            const g = shape.verticies.arr[vertexIndex];
+            const g = shape.verticies[vertexIndex];
             vertexIndex++;
-            const b = shape.verticies.arr[vertexIndex];
+            const b = shape.verticies[vertexIndex];
             vertexIndex++;
 
             this.addXYZPointToScene(x, y, z, shape.glRenderMode, r, g, b);

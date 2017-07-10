@@ -1,6 +1,10 @@
 import { Mock } from "ts-mocks";
 import { StringDictionary } from "../../src/utils/dictionary";
 import { ClassHelper } from "../../src/utils/classHelper";
+import { Line } from "../../src/graphics/shapes2d/line";
+import { Vec3 } from "cuon-matrix-ts";
+import { Settings } from "../../src/settings";
+import { RGBColor } from "../../src/graphics/rgbColor";
 
 export class WebglRendererTestHelper
 {
@@ -118,5 +122,37 @@ export class WebglRendererTestHelper
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;
 
         return spyDictionary;
+    }
+
+    public static getRandomLine (gl: WebGLRenderingContext, color: RGBColor = Settings.defaultColor,
+        numberOfVerticies: number = 10): Line
+    {
+        const randomStartPoint = this.getRandomXYPoint();
+        let line = new Line(randomStartPoint, color, gl);
+        numberOfVerticies--;
+
+        for (let i = 0; i < numberOfVerticies; i++)
+        {
+            let nextVertex = this.getRandomXYPoint();
+            line.addVertex(nextVertex);
+        }
+
+        return line;
+    }
+
+    public static getRandomXYPoint(): Vec3
+    {
+        const plusOrMinusX = this.plusOrMinus();
+        const randX = Math.random() * plusOrMinusX;
+
+        const plusOrMinusY = this.plusOrMinus();
+        const randY = Math.random() * plusOrMinusY;
+
+        return new Vec3(randX, randY);
+    }
+
+    public static plusOrMinus(): number
+    {
+        return ((((Math.random() *  100) / 100) % 2) === 0) ? 1 : -1;
     }
 }

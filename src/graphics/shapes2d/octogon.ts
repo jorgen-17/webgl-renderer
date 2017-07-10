@@ -44,6 +44,6 @@ export class Octogon extends Shape2d
         insertionIndex += Settings.floatsPerVertex;
         this.addXYAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
 
-        this.verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr);
     }
 }

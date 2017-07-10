@@ -13,6 +13,7 @@ import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRendere
 import { Shape2d } from "../../src/graphics/shapes2d/shape2d";
 import { StringDictionary } from "../../src/utils/dictionary";
 import { ClassHelper } from "../../src/utils/classHelper";
+import { Line } from "../../src/graphics/shapes2d/line";
 
 describe("ShapeFactory ", () =>
 {
@@ -25,12 +26,12 @@ describe("ShapeFactory ", () =>
     const yellow = new RGBColor(1.0, 1.0, 0.0);
     const green = new RGBColor(0.0, 1.0, 0.0);
     const cyan = new RGBColor(0.0, 1.0, 1.0);
+    let line: Line;
     let redTriangle: Shape2d;
     let orangeSquare: Shape2d;
     let yellowHexagon: Shape2d;
     let greenOctogon: Shape2d;
     let expectedTrianglesStripVertexBuffer: Float32Array;
-
 
     beforeEach(() =>
     {
@@ -38,6 +39,7 @@ describe("ShapeFactory ", () =>
         gl = glMock.Object;
         renderer = new WebGLRenderer(800, 600, gl);
 
+        line = WebglRendererTestHelper.getRandomLine(gl);
         redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
             "triangles", red, gl);
         orangeSquare = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
@@ -47,8 +49,8 @@ describe("ShapeFactory ", () =>
         greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
             "octogons", green, gl);
 
-        let yellowHexVerts = yellowHexagon.verticies.arr;
-        let greenOctoVerts = greenOctogon.verticies.arr;
+        let yellowHexVerts = yellowHexagon.verticies;
+        let greenOctoVerts = greenOctogon.verticies;
         expectedTrianglesStripVertexBuffer = new Float32Array(yellowHexVerts.length + greenOctoVerts.length);
         expectedTrianglesStripVertexBuffer.set(yellowHexVerts);
         expectedTrianglesStripVertexBuffer.set(greenOctoVerts, yellowHexVerts.length);
@@ -64,13 +66,14 @@ describe("ShapeFactory ", () =>
         // do the thing
     });
 
-    xdescribe("adding verticies to different vertex buffers sends them to webgl", () =>
+    xdescribe("adding  verticies to different vertex buffers sends them to webgl", () =>
     {
         // do the thing
     });
 
     it("addShapeToScene sends their verticies to webgl", () =>
     {
+        renderer.addShapeToScene(line);
         renderer.addShapeToScene(redTriangle);
         renderer.addShapeToScene(orangeSquare);
         renderer.addShapeToScene(yellowHexagon);
@@ -78,30 +81,60 @@ describe("ShapeFactory ", () =>
 
         renderer.draw();
 
-        expect(gl.bufferData).toHaveBeenCalledTimes(3);
-        expect(gl.bufferData).
-            toHaveBeenCalledWith(
-                gl.ARRAY_BUFFER,
-                redTriangle.verticies.arr,
-                gl.STATIC_DRAW
-            );
-        expect(gl.bufferData).
-            toHaveBeenCalledWith(
-                gl.ARRAY_BUFFER,
-                orangeSquare.verticies.arr,
-                gl.STATIC_DRAW
-            );
-        expect(gl.bufferData).
-            toHaveBeenCalledWith(
-                gl.ARRAY_BUFFER,
-                expectedTrianglesStripVertexBuffer,
-                gl.STATIC_DRAW
-            );
+        const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
+        const bufferDataSpy = glSpiesDictionary[bufferDataName];
+        const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
+        const drawArraysSpy = glSpiesDictionary[drawArraysName];
+
+        expect(gl.bufferData).toHaveBeenCalledTimes(4);
+        expect(gl.drawArrays).toHaveBeenCalledTimes(4);
+
+        expect(bufferDataSpy.calls.all()[0].args).toEqual([
+            gl.ARRAY_BUFFER,
+            line.verticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[0].args).toEqual([
+            gl.LINE_STRIP,
+            0,
+            10
+        ]);
+        expect(bufferDataSpy.calls.all()[1].args).toEqual([
+            gl.ARRAY_BUFFER,
+            redTriangle.verticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[1].args).toEqual([
+            gl.TRIANGLES,
+            0,
+            3
+        ]);
+        expect(bufferDataSpy.calls.all()[2].args).toEqual([
+            gl.ARRAY_BUFFER,
+            orangeSquare.verticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[2].args).toEqual([
+            gl.TRIANGLE_STRIP,
+            0,
+            4
+        ]);
+        expect(bufferDataSpy.calls.all()[3].args).toEqual([
+            gl.ARRAY_BUFFER,
+            expectedTrianglesStripVertexBuffer,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[3].args).toEqual([
+            gl.TRIANGLE_FAN,
+            0,
+            14
+        ]);
     });
 
     it("addShapesToScene sends their verticies to webgl", () =>
     {
         renderer.addShapesToScene([
+            line,
             redTriangle,
             orangeSquare,
             yellowHexagon,
@@ -110,25 +143,54 @@ describe("ShapeFactory ", () =>
 
         renderer.draw();
 
-        expect(gl.bufferData).toHaveBeenCalledTimes(3);
-        expect(gl.bufferData).
-            toHaveBeenCalledWith(
-                gl.ARRAY_BUFFER,
-                redTriangle.verticies.arr,
-                gl.STATIC_DRAW
-            );
-        expect(gl.bufferData).
-            toHaveBeenCalledWith(
-                gl.ARRAY_BUFFER,
-                orangeSquare.verticies.arr,
-                gl.STATIC_DRAW
-            );
-        expect(gl.bufferData).
-            toHaveBeenCalledWith(
-                gl.ARRAY_BUFFER,
-                expectedTrianglesStripVertexBuffer,
-                gl.STATIC_DRAW
-            );
+        const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
+        const bufferDataSpy = glSpiesDictionary[bufferDataName];
+        const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
+        const drawArraysSpy = glSpiesDictionary[drawArraysName];
+
+        expect(gl.bufferData).toHaveBeenCalledTimes(4);
+        expect(gl.drawArrays).toHaveBeenCalledTimes(4);
+
+        expect(bufferDataSpy.calls.all()[0].args).toEqual([
+            gl.ARRAY_BUFFER,
+            line.verticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[0].args).toEqual([
+            gl.LINE_STRIP,
+            0,
+            10
+        ]);
+        expect(bufferDataSpy.calls.all()[1].args).toEqual([
+            gl.ARRAY_BUFFER,
+            redTriangle.verticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[1].args).toEqual([
+            gl.TRIANGLES,
+            0,
+            3
+        ]);
+        expect(bufferDataSpy.calls.all()[2].args).toEqual([
+            gl.ARRAY_BUFFER,
+            orangeSquare.verticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[2].args).toEqual([
+            gl.TRIANGLE_STRIP,
+            0,
+            4
+        ]);
+        expect(bufferDataSpy.calls.all()[3].args).toEqual([
+            gl.ARRAY_BUFFER,
+            expectedTrianglesStripVertexBuffer,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[3].args).toEqual([
+            gl.TRIANGLE_FAN,
+            0,
+            14
+        ]);
     });
 
 

@@ -5,7 +5,7 @@ import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
 
 export abstract class Shape2d {
-    public verticies: Float32Vector;
+    protected _verticies: Float32Vector;
     public glRenderMode: number;
     protected boundingRect: BoundingRectangle;
     private _rgbColor: RGBColor;
@@ -28,6 +28,11 @@ export abstract class Shape2d {
     {
         this._rgbColor = value;
         this.computeVerticies();
+    }
+
+    public get verticies(): Float32Array
+    {
+        return this._verticies.arr;
     }
 
     protected abstract computeVerticies(): void;

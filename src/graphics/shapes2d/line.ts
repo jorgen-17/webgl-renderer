@@ -22,6 +22,11 @@ export class Line extends Shape2d
         this.glRenderMode = gl.LINE_STRIP;
     }
 
+    public get verticies(): Float32Array
+    {
+        return this._verticies.getTrimmedArray();
+    }
+
     protected computeVerticies(): void
     {
         let arr = new Float32Array(this.vertexPositions.length * Settings.floatsPerVertex);
@@ -33,7 +38,7 @@ export class Line extends Shape2d
             this.addXYAndColorToFloat32Array(arr, insertionIndex, vertexPosition.x, vertexPosition.y, vertexPosition.z);
         }
 
-        this.verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr);
     }
 
     public addVertex(vertex: Vec3): void
@@ -42,6 +47,6 @@ export class Line extends Shape2d
 
         let array = new Float32Array(Settings.floatsPerVertex);
         this.addXYAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);
-        this.verticies.addArray(array);
+        this._verticies.addArray(array);
     }
 }

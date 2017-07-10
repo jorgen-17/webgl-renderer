@@ -34,6 +34,6 @@ export class Triangle extends Shape2d
         this.addXYAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomRight.x,
             this.boundingRect.bottomRight.y, this.boundingRect.bottomRight.z);
 
-        this.verticies = new Float32Vector(array);
+        this._verticies = new Float32Vector(array);
     }
 }

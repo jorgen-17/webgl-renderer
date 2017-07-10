@@ -37,7 +37,11 @@ module.exports = function(config) {
 
     karmaTypescriptConfig: {
         coverageOptions: {
-            instrumentation: true // set to false if you need to debug though source ts
+            instrumentation: true, // set to false if you need to debug though source ts
+            exclude: [
+                /\.(d|spec|test|mock|snapshots)\.ts/i,
+                /specHelpers\//i
+            ]
         },
         reports: {
             "html": {

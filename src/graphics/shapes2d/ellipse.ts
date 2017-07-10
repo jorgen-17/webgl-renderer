@@ -78,7 +78,7 @@ export class Ellipse extends Shape2d
             insertionIndex += Settings.floatsPerVertex;
         }
 
-        this.verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr);
     }
 
     private getYDistanceFromCenterForX(x: number): number

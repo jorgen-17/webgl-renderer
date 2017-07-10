@@ -41,6 +41,6 @@ export class Hexagon extends Shape2d
         mid = Midpoint.between(this.boundingRect.bottomLeft, this.boundingRect.topLeft);
         this.addXYAndColorToFloat32Array(arr, insertionIndex, mid.x, mid.y, mid.z);
 
-        this.verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr);
     }
 }
