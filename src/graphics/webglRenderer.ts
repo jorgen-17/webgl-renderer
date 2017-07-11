@@ -108,8 +108,9 @@ export class WebGLRenderer
         return this._camera;
     }
 
-    public addXYZPointToScene(x: number, y: number, z: number = 0, renderMode: number = this._glRenderMode,
-        r: number = Settings.defaultColor.red, g: number = Settings.defaultColor.green, b: number = Settings.defaultColor.blue): void
+    public addXYZPointToScene(x: number, y: number, z: number = 0,
+        r: number = Settings.defaultColor.red, g: number = Settings.defaultColor.green,
+        b: number = Settings.defaultColor.blue, renderMode: number = this._glRenderMode): void
     {
         switch (renderMode)
         {
@@ -155,7 +156,7 @@ export class WebGLRenderer
             const b = shape.verticies[vertexIndex];
             vertexIndex++;
 
-            this.addXYZPointToScene(x, y, z, shape.glRenderMode, r, g, b);
+            this.addXYZPointToScene(x, y, z, r, g, b, shape.glRenderMode);
         }
     }
 

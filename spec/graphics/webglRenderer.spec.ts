@@ -39,9 +39,122 @@ describe("ShapeFactory ", () =>
         // do the thing
     });
 
-    xdescribe("adding  verticies to different vertex buffers sends them to webgl", () =>
+    it("adding verticies to different vertex buffers sends them to webgl", () =>
     {
-        // do the thing
+        const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "points";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies);
+
+        const linesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "lines";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies);
+
+        const lineStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "lineStrip";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineStripVerticies);
+
+        const lineLoopVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "lineLoop";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineLoopVerticies);
+
+        const trianglesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "triangles";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, trianglesVerticies);
+
+        const triangleStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "triangleStrip";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleStripVerticies);
+
+        const triangleFanVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+        renderer.renderMode = "triangleFan";
+        WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleFanVerticies);
+
+        renderer.draw();
+
+        const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
+        const bufferDataSpy = glSpiesDictionary[bufferDataName];
+        const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
+        const drawArraysSpy = glSpiesDictionary[drawArraysName];
+
+        expect(gl.bufferData).toHaveBeenCalledTimes(7);
+        expect(gl.drawArrays).toHaveBeenCalledTimes(7);
+
+        // expect(bufferDataSpy.calls.all()[0].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     pointsVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        expect(drawArraysSpy.calls.all()[0].args).toEqual([
+            gl.POINTS,
+            0,
+            10
+        ]);
+
+        // expect(bufferDataSpy.calls.all()[1].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     linesVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        // expect(drawArraysSpy.calls.all()[1].args).toEqual([
+        //     gl.LINES,
+        //     0,
+        //     10
+        // ]);
+
+        // expect(bufferDataSpy.calls.all()[2].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     lineStripVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        // expect(drawArraysSpy.calls.all()[2].args).toEqual([
+        //     gl.LINE_STRIP,
+        //     0,
+        //     10
+        // ]);
+
+        // expect(bufferDataSpy.calls.all()[3].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     lineLoopVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        // expect(drawArraysSpy.calls.all()[3].args).toEqual([
+        //     gl.LINE_LOOP,
+        //     0,
+        //     10
+        // ]);
+
+        // expect(bufferDataSpy.calls.all()[4].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     trianglesVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        // expect(drawArraysSpy.calls.all()[4].args).toEqual([
+        //     gl.TRIANGLES,
+        //     0,
+        //     10
+        // ]);
+
+        // expect(bufferDataSpy.calls.all()[5].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     triangleStripVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        // expect(drawArraysSpy.calls.all()[5].args).toEqual([
+        //     gl.TRIANGLE_STRIP,
+        //     0,
+        //     10
+        // ]);
+
+        // expect(bufferDataSpy.calls.all()[6].args).toEqual([
+        //     gl.ARRAY_BUFFER,
+        //     triangleFanVerticies,
+        //     gl.STATIC_DRAW
+        // ]);
+        // expect(drawArraysSpy.calls.all()[6].args).toEqual([
+        //     gl.TRIANGLE_FAN,
+        //     0,
+        //     10
+        // ]);
     });
 
     describe("shapes", () =>
@@ -198,10 +311,7 @@ describe("ShapeFactory ", () =>
                 14
             ]);
         });
-    })
-
-
-
+    });
 
     xit("changing point size gets passed into webgl", () =>
     {

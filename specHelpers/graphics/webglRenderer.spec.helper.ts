@@ -5,6 +5,7 @@ import { Line } from "../../src/graphics/shapes2d/line";
 import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../src/settings";
 import { RGBColor } from "../../src/graphics/rgbColor";
+import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 
 export class WebglRendererTestHelper
 {
@@ -138,6 +139,48 @@ export class WebglRendererTestHelper
         }
 
         return line;
+    }
+
+    public static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
+        color: RGBColor = Settings.defaultColor): Float32Array
+    {
+        let arr = new Float32Array(numberOfVerticies * Settings.floatsPerVertex);
+
+        for (let i = 0; i < numberOfVerticies; i++)
+        {
+            const position = this.getRandomXYPoint();
+            const xyzRGB = new Float32Array([
+                position.x,
+                position.y,
+                position.z,
+                color.red,
+                color.green,
+                color.blue
+            ]);
+            arr.set(xyzRGB, (i * Settings.floatsPerVertex));
+        }
+
+        return arr;
+    }
+
+    public static addVerticiesToRenderer(renderer: WebGLRenderer, arr: Float32Array)
+    {
+        if (arr.length % 6 !== 0)
+        {
+            throw `incorrect number of floats, must be divisible by ${Settings.floatsPerVertex}`;
+        }
+
+        const numberOfVerticies = (arr.length / Settings.floatsPerVertex);
+        for (let i = 0; i < numberOfVerticies; i++)
+        {
+            const x = arr[i * Settings.floatsPerVertex];
+            const y = arr[(i + 1) * Settings.floatsPerVertex];
+            const z = arr[(i + 2) * Settings.floatsPerVertex];
+            const r = arr[(i + 3) * Settings.floatsPerVertex];
+            const g = arr[(i + 4) * Settings.floatsPerVertex];
+            const b = arr[(i + 5) * Settings.floatsPerVertex];
+            renderer.addXYZPointToScene(x, y, z, r, g, b);
+        }
     }
 
     public static getRandomXYPoint(): Vec3
