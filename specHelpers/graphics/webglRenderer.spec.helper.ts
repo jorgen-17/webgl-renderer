@@ -174,11 +174,11 @@ export class WebglRendererTestHelper
         for (let i = 0; i < numberOfVerticies; i++)
         {
             const x = arr[i * Settings.floatsPerVertex];
-            const y = arr[(i + 1) * Settings.floatsPerVertex];
-            const z = arr[(i + 2) * Settings.floatsPerVertex];
-            const r = arr[(i + 3) * Settings.floatsPerVertex];
-            const g = arr[(i + 4) * Settings.floatsPerVertex];
-            const b = arr[(i + 5) * Settings.floatsPerVertex];
+            const y = arr[(i * Settings.floatsPerVertex) + 1];
+            const z = arr[(i * Settings.floatsPerVertex) + 2];
+            const r = arr[(i * Settings.floatsPerVertex) + 3];
+            const g = arr[(i * Settings.floatsPerVertex) + 4];
+            const b = arr[(i * Settings.floatsPerVertex) + 5];
             renderer.addXYZPointToScene(x, y, z, r, g, b);
         }
     }

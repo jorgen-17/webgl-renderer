@@ -79,82 +79,82 @@ describe("ShapeFactory ", () =>
         expect(gl.bufferData).toHaveBeenCalledTimes(7);
         expect(gl.drawArrays).toHaveBeenCalledTimes(7);
 
-        // expect(bufferDataSpy.calls.all()[0].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     pointsVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
+        expect(bufferDataSpy.calls.all()[0].args).toEqual([
+            gl.ARRAY_BUFFER,
+            pointsVerticies,
+            gl.STATIC_DRAW
+        ]);
         expect(drawArraysSpy.calls.all()[0].args).toEqual([
             gl.POINTS,
             0,
             10
         ]);
 
-        // expect(bufferDataSpy.calls.all()[1].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     linesVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
-        // expect(drawArraysSpy.calls.all()[1].args).toEqual([
-        //     gl.LINES,
-        //     0,
-        //     10
-        // ]);
+        expect(bufferDataSpy.calls.all()[1].args).toEqual([
+            gl.ARRAY_BUFFER,
+            linesVerticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[1].args).toEqual([
+            gl.LINES,
+            0,
+            10
+        ]);
 
-        // expect(bufferDataSpy.calls.all()[2].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     lineStripVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
-        // expect(drawArraysSpy.calls.all()[2].args).toEqual([
-        //     gl.LINE_STRIP,
-        //     0,
-        //     10
-        // ]);
+        expect(bufferDataSpy.calls.all()[2].args).toEqual([
+            gl.ARRAY_BUFFER,
+            lineStripVerticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[2].args).toEqual([
+            gl.LINE_STRIP,
+            0,
+            10
+        ]);
 
-        // expect(bufferDataSpy.calls.all()[3].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     lineLoopVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
-        // expect(drawArraysSpy.calls.all()[3].args).toEqual([
-        //     gl.LINE_LOOP,
-        //     0,
-        //     10
-        // ]);
+        expect(bufferDataSpy.calls.all()[3].args).toEqual([
+            gl.ARRAY_BUFFER,
+            lineLoopVerticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[3].args).toEqual([
+            gl.LINE_LOOP,
+            0,
+            10
+        ]);
 
-        // expect(bufferDataSpy.calls.all()[4].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     trianglesVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
-        // expect(drawArraysSpy.calls.all()[4].args).toEqual([
-        //     gl.TRIANGLES,
-        //     0,
-        //     10
-        // ]);
+        expect(bufferDataSpy.calls.all()[4].args).toEqual([
+            gl.ARRAY_BUFFER,
+            trianglesVerticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[4].args).toEqual([
+            gl.TRIANGLES,
+            0,
+            10
+        ]);
 
-        // expect(bufferDataSpy.calls.all()[5].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     triangleStripVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
-        // expect(drawArraysSpy.calls.all()[5].args).toEqual([
-        //     gl.TRIANGLE_STRIP,
-        //     0,
-        //     10
-        // ]);
+        expect(bufferDataSpy.calls.all()[5].args).toEqual([
+            gl.ARRAY_BUFFER,
+            triangleStripVerticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[5].args).toEqual([
+            gl.TRIANGLE_STRIP,
+            0,
+            10
+        ]);
 
-        // expect(bufferDataSpy.calls.all()[6].args).toEqual([
-        //     gl.ARRAY_BUFFER,
-        //     triangleFanVerticies,
-        //     gl.STATIC_DRAW
-        // ]);
-        // expect(drawArraysSpy.calls.all()[6].args).toEqual([
-        //     gl.TRIANGLE_FAN,
-        //     0,
-        //     10
-        // ]);
+        expect(bufferDataSpy.calls.all()[6].args).toEqual([
+            gl.ARRAY_BUFFER,
+            triangleFanVerticies,
+            gl.STATIC_DRAW
+        ]);
+        expect(drawArraysSpy.calls.all()[6].args).toEqual([
+            gl.TRIANGLE_FAN,
+            0,
+            10
+        ]);
     });
 
     describe("shapes", () =>
