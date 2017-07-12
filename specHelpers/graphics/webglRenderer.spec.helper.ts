@@ -6,6 +6,7 @@ import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../src/settings";
 import { RGBColor } from "../../src/graphics/rgbColor";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
+import { RenderMode, RenderModeMapper } from "../../src/graphics/renderModeMapper";
 
 export class WebglRendererTestHelper
 {
@@ -163,7 +164,8 @@ export class WebglRendererTestHelper
         return arr;
     }
 
-    public static addVerticiesToRenderer(renderer: WebGLRenderer, arr: Float32Array)
+    public static addVerticiesToRenderer(renderer: WebGLRenderer, arr: Float32Array,
+        renderMode: RenderMode | null = null, gl: WebGLRenderingContext | null = null)
     {
         if (arr.length % 6 !== 0)
         {
@@ -179,7 +181,15 @@ export class WebglRendererTestHelper
             const r = arr[(i * Settings.floatsPerVertex) + 3];
             const g = arr[(i * Settings.floatsPerVertex) + 4];
             const b = arr[(i * Settings.floatsPerVertex) + 5];
-            renderer.addXYZPointToScene(x, y, z, r, g, b);
+            if (renderMode && gl)
+            {
+                const glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, gl);
+                renderer.addXYZPointToScene(x, y, z, r, g, b, glRenderMode);
+            }
+            else
+            {
+                renderer.addXYZPointToScene(x, y, z, r, g, b);
+            }
         }
     }
 

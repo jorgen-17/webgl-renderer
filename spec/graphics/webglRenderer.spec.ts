@@ -14,6 +14,7 @@ import { Shape2d } from "../../src/graphics/shapes2d/shape2d";
 import { StringDictionary } from "../../src/utils/dictionary";
 import { ClassHelper } from "../../src/utils/classHelper";
 import { Line } from "../../src/graphics/shapes2d/line";
+import { RenderMode } from "../../src/graphics/renderModeMapper";
 
 describe("ShapeFactory ", () =>
 {
@@ -39,9 +40,17 @@ describe("ShapeFactory ", () =>
         // do the thing
     });
 
-    describe("verticies:", () =>
+    describe("renderMode:", () =>
     {
-        it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
+        it("is set-able and get-able", () =>
+        {
+            const trianleMode: RenderMode = "triangles";
+            renderer.renderMode = trianleMode;
+
+            expect(trianleMode).toBe(renderer.renderMode);
+        });
+
+        it("determines the default renderMode used when addXYZPointToScene is called", () =>
         {
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             renderer.renderMode = "points";
@@ -51,25 +60,65 @@ describe("ShapeFactory ", () =>
             renderer.renderMode = "lines";
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies);
 
+            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
+            const bufferDataSpy = glSpiesDictionary[bufferDataName];
+            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
+            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+
+            renderer.draw();
+
+            expect(gl.bufferData).toHaveBeenCalledTimes(2);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(2);
+
+            expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                gl.ARRAY_BUFFER,
+                pointsVerticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                gl.POINTS,
+                0,
+                10
+            ]);
+
+            expect(bufferDataSpy.calls.all()[1].args).toEqual([
+                gl.ARRAY_BUFFER,
+                linesVerticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[1].args).toEqual([
+                gl.LINES,
+                0,
+                10
+            ]);
+
+        });
+    });
+
+    describe("verticies:", () =>
+    {
+        it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
+        {
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            const linesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies, "lines", gl);
+
             const lineStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            renderer.renderMode = "lineStrip";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineStripVerticies);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineStripVerticies, "lineStrip", gl);
 
             const lineLoopVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            renderer.renderMode = "lineLoop";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineLoopVerticies);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineLoopVerticies, "lineLoop", gl);
 
             const trianglesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            renderer.renderMode = "triangles";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, trianglesVerticies);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, trianglesVerticies, "triangles", gl);
 
             const triangleStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            renderer.renderMode = "triangleStrip";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleStripVerticies);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleStripVerticies, "triangleStrip", gl);
 
             const triangleFanVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            renderer.renderMode = "triangleFan";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleFanVerticies);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleFanVerticies, "triangleFan", gl);
 
             renderer.draw();
 
