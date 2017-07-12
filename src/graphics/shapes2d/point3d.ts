@@ -1,6 +1,5 @@
 import { RGBColor } from "../rgbColor";
 import { Vec3 } from "cuon-matrix-ts";
-import { Settings } from "../../settings";
 
 export class Point3d {
     public x: number;
