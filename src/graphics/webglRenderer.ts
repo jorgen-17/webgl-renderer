@@ -108,6 +108,11 @@ export class WebGLRenderer
         return this._camera;
     }
 
+    public set camera(value: Camera)
+    {
+        this._camera = value;
+    }
+
     public addXYZPointToScene(x: number, y: number, z: number = 0,
         r: number = Settings.defaultColor.red, g: number = Settings.defaultColor.green,
         b: number = Settings.defaultColor.blue, renderMode: number = this._glRenderMode): void
@@ -208,10 +213,7 @@ export class WebGLRenderer
         }
         else
         {
-            const eyePosition = new Vec3(0, 0, 0);
-            const lookAtPoint = new Vec3(0, 0, -1);
-            const upPosition = new Vec3(0, 1, 0);
-            this._camera = new Camera(eyePosition, lookAtPoint, upPosition);
+            this._camera = Settings.defaultCamera;
         }
     }
 

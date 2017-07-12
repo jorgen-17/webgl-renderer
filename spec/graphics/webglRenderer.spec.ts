@@ -15,6 +15,8 @@ import { StringDictionary } from "../../src/utils/dictionary";
 import { ClassHelper } from "../../src/utils/classHelper";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
+import { Camera } from "../../src/graphics/camera";
+import { DrawingSettings } from "../../src/graphics/drawingSettings";
 
 describe("ShapeFactory ", () =>
 {
@@ -27,22 +29,35 @@ describe("ShapeFactory ", () =>
     {
         glSpiesDictionary = WebglRendererTestHelper.setupGlMockFunctions(glMock);
         gl = glMock.Object;
-        renderer = new WebGLRenderer(800, 600, gl);
     });
 
-    xit("camera can be passed in and is used", () =>
+    it("settings are used", () =>
     {
-        // do the thing
-    });
+        const trianleMode: RenderMode = "triangles";
+        const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+        const pointSize = 15;
+        const settings: DrawingSettings = {
+            renderMode: trianleMode,
+            backgroundColor: backgroundColor,
+            pointSize: pointSize
+        };
 
-    xit("settings are used", () =>
-    {
-        // do the thing
+        const eyePosition = new Vec3(1, 1, 1);
+        const lookAtPoint = new Vec3(1, 1, -2);
+        const upPosition = new Vec3(1, 2, 1);
+        const camera = new Camera(eyePosition, lookAtPoint, upPosition);
+
+        renderer = new WebGLRenderer(800, 600, gl, settings, camera);
+
+        expect(trianleMode).toBe(renderer.renderMode);
+        expect(backgroundColor).toBe(renderer.backgroundColor);
+        expect(pointSize).toBe(renderer.pointSize);
+        expect(camera.getViewMatrix()).toBe(renderer.camera.getViewMatrix());
     });
 
     describe("renderMode:", () =>
     {
-        afterEach(() =>
+        beforeEach(() =>
         {
             renderer = new WebGLRenderer(800, 600, gl);
         });
@@ -102,14 +117,15 @@ describe("ShapeFactory ", () =>
 
     describe("backgroundColor:", () =>
     {
-        afterEach(() =>
+        const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+
+        beforeEach(() =>
         {
             renderer = new WebGLRenderer(800, 600, gl);
         });
 
         it("is set-able and get-able", () =>
         {
-            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
             renderer.backgroundColor = backgroundColor;
 
             expect(backgroundColor).toBe(renderer.backgroundColor);
@@ -131,7 +147,6 @@ describe("ShapeFactory ", () =>
             ]);
             clearColorSpy.calls.reset();
 
-            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
             renderer.backgroundColor = backgroundColor;
 
             renderer.draw();
@@ -148,14 +163,15 @@ describe("ShapeFactory ", () =>
 
     describe("pointSize:", () =>
     {
-        afterEach(() =>
+        const pointSize = 15;
+
+        beforeEach(() =>
         {
             renderer = new WebGLRenderer(800, 600, gl);
         });
 
         it("is set-able and get-able", () =>
         {
-            const pointSize = 15;
             renderer.pointSize = pointSize;
 
             expect(pointSize).toBe(renderer.pointSize);
@@ -178,7 +194,6 @@ describe("ShapeFactory ", () =>
             ]);
             uniform1fSpy.calls.reset();
 
-            const pointSize = 15;
             renderer.pointSize = pointSize;
 
             renderer.draw();
@@ -191,9 +206,59 @@ describe("ShapeFactory ", () =>
         });
     });
 
+    describe("camera:", () =>
+    {
+        const eyePosition = new Vec3(1, 1, 1);
+        const lookAtPoint = new Vec3(1, 1, -2);
+        const upPosition = new Vec3(1, 2, 1);
+        const camera = new Camera(eyePosition, lookAtPoint, upPosition);
+
+        beforeEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            renderer.camera = camera;
+
+            expect(camera.getViewMatrix()).toBe(renderer.camera.getViewMatrix());
+        });
+
+        it("sets the uniform variable u_viewMatrix", () =>
+        {
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            renderer.draw();
+
+            const uniformMatrix4fvName = ClassHelper.getMethodName(() => gl.uniformMatrix4fv);
+            const uniformMatrix4fvNameSpy = glSpiesDictionary[uniformMatrix4fvName];
+
+            expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
+            expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
+                1,
+                false,
+                Settings.defaultCamera.getViewMatrix()
+            ]);
+            uniformMatrix4fvNameSpy.calls.reset();
+
+            renderer.camera = camera;
+
+            renderer.draw();
+
+            expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
+            expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
+                1,
+                false,
+                camera.getViewMatrix()
+            ]);
+        });
+    });
+
     describe("verticies:", () =>
     {
-        afterEach(() =>
+        beforeEach(() =>
         {
             renderer = new WebGLRenderer(800, 600, gl);
         });
@@ -363,6 +428,8 @@ describe("ShapeFactory ", () =>
 
         beforeEach(() =>
         {
+            renderer = new WebGLRenderer(800, 600, gl);
+
             line = WebglRendererTestHelper.getRandomLine(gl);
             redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", red, gl);
@@ -380,7 +447,7 @@ describe("ShapeFactory ", () =>
             expectedTrianglesStripVertexBuffer.set(greenOctoVerts, yellowHexVerts.length);
         });
 
-        afterEach(() =>
+        beforeEach(() =>
         {
             renderer = new WebGLRenderer(800, 600, gl);
         });

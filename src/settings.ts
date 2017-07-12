@@ -2,6 +2,8 @@ import { RenderMode } from "./graphics/renderModeMapper";
 import { ShapeMode } from "./graphics/shapes2d/shapeMode";
 import { DrawingMode } from "./graphics/drawingMode";
 import { RGBColor } from "./graphics/rgbColor";
+import { Vec3 } from "cuon-matrix-ts";
+import { Camera } from "./graphics/camera";
 
 
 const floatsPerPoint = 3; // x, y, and z
@@ -12,6 +14,10 @@ const defaultShapeMode: ShapeMode = "points";
 const defaultDrawingMode: DrawingMode = DrawingMode.Verticies;
 const defaultBackgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 };
 const defaultColor: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 };
+const defaultEyePosition = new Vec3(0, 0, 0);
+const defaultLookAtPoint = new Vec3(0, 0, -1);
+const defaultUpPosition = new Vec3(0, 1, 0);
+const defaultCamera: Camera = new Camera(defaultEyePosition, defaultLookAtPoint, defaultUpPosition);
 
 export let Settings =
 {
@@ -26,5 +32,6 @@ export let Settings =
     defaultPointSize: 10,
     defaultBackgroundColor: defaultBackgroundColor,
     defaultBackgroundAlpha: 1,
-    defaultColor: defaultColor
+    defaultColor: defaultColor,
+    defaultCamera: defaultCamera
 };
