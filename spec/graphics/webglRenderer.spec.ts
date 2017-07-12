@@ -40,8 +40,59 @@ describe("ShapeFactory ", () =>
         // do the thing
     });
 
+    describe("backgroundColor:", () =>
+    {
+        afterEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+            renderer.backgroundColor = backgroundColor;
+
+            expect(backgroundColor).toBe(renderer.backgroundColor);
+        });
+
+        it("sets the color that the renderer passes in when calling gl.clearColor", () =>
+        {
+            renderer.draw();
+
+            const clearColorName = ClassHelper.getMethodName(() => gl.clearColor);
+            const clearColorSpy = glSpiesDictionary[clearColorName];
+
+            expect(gl.clearColor).toHaveBeenCalledTimes(1);
+            expect(clearColorSpy.calls.all()[0].args).toEqual([
+                Settings.defaultBackgroundColor.red,
+                Settings.defaultBackgroundColor.green,
+                Settings.defaultBackgroundColor.blue,
+                Settings.defaultBackgroundAlpha,
+            ]);
+            clearColorSpy.calls.reset();
+
+            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+            renderer.backgroundColor = backgroundColor;
+
+            renderer.draw();
+
+            expect(gl.clearColor).toHaveBeenCalledTimes(1);
+            expect(clearColorSpy.calls.all()[0].args).toEqual([
+                backgroundColor.red,
+                backgroundColor.green,
+                backgroundColor.blue,
+                Settings.defaultBackgroundAlpha,
+            ]);
+        });
+    });
+
     describe("renderMode:", () =>
     {
+        afterEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
+        });
+
         it("is set-able and get-able", () =>
         {
             const trianleMode: RenderMode = "triangles";
@@ -97,6 +148,11 @@ describe("ShapeFactory ", () =>
 
     describe("verticies:", () =>
     {
+        afterEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
+        });
+
         it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
         {
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
@@ -277,6 +333,11 @@ describe("ShapeFactory ", () =>
             expectedTrianglesStripVertexBuffer = new Float32Array(yellowHexVerts.length + greenOctoVerts.length);
             expectedTrianglesStripVertexBuffer.set(yellowHexVerts);
             expectedTrianglesStripVertexBuffer.set(greenOctoVerts, yellowHexVerts.length);
+        });
+
+        afterEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
         });
 
         it("addShapeToScene sends their verticies to webgl", () =>
