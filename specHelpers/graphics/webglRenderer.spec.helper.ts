@@ -92,6 +92,7 @@ export class WebglRendererTestHelper
         const vertexAttribPointerName = ClassHelper.getMethodName(() => gl.vertexAttribPointer);
         const enableVertexAttribArrayName = ClassHelper.getMethodName(() => gl.enableVertexAttribArray);
         const uniformMatrix4fvName = ClassHelper.getMethodName(() => gl.uniformMatrix4fv);
+        const uniform1fName = ClassHelper.getMethodName(() => gl.uniform1f);
         const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
         spyDictionary[getAttribLocationName] = glMock.setup(x => x.getAttribLocation)
             .is((shader: WebGLShader, name: string) => 1).Spy;
@@ -119,6 +120,10 @@ export class WebglRendererTestHelper
             .is(
                 (uniformLocation: WebGLUniformLocation, transpose: boolean,
                 value: Float32Array | number[]) =>
+                { /* noop */ }).Spy;
+        spyDictionary[uniform1fName] = glMock.setup(x => x.uniform1f)
+            .is(
+                (uniformLocation: WebGLUniformLocation, value: number) =>
                 { /* noop */ }).Spy;
         spyDictionary[drawArraysName] = glMock.setup(x => x.drawArrays)
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;

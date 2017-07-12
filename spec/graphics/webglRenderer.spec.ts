@@ -40,52 +40,6 @@ describe("ShapeFactory ", () =>
         // do the thing
     });
 
-    describe("backgroundColor:", () =>
-    {
-        afterEach(() =>
-        {
-            renderer = new WebGLRenderer(800, 600, gl);
-        });
-
-        it("is set-able and get-able", () =>
-        {
-            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
-            renderer.backgroundColor = backgroundColor;
-
-            expect(backgroundColor).toBe(renderer.backgroundColor);
-        });
-
-        it("sets the color that the renderer passes in when calling gl.clearColor", () =>
-        {
-            renderer.draw();
-
-            const clearColorName = ClassHelper.getMethodName(() => gl.clearColor);
-            const clearColorSpy = glSpiesDictionary[clearColorName];
-
-            expect(gl.clearColor).toHaveBeenCalledTimes(1);
-            expect(clearColorSpy.calls.all()[0].args).toEqual([
-                Settings.defaultBackgroundColor.red,
-                Settings.defaultBackgroundColor.green,
-                Settings.defaultBackgroundColor.blue,
-                Settings.defaultBackgroundAlpha,
-            ]);
-            clearColorSpy.calls.reset();
-
-            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
-            renderer.backgroundColor = backgroundColor;
-
-            renderer.draw();
-
-            expect(gl.clearColor).toHaveBeenCalledTimes(1);
-            expect(clearColorSpy.calls.all()[0].args).toEqual([
-                backgroundColor.red,
-                backgroundColor.green,
-                backgroundColor.blue,
-                Settings.defaultBackgroundAlpha,
-            ]);
-        });
-    });
-
     describe("renderMode:", () =>
     {
         afterEach(() =>
@@ -143,6 +97,97 @@ describe("ShapeFactory ", () =>
                 10
             ]);
 
+        });
+    });
+
+    describe("backgroundColor:", () =>
+    {
+        afterEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+            renderer.backgroundColor = backgroundColor;
+
+            expect(backgroundColor).toBe(renderer.backgroundColor);
+        });
+
+        it("sets the color that the renderer passes in when calling gl.clearColor", () =>
+        {
+            renderer.draw();
+
+            const clearColorName = ClassHelper.getMethodName(() => gl.clearColor);
+            const clearColorSpy = glSpiesDictionary[clearColorName];
+
+            expect(gl.clearColor).toHaveBeenCalledTimes(1);
+            expect(clearColorSpy.calls.all()[0].args).toEqual([
+                Settings.defaultBackgroundColor.red,
+                Settings.defaultBackgroundColor.green,
+                Settings.defaultBackgroundColor.blue,
+                Settings.defaultBackgroundAlpha,
+            ]);
+            clearColorSpy.calls.reset();
+
+            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+            renderer.backgroundColor = backgroundColor;
+
+            renderer.draw();
+
+            expect(gl.clearColor).toHaveBeenCalledTimes(1);
+            expect(clearColorSpy.calls.all()[0].args).toEqual([
+                backgroundColor.red,
+                backgroundColor.green,
+                backgroundColor.blue,
+                Settings.defaultBackgroundAlpha,
+            ]);
+        });
+    });
+
+    describe("pointSize:", () =>
+    {
+        afterEach(() =>
+        {
+            renderer = new WebGLRenderer(800, 600, gl);
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const pointSize = 15;
+            renderer.pointSize = pointSize;
+
+            expect(pointSize).toBe(renderer.pointSize);
+        });
+
+        it("sets the uniform variable u_pointSize", () =>
+        {
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            renderer.draw();
+
+            const uniform1fName = ClassHelper.getMethodName(() => gl.uniform1f);
+            const uniform1fSpy = glSpiesDictionary[uniform1fName];
+
+            expect(gl.uniform1f).toHaveBeenCalledTimes(1);
+            expect(uniform1fSpy.calls.all()[0].args).toEqual([
+                1,
+                Settings.defaultPointSize
+            ]);
+            uniform1fSpy.calls.reset();
+
+            const pointSize = 15;
+            renderer.pointSize = pointSize;
+
+            renderer.draw();
+
+            expect(gl.uniform1f).toHaveBeenCalledTimes(1);
+            expect(uniform1fSpy.calls.all()[0].args).toEqual([
+                1,
+                pointSize
+            ]);
         });
     });
 
@@ -497,10 +542,4 @@ describe("ShapeFactory ", () =>
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
         });
     });
-
-    xit("changing point size gets passed into webgl", () =>
-    {
-        // do the thing
-    });
-
 });
