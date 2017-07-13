@@ -213,7 +213,7 @@ export class WebGLRenderer
         }
         else
         {
-            this._camera = Settings.defaultCamera;
+            this._camera = new Camera();
         }
     }
 
@@ -266,7 +266,7 @@ export class WebGLRenderer
         this.gl.vertexAttribPointer(a_color, Settings.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(a_color);
-        this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.getViewMatrix());
+        this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.viewMatrix);
         this.gl.uniform1f(u_pointSize, this._pointSize);
         this.gl.drawArrays(renderMode, 0, (arr.length / Settings.floatsPerVertex));
     }

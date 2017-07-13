@@ -28,6 +28,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/shapes2d/shapeFactory.spec.ts" },
         { pattern: "spec/graphics/webglRenderer.spec.ts" },
         { pattern: "spec/graphics/colorMapper.spec.ts" },
+        { pattern: "spec/graphics/camera.spec.ts" },
         { pattern: "spec/utils/contextWrangler.spec.ts" }
     ],
 

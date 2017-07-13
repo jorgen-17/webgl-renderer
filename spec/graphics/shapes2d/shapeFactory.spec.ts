@@ -9,7 +9,7 @@ import { ShapeFactory } from "../../../src/graphics/shapes2d/shapeFactory";
 import { Settings } from "../../../src/settings";
 import { ShapeMode } from "../../../src/graphics/shapes2d/shapeMode";
 
-describe("ShapeFactory ", () =>
+describe("shapeFactory:", () =>
 {
     const point1 = new Vec3(0.5, 0.5);
     const point2 = new Vec3(1, 1);

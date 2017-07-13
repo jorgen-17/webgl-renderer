@@ -1,4 +1,5 @@
 import { Mat4, Vec3 } from "cuon-matrix-ts";
+import { Settings } from "../settings";
 
 export class Camera
 {
@@ -7,7 +8,9 @@ export class Camera
     private _lookAtPoint: Vec3;
     private _upPosition: Vec3;
 
-    constructor(eyePosition: Vec3, lookAtPoint: Vec3, upPosition: Vec3)
+    constructor(eyePosition: Vec3 = Settings.defaultEyePosition,
+        lookAtPoint: Vec3 = Settings.defaultLookAtPoint,
+        upPosition: Vec3 = Settings.defaultUpPosition)
     {
         this._eyePosition = eyePosition;
         this._lookAtPoint = lookAtPoint;
@@ -19,7 +22,7 @@ export class Camera
             upPosition.x, upPosition.y, upPosition.z);
     }
 
-    public getViewMatrix(): Float32Array
+    public get viewMatrix(): Float32Array
     {
         return this._viewMatrix.elements;
     }

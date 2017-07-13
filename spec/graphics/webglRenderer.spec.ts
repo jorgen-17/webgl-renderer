@@ -18,7 +18,7 @@ import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
 import { DrawingSettings } from "../../src/graphics/drawingSettings";
 
-describe("ShapeFactory ", () =>
+describe("webglRenderer:", () =>
 {
     const glMock = new Mock<WebGLRenderingContext>();
     let glSpiesDictionary: StringDictionary<jasmine.Spy>;
@@ -52,7 +52,7 @@ describe("ShapeFactory ", () =>
         expect(trianleMode).toBe(renderer.renderMode);
         expect(backgroundColor).toBe(renderer.backgroundColor);
         expect(pointSize).toBe(renderer.pointSize);
-        expect(camera.getViewMatrix()).toBe(renderer.camera.getViewMatrix());
+        expect(camera.viewMatrix).toBe(renderer.camera.viewMatrix);
     });
 
     describe("renderMode:", () =>
@@ -222,7 +222,7 @@ describe("ShapeFactory ", () =>
         {
             renderer.camera = camera;
 
-            expect(camera.getViewMatrix()).toBe(renderer.camera.getViewMatrix());
+            expect(camera.viewMatrix).toBe(renderer.camera.viewMatrix);
         });
 
         it("sets the uniform variable u_viewMatrix", () =>
@@ -239,7 +239,7 @@ describe("ShapeFactory ", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                Settings.defaultCamera.getViewMatrix()
+                new Camera().viewMatrix
             ]);
             uniformMatrix4fvNameSpy.calls.reset();
 
@@ -251,7 +251,7 @@ describe("ShapeFactory ", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                camera.getViewMatrix()
+                camera.viewMatrix
             ]);
         });
     });
