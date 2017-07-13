@@ -9,7 +9,7 @@ import { Camera } from "./camera";
 import { Point3d } from "./shapes2d/point3d";
 import { DrawingSettings } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
-import { Settings } from "../settings";
+import { Settings, ShaderSettings } from "../settings";
 import { Vec3 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
 
@@ -31,26 +31,26 @@ export class WebGLRenderer
     private _vertexBuffers: Array<VertexBuffer>;
     private _shaderProgram: WebGLShader;
     private _vertexShaderSource: string =
-    "    attribute vec4 a_position;\n" +
-    "    attribute vec4 a_color;\n" +
-    "    uniform mat4 u_viewMatrix;\n" +
-    "    uniform float u_pointSize;\n" +
-    "    varying vec4 v_color;\n" +
-    "    void main(void)\n" +
-    "    {\n" +
-    "        gl_Position = u_viewMatrix * a_position;\n" +
-    "        gl_PointSize = u_pointSize;\n" +
-    "        v_color = a_color;\n" +
-    "    }\n";
+`   attribute vec4 ${ShaderSettings.positionAttributeName};
+    attribute vec4 ${ShaderSettings.colorAttributeName};
+    uniform mat4 ${ShaderSettings.viewMatrixUniformName};
+    uniform float ${ShaderSettings.pointSizeUniformName};
+    varying vec4 v_color;
+    void main(void)
+    {
+        gl_Position = ${ShaderSettings.viewMatrixUniformName} * ${ShaderSettings.positionAttributeName};
+        gl_PointSize = ${ShaderSettings.pointSizeUniformName};
+        v_color = ${ShaderSettings.colorAttributeName};
+    }`;
 
     private _fragmentShaderSource: string =
-    "    precision mediump float;\n" +
-    "    uniform vec4 u_fragColor;" +
-    "    varying vec4 v_color;\n" +
-    "    void main(void)\n" +
-    "    {\n" +
-    "        gl_FragColor = v_color;\n" +
-    "    }\n";
+`   precision mediump float;
+    uniform vec4 u_fragColor;
+    varying vec4 v_color;
+    void main(void)
+    {
+        gl_FragColor = v_color;
+    }`;
 
     constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext,
         drawingSettings: DrawingSettings | null = null, camera: Camera | null = null)
@@ -239,22 +239,16 @@ export class WebGLRenderer
 
     private drawGlArray(arr: Float32Array, renderMode: number): void
     {
-        const pointSizeUniformName = "u_pointSize";
-        const viewMatrixUniformName = "u_viewMatrix";
-
-        const a_position = this.gl.getAttribLocation(this._shaderProgram, "a_position");
-        const a_color = this.gl.getAttribLocation(this._shaderProgram, "a_color");
-        const u_pointSize = this.gl.getUniformLocation(this._shaderProgram, pointSizeUniformName);
-        const u_viewMatrix = this.gl.getUniformLocation(this._shaderProgram, viewMatrixUniformName);
-
+        const a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
+        const a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
+        const u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
+        const u_viewMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.viewMatrixUniformName);
 
         if (!u_pointSize || !u_viewMatrix)
         {
-            const uniformsMap: StringDictionary<WebGLUniformLocation | null> =
-            {
-                pointSizeUniformName: u_pointSize,
-                viewMatrixUniformName: u_viewMatrix
-            };
+            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
+            uniformsMap[ShaderSettings.pointSizeUniformName] = u_pointSize;
+            uniformsMap[ShaderSettings.viewMatrixUniformName] = u_viewMatrix;
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
         }
@@ -285,7 +279,7 @@ export class WebGLRenderer
         let shader: WebGLProgram | null = this.gl.createProgram();
         if (shader === null)
         {
-            throw Error("Could not create shader program");
+            throw "could not create shader program";
         }
         this._shaderProgram = shader;
         this.gl.attachShader(this._shaderProgram, vertexShader);
@@ -294,7 +288,7 @@ export class WebGLRenderer
 
         if (!this.gl.getProgramParameter(this._shaderProgram, this.gl.LINK_STATUS))
         {
-            throw Error("Could not initialise shaders");
+            throw "could not link shader program";
         }
 
         this.gl.useProgram(this._shaderProgram);
@@ -302,7 +296,7 @@ export class WebGLRenderer
 
     private createShader(shaderSource: string, type: ShaderType): WebGLShader | null
     {
-        let shader: WebGLShader | null;
+        let shader: WebGLShader | null = null;
         if (type === "fragment")
         {
             shader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
@@ -311,33 +305,27 @@ export class WebGLRenderer
         {
             shader = this.gl.createShader(this.gl.VERTEX_SHADER);
         }
-        else
-        {
-            return null;
-        }
 
         this.gl.shaderSource(shader, shaderSource);
         this.gl.compileShader(shader);
         if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS))
         {
-            alert(this.gl.getShaderInfoLog(shader));
-            return null;
+            throw `could not compile shader, shader info log: ${this.gl.getShaderInfoLog(shader)}`;
         }
         return shader;
     }
 
     private createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string
     {
-        let result = `cannot find uniform in shader program`;
+        let result = `cannot find uniform in shader program\n`;
 
-
-        result += `Potential culprits:`;
+        result += `potential culprits:\n`;
 
         for (let key in uniformsMap)
         {
             if (uniformsMap.hasOwnProperty(key))
             {
-                result += `\t${key}: ${uniformsMap[key]}`;
+                result += `\t${key}: ${uniformsMap[key]}\n`;
             }
         }
 

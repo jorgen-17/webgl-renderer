@@ -61,6 +61,7 @@ export class WebglRendererTestHelper
         const attatchShaderName = ClassHelper.getMethodName(() => gl.attachShader);
         const linkProgramtName = ClassHelper.getMethodName(() => gl.linkProgram);
         const getProgramParameterName = ClassHelper.getMethodName(() => gl.getProgramParameter);
+        const getShaderInfoLogName = ClassHelper.getMethodName(() => gl.getShaderInfoLog);
         const useProgramName = ClassHelper.getMethodName(() => gl.useProgram);
         const shaderProgram = new Mock<WebGLProgram>();
         spyDictionary[createProgramName] = glMock.setup(x => x.createProgram)
@@ -71,6 +72,8 @@ export class WebglRendererTestHelper
             .is((shader: WebGLShader) => { /* noop */}).Spy;
         spyDictionary[getProgramParameterName] = glMock.setup(x => x.getProgramParameter)
             .is((shader: WebGLShader, pName: number) => true).Spy;
+        spyDictionary[getShaderInfoLogName] = glMock.setup(x => x.getShaderInfoLog)
+            .is((shader: WebGLShader) => "theres some shady shit going on").Spy;
         spyDictionary[useProgramName] = glMock.setup(x => x.useProgram)
             .is((shader: WebGLShader) => { /* noop */ }).Spy;
 

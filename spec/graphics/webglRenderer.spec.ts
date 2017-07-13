@@ -6,7 +6,7 @@ import { Precision } from "../../src/graphics/precision";
 import { RGBColor } from "../../src/graphics/rgbColor";
 import { Triangle } from "../../src/graphics/shapes2d/triangle";
 import { ShapeFactory } from "../../src/graphics/shapes2d/shapeFactory";
-import { Settings } from "../../src/settings";
+import { Settings, ShaderSettings } from "../../src/settings";
 import { ShapeMode } from "../../src/graphics/shapes2d/shapeMode";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRenderer.spec.helper";
@@ -607,6 +607,149 @@ describe("ShapeFactory ", () =>
 
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+        });
+    });
+
+    describe("when uniforms not found in shader, " +
+        "draw throws and createUniforNotFoundErrorMessage " +
+        "generates the correct error message", () =>
+    {
+        const getUniformLocationName = ClassHelper.getMethodName(() => gl.getUniformLocation);
+
+        it("when u_pointSize is missing and u_viewMatrix is found", () =>
+        {
+            let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
+            .is((shader: WebGLShader, name: string) =>
+            {
+                if (name === ShaderSettings.pointSizeUniformName)
+                {
+                    return 0;
+                }
+                if (name === ShaderSettings.viewMatrixUniformName)
+                {
+                    return 1;
+                }
+                return null;
+            }).Spy;
+
+            renderer = new WebGLRenderer(800, 600, gl);
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            const expectedErrorString =
+            `cannot find uniform in shader program\n` +
+            `potential culprits:\n` +
+                `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
+                `\t${ShaderSettings.viewMatrixUniformName}: 1\n`;
+            expect(() => renderer.draw()).toThrow(expectedErrorString);
+        });
+
+        it("when u_pointSize is found and u_viewMatrix is missing", () =>
+        {
+            let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
+            .is((shader: WebGLShader, name: string) =>
+            {
+                if (name === ShaderSettings.pointSizeUniformName)
+                {
+                    return 1;
+                }
+                if (name === ShaderSettings.viewMatrixUniformName)
+                {
+                    return 0;
+                }
+                return null;
+            }).Spy;
+
+            renderer = new WebGLRenderer(800, 600, gl);
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            const expectedErrorString =
+            `cannot find uniform in shader program\n` +
+            `potential culprits:\n` +
+                `\t${ShaderSettings.pointSizeUniformName}: 1\n` +
+                `\t${ShaderSettings.viewMatrixUniformName}: 0\n`;
+            expect(() => renderer.draw()).toThrow(expectedErrorString);
+        });
+
+        it("when u_pointSize is missing and u_viewMatrix is missing", () =>
+        {
+            let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
+            .is((shader: WebGLShader, name: string) =>
+            {
+                if (name === ShaderSettings.pointSizeUniformName)
+                {
+                    return 0;
+                }
+                if (name === ShaderSettings.viewMatrixUniformName)
+                {
+                    return 0;
+                }
+                return null;
+            }).Spy;
+
+            renderer = new WebGLRenderer(800, 600, gl);
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            const expectedErrorString =
+            `cannot find uniform in shader program\n` +
+            `potential culprits:\n` +
+                `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
+                `\t${ShaderSettings.viewMatrixUniformName}: 0\n`;
+            expect(() => renderer.draw()).toThrow(expectedErrorString);
+        });
+    });
+
+    describe("catching gl errors:", () =>
+    {
+        afterEach(() =>
+        {
+            const getShaderParameterName = ClassHelper.getMethodName(() => gl.getShaderParameter);
+            glSpiesDictionary[getShaderParameterName] = glMock.setup(x => x.getShaderParameter)
+                .is((shader: WebGLShader, pName: number) => true).Spy;
+
+            const getProgramParameterName = ClassHelper.getMethodName(() => gl.getProgramParameter);
+            glSpiesDictionary[getProgramParameterName] = glMock.setup(x => x.getProgramParameter)
+                .is((shader: WebGLShader, pName: number) => true).Spy;
+
+            const createProgramName = ClassHelper.getMethodName(() => gl.createProgram);
+            const shaderProgram = new Mock<WebGLProgram>();
+            glSpiesDictionary[createProgramName] = glMock.setup(x => x.createProgram)
+                .is(() => shaderProgram.Object).Spy;
+        });
+
+        it("when shader not able to compile, " +
+            "constructor should throw correct error message", () =>
+        {
+            glMock.setup(x => x.getShaderParameter)
+            .is((shader: WebGLShader, pName: number) => false);
+
+            const expectedErrorString =
+            "could not compile shader, shader info log: theres some shady shit going on";
+            expect(() => renderer = new WebGLRenderer(800, 600, gl))
+                .toThrow(expectedErrorString);
+        });
+
+        it("when gl.createProgram returns null, " +
+            "constructor should throw correct error message", () =>
+        {
+            glMock.setup(x => x.createProgram).is(() => null);
+
+            const expectedErrorString = "could not create shader program";
+            expect(() => renderer = new WebGLRenderer(800, 600, gl))
+                .toThrow(expectedErrorString);
+        });
+
+        it("when shader program not able to link, " +
+            "constructor should throw correct error message", () =>
+        {
+            glMock.setup(x => x.getProgramParameter)
+            .is((shader: WebGLShader, pName: number) => false);
+
+            const expectedErrorString = "could not link shader program";
+            expect(() => renderer = new WebGLRenderer(800, 600, gl))
+                .toThrow(expectedErrorString);
         });
     });
 });
