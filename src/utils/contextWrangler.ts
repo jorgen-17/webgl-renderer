@@ -9,11 +9,11 @@ export class ContextWrangler
 
         const isIE = browserHelper.isIE();
         const isEdge = browserHelper.isEdge();
-        const contextName = (isIE || isEdge) ? "experimental-webgl" : "webgl";
+        const contextId = (isIE || isEdge) ? "experimental-webgl" : "webgl";
 
         try
         {
-            gl = canvas.getContext(contextName,
+            gl = canvas.getContext(contextId,
                 {
                     alpha: false,
                     antialias: false,
@@ -23,14 +23,12 @@ export class ContextWrangler
         }
         catch (e)
         {
-            const msg = `Error creating WebGL Context!: ${e.toString()}`;
-            throw Error(msg);
+            throw `error creating webgl context!: ${e.toString()}`;
         }
 
         if (gl === null)
         {
-            const msg = `Error creating WebGL Context!, gl === null`;
-            throw Error(msg);
+            throw `error creating webgl context!, gl === null`;
         }
 
         return gl;
