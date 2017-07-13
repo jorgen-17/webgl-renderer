@@ -33,7 +33,7 @@ export class ColorMapper
                 return new RGBColor(1.0, 0.0, 1.0);
             case "white":
                 return new RGBColor(1.0, 1.0, 1.0);
-            default: throw Error(`could not find color ${color}`);
+            default: throw `could not find color ${color}`;
         }
     }
 }

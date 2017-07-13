@@ -1,5 +1,5 @@
 import { RGBColor } from "../../src/graphics/rgbColor";
-import { ColorMapper } from "../../src/graphics/colorMapper";
+import { Color, ColorMapper } from "../../src/graphics/colorMapper";
 
 describe("colorMapper:", () =>
 {
@@ -51,5 +51,12 @@ describe("colorMapper:", () =>
         {
             expect(white).toEqual(ColorMapper.colorToRGBColor("white"));
         });
+    });
+
+    it("throws if unexpected color", () =>
+    {
+        const expectedErrorString = "could not find color black";
+        expect(() => ColorMapper.colorToRGBColor("black" as Color))
+            .toThrow(expectedErrorString);
     });
 });
