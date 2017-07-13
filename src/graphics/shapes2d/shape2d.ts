@@ -37,7 +37,8 @@ export abstract class Shape2d {
 
     protected abstract computeVerticies(): void;
 
-    protected addXYAndColorToFloat32Array(array: Float32Array, index: number, x: number, y: number, z: number)
+    protected addXYZAndColorToFloat32Array(array: Float32Array, index: number,
+        x: number, y: number, z: number)
     {
         array[index] = x;
         array[index + 1] = y;

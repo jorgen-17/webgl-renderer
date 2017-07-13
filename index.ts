@@ -13,7 +13,7 @@ import { Octogon } from "./src/graphics/shapes2d/octogon";
 import { Triangle } from "./src/graphics/shapes2d/triangle";
 import { RGBColor } from "./src/graphics/rgbColor";
 import { Camera } from "./src/graphics/camera";
-import { Point3d } from "./src/graphics/shapes2d/point3d";
+import { Point } from "./src/graphics/shapes2d/point";
 import { DrawingSettings } from "./src/graphics/drawingSettings";
 import { Vec3 } from "cuon-matrix-ts";
 
@@ -34,7 +34,7 @@ export
     Line,
     Hexagon,
     Octogon,
-    Point3d,
+    Point,
     ShapeFactory,
     Camera,
     Vec3

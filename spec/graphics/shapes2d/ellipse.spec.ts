@@ -20,7 +20,8 @@ describe("HorizontalEllipse ", () =>
 
         it("should initialize basic properties correctly", () =>
         {
-            const ellipse = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.Object, Precision.Low);
+            const ellipse = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object,
+                Precision.Low, color);
 
             expect(color).toBe(ellipse.rgbColor);
             expect(6).toBe(ellipse.glRenderMode);
@@ -30,7 +31,8 @@ describe("HorizontalEllipse ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
             {
-                const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.Object, Precision.Low);
+                const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object,
+                    Precision.Low, color);
 
                 expect(66).toEqual(circle.verticies.length);
 
@@ -60,7 +62,8 @@ describe("HorizontalEllipse ", () =>
 
             it("when constructed with point(0.0, 0.5) and point(1.0, 1.0) AKA its a real horizontal ellipse", () =>
             {
-                const horizontalEllipse = new Ellipse(new Vec3(0.0, 0.5), new Vec3(1.0, 1.0), color, gl.Object, Precision.Low);
+                const horizontalEllipse = new Ellipse(new Vec3(0.0, 0.5), new Vec3(1.0, 1.0), gl.Object,
+                    Precision.Low, color);
 
                 expect(66).toEqual(horizontalEllipse.verticies.length);
 
@@ -90,7 +93,8 @@ describe("HorizontalEllipse ", () =>
 
             it("when constructed with point(0.0, 0.0) and point(0.5, 1.0) AKA its vertical ellipse", () =>
             {
-                const verticalEllipse = new Ellipse(new Vec3(0.0, 0.0), new Vec3(0.5, 1.0), color, gl.Object, Precision.Low);
+                const verticalEllipse = new Ellipse(new Vec3(0.0, 0.0), new Vec3(0.5, 1.0), gl.Object,
+                    Precision.Low, color);
 
                 expect(66).toEqual(verticalEllipse.verticies.length);
 

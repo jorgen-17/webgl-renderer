@@ -6,7 +6,6 @@ import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shapes2d/shapeMode";
 import { RGBColor } from "./rgbColor";
 import { Camera } from "./camera";
-import { Point3d } from "./shapes2d/point3d";
 import { DrawingSettings } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
 import { Settings, ShaderSettings } from "../settings";

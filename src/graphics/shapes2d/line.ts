@@ -8,7 +8,7 @@ export class Line extends Shape2d
 {
     private vertexPositions: Array<Vec3> ;
 
-    constructor(point: Vec3, rgbColor: RGBColor, gl: WebGLRenderingContext)
+    constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(rgbColor);
 
@@ -35,7 +35,7 @@ export class Line extends Shape2d
         {
             const insertionIndex = i * Settings.floatsPerVertex;
             const vertexPosition = this.vertexPositions[i];
-            this.addXYAndColorToFloat32Array(arr, insertionIndex, vertexPosition.x, vertexPosition.y, vertexPosition.z);
+            this.addXYZAndColorToFloat32Array(arr, insertionIndex, vertexPosition.x, vertexPosition.y, vertexPosition.z);
         }
 
         this._verticies = new Float32Vector(arr);
@@ -46,7 +46,7 @@ export class Line extends Shape2d
         this.vertexPositions.push(vertex);
 
         let array = new Float32Array(Settings.floatsPerVertex);
-        this.addXYAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);
+        this.addXYZAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);
         this._verticies.addArray(array);
     }
 }

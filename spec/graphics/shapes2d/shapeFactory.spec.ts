@@ -26,35 +26,35 @@ describe("shapeFactory:", () =>
 
     it("creates triangle", () =>
     {
-        const triangle = ShapeFactory.createShape(point1, point2, "triangles", color, gl.Object);
+        const triangle = ShapeFactory.createShape(point1, point2, "triangles", gl.Object, color);
         expect(3 * Settings.floatsPerVertex).toBe(triangle.verticies.length);
         expect(4).toBe(triangle.glRenderMode);
         expect(color).toBe(triangle.rgbColor);
     });
     it("creates rectangle", () =>
     {
-        const rectangle = ShapeFactory.createShape(point1, point2, "rectangles", color, gl.Object);
+        const rectangle = ShapeFactory.createShape(point1, point2, "rectangles", gl.Object, color);
         expect(4 * Settings.floatsPerVertex).toBe(rectangle.verticies.length);
         expect(5).toBe(rectangle.glRenderMode);
         expect(color).toBe(rectangle.rgbColor);
     });
     it("creates hexagon", () =>
     {
-        const hexagon = ShapeFactory.createShape(point1, point2, "hexagons", color, gl.Object);
+        const hexagon = ShapeFactory.createShape(point1, point2, "hexagons", gl.Object, color);
         expect(6 * Settings.floatsPerVertex).toBe(hexagon.verticies.length);
         expect(6).toBe(hexagon.glRenderMode);
         expect(color).toBe(hexagon.rgbColor);
     });
     it("creates octogon", () =>
     {
-        const octogon = ShapeFactory.createShape(point1, point2, "octogons", color, gl.Object);
+        const octogon = ShapeFactory.createShape(point1, point2, "octogons", gl.Object, color);
         expect(8 * Settings.floatsPerVertex).toBe(octogon.verticies.length);
         expect(6).toBe(octogon.glRenderMode);
         expect(color).toBe(octogon.rgbColor);
     });
     it("creates ellipse", () =>
     {
-        const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", color, gl.Object);
+        const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", gl.Object, color);
         expect(403 * Settings.floatsPerVertex).toBe(ellipse.verticies.length);
         expect(6).toBe(ellipse.glRenderMode);
         expect(color).toBe(ellipse.rgbColor);
@@ -63,7 +63,8 @@ describe("shapeFactory:", () =>
     {
         const createShape = () =>
         {
-            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode, color, gl.Object);
+            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode,
+                gl.Object, color);
         };
 
         expect(createShape).toThrow(new Error("cannot recognize shape type notShape"));

@@ -12,56 +12,56 @@ import { Vec3 } from "cuon-matrix-ts";
 export class ShapeFactory
 {
     public static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
-        rgbColor: RGBColor, gl: WebGLRenderingContext): Shape2d
+        gl: WebGLRenderingContext, rgbColor?: RGBColor): Shape2d
     {
         switch (shapeMode)
         {
             case "triangles":
-                return this.createTriangle(point1, point2, rgbColor, gl);
+                return this.createTriangle(point1, point2, gl, rgbColor);
             case "rectangles":
-                return this.createRectangle(point1, point2, rgbColor, gl);
+                return this.createRectangle(point1, point2, gl, rgbColor);
             case "hexagons":
-                return this.createHexagon(point1, point2, rgbColor, gl);
+                return this.createHexagon(point1, point2, gl, rgbColor);
             case "octogons":
-                return this.createOctogon(point1, point2, rgbColor, gl);
+                return this.createOctogon(point1, point2, gl, rgbColor);
             case "ellipses":
-                return this.createEllipse(point1, point2, rgbColor, gl);
+                return this.createEllipse(point1, point2, gl, rgbColor);
             default:
                 throw Error(`cannot recognize shape type ${shapeMode}`);
         }
     }
 
-    private static createTriangle(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
-        gl: WebGLRenderingContext): Triangle
+    private static createTriangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Triangle
     {
-        return new Triangle(point1, point2, rgbColor, gl);
+        return new Triangle(point1, point2, gl, rgbColor);
     }
 
-    private static createRectangle(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
-        gl: WebGLRenderingContext): Rectangle
+    private static createRectangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Rectangle
     {
-        return new Rectangle(point1, point2, rgbColor, gl);
+        return new Rectangle(point1, point2, gl, rgbColor);
     }
 
-    private static createHexagon(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
-        gl: WebGLRenderingContext): Hexagon
+    private static createHexagon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Hexagon
     {
-        return new Hexagon(point1, point2, rgbColor, gl);
+        return new Hexagon(point1, point2, gl, rgbColor);
         // youre
         // cute baby you know its true
         // love,
         // - your girlfriend
     }
 
-    private static createOctogon(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
-        gl: WebGLRenderingContext): Octogon
+    private static createOctogon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Octogon
     {
-        return new Octogon(point1, point2, rgbColor, gl);
+        return new Octogon(point1, point2, gl, rgbColor);
     }
 
-    private static createEllipse(point1: Vec3, point2: Vec3, rgbColor: RGBColor,
-        gl: WebGLRenderingContext): Ellipse
+    private static createEllipse(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Ellipse
     {
-        return new Ellipse(point1, point2, rgbColor, gl, Precision.High);
+        return new Ellipse(point1, point2, gl, Precision.High, rgbColor);
     }
 }

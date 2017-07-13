@@ -138,7 +138,7 @@ export class WebglRendererTestHelper
         numberOfVerticies: number = 10): Line
     {
         const randomStartPoint = this.getRandomXYPoint();
-        let line = new Line(randomStartPoint, color, gl);
+        let line = new Line(randomStartPoint, gl, color);
         numberOfVerticies--;
 
         for (let i = 0; i < numberOfVerticies; i++)

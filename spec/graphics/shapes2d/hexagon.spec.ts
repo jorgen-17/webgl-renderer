@@ -19,7 +19,7 @@ describe("Hexagon ", () =>
 
         it("should initialize basic properties correctly", () =>
         {
-            const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), color, gl.Object);
+            const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl.Object, color);
 
             expect(color).toBe(hexagon.rgbColor);
             expect(6).toBe(hexagon.glRenderMode);
@@ -29,7 +29,7 @@ describe("Hexagon ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.Object);
+                const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
 
                 expect(36).toEqual(hexagon.verticies.length);
 

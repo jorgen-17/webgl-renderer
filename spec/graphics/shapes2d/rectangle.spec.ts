@@ -19,7 +19,7 @@ describe("Rectangle ", () =>
 
         it("should initialize basic properties correctly", () =>
         {
-            const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), color, gl.Object);
+            const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl.Object, color);
 
             expect(color).toBe(rectangle.rgbColor);
             expect(5).toBe(rectangle.glRenderMode);
@@ -29,7 +29,7 @@ describe("Rectangle ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), color, gl.Object);
+                const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
 
                 expect(24).toEqual(rectangle.verticies.length);
 

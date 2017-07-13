@@ -432,13 +432,13 @@ describe("webglRenderer:", () =>
 
             line = WebglRendererTestHelper.getRandomLine(gl);
             redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                "triangles", red, gl);
+                "triangles", gl, red);
             orangeSquare = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "rectangles", orange, gl);
+                "rectangles", gl, orange);
             yellowHexagon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(-1, -1),
-                "hexagons", yellow, gl);
+                "hexagons", gl, yellow);
             greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "octogons", green, gl);
+                "octogons", gl, green);
 
             let yellowHexVerts = yellowHexagon.verticies;
             let greenOctoVerts = greenOctogon.verticies;
