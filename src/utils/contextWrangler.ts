@@ -1,11 +1,14 @@
+import { BrowserHelper } from "./browserHelper";
+
 export class ContextWrangler
 {
-    public static getContext (canvas: HTMLCanvasElement): WebGLRenderingContext
+    public static getContext (canvas: HTMLCanvasElement,
+            browserHelper: BrowserHelper = new BrowserHelper()): WebGLRenderingContext
     {
         let gl: WebGLRenderingContext | null;
 
-        const isIE = /*@cc_on!@*/false || !!(document as any).documentMode;
-        const isEdge = !isIE && !!(window as any).StyleMedia;
+        const isIE = browserHelper.isIE();
+        const isEdge = browserHelper.isEdge();
         const contextName = (isIE || isEdge) ? "experimental-webgl" : "webgl";
 
         try

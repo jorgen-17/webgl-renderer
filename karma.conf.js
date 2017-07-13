@@ -41,7 +41,8 @@ module.exports = function(config) {
             instrumentation: true, // set to false if you need to debug though source ts
             exclude: [
                 /\.(d|spec|test|mock|snapshots)\.ts/i,
-                /specHelpers\//i
+                /specHelpers\//i,
+                /utils\/browserHelper\.ts/i
             ]
         },
         reports: {
