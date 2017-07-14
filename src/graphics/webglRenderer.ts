@@ -1,5 +1,5 @@
 ﻿import { Shape2d } from "./shapes2d/shape2d";
-import { Float32Vector } from "../utils/vector";
+import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";

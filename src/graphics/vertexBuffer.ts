@@ -1,4 +1,4 @@
-import { Float32Vector } from "../utils/vector";
+import { Float32Vector } from "../utils/float32Vector";
 import { Settings } from "../settings";
 
 export class VertexBuffer

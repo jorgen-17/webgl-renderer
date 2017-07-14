@@ -1,5 +1,5 @@
 import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/vector";
+import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { RGBColor } from "../rgbColor";
 import { Vec3 } from "cuon-matrix-ts";
@@ -34,6 +34,6 @@ export class Rectangle extends Shape2d
         this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomRight.x,
             this.boundingRect.bottomRight.y, this.boundingRect.bottomRight.z);
 
-        this._verticies = new Float32Vector(array);
+        this._verticies = new Float32Vector(array, array.length);
     }
 }

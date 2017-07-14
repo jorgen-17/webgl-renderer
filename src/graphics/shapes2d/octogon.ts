@@ -1,5 +1,5 @@
 import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/vector";
+import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { ThirdPoints } from "./midpoint";
 import { RGBColor } from "../rgbColor";
@@ -44,6 +44,6 @@ export class Octogon extends Shape2d
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
 
-        this._verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr, arr.length);
     }
 }

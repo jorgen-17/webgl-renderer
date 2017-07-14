@@ -1,7 +1,7 @@
 import { Mock } from "ts-mocks";
+import { Vec3 } from "cuon-matrix-ts";
 
 import { RGBColor } from "../../../src/graphics/rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
 import { Triangle } from "../../../src/graphics/shapes2d/triangle";
 
 

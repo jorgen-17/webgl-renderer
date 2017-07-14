@@ -1,5 +1,5 @@
 import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/vector";
+import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "./midpoint";
 import { Precision } from "../precision";
@@ -79,7 +79,7 @@ export class Ellipse extends Shape2d
             insertionIndex += Settings.floatsPerVertex;
         }
 
-        this._verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr, arr.length);
     }
 
     private getYDistanceFromCenterForX(x: number): number

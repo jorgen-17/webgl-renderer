@@ -1,4 +1,4 @@
-import { Float32Vector } from "../../utils/vector";
+import { Float32Vector } from "../../utils/float32Vector";
 import { RGBColor } from "../rgbColor";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Vec3 } from "cuon-matrix-ts";

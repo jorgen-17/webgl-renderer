@@ -1,5 +1,5 @@
 import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/vector";
+import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint, ThirdPoints } from "./midpoint";
 import { RGBColor } from "../rgbColor";
@@ -43,6 +43,6 @@ export class Hexagon extends Shape2d
         mid = Midpoint.between(this.boundingRect.bottomLeft, this.boundingRect.topLeft);
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, mid.x, mid.y, mid.z);
 
-        this._verticies = new Float32Vector(arr);
+        this._verticies = new Float32Vector(arr, arr.length);
     }
 }

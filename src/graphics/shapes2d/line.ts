@@ -1,5 +1,5 @@
 import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/vector";
+import { Float32Vector } from "../../utils/float32Vector";
 import { RGBColor } from "../rgbColor";
 import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../settings";
