@@ -3,6 +3,7 @@ import { Vec3 } from "cuon-matrix-ts";
 import { RGBColor } from "../rgbColor";
 import { Shape2d } from "./shape2d";
 import { Settings } from "../../settings";
+import { Float32Vector } from "../../utils/vector";
 
 export class Point extends Shape2d
 {
@@ -24,5 +25,7 @@ export class Point extends Shape2d
 
         this.addXYZAndColorToFloat32Array(vertex, 0, this._location.x,
             this._location.y, this._location.z);
+
+        this._verticies = new Float32Vector(vertex);
     }
 }

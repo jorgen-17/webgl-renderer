@@ -7,6 +7,7 @@ import { Settings } from "../../src/settings";
 import { RGBColor } from "../../src/graphics/rgbColor";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { RenderMode, RenderModeMapper } from "../../src/graphics/renderModeMapper";
+import { Point } from "../../src/graphics/shapes2d/point";
 
 export class WebglRendererTestHelper
 {
@@ -134,7 +135,7 @@ export class WebglRendererTestHelper
         return spyDictionary;
     }
 
-    public static getRandomLine (gl: WebGLRenderingContext, color: RGBColor = Settings.defaultColor,
+    public static getRandomLine(gl: WebGLRenderingContext, color: RGBColor = Settings.defaultColor,
         numberOfVerticies: number = 10): Line
     {
         const randomStartPoint = this.getRandomXYPoint();
@@ -148,6 +149,13 @@ export class WebglRendererTestHelper
         }
 
         return line;
+    }
+
+    public static getRandomPoint(gl: WebGLRenderingContext,
+        color: RGBColor = Settings.defaultColor): Point
+    {
+        const location = this.getRandomXYPoint();
+        return new Point(location, gl);
     }
 
     public static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
