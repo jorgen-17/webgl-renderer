@@ -1,6 +1,6 @@
 import { Mock } from "ts-mocks";
 import { StringDictionary } from "../../src/utils/dictionary";
-import { ClassHelper } from "../../src/utils/classHelper";
+import { ClassHelper } from "../../specHelpers/classHelper";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../../src/settings";

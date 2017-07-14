@@ -17,7 +17,6 @@ module.exports = function(config) {
         { pattern: "specHelpers/**/*.ts" },
 
         // tests
-        { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },
         { pattern: "spec/graphics/shapes2d/midpoint.spec.ts" },
         { pattern: "spec/graphics/shapes2d/point.spec.ts" },
@@ -31,6 +30,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/colorMapper.spec.ts" },
         { pattern: "spec/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/graphics/camera.spec.ts" },
+        { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/utils/contextWrangler.spec.ts" }
     ],
 

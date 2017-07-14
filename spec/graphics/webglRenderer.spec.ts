@@ -12,7 +12,7 @@ import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRenderer.spec.helper";
 import { Shape2d } from "../../src/graphics/shapes2d/shape2d";
 import { StringDictionary } from "../../src/utils/dictionary";
-import { ClassHelper } from "../../src/utils/classHelper";
+import { ClassHelper } from "../../specHelpers/classHelper";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
