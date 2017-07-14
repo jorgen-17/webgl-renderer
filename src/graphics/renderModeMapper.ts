@@ -25,7 +25,7 @@ export class RenderModeMapper
                 return gl.TRIANGLE_STRIP;
             case "triangleFan":
                 return gl.TRIANGLE_FAN;
-            default: throw Error(`could not find renderMode named ${mode}`);
+            default: throw `could not find renderMode named ${mode}`;
         }
     }
 }

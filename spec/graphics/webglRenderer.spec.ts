@@ -23,13 +23,12 @@ describe("webglRenderer:", () =>
 {
     const glMock = new Mock<WebGLRenderingContext>();
     let glSpiesDictionary: StringDictionary<jasmine.Spy>;
-    let gl: WebGLRenderingContext;
+    const gl = glMock.Object;
     let renderer: WebGLRenderer;
 
     beforeEach(() =>
     {
         glSpiesDictionary = WebglRendererTestHelper.setupGlMockFunctions(glMock);
-        gl = glMock.Object;
     });
 
     it("settings are used", () =>
