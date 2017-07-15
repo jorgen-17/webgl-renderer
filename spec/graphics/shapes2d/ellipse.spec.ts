@@ -9,18 +9,19 @@ import { Vec3 } from "cuon-matrix-ts";
 describe("HorizontalEllipse ", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
-    const gl = new Mock<WebGLRenderingContext>();
+    const glMock = new Mock<WebGLRenderingContext>();
+    const gl = glMock.Object;
 
     beforeAll(() =>
     {
-        gl.setup(x => x.TRIANGLE_FAN).is(0x0006);
+        glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
     describe("constructor should initialize points correctly ", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
-            const ellipse = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object,
+            const ellipse = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl,
                 Precision.Low, color);
 
             expect(color).toBe(ellipse.rgbColor);
@@ -31,7 +32,7 @@ describe("HorizontalEllipse ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0) AKA its actually a circle", () =>
             {
-                const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object,
+                const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl,
                     Precision.Low, color);
 
                 expect(66).toEqual(circle.verticies.length);
@@ -106,7 +107,7 @@ describe("HorizontalEllipse ", () =>
 
             it("when constructed with point(0.0, 0.5) and point(1.0, 1.0) AKA its a real horizontal ellipse", () =>
             {
-                const horizontalEllipse = new Ellipse(new Vec3(0.0, 0.5), new Vec3(1.0, 1.0), gl.Object,
+                const horizontalEllipse = new Ellipse(new Vec3(0.0, 0.5), new Vec3(1.0, 1.0), gl,
                     Precision.Low, color);
 
                 expect(66).toEqual(horizontalEllipse.verticies.length);
@@ -181,7 +182,7 @@ describe("HorizontalEllipse ", () =>
 
             it("when constructed with point(0.0, 0.0) and point(0.5, 1.0) AKA its vertical ellipse", () =>
             {
-                const verticalEllipse = new Ellipse(new Vec3(0.0, 0.0), new Vec3(0.5, 1.0), gl.Object,
+                const verticalEllipse = new Ellipse(new Vec3(0.0, 0.0), new Vec3(0.5, 1.0), gl,
                     Precision.Low, color);
 
                 expect(66).toEqual(verticalEllipse.verticies.length);
@@ -258,7 +259,7 @@ describe("HorizontalEllipse ", () =>
 
     it("when color is set, it should recalculate verticies", () =>
     {
-        const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object,
+        const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl,
                     Precision.Low, color);
 
         expect(66).toEqual(circle.verticies.length);

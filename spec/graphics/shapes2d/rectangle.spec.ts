@@ -8,11 +8,13 @@ import { Rectangle } from "../../../src/graphics/shapes2d/rectangle";
 describe("Rectangle ", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
-    const gl = new Mock<WebGLRenderingContext>();
+    const glMock = new Mock<WebGLRenderingContext>();
+    const gl = glMock.Object;
+
 
     beforeAll(() =>
     {
-        gl.setup(x => x.TRIANGLE_STRIP).is(0x0005);
+        glMock.setup(x => x.TRIANGLE_STRIP).is(0x0005);
     });
 
     describe("constructor", () =>
@@ -20,7 +22,7 @@ describe("Rectangle ", () =>
 
         it("should initialize basic properties correctly", () =>
         {
-            const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl.Object, color);
+            const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(rectangle.rgbColor);
             expect(5).toBe(rectangle.glRenderMode);
@@ -30,7 +32,7 @@ describe("Rectangle ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+                const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
                 expect(24).toEqual(rectangle.verticies.length);
 
@@ -67,7 +69,7 @@ describe("Rectangle ", () =>
 
     it("when color is set, it should recalculate verticies", () =>
     {
-        const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+        const rectangle = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
         expect(24).toEqual(rectangle.verticies.length);
 

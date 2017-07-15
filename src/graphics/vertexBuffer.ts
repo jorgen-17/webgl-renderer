@@ -3,21 +3,21 @@ import { Settings } from "../settings";
 
 export class VertexBuffer
 {
-    public renderMode: number;
+    public glRenderMode: number;
     public verticiesStack: Array<Float32Vector>;
     private _topVertexVector: Float32Vector;
-    constructor(renderMode: number, gl: WebGLRenderingContext)
+    constructor(glRenderMode: number, gl: WebGLRenderingContext)
     {
-        if (this.renderModeValidator(renderMode, gl))
+        if (this.glRenderModeValidator(glRenderMode, gl))
         {
-            this.renderMode = renderMode;
-            this._topVertexVector = new Float32Vector();
+            this.glRenderMode = glRenderMode;
+            this._topVertexVector = new Float32Vector(new Float32Array(0), Settings.vertexBufferFloatLimit);
             this.verticiesStack = new Array<Float32Vector>();
             this.verticiesStack.push(this._topVertexVector);
         }
         else
         {
-            throw Error("Cannot initialize vertex buffer of unrecognized gl render mode");
+            throw "cannot initialize vertex buffer of unrecognized gl render mode";
         }
     }
 
@@ -29,20 +29,20 @@ export class VertexBuffer
                 `we only accept verticies of ${Settings.floatsPerVertex} floats (x, y, z, r, g, b)`;
         }
 
-        if (this._topVertexVector.size + vertex.length < Settings.vertexBufferFloatLimit)
+        if (this._topVertexVector.size + vertex.length <= Settings.vertexBufferFloatLimit)
         {
             this._topVertexVector.addArray(vertex);
         }
         else
         {
-            this._topVertexVector = new Float32Vector(vertex);
+            this._topVertexVector = new Float32Vector(vertex, Settings.vertexBufferFloatLimit);
             this.verticiesStack.push(this._topVertexVector);
         }
     }
 
-    private renderModeValidator(renderMode: number, gl: WebGLRenderingContext): boolean
+    private glRenderModeValidator(glRenderMode: number, gl: WebGLRenderingContext): boolean
     {
-        switch (renderMode)
+        switch (glRenderMode)
         {
             case gl.POINTS:
                 return true;

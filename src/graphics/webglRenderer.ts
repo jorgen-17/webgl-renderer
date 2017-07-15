@@ -20,13 +20,13 @@ export class WebGLRenderer
     private _pointSize: number;
     private _backgroundColor: RGBColor;
     private _camera: Camera;
-    private _pointsVector: VertexBuffer;
-    private _linesVector: VertexBuffer;
-    private _lineStripVector: VertexBuffer;
-    private _lineLoopVector: VertexBuffer;
-    private _trianglesVector: VertexBuffer;
-    private _triangleStripVector: VertexBuffer;
-    private _triangleFanVector: VertexBuffer;
+    private _pointsVertexBuffer: VertexBuffer;
+    private _linesVertexBuffer: VertexBuffer;
+    private _lineStripVertexBuffer: VertexBuffer;
+    private _lineLoopVertexBuffer: VertexBuffer;
+    private _trianglesVertexBuffer: VertexBuffer;
+    private _triangleStripVertexBuffer: VertexBuffer;
+    private _triangleFanVertexBuffer: VertexBuffer;
     private _vertexBuffers: Array<VertexBuffer>;
     private _shaderProgram: WebGLShader;
     private _vertexShaderSource: string =
@@ -119,25 +119,25 @@ export class WebGLRenderer
         switch (renderMode)
         {
             case this.gl.POINTS:
-                this._pointsVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._pointsVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.LINES:
-                this._linesVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._linesVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.LINE_STRIP:
-                this._lineStripVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._lineStripVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.LINE_LOOP:
-                this._lineLoopVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._lineLoopVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.TRIANGLES:
-                this._trianglesVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._trianglesVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.TRIANGLE_STRIP:
-                this._triangleStripVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._triangleStripVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
             case this.gl.TRIANGLE_FAN:
-                this._triangleFanVector.addVertex(new Float32Array([x, y, z, r, g, b]));
+                this._triangleFanVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
                 break;
         }
     }
@@ -190,7 +190,7 @@ export class WebGLRenderer
             {
                 if (verts.size > 0)
                 {
-                    this.drawGlArray(verts.getTrimmedArray(), vb.renderMode);
+                    this.drawGlArray(verts.getTrimmedArray(), vb.glRenderMode);
                 }
             }
         }
@@ -218,21 +218,21 @@ export class WebGLRenderer
 
     private initializeVertexBuffers()
     {
-        this._pointsVector = new VertexBuffer(this.gl.POINTS, this.gl);
-        this._linesVector = new VertexBuffer(this.gl.LINES, this.gl);
-        this._lineStripVector = new VertexBuffer(this.gl.LINE_STRIP, this.gl);
-        this._lineLoopVector = new VertexBuffer(this.gl.LINE_LOOP, this.gl);
-        this._trianglesVector = new VertexBuffer(this.gl.TRIANGLES, this.gl);
-        this._triangleStripVector = new VertexBuffer(this.gl.TRIANGLE_STRIP, this.gl);
-        this._triangleFanVector = new VertexBuffer(this.gl.TRIANGLE_FAN, this.gl);
+        this._pointsVertexBuffer = new VertexBuffer(this.gl.POINTS, this.gl);
+        this._linesVertexBuffer = new VertexBuffer(this.gl.LINES, this.gl);
+        this._lineStripVertexBuffer = new VertexBuffer(this.gl.LINE_STRIP, this.gl);
+        this._lineLoopVertexBuffer = new VertexBuffer(this.gl.LINE_LOOP, this.gl);
+        this._trianglesVertexBuffer = new VertexBuffer(this.gl.TRIANGLES, this.gl);
+        this._triangleStripVertexBuffer = new VertexBuffer(this.gl.TRIANGLE_STRIP, this.gl);
+        this._triangleFanVertexBuffer = new VertexBuffer(this.gl.TRIANGLE_FAN, this.gl);
         this._vertexBuffers = [
-            this._pointsVector,
-            this._linesVector,
-            this._lineStripVector,
-            this._lineLoopVector,
-            this._trianglesVector,
-            this._triangleStripVector,
-            this._triangleFanVector
+            this._pointsVertexBuffer,
+            this._linesVertexBuffer,
+            this._lineStripVertexBuffer,
+            this._lineLoopVertexBuffer,
+            this._trianglesVertexBuffer,
+            this._triangleStripVertexBuffer,
+            this._triangleFanVertexBuffer
         ];
     }
 

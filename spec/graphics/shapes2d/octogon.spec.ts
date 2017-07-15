@@ -8,18 +8,19 @@ import { Octogon } from "../../../src/graphics/shapes2d/octogon";
 describe("Hexagon ", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
-    const gl = new Mock<WebGLRenderingContext>();
+    const glMock = new Mock<WebGLRenderingContext>();
+    const gl = glMock.Object;
 
     beforeAll(() =>
     {
-        gl.setup(x => x.TRIANGLE_FAN).is(0x0006);
+        glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
     describe("constructor", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
-            const octogon = new Octogon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl.Object, color);
+            const octogon = new Octogon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(octogon.rgbColor);
             expect(6).toBe(octogon.glRenderMode);
@@ -29,7 +30,7 @@ describe("Hexagon ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+                const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
                 expect(48).toEqual(octogon.verticies.length);
 
@@ -94,7 +95,7 @@ describe("Hexagon ", () =>
 
     it("when color is set, it should recalculate verticies", () =>
     {
-        const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+        const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
         expect(48).toEqual(octogon.verticies.length);
 

@@ -8,18 +8,19 @@ import { Hexagon } from "../../../src/graphics/shapes2d/hexagon";
 describe("Hexagon ", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
-    const gl = new Mock<WebGLRenderingContext>();
+    const glMock = new Mock<WebGLRenderingContext>();
+    const gl = glMock.Object;
 
     beforeAll(() =>
     {
-        gl.setup(x => x.TRIANGLE_FAN).is(0x0006);
+        glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
     describe("constructor", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
-            const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl.Object, color);
+            const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(hexagon.rgbColor);
             expect(6).toBe(hexagon.glRenderMode);
@@ -29,7 +30,7 @@ describe("Hexagon ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+                const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
                 expect(36).toEqual(hexagon.verticies.length);
 
@@ -80,7 +81,7 @@ describe("Hexagon ", () =>
 
     it("when color is set, it should recalculate verticies", () =>
     {
-        const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+        const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
         expect(36).toEqual(hexagon.verticies.length);
 

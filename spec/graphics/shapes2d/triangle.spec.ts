@@ -8,18 +8,19 @@ import { Triangle } from "../../../src/graphics/shapes2d/triangle";
 describe("Triangle ", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
-    const gl = new Mock<WebGLRenderingContext>();
+    const glMock = new Mock<WebGLRenderingContext>();
+    const gl = glMock.Object;
 
     beforeAll(() =>
     {
-        gl.setup(x => x.TRIANGLES).is(0x0004);
+        glMock.setup(x => x.TRIANGLES).is(0x0004);
     });
 
     describe("constructor", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
-            const triangle = new Triangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl.Object, color);
+            const triangle = new Triangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(triangle.rgbColor);
             expect(4).toBe(triangle.glRenderMode);
@@ -29,7 +30,7 @@ describe("Triangle ", () =>
         {
             it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
             {
-                const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+                const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
                 expect(18).toEqual(triangle.verticies.length);
 
@@ -59,7 +60,7 @@ describe("Triangle ", () =>
 
     it("when color is set, it should recalculate verticies", () =>
     {
-        const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl.Object, color);
+        const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
         expect(18).toEqual(triangle.verticies.length);
 

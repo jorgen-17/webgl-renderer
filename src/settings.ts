@@ -23,7 +23,9 @@ export let Settings =
     floatsPerPoint: floatsPerPoint,
     floatsPerColor: floatsPerColor,
     floatsPerVertex: floatsPerVertex,
-    vertexBufferFloatLimit: 65000,
+    // closest number to 65k(gl vertex limit)
+    // that is also divisible by floatsPerVertex
+    vertexBufferFloatLimit: 64998,
     defaultAlpha: 1.0,
     defaultRendereMode: defaultRenderMode,
     defaultShapeMode: defaultShapeMode,

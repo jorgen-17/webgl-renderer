@@ -8,6 +8,7 @@ import { RGBColor } from "../../src/graphics/rgbColor";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { RenderMode, RenderModeMapper } from "../../src/graphics/renderModeMapper";
 import { Point } from "../../src/graphics/shapes2d/point";
+import { VertexBuffer } from "../../src/graphics/vertexBuffer";
 
 export class WebglRendererTestHelper
 {
@@ -208,6 +209,28 @@ export class WebglRendererTestHelper
             }
         }
     }
+
+    public static addVerticiesToVertexBuffer(vertexBuffer: VertexBuffer, arr: Float32Array)
+    {
+        if (arr.length % 6 !== 0)
+        {
+            throw `incorrect number of floats, must be divisible by ${Settings.floatsPerVertex}`;
+        }
+
+        const numberOfVerticies = (arr.length / Settings.floatsPerVertex);
+        for (let i = 0; i < numberOfVerticies; i++)
+        {
+            const x = arr[i * Settings.floatsPerVertex];
+            const y = arr[(i * Settings.floatsPerVertex) + 1];
+            const z = arr[(i * Settings.floatsPerVertex) + 2];
+            const r = arr[(i * Settings.floatsPerVertex) + 3];
+            const g = arr[(i * Settings.floatsPerVertex) + 4];
+            const b = arr[(i * Settings.floatsPerVertex) + 5];
+
+            vertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
+        }
+    }
+
 
     public static getRandomXYPoint(): Vec3
     {
