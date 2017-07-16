@@ -1,12 +1,11 @@
 import { Mock } from "ts-mocks";
+import { Vec3 } from "cuon-matrix-ts";
 
 import { Ellipse } from "../../../src/graphics/shapes2d/ellipse";
 import { Precision } from "../../../src/graphics/precision";
 import { RGBColor } from "../../../src/graphics/rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
 
-
-describe("HorizontalEllipse ", () =>
+describe("ellipse:", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
@@ -17,7 +16,7 @@ describe("HorizontalEllipse ", () =>
         glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
-    describe("constructor should initialize points correctly ", () =>
+    describe("constructor:", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
@@ -25,7 +24,7 @@ describe("HorizontalEllipse ", () =>
                 Precision.Low, color);
 
             expect(color).toBe(ellipse.rgbColor);
-            expect(6).toBe(ellipse.glRenderMode);
+            expect(gl.TRIANGLE_FAN).toBe(ellipse.glRenderMode);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

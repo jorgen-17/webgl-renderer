@@ -5,7 +5,7 @@ import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Octogon } from "../../../src/graphics/shapes2d/octogon";
 
 
-describe("Hexagon ", () =>
+describe("octogon:", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
@@ -16,7 +16,7 @@ describe("Hexagon ", () =>
         glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
-    describe("constructor", () =>
+    describe("constructor:", () =>
     {
         it("should initialize basic properties correctly", () =>
         {

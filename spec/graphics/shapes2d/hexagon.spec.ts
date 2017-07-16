@@ -5,7 +5,7 @@ import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Hexagon } from "../../../src/graphics/shapes2d/hexagon";
 
 
-describe("Hexagon ", () =>
+describe("hexagon:", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
@@ -16,14 +16,14 @@ describe("Hexagon ", () =>
         glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
-    describe("constructor", () =>
+    describe("constructor:", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
             const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(hexagon.rgbColor);
-            expect(6).toBe(hexagon.glRenderMode);
+            expect(gl.TRIANGLE_FAN).toBe(hexagon.glRenderMode);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

@@ -6,7 +6,7 @@ import { Settings } from "../../settings";
 
 export class Line extends Shape2d
 {
-    private vertexPositions: Array<Vec3> ;
+    private _vertexPositions: Array<Vec3> ;
 
     constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
@@ -14,8 +14,8 @@ export class Line extends Shape2d
 
         let array = new Float32Array(Settings.floatsPerVertex);
 
-        this.vertexPositions = new Array<Vec3>();
-        this.vertexPositions.push(point);
+        this._vertexPositions = new Array<Vec3>();
+        this._vertexPositions.push(point);
 
         this.computeVerticies();
 
@@ -29,12 +29,12 @@ export class Line extends Shape2d
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(this.vertexPositions.length * Settings.floatsPerVertex);
+        let arr = new Float32Array(this._vertexPositions.length * Settings.floatsPerVertex);
 
-        for (let i = 0; i < this.vertexPositions.length; i++)
+        for (let i = 0; i < this._vertexPositions.length; i++)
         {
             const insertionIndex = i * Settings.floatsPerVertex;
-            const vertexPosition = this.vertexPositions[i];
+            const vertexPosition = this._vertexPositions[i];
             this.addXYZAndColorToFloat32Array(arr, insertionIndex, vertexPosition.x, vertexPosition.y, vertexPosition.z);
         }
 
@@ -43,7 +43,7 @@ export class Line extends Shape2d
 
     public addVertex(vertex: Vec3): void
     {
-        this.vertexPositions.push(vertex);
+        this._vertexPositions.push(vertex);
 
         let array = new Float32Array(Settings.floatsPerVertex);
         this.addXYZAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);

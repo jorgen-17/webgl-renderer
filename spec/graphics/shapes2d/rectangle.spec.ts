@@ -5,7 +5,7 @@ import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Rectangle } from "../../../src/graphics/shapes2d/rectangle";
 
 
-describe("Rectangle ", () =>
+describe("rectangle:", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
@@ -17,7 +17,7 @@ describe("Rectangle ", () =>
         glMock.setup(x => x.TRIANGLE_STRIP).is(0x0005);
     });
 
-    describe("constructor", () =>
+    describe("constructor:", () =>
     {
 
         it("should initialize basic properties correctly", () =>
@@ -25,7 +25,7 @@ describe("Rectangle ", () =>
             const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(rectangle.rgbColor);
-            expect(5).toBe(rectangle.glRenderMode);
+            expect(gl.TRIANGLE_STRIP).toBe(rectangle.glRenderMode);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

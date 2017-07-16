@@ -20,6 +20,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },
         { pattern: "spec/graphics/shapes2d/midpoint.spec.ts" },
         { pattern: "spec/graphics/shapes2d/point.spec.ts" },
+        { pattern: "spec/graphics/shapes2d/line.spec.ts" },
         { pattern: "spec/graphics/shapes2d/triangle.spec.ts" },
         { pattern: "spec/graphics/shapes2d/rectangle.spec.ts" },
         { pattern: "spec/graphics/shapes2d/hexagon.spec.ts" },

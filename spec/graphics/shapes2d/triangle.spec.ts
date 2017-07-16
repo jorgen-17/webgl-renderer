@@ -5,7 +5,7 @@ import { RGBColor } from "../../../src/graphics/rgbColor";
 import { Triangle } from "../../../src/graphics/shapes2d/triangle";
 
 
-describe("Triangle ", () =>
+describe("triangle:", () =>
 {
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
@@ -16,14 +16,14 @@ describe("Triangle ", () =>
         glMock.setup(x => x.TRIANGLES).is(0x0004);
     });
 
-    describe("constructor", () =>
+    describe("constructor:", () =>
     {
         it("should initialize basic properties correctly", () =>
         {
             const triangle = new Triangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(triangle.rgbColor);
-            expect(4).toBe(triangle.glRenderMode);
+            expect(gl.TRIANGLES).toBe(triangle.glRenderMode);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>
