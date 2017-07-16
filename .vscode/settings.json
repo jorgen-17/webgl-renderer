@@ -25,5 +25,11 @@
         "**/bower_components": true,
         "**/coverage": true,
         "**/lib": true
-    }
+    },
+    "powermode.enabled": true,
+    "powermode.comboThreshold": 15,
+    "powermode.explosionFrequency": 1,
+    "powermode.maxExplosions": 5,
+    "powermode.explosionSize": 10,
+    "powermode.shakeIntensity": 10
 }
