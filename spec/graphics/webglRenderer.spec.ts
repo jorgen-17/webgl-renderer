@@ -508,7 +508,8 @@ describe("webglRenderer:", () =>
         let orangeSquare: Shape2d;
         let yellowHexagon: Shape2d;
         let greenOctogon: Shape2d;
-        let expectedTrianglesStripVertexBuffer: Float32Array;
+        let triangleVerticies: Float32Array;
+        let triangleStripVerticies: Float32Array;
 
         beforeEach(() =>
         {
@@ -525,16 +526,11 @@ describe("webglRenderer:", () =>
             greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "octogons", gl, green);
 
-            let yellowHexVerts = yellowHexagon.verticies;
-            let greenOctoVerts = greenOctogon.verticies;
-            expectedTrianglesStripVertexBuffer = new Float32Array(yellowHexVerts.length + greenOctoVerts.length);
-            expectedTrianglesStripVertexBuffer.set(yellowHexVerts);
-            expectedTrianglesStripVertexBuffer.set(greenOctoVerts, yellowHexVerts.length);
-        });
+            triangleVerticies = WebglRendererTestHelper.
+                float32ArrayConcat(redTriangle.verticies, orangeSquare.verticies);
+            triangleStripVerticies = WebglRendererTestHelper.
+                float32ArrayConcat(yellowHexagon.verticies, greenOctogon.verticies);
 
-        beforeEach(() =>
-        {
-            renderer = new WebGLRenderer(800, 600, gl);
         });
 
         it("addShapeToScene sends their verticies to webgl", () =>
@@ -553,8 +549,8 @@ describe("webglRenderer:", () =>
             const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
             const drawArraysSpy = glSpiesDictionary[drawArraysName];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(5);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(5);
+            expect(gl.bufferData).toHaveBeenCalledTimes(4);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(4);
 
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
@@ -566,6 +562,7 @@ describe("webglRenderer:", () =>
                 0,
                 1
             ]);
+
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
                 line.verticies,
@@ -576,32 +573,24 @@ describe("webglRenderer:", () =>
                 0,
                 10
             ]);
+
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.verticies,
+                triangleVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                3
+                9
             ]);
+
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
+                triangleStripVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
-                gl.TRIANGLE_STRIP,
-                0,
-                4
-            ]);
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
-                gl.ARRAY_BUFFER,
-                expectedTrianglesStripVertexBuffer,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
                 gl.TRIANGLE_FAN,
                 0,
                 14
@@ -626,8 +615,8 @@ describe("webglRenderer:", () =>
             const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
             const drawArraysSpy = glSpiesDictionary[drawArraysName];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(5);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(5);
+            expect(gl.bufferData).toHaveBeenCalledTimes(4);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(4);
 
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
@@ -639,6 +628,7 @@ describe("webglRenderer:", () =>
                 0,
                 1
             ]);
+
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
                 line.verticies,
@@ -649,32 +639,24 @@ describe("webglRenderer:", () =>
                 0,
                 10
             ]);
+
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.verticies,
+                triangleVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                3
+                9
             ]);
+
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
+                triangleStripVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
-                gl.TRIANGLE_STRIP,
-                0,
-                4
-            ]);
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
-                gl.ARRAY_BUFFER,
-                expectedTrianglesStripVertexBuffer,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
                 gl.TRIANGLE_FAN,
                 0,
                 14
@@ -699,8 +681,8 @@ describe("webglRenderer:", () =>
             const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
             const drawArraysSpy = glSpiesDictionary[drawArraysName];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(5);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(5);
+            expect(gl.bufferData).toHaveBeenCalledTimes(4);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(4);
 
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
@@ -712,6 +694,7 @@ describe("webglRenderer:", () =>
                 0,
                 1
             ]);
+
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
                 line.verticies,
@@ -722,32 +705,24 @@ describe("webglRenderer:", () =>
                 0,
                 10
             ]);
+
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.verticies,
+                triangleVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                3
+                9
             ]);
+
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
+                triangleStripVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
-                gl.TRIANGLE_STRIP,
-                0,
-                4
-            ]);
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
-                gl.ARRAY_BUFFER,
-                expectedTrianglesStripVertexBuffer,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
                 gl.TRIANGLE_FAN,
                 0,
                 14

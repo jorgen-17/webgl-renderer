@@ -7,7 +7,7 @@ import { Settings } from "../../settings";
 
 export class Rectangle extends Shape2d
 {
-    private static readonly numberOfVerticies: number = 4;
+    private static readonly numberOfVerticies: number = 6;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
@@ -15,7 +15,7 @@ export class Rectangle extends Shape2d
 
         this.computeVerticies();
 
-        this.glRenderMode = gl.TRIANGLE_STRIP;
+        this.glRenderMode = gl.TRIANGLES;
     }
     protected computeVerticies(): void
     {
@@ -30,6 +30,12 @@ export class Rectangle extends Shape2d
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
             this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
+            this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topRight.x,
+            this.boundingRect.topRight.y, this.boundingRect.topRight.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomRight.x,
             this.boundingRect.bottomRight.y, this.boundingRect.bottomRight.z);
