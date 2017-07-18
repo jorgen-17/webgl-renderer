@@ -22,6 +22,7 @@ export class Rectangle extends Shape2d
         let array = new Float32Array(Rectangle.numberOfVerticies * Settings.floatsPerVertex);
 
         let insertionIndex = 0;
+
         this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topLeft.x,
             this.boundingRect.topLeft.y, this.boundingRect.topLeft.z);
         insertionIndex += Settings.floatsPerVertex;
@@ -31,6 +32,7 @@ export class Rectangle extends Shape2d
         this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
             this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
         insertionIndex += Settings.floatsPerVertex;
+
         this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
             this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
         insertionIndex += Settings.floatsPerVertex;

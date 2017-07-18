@@ -49,8 +49,8 @@ describe("shapeFactory:", () =>
     it("creates octogon", () =>
     {
         const octogon = ShapeFactory.createShape(point1, point2, "octogons", gl, color);
-        expect(8 * Settings.floatsPerVertex).toBe(octogon.verticies.length);
-        expect(gl.TRIANGLE_FAN).toBe(octogon.glRenderMode);
+        expect(18 * Settings.floatsPerVertex).toBe(octogon.verticies.length);
+        expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
         expect(color).toBe(octogon.rgbColor);
     });
     it("creates ellipse", () =>

@@ -42,18 +42,21 @@ export class Hexagon extends Shape2d
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, midLeft.x, midLeft.y, midLeft.z);
         insertionIndex += Settings.floatsPerVertex;
+
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, topFirstThird.x, topFirstThird.y, topFirstThird.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, bottomFirstThird.x, bottomFirstThird.y, bottomFirstThird.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, bottomSecondThird.x, bottomSecondThird.y, bottomSecondThird.z);
         insertionIndex += Settings.floatsPerVertex;
+
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, topFirstThird.x, topFirstThird.y, topFirstThird.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, topSecondThird.x, topSecondThird.y, topSecondThird.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, bottomSecondThird.x, bottomSecondThird.y, bottomSecondThird.z);
         insertionIndex += Settings.floatsPerVertex;
+
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, topSecondThird.x, topSecondThird.y, topSecondThird.z);
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex, bottomSecondThird.x, bottomSecondThird.y, bottomSecondThird.z);

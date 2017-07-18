@@ -8,7 +8,7 @@ import { Settings } from "../../settings";
 
 export class Octogon extends Shape2d
 {
-    private static readonly numberOfVerticies: number = 8;
+    private static readonly numberOfVerticies: number = 18;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
@@ -16,33 +16,89 @@ export class Octogon extends Shape2d
 
         this.computeVerticies();
 
-        this.glRenderMode = gl.TRIANGLE_FAN;
+        this.glRenderMode = gl.TRIANGLES;
     }
 
     protected computeVerticies(): void
     {
         let arr = new Float32Array(Octogon.numberOfVerticies * Settings.floatsPerVertex);
 
+        const topThirds = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.topRight);
+        const rightThirds = ThirdPoints.between(this.boundingRect.topRight, this.boundingRect.bottomRight);
+        const bottomThirds = ThirdPoints.between(this.boundingRect.bottomLeft, this.boundingRect.bottomRight);
+        const leftThirds = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.bottomLeft);
+
+        const topLeftThird = topThirds.first;
+        const topRightThird = topThirds.second;
+        const rightTopThird = rightThirds.first;
+        const rightBottomThird = rightThirds.second;
+        const bottomLeftThird = bottomThirds.first;
+        const bottomRightThird = bottomThirds.second;
+        const leftTopThird = leftThirds.first;
+        const leftBottomThird = leftThirds.second;
+
         let insertionIndex = 0;
-        let { first, second } = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.topRight);
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, first.x, first.y, first.z);
+
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            leftTopThird.x, leftTopThird.y, leftTopThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topLeftThird.x, topLeftThird.y, topLeftThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        ({ first, second } = ThirdPoints.between(this.boundingRect.topRight, this.boundingRect.bottomRight));
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            leftBottomThird.x, leftBottomThird.y, leftBottomThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, first.x, first.y, first.z);
+
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            leftBottomThird.x, leftBottomThird.y, leftBottomThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        ({ first, second } = ThirdPoints.between(this.boundingRect.bottomRight, this.boundingRect.bottomLeft));
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topLeftThird.x, topLeftThird.y, topLeftThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, first.x, first.y, first.z);
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            bottomLeftThird.x, bottomLeftThird.y, bottomLeftThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        ({ first, second } = ThirdPoints.between(this.boundingRect.bottomLeft, this.boundingRect.topLeft));
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, first.x, first.y, first.z);
+
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            bottomLeftThird.x, bottomLeftThird.y, bottomLeftThird.z);
         insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex, second.x, second.y, second.z);
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topLeftThird.x, topLeftThird.y, topLeftThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            bottomRightThird.x, bottomRightThird.y, bottomRightThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topLeftThird.x, topLeftThird.y, topLeftThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            bottomRightThird.x, bottomRightThird.y, bottomRightThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topRightThird.x, topRightThird.y, topRightThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topRightThird.x, topRightThird.y, topRightThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            bottomRightThird.x, bottomRightThird.y, bottomRightThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            rightBottomThird.x, rightBottomThird.y, rightBottomThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            topRightThird.x, topRightThird.y, topRightThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            rightBottomThird.x, rightBottomThird.y, rightBottomThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
+            rightTopThird.x, rightTopThird.y, rightTopThird.z);
+        insertionIndex += Settings.floatsPerVertex;
+
 
         this._verticies = new Float32Vector(arr, arr.length);
     }
