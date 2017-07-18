@@ -42,8 +42,8 @@ describe("shapeFactory:", () =>
     it("creates hexagon", () =>
     {
         const hexagon = ShapeFactory.createShape(point1, point2, "hexagons", gl, color);
-        expect(6 * Settings.floatsPerVertex).toBe(hexagon.verticies.length);
-        expect(gl.TRIANGLE_FAN).toBe(hexagon.glRenderMode);
+        expect(12 * Settings.floatsPerVertex).toBe(hexagon.verticies.length);
+        expect(gl.TRIANGLES).toBe(hexagon.glRenderMode);
         expect(color).toBe(hexagon.rgbColor);
     });
     it("creates octogon", () =>

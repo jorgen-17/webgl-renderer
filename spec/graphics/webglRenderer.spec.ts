@@ -509,7 +509,6 @@ describe("webglRenderer:", () =>
         let yellowHexagon: Shape2d;
         let greenOctogon: Shape2d;
         let triangleVerticies: Float32Array;
-        let triangleStripVerticies: Float32Array;
 
         beforeEach(() =>
         {
@@ -526,11 +525,11 @@ describe("webglRenderer:", () =>
             greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "octogons", gl, green);
 
-            triangleVerticies = WebglRendererTestHelper.
-                float32ArrayConcat(redTriangle.verticies, orangeSquare.verticies);
-            triangleStripVerticies = WebglRendererTestHelper.
-                float32ArrayConcat(yellowHexagon.verticies, greenOctogon.verticies);
-
+            triangleVerticies = WebglRendererTestHelper.concatMultipleFloat32Arrays([
+                redTriangle.verticies,
+                orangeSquare.verticies,
+                yellowHexagon.verticies
+            ]);
         });
 
         it("addShapeToScene sends their verticies to webgl", () =>
@@ -582,18 +581,18 @@ describe("webglRenderer:", () =>
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                9
+                21
             ]);
 
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                triangleStripVerticies,
+                greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
                 gl.TRIANGLE_FAN,
                 0,
-                14
+                8
             ]);
         });
 
@@ -648,18 +647,18 @@ describe("webglRenderer:", () =>
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                9
+                21
             ]);
 
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                triangleStripVerticies,
+                greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
                 gl.TRIANGLE_FAN,
                 0,
-                14
+                8
             ]);
         });
 
@@ -714,18 +713,18 @@ describe("webglRenderer:", () =>
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                9
+                21
             ]);
 
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                triangleStripVerticies,
+                greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
                 gl.TRIANGLE_FAN,
                 0,
-                14
+                8
             ]);
             bufferDataSpy.calls.reset();
             drawArraysSpy.calls.reset();

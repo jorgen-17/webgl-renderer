@@ -248,12 +248,31 @@ export class WebglRendererTestHelper
         return ((((Math.random() *  100) / 100) % 2) === 0) ? 1 : -1;
     }
 
-    public static float32ArrayConcat(arr1: Float32Array, arr2: Float32Array): Float32Array
+    public static concatTwoFloat32Arrays(arr1: Float32Array, arr2: Float32Array): Float32Array
     {
         let concated = new Float32Array(arr1.length + arr2.length);
         concated.set(arr1);
         concated.set(arr2, arr1.length);
 
         return concated;
+    }
+
+    public static concatMultipleFloat32Arrays(arrs: Array<Float32Array>): Float32Array
+    {
+        let newArrayLength = 0;
+        arrs.forEach(arr => {
+            newArrayLength += arr.length;
+        });
+
+        let newArr = new Float32Array(newArrayLength);
+        let insertionIndex = 0;
+        newArr.set(arrs[0]);
+        for (let i = 1; i < arrs.length; i++)
+        {
+            insertionIndex += arrs[i - 1].length;
+            newArr.set(arrs[i], insertionIndex);
+        }
+
+        return newArr;
     }
 }
