@@ -28,7 +28,7 @@ describe("octogon:", () =>
 
         describe("should initialize vertex positions and color correctly ", () =>
         {
-            it("when constructed with point(0.5, 0.5) and point(1.0, 1.0)", () =>
+            it("when constructed with point(0.5, 0.5) and point(1.0, 1. 0)", () =>
             {
                 const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
@@ -60,6 +60,8 @@ describe("octogon:", () =>
                     1, 0.6666666865348816, 0, color.red, color.green, color.blue, // vertex 17
                     1, 0.8333333730697632, 0, color.red, color.green, color.blue, // vertex 18
                 ]);
+
+                expect(expectedVerticies).toEqual(octogon.verticies);
             });
         });
     });
@@ -97,6 +99,8 @@ describe("octogon:", () =>
             1, 0.8333333730697632, 0, color.red, color.green, color.blue, // vertex 18
         ]);
 
+        expect(expectedVerticies).toEqual(octogon.verticies);
+
         const newColor = new RGBColor(0.5, 0.5, 0.5);
 
         octogon.rgbColor = newColor;
@@ -105,29 +109,31 @@ describe("octogon:", () =>
 
         expectedVerticies = new Float32Array([
             // triangle 1
-            0.5, 0.8333333730697632, 0, color.red, color.green, color.blue, // vertex 1
-            0.6666666865348816, 1, 0, color.red, color.green, color.blue, // vertex 2
-            0.5, 0.6666666865348816, 0, color.red, color.green, color.blue, // vertex 3
+            0.5, 0.8333333730697632, 0, newColor.red, newColor.green, newColor.blue, // vertex 1
+            0.6666666865348816, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 2
+            0.5, 0.6666666865348816, 0, newColor.red, newColor.green, newColor.blue, // vertex 3
             // triangle 2
-            0.5, 0.6666666865348816, 0, color.red, color.green, color.blue, // vertex 4
-            0.6666666865348816, 1, 0, color.red, color.green, color.blue, // vertex 5
-            0.6666666865348816, 0.5, 0, color.red, color.green, color.blue, // vertex 6
+            0.5, 0.6666666865348816, 0, newColor.red, newColor.green, newColor.blue, // vertex 4
+            0.6666666865348816, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 5
+            0.6666666865348816, 0.5, 0, newColor.red, newColor.green, newColor.blue, // vertex 6
             // triangle 3
-            0.6666666865348816, 0.5, 0, color.red, color.green, color.blue, // vertex 7
-            0.6666666865348816, 1, 0, color.red, color.green, color.blue, // vertex 8
-            0.8333333730697632, 0.5, 0, color.red, color.green, color.blue, // vertex 9
+            0.6666666865348816, 0.5, 0, newColor.red, newColor.green, newColor.blue, // vertex 7
+            0.6666666865348816, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 8
+            0.8333333730697632, 0.5, 0, newColor.red, newColor.green, newColor.blue, // vertex 9
             // triangle 4
-            0.6666666865348816, 1, 0, color.red, color.green, color.blue, // vertex 10
-            0.8333333730697632, 0.5, 0, color.red, color.green, color.blue, // vertex 11
-            0.8333333730697632, 1, 0, color.red, color.green, color.blue, // vertex 12
+            0.6666666865348816, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 10
+            0.8333333730697632, 0.5, 0, newColor.red, newColor.green, newColor.blue, // vertex 11
+            0.8333333730697632, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 12
             // triangle 5
-            0.8333333730697632, 1, 0, color.red, color.green, color.blue, // vertex 13
-            0.8333333730697632, 0.5, 0, color.red, color.green, color.blue, // vertex 14
-            1, 0.6666666865348816, 0, color.red, color.green, color.blue, // vertex 15
+            0.8333333730697632, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 13
+            0.8333333730697632, 0.5, 0, newColor.red, newColor.green, newColor.blue, // vertex 14
+            1, 0.6666666865348816, 0, newColor.red, newColor.green, newColor.blue, // vertex 15
             // triangle 6
-            0.8333333730697632, 1, 0, color.red, color.green, color.blue, // vertex 16
-            1, 0.6666666865348816, 0, color.red, color.green, color.blue, // vertex 17
-            1, 0.8333333730697632, 0, color.red, color.green, color.blue, // vertex 18
+            0.8333333730697632, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 16
+            1, 0.6666666865348816, 0, newColor.red, newColor.green, newColor.blue, // vertex 17
+            1, 0.8333333730697632, 0, newColor.red, newColor.green, newColor.blue, // vertex 18
         ]);
+
+        expect(expectedVerticies).toEqual(octogon.verticies);
     });
 });

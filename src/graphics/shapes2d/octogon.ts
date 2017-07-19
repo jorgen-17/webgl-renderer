@@ -30,12 +30,12 @@ export class Octogon extends Shape2d
 
         const topLeftThird = topThirds.first;
         const topRightThird = topThirds.second;
-        const rightTopThird = rightThirds.first;
-        const rightBottomThird = rightThirds.second;
+        const rightTopThird = rightThirds.second;
+        const rightBottomThird = rightThirds.first;
         const bottomLeftThird = bottomThirds.first;
         const bottomRightThird = bottomThirds.second;
-        const leftTopThird = leftThirds.first;
-        const leftBottomThird = leftThirds.second;
+        const leftTopThird = leftThirds.second;
+        const leftBottomThird = leftThirds.first;
 
         let insertionIndex = 0;
 
@@ -97,8 +97,6 @@ export class Octogon extends Shape2d
         insertionIndex += Settings.floatsPerVertex;
         this.addXYZAndColorToFloat32Array(arr, insertionIndex,
             rightTopThird.x, rightTopThird.y, rightTopThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-
 
         this._verticies = new Float32Vector(arr, arr.length);
     }
