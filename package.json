@@ -1,6 +1,6 @@
 {
     "name": "webgl-renderer",
-    "version": "0.6.9",
+    "version": "0.6.10",
     "description": "webGl renderering engine",
     "main": "lib/webgl-renderer.min.js",
     "scripts": {
@@ -8,7 +8,7 @@
         "dev": "./node_modules/.bin/webpack --verbose --progress --colors --watch --env dev",
         "test": "./node_modules/.bin/karma start karma.conf.js",
         "ci-test": "./node_modules/.bin/karma start karma.conf.js --browsers ChromeHeadless --single-run",
-        "type": "./node_modules/.bin/dts-generator --name webgl-renderer --project . --out lib/webgl-renderer.d.ts",
+        "type": "./node_modules/.bin/dts-generator --name webgl-renderer --project . --out lib/webgl-renderer.d.ts --exclude node_modules/**/*.d.ts --exclude specHelpers/**/*.ts --exclude spec/**/*.ts --extern cuon-matrix-ts",
         "cover": "./node_modules/.bin/codecov -f coverage/json/cover.json"
     },
     "dependencies": {

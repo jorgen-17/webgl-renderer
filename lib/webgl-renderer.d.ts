@@ -1,7 +1,56 @@
+/// <reference path="../node_modules/cuon-matrix-ts/index.d.ts" />
 declare module 'graphics/renderModeMapper' {
 	export type RenderMode = "points" | "lines" | "lineStrip" | "lineLoop" | "triangles" | "triangleStrip" | "triangleFan";
 	export class RenderModeMapper {
 	    static renderModeToWebGlConstant(mode: RenderMode, gl: WebGLRenderingContext): number;
+	}
+
+}
+declare module 'constants' {
+	export let Constants: {
+	    floatsPerPoint: number;
+	    floatsPerColor: number;
+	    floatsPerVertex: number;
+	    verticiesPerTriangle: number;
+	    floatsPerTriangle: number;
+	    vertexBufferFloatLimit: number;
+	    defaultAlpha: number;
+	    lineGlRenderMode: "lineStrip";
+	};
+
+}
+declare module 'utils/float32Vector' {
+	export class Float32Vector {
+	    arr: Float32Array;
+	    size: number;
+	    private _sizeLimit;
+	    constructor(arr?: Float32Array, sizeLimit?: number);
+	    addNumber(number: number): boolean;
+	    addArray(arr: Float32Array | Array<number>): boolean;
+	    getTrimmedArray(): Float32Array;
+	}
+
+}
+declare module 'graphics/rgbColor' {
+	export class RGBColor {
+	    red: number;
+	    green: number;
+	    blue: number;
+	    constructor(red: number, green: number, blue: number);
+	}
+
+}
+declare module 'graphics/shapes2d/boundingRectangle' {
+	import { Vec3 } from "cuon-matrix-ts";
+	export class BoundingRectangle {
+	    topLeft: Vec3;
+	    topRight: Vec3;
+	    bottomRight: Vec3;
+	    bottomLeft: Vec3;
+	    constructor(point1: Vec3, point2: Vec3);
+	    private isTopLeftBottomRight(point1, point2);
+	    private isBottomRightTopLeft(point1, point2);
+	    private isBottomLeftTopRight(point1, point2);
 	}
 
 }
@@ -13,15 +62,6 @@ declare module 'graphics/drawingMode' {
 	export enum DrawingMode {
 	    Shapes = 0,
 	    Verticies = 1,
-	}
-
-}
-declare module 'graphics/rgbColor' {
-	export class RGBColor {
-	    red: number;
-	    green: number;
-	    blue: number;
-	    constructor(red: number, green: number, blue: number);
 	}
 
 }
@@ -43,18 +83,11 @@ declare module 'graphics/camera' {
 
 }
 declare module 'settings' {
-	import { DrawingMode } from 'graphics/drawingMode';
-	import { RGBColor } from 'graphics/rgbColor';
 	import { Vec3 } from "cuon-matrix-ts";
+	import { RGBColor } from 'graphics/rgbColor';
 	export let Settings: {
-	    floatsPerPoint: number;
-	    floatsPerColor: number;
-	    floatsPerVertex: number;
-	    vertexBufferFloatLimit: number;
-	    defaultAlpha: number;
 	    defaultRendereMode: "points";
 	    defaultShapeMode: "points";
-	    defaultDrawingMode: DrawingMode;
 	    defaultPointSize: number;
 	    defaultBackgroundColor: RGBColor;
 	    defaultBackgroundAlpha: number;
@@ -63,45 +96,13 @@ declare module 'settings' {
 	    defaultLookAtPoint: Vec3;
 	    defaultUpPosition: Vec3;
 	};
-	export let ShaderSettings: {
-	    positionAttributeName: string;
-	    colorAttributeName: string;
-	    pointSizeUniformName: string;
-	    viewMatrixUniformName: string;
-	};
-
-}
-declare module 'utils/float32Vector' {
-	export class Float32Vector {
-	    arr: Float32Array;
-	    size: number;
-	    private _sizeLimit;
-	    constructor(arr?: Float32Array, sizeLimit?: number);
-	    addNumber(number: number): boolean;
-	    addArray(arr: Float32Array | Array<number>): boolean;
-	    getTrimmedArray(): Float32Array;
-	}
-
-}
-declare module 'graphics/shapes2d/boundingRectangle' {
-	import { Vec3 } from "cuon-matrix-ts";
-	export class BoundingRectangle {
-	    topLeft: Vec3;
-	    topRight: Vec3;
-	    bottomRight: Vec3;
-	    bottomLeft: Vec3;
-	    constructor(point1: Vec3, point2: Vec3);
-	    private isTopLeftBottomRight(point1, point2);
-	    private isBottomRightTopLeft(point1, point2);
-	    private isBottomLeftTopRight(point1, point2);
-	}
 
 }
 declare module 'graphics/shapes2d/shape2d' {
+	import { Vec3 } from "cuon-matrix-ts";
 	import { Float32Vector } from 'utils/float32Vector';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { BoundingRectangle } from 'graphics/shapes2d/boundingRectangle';
-	import { Vec3 } from "cuon-matrix-ts";
 	export abstract class Shape2d {
 	    protected _verticies: Float32Vector;
 	    glRenderMode: number;
@@ -112,6 +113,7 @@ declare module 'graphics/shapes2d/shape2d' {
 	    readonly verticies: Float32Array;
 	    protected abstract computeVerticies(): void;
 	    protected addXYZAndColorToFloat32Array(array: Float32Array, index: number, x: number, y: number, z: number): void;
+	    protected addTriangleToFloat32Array(array: Float32Array, index: number, vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3): void;
 	}
 
 }
@@ -146,8 +148,30 @@ declare module 'utils/dictionary' {
 	}
 
 }
+declare module 'shaderSettings' {
+	export let ShaderSettings: {
+	    positionAttributeName: string;
+	    colorAttributeName: string;
+	    pointSizeUniformName: string;
+	    viewMatrixUniformName: string;
+	};
+
+}
 declare module 'graphics/shaderType' {
 	export type ShaderType = "fragment" | "vertex";
+
+}
+declare module 'graphics/shapes2d/line' {
+	import { Vec3 } from "cuon-matrix-ts";
+	import { Shape2d } from 'graphics/shapes2d/shape2d';
+	import { RGBColor } from 'graphics/rgbColor';
+	export class Line extends Shape2d {
+	    private _vertexPositions;
+	    constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
+	    readonly verticies: Float32Array;
+	    protected computeVerticies(): void;
+	    addVertex(vertex: Vec3): void;
+	}
 
 }
 declare module 'graphics/webglRenderer' {
@@ -171,6 +195,8 @@ declare module 'graphics/webglRenderer' {
 	    private _triangleStripVertexBuffer;
 	    private _triangleFanVertexBuffer;
 	    private _vertexBuffers;
+	    private _lineFloat32Arrays;
+	    private _lineRenderMode;
 	    private _shaderProgram;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
@@ -217,19 +243,6 @@ declare module 'graphics/colorMapper' {
 	}
 
 }
-declare module 'graphics/shapes2d/line' {
-	import { Shape2d } from 'graphics/shapes2d/shape2d';
-	import { RGBColor } from 'graphics/rgbColor';
-	import { Vec3 } from "cuon-matrix-ts";
-	export class Line extends Shape2d {
-	    private _vertexPositions;
-	    constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
-	    readonly verticies: Float32Array;
-	    protected computeVerticies(): void;
-	    addVertex(vertex: Vec3): void;
-	}
-
-}
 declare module 'utils/tuple' {
 	export interface Tuple<T1, T2> {
 	    first: T1;
@@ -256,16 +269,19 @@ declare module 'graphics/precision' {
 
 }
 declare module 'graphics/shapes2d/ellipse' {
+	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { Precision } from 'graphics/precision';
 	import { RGBColor } from 'graphics/rgbColor';
-	import { Vec3 } from "cuon-matrix-ts";
 	export class Ellipse extends Shape2d {
-	    private static readonly highPrecisionNumberOfInnerVerticies;
+	    private static readonly numberOfEndPoints;
+	    private static readonly highPrecisionNumberOfPointsAlongCurve;
 	    private static readonly highPrecisionNumberOfVerticies;
-	    private static readonly lowPrecisionNumberOfInnerVerticies;
+	    private static readonly lowPrecisionNumberOfPointsAlongCurve;
 	    private static readonly lowPrecisionNumberOfVerticies;
 	    private center;
+	    private leftEndPoint;
+	    private rightEndPoint;
 	    private horizontalRadius;
 	    private verticalRadius;
 	    private precision;
@@ -276,9 +292,9 @@ declare module 'graphics/shapes2d/ellipse' {
 
 }
 declare module 'graphics/shapes2d/triangle' {
+	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { RGBColor } from 'graphics/rgbColor';
-	import { Vec3 } from "cuon-matrix-ts";
 	export class Triangle extends Shape2d {
 	    private static readonly numberOfVerticies;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
@@ -287,9 +303,9 @@ declare module 'graphics/shapes2d/triangle' {
 
 }
 declare module 'graphics/shapes2d/rectangle' {
+	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { RGBColor } from 'graphics/rgbColor';
-	import { Vec3 } from "cuon-matrix-ts";
 	export class Rectangle extends Shape2d {
 	    private static readonly numberOfVerticies;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
@@ -298,9 +314,9 @@ declare module 'graphics/shapes2d/rectangle' {
 
 }
 declare module 'graphics/shapes2d/hexagon' {
+	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { RGBColor } from 'graphics/rgbColor';
-	import { Vec3 } from "cuon-matrix-ts";
 	export class Hexagon extends Shape2d {
 	    private static readonly numberOfVerticies;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
@@ -309,9 +325,9 @@ declare module 'graphics/shapes2d/hexagon' {
 
 }
 declare module 'graphics/shapes2d/octogon' {
+	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { RGBColor } from 'graphics/rgbColor';
-	import { Vec3 } from "cuon-matrix-ts";
 	export class Octogon extends Shape2d {
 	    private static readonly numberOfVerticies;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
@@ -365,34 +381,5 @@ declare module 'webgl-renderer' {
 	import { DrawingSettings } from 'graphics/drawingSettings';
 	import { Vec3 } from "cuon-matrix-ts";
 	export { WebGLRenderer, DrawingSettings, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3 };
-
-}
-declare module 'webgl-renderer/specHelpers/classHelper' {
-	export class ClassHelper {
-	    static getMethodName(obj: any): string;
-	}
-
-}
-declare module 'webgl-renderer/specHelpers/graphics/webglRenderer.spec.helper' {
-	/// <reference types="jasmine" />
-	import { Mock } from "ts-mocks";
-	import { StringDictionary } from 'utils/dictionary';
-	import { Line } from 'graphics/shapes2d/line';
-	import { Vec3 } from "cuon-matrix-ts";
-	import { RGBColor } from 'graphics/rgbColor';
-	import { WebGLRenderer } from 'graphics/webglRenderer';
-	import { RenderMode } from 'graphics/renderModeMapper';
-	import { Point } from 'graphics/shapes2d/point';
-	import { VertexBuffer } from 'graphics/vertexBuffer';
-	export class WebglRendererTestHelper {
-	    static setupGlMockFunctions(glMock: Mock<WebGLRenderingContext>): StringDictionary<jasmine.Spy>;
-	    static getRandomLine(gl: WebGLRenderingContext, color?: RGBColor, numberOfVerticies?: number): Line;
-	    static getRandomPoint(gl: WebGLRenderingContext, color?: RGBColor): Point;
-	    static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies?: number, color?: RGBColor): Float32Array;
-	    static addVerticiesToRenderer(renderer: WebGLRenderer, arr: Float32Array, renderMode?: RenderMode | null, gl?: WebGLRenderingContext | null): void;
-	    static addVerticiesToVertexBuffer(vertexBuffer: VertexBuffer, arr: Float32Array): void;
-	    static getRandomXYPoint(): Vec3;
-	    static plusOrMinus(): number;
-	}
 
 }

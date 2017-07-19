@@ -1,4 +1,4 @@
-import { Settings } from "../settings";
+import { Constants } from "../constants";
 export class Float32Vector
 {
     public arr: Float32Array;

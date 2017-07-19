@@ -1,7 +1,9 @@
+import { Vec3 } from "cuon-matrix-ts";
+
 import { Float32Vector } from "../../utils/float32Vector";
 import { RGBColor } from "../rgbColor";
 import { BoundingRectangle } from "./boundingRectangle";
-import { Vec3 } from "cuon-matrix-ts";
+import { Constants } from "../../constants";
 import { Settings } from "../../settings";
 
 export abstract class Shape2d {
@@ -53,9 +55,9 @@ export abstract class Shape2d {
     {
         this.addXYZAndColorToFloat32Array(array, index, vertex1Position.x,
             vertex1Position.y, vertex1Position.z);
-        this.addXYZAndColorToFloat32Array(array, (index + Settings.floatsPerVertex), vertex2Position.x,
+        this.addXYZAndColorToFloat32Array(array, (index + Constants.floatsPerVertex), vertex2Position.x,
             vertex2Position.y, vertex2Position.z);
-        this.addXYZAndColorToFloat32Array(array, (index + (Settings.floatsPerVertex * 2)),
+        this.addXYZAndColorToFloat32Array(array, (index + (Constants.floatsPerVertex * 2)),
             vertex3Position.x, vertex3Position.y, vertex3Position.z);
     }
 }

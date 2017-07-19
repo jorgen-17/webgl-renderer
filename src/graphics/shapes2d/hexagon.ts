@@ -1,10 +1,11 @@
+import { Vec3 } from "cuon-matrix-ts";
+
 import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint, ThirdPoints } from "./midpoint";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
-import { Settings } from "../../settings";
+import { Constants } from "../../constants";
 
 export class Hexagon extends Shape2d
 {
@@ -21,7 +22,7 @@ export class Hexagon extends Shape2d
 
     protected computeVerticies(): void
     {
-        const arr = new Float32Array(Hexagon.numberOfVerticies * Settings.floatsPerVertex);
+        const arr = new Float32Array(Hexagon.numberOfVerticies * Constants.floatsPerVertex);
 
         const topThirds = ThirdPoints.between(this.boundingRect.topLeft,
             this.boundingRect.topRight);
@@ -38,15 +39,15 @@ export class Hexagon extends Shape2d
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topFirstThird,
             bottomFirstThird, midLeft);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topFirstThird,
             bottomFirstThird, bottomSecondThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topFirstThird,
             topSecondThird, bottomSecondThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topSecondThird,
             bottomSecondThird, midRight);

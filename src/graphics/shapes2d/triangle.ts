@@ -1,10 +1,11 @@
+import { Vec3 } from "cuon-matrix-ts";
+
 import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "./midpoint";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
-import { Settings } from "../../settings";
+import { Constants } from "../../constants";
 
 export class Triangle extends Shape2d
 {
@@ -23,7 +24,7 @@ export class Triangle extends Shape2d
     {
         const topPoint = Midpoint.between(this.boundingRect.topLeft, this.boundingRect.topRight);
 
-        let array = new Float32Array(Triangle.numberOfVerticies * Settings.floatsPerVertex);
+        let array = new Float32Array(Triangle.numberOfVerticies * Constants.floatsPerVertex);
 
         let insertionIndex = 0;
 

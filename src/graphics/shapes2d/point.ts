@@ -2,7 +2,7 @@ import { Vec3 } from "cuon-matrix-ts";
 
 import { RGBColor } from "../rgbColor";
 import { Shape2d } from "./shape2d";
-import { Settings } from "../../settings";
+import { Constants } from "../../constants";
 import { Float32Vector } from "../../utils/float32Vector";
 
 export class Point extends Shape2d
@@ -21,7 +21,7 @@ export class Point extends Shape2d
 
     protected computeVerticies(): void
     {
-        let vertex = new Float32Array(Settings.floatsPerVertex);
+        let vertex = new Float32Array(Constants.floatsPerVertex);
 
         this.addXYZAndColorToFloat32Array(vertex, 0, this._location.x,
             this._location.y, this._location.z);

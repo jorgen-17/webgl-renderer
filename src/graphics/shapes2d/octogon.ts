@@ -1,10 +1,11 @@
+import { Vec3 } from "cuon-matrix-ts";
+
 import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { ThirdPoints } from "./midpoint";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
-import { Settings } from "../../settings";
+import { Constants } from "../../constants";
 
 export class Octogon extends Shape2d
 {
@@ -21,7 +22,7 @@ export class Octogon extends Shape2d
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(Octogon.numberOfVerticies * Settings.floatsPerVertex);
+        let arr = new Float32Array(Octogon.numberOfVerticies * Constants.floatsPerVertex);
 
         const topThirds = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.topRight);
         const rightThirds = ThirdPoints.between(this.boundingRect.topRight, this.boundingRect.bottomRight);
@@ -41,27 +42,27 @@ export class Octogon extends Shape2d
 
         this.addTriangleToFloat32Array(arr, insertionIndex, leftTopThird,
             topLeftThird, leftBottomThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, leftBottomThird,
             topLeftThird, bottomLeftThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, bottomLeftThird,
             topLeftThird, bottomRightThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topLeftThird,
             bottomRightThird, topRightThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topRightThird,
             bottomRightThird, rightBottomThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(arr, insertionIndex, topRightThird,
             rightBottomThird, rightTopThird);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this._verticies = new Float32Vector(arr, arr.length);
     }

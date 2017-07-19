@@ -1,6 +1,7 @@
-import { Settings } from "../../src/settings";
-import { Camera } from "../../src/graphics/camera";
 import { Vec3 } from "cuon-matrix-ts";
+
+import { Camera } from "../../src/graphics/camera";
+import { Settings } from "../../src/settings";
 
 describe("camera:", () =>
 {

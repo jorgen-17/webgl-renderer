@@ -1,21 +1,22 @@
+import { Vec3 } from "cuon-matrix-ts";
+
 import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Midpoint } from "./midpoint";
 import { Precision } from "../precision";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
-import { Settings } from "../../settings";
+import { Constants } from "../../constants";
 
 export class Ellipse extends Shape2d
 {
     private static readonly numberOfEndPoints = 2;
     private static readonly highPrecisionNumberOfPointsAlongCurve: number = 400 + Ellipse.numberOfEndPoints;
     private static readonly highPrecisionNumberOfVerticies: number =
-        Ellipse.highPrecisionNumberOfPointsAlongCurve * Settings.verticiesPerTriangle;
+        Ellipse.highPrecisionNumberOfPointsAlongCurve * Constants.verticiesPerTriangle;
     private static readonly lowPrecisionNumberOfPointsAlongCurve: number = 8 + Ellipse.numberOfEndPoints;
     private static readonly lowPrecisionNumberOfVerticies: number =
-        Ellipse.lowPrecisionNumberOfPointsAlongCurve * Settings.verticiesPerTriangle;
+        Ellipse.lowPrecisionNumberOfPointsAlongCurve * Constants.verticiesPerTriangle;
 
     private center: Vec3;
     private leftEndPoint: Vec3;
@@ -55,7 +56,7 @@ export class Ellipse extends Shape2d
             numberOfVerticies = Ellipse.lowPrecisionNumberOfVerticies;
         }
 
-        let arr = new Float32Array(numberOfVerticies * Settings.floatsPerVertex);
+        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerVertex);
 
         let x = this.leftEndPoint.x;
         // divide by 2 because of horizontal symmetry, subtract one because of duplicate vertex inserted at middle
@@ -77,16 +78,16 @@ export class Ellipse extends Shape2d
             const newPointBelowCenter = new Vec3(x, this.center.y - y);
 
             this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, newPointAboveCenter);
-            insertionIndex += Settings.floatsPerTriangle;
+            insertionIndex += Constants.floatsPerTriangle;
             this.addTriangleToFloat32Array(arr, insertionIndex, previousPointBelowCenter, this.center, newPointBelowCenter);
-            insertionIndex += Settings.floatsPerTriangle;
+            insertionIndex += Constants.floatsPerTriangle;
 
             previousPointAboveCenter = newPointAboveCenter;
             previousPointBelowCenter = newPointBelowCenter;
         }
 
         this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, this.rightEndPoint);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToFloat32Array(arr, insertionIndex, previousPointBelowCenter, this.center, this.rightEndPoint);
 
         this._verticies = new Float32Vector(arr, arr.length);

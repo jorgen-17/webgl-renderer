@@ -1,6 +1,6 @@
 import { Mock } from "ts-mocks";
 import { VertexBuffer } from "../../src/graphics/vertexBuffer";
-import { Settings } from "../../src/settings";
+import { Constants } from "../../src/constants";
 import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRenderer.spec.helper";
 
 describe("vertexBuffer:", () =>
@@ -96,14 +96,14 @@ describe("vertexBuffer:", () =>
             let vertexToAdd = new Float32Array([1, 2, 3, 4, 5]);
             let expectedErrorMessage =
                 `cannot add vertex repersented by ${vertexToAdd.length} floats, ` +
-                `we only accept verticies of ${Settings.floatsPerVertex} floats ` +
+                `we only accept verticies of ${Constants.floatsPerVertex} floats ` +
                 `(x, y, z, r, g, b)`;
             expect(() => vb.addVertex(vertexToAdd)).toThrow(expectedErrorMessage);
 
             vertexToAdd = new Float32Array([1, 2, 3, 4, 5, 6, 7]);
             expectedErrorMessage =
                 `cannot add vertex repersented by ${vertexToAdd.length} floats, ` +
-                `we only accept verticies of ${Settings.floatsPerVertex} floats ` +
+                `we only accept verticies of ${Constants.floatsPerVertex} floats ` +
                 `(x, y, z, r, g, b)`;
             expect(() => vb.addVertex(vertexToAdd)).toThrow(expectedErrorMessage);
         });

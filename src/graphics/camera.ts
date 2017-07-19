@@ -1,5 +1,6 @@
 import { Mat4, Vec3 } from "cuon-matrix-ts";
 import { Settings } from "../settings";
+import { Constants } from "../constants";
 
 export class Camera
 {

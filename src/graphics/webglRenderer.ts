@@ -8,9 +8,12 @@ import { RGBColor } from "./rgbColor";
 import { Camera } from "./camera";
 import { DrawingSettings } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
-import { Settings, ShaderSettings } from "../settings";
+import { Constants } from "../constants";
+import { ShaderSettings } from "../shaderSettings";
 import { Vec3 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
+import { Line } from "./shapes2d/line";
+import { Settings } from "../settings";
 
 export class WebGLRenderer
 {
@@ -28,6 +31,8 @@ export class WebGLRenderer
     private _triangleStripVertexBuffer: VertexBuffer;
     private _triangleFanVertexBuffer: VertexBuffer;
     private _vertexBuffers: Array<VertexBuffer>;
+    private _lineFloat32Arrays: Array<Float32Array>;
+    private _lineRenderMode: number;
     private _shaderProgram: WebGLShader;
     private _vertexShaderSource: string =
 `   attribute vec4 ${ShaderSettings.positionAttributeName};
@@ -64,6 +69,7 @@ export class WebGLRenderer
         this.initShaders();
 
         this.initializeVertexBuffers();
+        this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
     }
 
     public setViewPortDimensions(newWidth: number, newHeight: number): void
@@ -144,23 +150,30 @@ export class WebGLRenderer
 
     public addShapeToScene(shape: Shape2d): void
     {
-        let vertexIndex = 0;
-        for (let i = 0; i < shape.verticies.length; i += Settings.floatsPerVertex)
+        if (shape.glRenderMode === this._lineRenderMode)
         {
-            const x = shape.verticies[vertexIndex];
-            vertexIndex++;
-            const y = shape.verticies[vertexIndex];
-            vertexIndex++;
-            const z = shape.verticies[vertexIndex];
-            vertexIndex++;
-            const r = shape.verticies[vertexIndex];
-            vertexIndex++;
-            const g = shape.verticies[vertexIndex];
-            vertexIndex++;
-            const b = shape.verticies[vertexIndex];
-            vertexIndex++;
+            this._lineFloat32Arrays.push(shape.verticies);
+        }
+        else
+        {
+            let vertexIndex = 0;
+            for (let i = 0; i < shape.verticies.length; i += Constants.floatsPerVertex)
+            {
+                const x = shape.verticies[vertexIndex];
+                vertexIndex++;
+                const y = shape.verticies[vertexIndex];
+                vertexIndex++;
+                const z = shape.verticies[vertexIndex];
+                vertexIndex++;
+                const r = shape.verticies[vertexIndex];
+                vertexIndex++;
+                const g = shape.verticies[vertexIndex];
+                vertexIndex++;
+                const b = shape.verticies[vertexIndex];
+                vertexIndex++;
 
-            this.addXYZPointToScene(x, y, z, r, g, b, shape.glRenderMode);
+                this.addXYZPointToScene(x, y, z, r, g, b, shape.glRenderMode);
+            }
         }
     }
 
@@ -192,6 +205,13 @@ export class WebGLRenderer
                 {
                     this.drawGlArray(verts.getTrimmedArray(), vb.glRenderMode);
                 }
+            }
+        }
+        for (let lineVerticies of this._lineFloat32Arrays)
+        {
+            if (lineVerticies.length > 0)
+            {
+                this.drawGlArray(lineVerticies, this._lineRenderMode);
             }
         }
     }
@@ -234,6 +254,7 @@ export class WebGLRenderer
             this._triangleStripVertexBuffer,
             this._triangleFanVertexBuffer
         ];
+        this._lineFloat32Arrays = [];
     }
 
     private drawGlArray(arr: Float32Array, renderMode: number): void
@@ -253,21 +274,21 @@ export class WebGLRenderer
         }
 
         const floatSize = arr.BYTES_PER_ELEMENT;
-        const bytesPerPoint = floatSize * Settings.floatsPerPoint;
-        const bytesPerVertex = floatSize * Settings.floatsPerVertex;
+        const bytesPerPoint = floatSize * Constants.floatsPerPoint;
+        const bytesPerVertex = floatSize * Constants.floatsPerVertex;
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(a_position, Settings.floatsPerPoint, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(a_position, Constants.floatsPerPoint, this.gl.FLOAT,
             false, bytesPerVertex, 0);
         this.gl.enableVertexAttribArray(a_position);
-        this.gl.vertexAttribPointer(a_color, Settings.floatsPerColor, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(a_color);
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.viewMatrix);
         this.gl.uniform1f(u_pointSize, this._pointSize);
-        this.gl.drawArrays(renderMode, 0, (arr.length / Settings.floatsPerVertex));
+        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerVertex));
     }
 
     private initShaders(): void

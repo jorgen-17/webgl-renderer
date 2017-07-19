@@ -1,5 +1,5 @@
 import { Float32Vector } from "../utils/float32Vector";
-import { Settings } from "../settings";
+import { Constants } from "../constants";
 
 export class VertexBuffer
 {
@@ -11,7 +11,7 @@ export class VertexBuffer
         if (this.glRenderModeValidator(glRenderMode, gl))
         {
             this.glRenderMode = glRenderMode;
-            this._topVertexVector = new Float32Vector(new Float32Array(0), Settings.vertexBufferFloatLimit);
+            this._topVertexVector = new Float32Vector(new Float32Array(0), Constants.vertexBufferFloatLimit);
             this.verticiesStack = new Array<Float32Vector>();
             this.verticiesStack.push(this._topVertexVector);
         }
@@ -23,19 +23,19 @@ export class VertexBuffer
 
     public addVertex(vertex: Float32Array)
     {
-        if (vertex.length !== Settings.floatsPerVertex)
+        if (vertex.length !== Constants.floatsPerVertex)
         {
             throw `cannot add vertex repersented by ${vertex.length} floats, ` +
-                `we only accept verticies of ${Settings.floatsPerVertex} floats (x, y, z, r, g, b)`;
+                `we only accept verticies of ${Constants.floatsPerVertex} floats (x, y, z, r, g, b)`;
         }
 
-        if (this._topVertexVector.size + vertex.length <= Settings.vertexBufferFloatLimit)
+        if (this._topVertexVector.size + vertex.length <= Constants.vertexBufferFloatLimit)
         {
             this._topVertexVector.addArray(vertex);
         }
         else
         {
-            this._topVertexVector = new Float32Vector(vertex, Settings.vertexBufferFloatLimit);
+            this._topVertexVector = new Float32Vector(vertex, Constants.vertexBufferFloatLimit);
             this.verticiesStack.push(this._topVertexVector);
         }
     }

@@ -6,7 +6,8 @@ import { Precision } from "../../src/graphics/precision";
 import { RGBColor } from "../../src/graphics/rgbColor";
 import { Triangle } from "../../src/graphics/shapes2d/triangle";
 import { ShapeFactory } from "../../src/graphics/shapes2d/shapeFactory";
-import { Settings, ShaderSettings } from "../../src/settings";
+import { Constants } from "../../src/constants";
+import { ShaderSettings } from "../../src/shaderSettings";
 import { ShapeMode } from "../../src/graphics/shapes2d/shapeMode";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRenderer.spec.helper";
@@ -18,6 +19,7 @@ import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
 import { DrawingSettings } from "../../src/graphics/drawingSettings";
 import { Point } from "../../src/graphics/shapes2d/point";
+import { Settings } from "../../src/settings";
 
 describe("webglRenderer:", () =>
 {
@@ -571,24 +573,24 @@ describe("webglRenderer:", () =>
 
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.verticies,
+                triangleVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
-                gl.LINE_STRIP,
+                gl.TRIANGLES,
                 0,
-                10
+                1245
             ]);
 
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                triangleVerticies,
+                line.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
-                gl.TRIANGLES,
+                gl.LINE_STRIP,
                 0,
-                1245
+                10
             ]);
         });
 
@@ -627,24 +629,24 @@ describe("webglRenderer:", () =>
 
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.verticies,
+                triangleVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
-                gl.LINE_STRIP,
+                gl.TRIANGLES,
                 0,
-                10
+                1245
             ]);
 
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                triangleVerticies,
+                line.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
-                gl.TRIANGLES,
+                gl.LINE_STRIP,
                 0,
-                1245
+                10
             ]);
         });
 
@@ -683,24 +685,24 @@ describe("webglRenderer:", () =>
 
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.verticies,
+                triangleVerticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
-                gl.LINE_STRIP,
+                gl.TRIANGLES,
                 0,
-                10
+                1245
             ]);
 
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                triangleVerticies,
+                line.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
-                gl.TRIANGLES,
+                gl.LINE_STRIP,
                 0,
-                1245
+                10
             ]);
             bufferDataSpy.calls.reset();
             drawArraysSpy.calls.reset();

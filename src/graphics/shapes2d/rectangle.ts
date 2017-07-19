@@ -1,9 +1,10 @@
+import { Vec3 } from "cuon-matrix-ts";
+
 import { Shape2d } from "./shape2d";
 import { Float32Vector } from "../../utils/float32Vector";
 import { BoundingRectangle } from "./boundingRectangle";
 import { RGBColor } from "../rgbColor";
-import { Vec3 } from "cuon-matrix-ts";
-import { Settings } from "../../settings";
+import { Constants } from "../../constants";
 
 export class Rectangle extends Shape2d
 {
@@ -19,13 +20,13 @@ export class Rectangle extends Shape2d
     }
     protected computeVerticies(): void
     {
-        let array = new Float32Array(Rectangle.numberOfVerticies * Settings.floatsPerVertex);
+        let array = new Float32Array(Rectangle.numberOfVerticies * Constants.floatsPerVertex);
 
         let insertionIndex = 0;
 
         this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.topLeft,
             this.boundingRect.topRight, this.boundingRect.bottomLeft);
-        insertionIndex += Settings.floatsPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft,
             this.boundingRect.topRight, this.boundingRect.bottomRight);
