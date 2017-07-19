@@ -10,14 +10,16 @@ import { Settings } from "../../settings";
 export class Ellipse extends Shape2d
 {
     private static readonly numberOfEndPoints = 2;
-    private static readonly highPrecisionNumberOfPointsAlongCurve: number = 400;
+    private static readonly highPrecisionNumberOfPointsAlongCurve: number = 400 + Ellipse.numberOfEndPoints;
     private static readonly highPrecisionNumberOfVerticies: number =
-        (Ellipse.highPrecisionNumberOfPointsAlongCurve + Ellipse.numberOfEndPoints) * 3;
-    private static readonly lowPrecisionNumberOfPointsAlongCurve: number = 8;
+        Ellipse.highPrecisionNumberOfPointsAlongCurve * Settings.verticiesPerTriangle;
+    private static readonly lowPrecisionNumberOfPointsAlongCurve: number = 8 + Ellipse.numberOfEndPoints;
     private static readonly lowPrecisionNumberOfVerticies: number =
-        (Ellipse.lowPrecisionNumberOfPointsAlongCurve + Ellipse.numberOfEndPoints) * 3;
+        Ellipse.lowPrecisionNumberOfPointsAlongCurve * Settings.verticiesPerTriangle;
 
     private center: Vec3;
+    private leftEndPoint: Vec3;
+    private rightEndPoint: Vec3;
     private horizontalRadius: number;
     private verticalRadius: number;
     private precision: Precision;
@@ -30,32 +32,39 @@ export class Ellipse extends Shape2d
         this.horizontalRadius = (this.boundingRect.topRight.x - this.boundingRect.topLeft.x) / 2;
         this.verticalRadius = (this.boundingRect.topLeft.y - this.boundingRect.bottomLeft.y) / 2;
         this.center = Midpoint.between(this.boundingRect.topLeft, this.boundingRect.bottomRight);
+        this.leftEndPoint = Midpoint.between(this.boundingRect.topLeft, this.boundingRect.bottomLeft);
+        this.rightEndPoint = Midpoint.between(this.boundingRect.topRight, this.boundingRect.bottomRight);
         this.precision = precision;
 
         this.computeVerticies();
 
-        this.glRenderMode = gl.TRIANGLE_FAN;
+        this.glRenderMode = gl.TRIANGLES;
     }
 
     protected computeVerticies(): void
     {
-        let numberOfInnerVerticies, numberOfVerticies: number = 0;
+        let numberOfPointsAlongTheCurve, numberOfVerticies: number = 0;
         if (this.precision === Precision.High)
         {
-            numberOfInnerVerticies = Ellipse.highPrecisionNumberOfPointsAlongCurve;
+            numberOfPointsAlongTheCurve = Ellipse.highPrecisionNumberOfPointsAlongCurve;
             numberOfVerticies = Ellipse.highPrecisionNumberOfVerticies;
         }
         else if (this.precision === Precision.Low)
         {
-            numberOfInnerVerticies = Ellipse.lowPrecisionNumberOfPointsAlongCurve;
+            numberOfPointsAlongTheCurve = Ellipse.lowPrecisionNumberOfPointsAlongCurve;
             numberOfVerticies = Ellipse.lowPrecisionNumberOfVerticies;
         }
 
         let arr = new Float32Array(numberOfVerticies * Settings.floatsPerVertex);
 
-        let x = this.boundingRect.topLeft.x;
+        let x = this.leftEndPoint.x;
         // divide by 2 because of horizontal symmetry, subtract one because of duplicate vertex inserted at middle
-        const xIncrement = (this.horizontalRadius * 2) / ((numberOfVerticies - 1) / 2);
+        const xIncrement = (this.horizontalRadius * 2) / (numberOfPointsAlongTheCurve / 2);
+
+        let previousPointAboveCenter = this.leftEndPoint;
+        let previousPointBelowCenter = this.leftEndPoint;
+
+        let insertionIndex = 0;
 
         // manually insert first, middle, and last vertex
         // this.addXYZAndColorToFloat32Array(arr, 0, x, (this.boundingRect.topLeft.y - this.verticalRadius), this.center.z);
@@ -70,17 +79,33 @@ export class Ellipse extends Shape2d
         // // start at 6 because already inserted a vertex
         // let insertionIndex = Settings.floatsPerVertex;
 
-        // // divide by half the number of verticies because horizontal symmetry
-        // for ( let i = 0; i < numberOfInnerVerticies / 2; i++)
-        // {
-        //     x += xIncrement;
-        //     let y = this.getYDistanceFromCenterForX(x);
+        // divide by half the number of verticies because horizontal symmetry
+        // subtract by one because last triangle inserted after loop terminates
+        for ( let i = 0; i < (numberOfPointsAlongTheCurve / 2) - 1; i++)
+        {
+            x += xIncrement;
+            let y = this.getYDistanceFromCenterForX(x);
+
+            const newPointAboveCenter = new Vec3(x, y + this.center.y);
+            const newPointBelowCenter = new Vec3(x, this.center.y - y);
+
+            this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, newPointAboveCenter);
+            insertionIndex += Settings.floatsPerTriangle;
+            this.addTriangleToFloat32Array(arr, insertionIndex, previousPointBelowCenter, this.center, newPointBelowCenter);
+            insertionIndex += Settings.floatsPerTriangle;
+
+            previousPointAboveCenter = newPointAboveCenter;
+            previousPointBelowCenter = newPointBelowCenter;
 
         //     this.addXYZAndColorToFloat32Array(arr, insertionIndex, x, y + this.center.y, this.center.z);
         //     this.addXYZAndColorToFloat32Array(arr, insertionIndex + symmetryInsertionOffset, x, this.center.y - y, this.center.z);
 
         //     insertionIndex += Settings.floatsPerVertex;
-        // }
+        }
+
+        this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, this.rightEndPoint);
+        insertionIndex += Settings.floatsPerTriangle;
+        this.addTriangleToFloat32Array(arr, insertionIndex, previousPointBelowCenter, this.center, this.rightEndPoint);
 
         this._verticies = new Float32Vector(arr, arr.length);
     }

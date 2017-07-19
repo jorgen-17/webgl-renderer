@@ -22,7 +22,6 @@ describe("shapeFactory:", () =>
     {
         glMock.setup(x => x.TRIANGLES).is(0x0004);
         glMock.setup(x => x.TRIANGLE_STRIP).is(0x0005);
-        glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
     });
 
     it("creates triangle", () =>
@@ -53,11 +52,11 @@ describe("shapeFactory:", () =>
         expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
         expect(color).toBe(octogon.rgbColor);
     });
-    xit("creates ellipse", () =>
+    it("creates ellipse", () =>
     {
         const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", gl, color);
-        expect(403 * Settings.floatsPerVertex).toBe(ellipse.verticies.length);
-        expect(gl.TRIANGLE_FAN).toBe(ellipse.glRenderMode);
+        expect(1206 * Settings.floatsPerVertex).toBe(ellipse.verticies.length);
+        expect(gl.TRIANGLES).toBe(ellipse.glRenderMode);
         expect(color).toBe(ellipse.rgbColor);
     });
     it("creates unknown shape", () =>

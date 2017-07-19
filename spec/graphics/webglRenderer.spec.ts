@@ -502,12 +502,14 @@ describe("webglRenderer:", () =>
         const yellow = new RGBColor(1.0, 1.0, 0.0);
         const green = new RGBColor(0.0, 1.0, 0.0);
         const cyan = new RGBColor(0.0, 1.0, 1.0);
+        const blue = new RGBColor(0.0, 0.0, 1.0);
         let line: Line;
         let point: Point;
         let redTriangle: Shape2d;
         let orangeSquare: Shape2d;
         let yellowHexagon: Shape2d;
         let greenOctogon: Shape2d;
+        let blueEllipse: Shape2d;
         let triangleVerticies: Float32Array;
 
         beforeEach(() =>
@@ -524,12 +526,15 @@ describe("webglRenderer:", () =>
                 "hexagons", gl, yellow);
             greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "octogons", gl, green);
+            blueEllipse = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+                "ellipses", gl, blue);
 
             triangleVerticies = WebglRendererTestHelper.concatMultipleFloat32Arrays([
                 redTriangle.verticies,
                 orangeSquare.verticies,
                 yellowHexagon.verticies,
-                greenOctogon.verticies
+                greenOctogon.verticies,
+                blueEllipse.verticies
             ]);
         });
 
@@ -541,6 +546,7 @@ describe("webglRenderer:", () =>
             renderer.addShapeToScene(orangeSquare);
             renderer.addShapeToScene(yellowHexagon);
             renderer.addShapeToScene(greenOctogon);
+            renderer.addShapeToScene(blueEllipse);
 
             renderer.draw();
 
@@ -582,7 +588,7 @@ describe("webglRenderer:", () =>
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                39
+                1245
             ]);
         });
 
@@ -594,7 +600,8 @@ describe("webglRenderer:", () =>
                 redTriangle,
                 orangeSquare,
                 yellowHexagon,
-                greenOctogon
+                greenOctogon,
+                blueEllipse
             ]);
 
             renderer.draw();
@@ -637,7 +644,7 @@ describe("webglRenderer:", () =>
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                39
+                1245
             ]);
         });
 
@@ -649,7 +656,8 @@ describe("webglRenderer:", () =>
                 redTriangle,
                 orangeSquare,
                 yellowHexagon,
-                greenOctogon
+                greenOctogon,
+                blueEllipse
             ]);
 
             renderer.draw();
@@ -692,7 +700,7 @@ describe("webglRenderer:", () =>
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
-                39
+                1245
             ]);
             bufferDataSpy.calls.reset();
             drawArraysSpy.calls.reset();
