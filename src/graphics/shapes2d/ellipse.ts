@@ -9,10 +9,13 @@ import { Settings } from "../../settings";
 
 export class Ellipse extends Shape2d
 {
-    private static readonly highPrecisionNumberOfInnerVerticies: number = 400;
-    private static readonly highPrecisionNumberOfVerticies: number = Ellipse.highPrecisionNumberOfInnerVerticies + 3;
-    private static readonly lowPrecisionNumberOfInnerVerticies: number = 8;
-    private static readonly lowPrecisionNumberOfVerticies: number = Ellipse.lowPrecisionNumberOfInnerVerticies + 3;
+    private static readonly numberOfEndPoints = 2;
+    private static readonly highPrecisionNumberOfPointsAlongCurve: number = 400;
+    private static readonly highPrecisionNumberOfVerticies: number =
+        (Ellipse.highPrecisionNumberOfPointsAlongCurve + Ellipse.numberOfEndPoints) * 3;
+    private static readonly lowPrecisionNumberOfPointsAlongCurve: number = 8;
+    private static readonly lowPrecisionNumberOfVerticies: number =
+        (Ellipse.lowPrecisionNumberOfPointsAlongCurve + Ellipse.numberOfEndPoints) * 3;
 
     private center: Vec3;
     private horizontalRadius: number;
@@ -39,12 +42,12 @@ export class Ellipse extends Shape2d
         let numberOfInnerVerticies, numberOfVerticies: number = 0;
         if (this.precision === Precision.High)
         {
-            numberOfInnerVerticies = Ellipse.highPrecisionNumberOfInnerVerticies;
+            numberOfInnerVerticies = Ellipse.highPrecisionNumberOfPointsAlongCurve;
             numberOfVerticies = Ellipse.highPrecisionNumberOfVerticies;
         }
         else if (this.precision === Precision.Low)
         {
-            numberOfInnerVerticies = Ellipse.lowPrecisionNumberOfInnerVerticies;
+            numberOfInnerVerticies = Ellipse.lowPrecisionNumberOfPointsAlongCurve;
             numberOfVerticies = Ellipse.lowPrecisionNumberOfVerticies;
         }
 
@@ -55,29 +58,29 @@ export class Ellipse extends Shape2d
         const xIncrement = (this.horizontalRadius * 2) / ((numberOfVerticies - 1) / 2);
 
         // manually insert first, middle, and last vertex
-        this.addXYZAndColorToFloat32Array(arr, 0, x, (this.boundingRect.topLeft.y - this.verticalRadius), this.center.z);
-        // insert at half the verticies. times 5 because each vertex takes 5 spaces (x,y,r,g, and b)
-        // and then add 5 since we already inserted the first vertex
-        let symmetryInsertionOffset = ((numberOfInnerVerticies / 2) * Settings.floatsPerVertex) + Settings.floatsPerVertex;
-        let endPointX = this.boundingRect.topRight.x;
-        let endPointY = this.boundingRect.topRight.y - this.verticalRadius;
-        this.addXYZAndColorToFloat32Array(arr, symmetryInsertionOffset, endPointX, endPointY, this.center.z);
-        this.addXYZAndColorToFloat32Array(arr, (arr.length - Settings.floatsPerVertex), endPointX, endPointY, this.center.z);
+        // this.addXYZAndColorToFloat32Array(arr, 0, x, (this.boundingRect.topLeft.y - this.verticalRadius), this.center.z);
+        // // insert at half the verticies. times 5 because each vertex takes 5 spaces (x,y,r,g, and b)
+        // // and then add 5 since we already inserted the first vertex
+        // let symmetryInsertionOffset = ((numberOfInnerVerticies / 2) * Settings.floatsPerVertex) + Settings.floatsPerVertex;
+        // let endPointX = this.boundingRect.topRight.x;
+        // let endPointY = this.boundingRect.topRight.y - this.verticalRadius;
+        // this.addXYZAndColorToFloat32Array(arr, symmetryInsertionOffset, endPointX, endPointY, this.center.z);
+        // this.addXYZAndColorToFloat32Array(arr, (arr.length - Settings.floatsPerVertex), endPointX, endPointY, this.center.z);
 
-        // start at 6 because already inserted a vertex
-        let insertionIndex = Settings.floatsPerVertex;
+        // // start at 6 because already inserted a vertex
+        // let insertionIndex = Settings.floatsPerVertex;
 
-        // divide by half the number of verticies because horizontal symmetry
-        for ( let i = 0; i < numberOfInnerVerticies / 2; i++)
-        {
-            x += xIncrement;
-            let y = this.getYDistanceFromCenterForX(x);
+        // // divide by half the number of verticies because horizontal symmetry
+        // for ( let i = 0; i < numberOfInnerVerticies / 2; i++)
+        // {
+        //     x += xIncrement;
+        //     let y = this.getYDistanceFromCenterForX(x);
 
-            this.addXYZAndColorToFloat32Array(arr, insertionIndex, x, y + this.center.y, this.center.z);
-            this.addXYZAndColorToFloat32Array(arr, insertionIndex + symmetryInsertionOffset, x, this.center.y - y, this.center.z);
+        //     this.addXYZAndColorToFloat32Array(arr, insertionIndex, x, y + this.center.y, this.center.z);
+        //     this.addXYZAndColorToFloat32Array(arr, insertionIndex + symmetryInsertionOffset, x, this.center.y - y, this.center.z);
 
-            insertionIndex += Settings.floatsPerVertex;
-        }
+        //     insertionIndex += Settings.floatsPerVertex;
+        // }
 
         this._verticies = new Float32Vector(arr, arr.length);
     }

@@ -23,24 +23,12 @@ export class Rectangle extends Shape2d
 
         let insertionIndex = 0;
 
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topLeft.x,
-            this.boundingRect.topLeft.y, this.boundingRect.topLeft.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topRight.x,
-            this.boundingRect.topRight.y, this.boundingRect.topRight.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
-            this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
-        insertionIndex += Settings.floatsPerVertex;
+        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.topLeft,
+            this.boundingRect.topRight, this.boundingRect.bottomLeft);
+        insertionIndex += Settings.floatsPerTriangle;
 
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
-            this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.topRight.x,
-            this.boundingRect.topRight.y, this.boundingRect.topRight.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomRight.x,
-            this.boundingRect.bottomRight.y, this.boundingRect.bottomRight.z);
+        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft,
+            this.boundingRect.topRight, this.boundingRect.bottomRight);
 
         this._verticies = new Float32Vector(array, array.length);
     }

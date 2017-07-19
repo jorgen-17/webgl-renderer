@@ -47,4 +47,15 @@ export abstract class Shape2d {
         array[index + 4] = this._rgbColor.green;
         array[index + 5] = this._rgbColor.blue;
     }
+
+    protected addTriangleToFloat32Array(array: Float32Array, index: number,
+        vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3)
+    {
+        this.addXYZAndColorToFloat32Array(array, index, vertex1Position.x,
+            vertex1Position.y, vertex1Position.z);
+        this.addXYZAndColorToFloat32Array(array, (index + Settings.floatsPerVertex), vertex2Position.x,
+            vertex2Position.y, vertex2Position.z);
+        this.addXYZAndColorToFloat32Array(array, (index + (Settings.floatsPerVertex * 2)),
+            vertex3Position.x, vertex3Position.y, vertex3Position.z);
+    }
 }

@@ -5,10 +5,11 @@ import { RGBColor } from "./graphics/rgbColor";
 import { Vec3 } from "cuon-matrix-ts";
 import { Camera } from "./graphics/camera";
 
-
 const floatsPerPoint = 3; // x, y, and z
 const floatsPerColor = 3; // r, g, and b
 const floatsPerVertex = floatsPerPoint + floatsPerColor;
+const verticiesPerTriangle = 3; // obvious, but avoids random 3 everywhere
+const floatsPerTriangle = verticiesPerTriangle * floatsPerVertex;
 const defaultRenderMode: RenderMode = "points";
 const defaultShapeMode: ShapeMode = "points";
 const defaultDrawingMode: DrawingMode = DrawingMode.Verticies;
@@ -23,6 +24,8 @@ export let Settings =
     floatsPerPoint: floatsPerPoint,
     floatsPerColor: floatsPerColor,
     floatsPerVertex: floatsPerVertex,
+    verticiesPerTriangle: verticiesPerTriangle,
+    floatsPerTriangle: floatsPerTriangle,
     // closest number to 65k(gl vertex limit)
     // that is also divisible by floatsPerVertex
     vertexBufferFloatLimit: 64998,
@@ -36,7 +39,7 @@ export let Settings =
     defaultColor: defaultColor,
     defaultEyePosition: defaultEyePosition,
     defaultLookAtPoint: defaultLookAtPoint,
-    defaultUpPosition: defaultUpPosition
+    defaultUpPosition: defaultUpPosition,
 };
 
 export let ShaderSettings =

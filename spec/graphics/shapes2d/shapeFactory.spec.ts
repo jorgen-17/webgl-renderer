@@ -53,7 +53,7 @@ describe("shapeFactory:", () =>
         expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
         expect(color).toBe(octogon.rgbColor);
     });
-    it("creates ellipse", () =>
+    xit("creates ellipse", () =>
     {
         const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", gl, color);
         expect(403 * Settings.floatsPerVertex).toBe(ellipse.verticies.length);

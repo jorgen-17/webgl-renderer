@@ -26,13 +26,9 @@ export class Triangle extends Shape2d
         let array = new Float32Array(Triangle.numberOfVerticies * Settings.floatsPerVertex);
 
         let insertionIndex = 0;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft.x,
-            this.boundingRect.bottomLeft.y, this.boundingRect.bottomLeft.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, topPoint.x, topPoint.y, topPoint.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(array, insertionIndex, this.boundingRect.bottomRight.x,
-            this.boundingRect.bottomRight.y, this.boundingRect.bottomRight.z);
+
+        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft,
+            topPoint, this.boundingRect.bottomRight);
 
         this._verticies = new Float32Vector(array, array.length);
     }

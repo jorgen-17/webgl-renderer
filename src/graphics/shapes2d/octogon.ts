@@ -39,64 +39,29 @@ export class Octogon extends Shape2d
 
         let insertionIndex = 0;
 
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            leftTopThird.x, leftTopThird.y, leftTopThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topLeftThird.x, topLeftThird.y, topLeftThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            leftBottomThird.x, leftBottomThird.y, leftBottomThird.z);
-        insertionIndex += Settings.floatsPerVertex;
+        this.addTriangleToFloat32Array(arr, insertionIndex, leftTopThird,
+            topLeftThird, leftBottomThird);
+        insertionIndex += Settings.floatsPerTriangle;
 
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            leftBottomThird.x, leftBottomThird.y, leftBottomThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topLeftThird.x, topLeftThird.y, topLeftThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            bottomLeftThird.x, bottomLeftThird.y, bottomLeftThird.z);
-        insertionIndex += Settings.floatsPerVertex;
+        this.addTriangleToFloat32Array(arr, insertionIndex, leftBottomThird,
+            topLeftThird, bottomLeftThird);
+        insertionIndex += Settings.floatsPerTriangle;
 
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            bottomLeftThird.x, bottomLeftThird.y, bottomLeftThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topLeftThird.x, topLeftThird.y, topLeftThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            bottomRightThird.x, bottomRightThird.y, bottomRightThird.z);
-        insertionIndex += Settings.floatsPerVertex;
+        this.addTriangleToFloat32Array(arr, insertionIndex, bottomLeftThird,
+            topLeftThird, bottomRightThird);
+        insertionIndex += Settings.floatsPerTriangle;
 
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topLeftThird.x, topLeftThird.y, topLeftThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            bottomRightThird.x, bottomRightThird.y, bottomRightThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topRightThird.x, topRightThird.y, topRightThird.z);
-        insertionIndex += Settings.floatsPerVertex;
+        this.addTriangleToFloat32Array(arr, insertionIndex, topLeftThird,
+            bottomRightThird, topRightThird);
+        insertionIndex += Settings.floatsPerTriangle;
 
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topRightThird.x, topRightThird.y, topRightThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            bottomRightThird.x, bottomRightThird.y, bottomRightThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            rightBottomThird.x, rightBottomThird.y, rightBottomThird.z);
-        insertionIndex += Settings.floatsPerVertex;
+        this.addTriangleToFloat32Array(arr, insertionIndex, topRightThird,
+            bottomRightThird, rightBottomThird);
+        insertionIndex += Settings.floatsPerTriangle;
 
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            topRightThird.x, topRightThird.y, topRightThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            rightBottomThird.x, rightBottomThird.y, rightBottomThird.z);
-        insertionIndex += Settings.floatsPerVertex;
-        this.addXYZAndColorToFloat32Array(arr, insertionIndex,
-            rightTopThird.x, rightTopThird.y, rightTopThird.z);
+        this.addTriangleToFloat32Array(arr, insertionIndex, topRightThird,
+            rightBottomThird, rightTopThird);
+        insertionIndex += Settings.floatsPerTriangle;
 
         this._verticies = new Float32Vector(arr, arr.length);
     }
