@@ -66,19 +66,6 @@ export class Ellipse extends Shape2d
 
         let insertionIndex = 0;
 
-        // manually insert first, middle, and last vertex
-        // this.addXYZAndColorToFloat32Array(arr, 0, x, (this.boundingRect.topLeft.y - this.verticalRadius), this.center.z);
-        // // insert at half the verticies. times 5 because each vertex takes 5 spaces (x,y,r,g, and b)
-        // // and then add 5 since we already inserted the first vertex
-        // let symmetryInsertionOffset = ((numberOfInnerVerticies / 2) * Settings.floatsPerVertex) + Settings.floatsPerVertex;
-        // let endPointX = this.boundingRect.topRight.x;
-        // let endPointY = this.boundingRect.topRight.y - this.verticalRadius;
-        // this.addXYZAndColorToFloat32Array(arr, symmetryInsertionOffset, endPointX, endPointY, this.center.z);
-        // this.addXYZAndColorToFloat32Array(arr, (arr.length - Settings.floatsPerVertex), endPointX, endPointY, this.center.z);
-
-        // // start at 6 because already inserted a vertex
-        // let insertionIndex = Settings.floatsPerVertex;
-
         // divide by half the number of verticies because horizontal symmetry
         // subtract by one because last triangle inserted after loop terminates
         for ( let i = 0; i < (numberOfPointsAlongTheCurve / 2) - 1; i++)
@@ -96,11 +83,6 @@ export class Ellipse extends Shape2d
 
             previousPointAboveCenter = newPointAboveCenter;
             previousPointBelowCenter = newPointBelowCenter;
-
-        //     this.addXYZAndColorToFloat32Array(arr, insertionIndex, x, y + this.center.y, this.center.z);
-        //     this.addXYZAndColorToFloat32Array(arr, insertionIndex + symmetryInsertionOffset, x, this.center.y - y, this.center.z);
-
-        //     insertionIndex += Settings.floatsPerVertex;
         }
 
         this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, this.rightEndPoint);
