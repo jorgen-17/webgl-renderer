@@ -13,24 +13,131 @@ import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRenderer.spec.helper";
 import { Shape2d } from "../../src/graphics/shapes2d/shape2d";
 import { StringDictionary } from "../../src/utils/dictionary";
-import { ClassHelper } from "../../specHelpers/classHelper";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
 import { DrawingSettings } from "../../src/graphics/drawingSettings";
 import { Point } from "../../src/graphics/shapes2d/point";
 import { Settings } from "../../src/settings";
+import { BrowserHelper } from "../../src/utils/browserHelper";
 
 describe("webglRenderer:", () =>
 {
     const glMock = new Mock<WebGLRenderingContext>();
-    let glSpiesDictionary: StringDictionary<jasmine.Spy>;
     const gl = glMock.Object;
+    let glSpiesDictionary: StringDictionary<jasmine.Spy>;
+
+    const canvasMock = new Mock<HTMLCanvasElement>();
+    const canvas = canvasMock.Object;
+    let getContextSpy: jasmine.Spy;
+
+    const browserHelperMock = new Mock<BrowserHelper>();
+    const browserHelper = browserHelperMock.Object;
+
     let renderer: WebGLRenderer;
 
     beforeEach(() =>
     {
         glSpiesDictionary = WebglRendererTestHelper.setupGlMockFunctions(glMock);
+
+        canvasMock.setup(c => c.width).is(800);
+        canvasMock.setup(c => c.height).is(600);
+
+        getContextSpy = canvasMock.setup<(contextId: "webgl" | "experimental-webgl",
+                        contextAttributes?: WebGLContextAttributes)
+                        => WebGLRenderingContext | null>(c => c.getContext)
+            .is((contextName: string, contextAttributes: {}) => gl).Spy;
+
+        browserHelperMock.setup(bh => bh.isIE).is(() => false);
+        browserHelperMock.setup(bh => bh.isEdge).is(() => false);
+    });
+
+    describe("getContext:", () =>
+    {
+        describe("returns the gl context from canvas.getContext", () =>
+        {
+            beforeEach(() =>
+            {
+                browserHelperMock.setup(bh => bh.isIE).is(() => false);
+                browserHelperMock.setup(bh => bh.isEdge).is(() => false);
+
+                getContextSpy.calls.reset();
+            });
+
+            it("when IE, uses experimental-webgl as contextId", () =>
+            {
+                browserHelperMock.setup(bh => bh.isIE).is(() => true);
+
+                renderer = new WebGLRenderer(canvas, browserHelper);
+
+                expect(gl).toEqual(renderer.gl);
+                expect(browserHelper.isIE).toHaveBeenCalledTimes(1);
+                expect(canvas.getContext).toHaveBeenCalledTimes(1);
+                expect(canvas.getContext).toHaveBeenCalledWith("experimental-webgl",
+                    {
+                        alpha: false,
+                        antialias: false,
+                        depth: false
+                    });
+            });
+
+            it("when Edge, uses experimental-webgl as contextId", () =>
+            {
+                browserHelperMock.setup(bh => bh.isEdge).is(() => true);
+
+                renderer = new WebGLRenderer(canvas, browserHelper);
+
+                expect(gl).toEqual(renderer.gl);
+                expect(browserHelper.isEdge).toHaveBeenCalledTimes(1);
+                expect(canvas.getContext).toHaveBeenCalledTimes(1);
+                expect(canvas.getContext).toHaveBeenCalledWith("experimental-webgl",
+                    {
+                        alpha: false,
+                        antialias: false,
+                        depth: false
+                    });
+            });
+
+            it("when not IE or Edge, uses webgl as contextId", () =>
+            {
+                renderer = new WebGLRenderer(canvas, browserHelper);
+
+                expect(gl).toEqual(renderer.gl);
+                expect(canvas.getContext).toHaveBeenCalledTimes(1);
+                expect(canvas.getContext).toHaveBeenCalledWith("webgl",
+                    {
+                        alpha: false,
+                        antialias: false,
+                        depth: false
+                    });
+            });
+        });
+
+        it("canvas throws when getting context", () =>
+        {
+            canvasMock.setup<(contextId: "webgl" | "experimental-webgl",
+                            contextAttributes?: WebGLContextAttributes)
+                            => WebGLRenderingContext | null>(c => c.getContext)
+                .is((contextName: string, contextAttributes: {}) =>
+                    { throw "something is fucky-fucky-one-dolla"; });
+
+            const expectedErrorMessage =
+                "error creating webgl context!: something is fucky-fucky-one-dolla";
+            expect(() => renderer = new WebGLRenderer(canvas, browserHelper))
+                .toThrow(expectedErrorMessage);
+        });
+
+        it("canvas throws when getting context", () =>
+        {
+            canvasMock.setup<(contextId: "webgl" | "experimental-webgl",
+                            contextAttributes?: WebGLContextAttributes)
+                            => WebGLRenderingContext | null>(c => c.getContext)
+                .is((contextName: string, contextAttributes: {}) => null);
+
+            const expectedErrorMessage = "error creating webgl context!, gl === null";
+            expect(() => renderer = new WebGLRenderer(canvas, browserHelper))
+                .toThrow(expectedErrorMessage);
+        });
     });
 
     it("settings are used", () =>
@@ -49,7 +156,7 @@ describe("webglRenderer:", () =>
         const upPosition = new Vec3(1, 2, 1);
         const camera = new Camera(eyePosition, lookAtPoint, upPosition);
 
-        renderer = new WebGLRenderer(800, 600, gl, settings, camera);
+        renderer = new WebGLRenderer(canvas, browserHelper, settings, camera);
 
         expect(trianleMode).toBe(renderer.renderMode);
         expect(backgroundColor).toBe(renderer.backgroundColor);
@@ -61,7 +168,7 @@ describe("webglRenderer:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
         });
 
         it("is set-able and get-able", () =>
@@ -82,10 +189,8 @@ describe("webglRenderer:", () =>
             renderer.renderMode = "lines";
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies);
 
-            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-            const bufferDataSpy = glSpiesDictionary[bufferDataName];
-            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             renderer.draw();
 
@@ -123,7 +228,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
         });
 
         it("is set-able and get-able", () =>
@@ -137,8 +242,7 @@ describe("webglRenderer:", () =>
         {
             renderer.draw();
 
-            const clearColorName = ClassHelper.getMethodName(() => gl.clearColor);
-            const clearColorSpy = glSpiesDictionary[clearColorName];
+            const clearColorSpy = glSpiesDictionary["clearColor"];
 
             expect(gl.clearColor).toHaveBeenCalledTimes(1);
             expect(clearColorSpy.calls.all()[0].args).toEqual([
@@ -169,7 +273,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
         });
 
         it("is set-able and get-able", () =>
@@ -186,8 +290,7 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const uniform1fName = ClassHelper.getMethodName(() => gl.uniform1f);
-            const uniform1fSpy = glSpiesDictionary[uniform1fName];
+            const uniform1fSpy = glSpiesDictionary["uniform1f"];
 
             expect(gl.uniform1f).toHaveBeenCalledTimes(1);
             expect(uniform1fSpy.calls.all()[0].args).toEqual([
@@ -217,7 +320,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
         });
 
         it("is set-able and get-able", () =>
@@ -234,8 +337,7 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const uniformMatrix4fvName = ClassHelper.getMethodName(() => gl.uniformMatrix4fv);
-            const uniformMatrix4fvNameSpy = glSpiesDictionary[uniformMatrix4fvName];
+            const uniformMatrix4fvNameSpy = glSpiesDictionary["uniformMatrix4fv"];
 
             expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
@@ -262,7 +364,7 @@ describe("webglRenderer:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
         });
 
         it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
@@ -290,10 +392,8 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-            const bufferDataSpy = glSpiesDictionary[bufferDataName];
-            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             expect(gl.bufferData).toHaveBeenCalledTimes(7);
             expect(gl.drawArrays).toHaveBeenCalledTimes(7);
@@ -401,10 +501,8 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-            const bufferDataSpy = glSpiesDictionary[bufferDataName];
-            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             expect(gl.bufferData).toHaveBeenCalledTimes(7);
             expect(gl.drawArrays).toHaveBeenCalledTimes(7);
@@ -516,7 +614,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
 
             line = WebglRendererTestHelper.getRandomLine(gl);
             point = WebglRendererTestHelper.getRandomPoint(gl);
@@ -552,10 +650,8 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-            const bufferDataSpy = glSpiesDictionary[bufferDataName];
-            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             expect(gl.bufferData).toHaveBeenCalledTimes(3);
             expect(gl.drawArrays).toHaveBeenCalledTimes(3);
@@ -608,10 +704,8 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-            const bufferDataSpy = glSpiesDictionary[bufferDataName];
-            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             expect(gl.bufferData).toHaveBeenCalledTimes(3);
             expect(gl.drawArrays).toHaveBeenCalledTimes(3);
@@ -664,10 +758,8 @@ describe("webglRenderer:", () =>
 
             renderer.draw();
 
-            const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-            const bufferDataSpy = glSpiesDictionary[bufferDataName];
-            const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-            const drawArraysSpy = glSpiesDictionary[drawArraysName];
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             expect(gl.bufferData).toHaveBeenCalledTimes(3);
             expect(gl.drawArrays).toHaveBeenCalledTimes(3);
@@ -720,8 +812,6 @@ describe("webglRenderer:", () =>
         "draw throws and createUniforNotFoundErrorMessage " +
         "generates the correct error message", () =>
     {
-        const getUniformLocationName = ClassHelper.getMethodName(() => gl.getUniformLocation);
-
         it("when u_pointSize is missing and u_viewMatrix is found", () =>
         {
             let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
@@ -738,7 +828,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -766,7 +856,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -794,7 +884,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRenderer(800, 600, gl);
+            renderer = new WebGLRenderer(canvas, browserHelper);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -811,17 +901,14 @@ describe("webglRenderer:", () =>
     {
         afterEach(() =>
         {
-            const getShaderParameterName = ClassHelper.getMethodName(() => gl.getShaderParameter);
-            glSpiesDictionary[getShaderParameterName] = glMock.setup(x => x.getShaderParameter)
+            glSpiesDictionary["getShaderParameter"] = glMock.setup(x => x.getShaderParameter)
                 .is((shader: WebGLShader, pName: number) => true).Spy;
 
-            const getProgramParameterName = ClassHelper.getMethodName(() => gl.getProgramParameter);
-            glSpiesDictionary[getProgramParameterName] = glMock.setup(x => x.getProgramParameter)
+            glSpiesDictionary["getProgramParameter"] = glMock.setup(x => x.getProgramParameter)
                 .is((shader: WebGLShader, pName: number) => true).Spy;
 
-            const createProgramName = ClassHelper.getMethodName(() => gl.createProgram);
             const shaderProgram = new Mock<WebGLProgram>();
-            glSpiesDictionary[createProgramName] = glMock.setup(x => x.createProgram)
+            glSpiesDictionary["createProgram"] = glMock.setup(x => x.createProgram)
                 .is(() => shaderProgram.Object).Spy;
         });
 
@@ -833,7 +920,7 @@ describe("webglRenderer:", () =>
 
             const expectedErrorString =
             "could not compile shader, shader info log: theres some shady shit going on";
-            expect(() => renderer = new WebGLRenderer(800, 600, gl))
+            expect(() => renderer = new WebGLRenderer(canvas, browserHelper))
                 .toThrow(expectedErrorString);
         });
 
@@ -843,7 +930,7 @@ describe("webglRenderer:", () =>
             glMock.setup(x => x.createProgram).is(() => null);
 
             const expectedErrorString = "could not create shader program";
-            expect(() => renderer = new WebGLRenderer(800, 600, gl))
+            expect(() => renderer = new WebGLRenderer(canvas, browserHelper))
                 .toThrow(expectedErrorString);
         });
 
@@ -854,7 +941,7 @@ describe("webglRenderer:", () =>
             .is((shader: WebGLShader, pName: number) => false);
 
             const expectedErrorString = "could not link shader program";
-            expect(() => renderer = new WebGLRenderer(800, 600, gl))
+            expect(() => renderer = new WebGLRenderer(canvas, browserHelper))
                 .toThrow(expectedErrorString);
         });
     });

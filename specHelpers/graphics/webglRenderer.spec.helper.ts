@@ -2,7 +2,6 @@ import { Mock } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
 import { StringDictionary } from "../../src/utils/dictionary";
-import { ClassHelper } from "../../specHelpers/classHelper";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { Constants } from "../../src/constants";
 import { RGBColor } from "../../src/graphics/rgbColor";
@@ -42,97 +41,74 @@ export class WebglRendererTestHelper
         glMock.setup(x => x.FLOAT).is(0x1406);
 
         // init viewport
-        const viewportName = ClassHelper.getMethodName(() => gl.viewport);
-        spyDictionary[viewportName] = glMock.setup(x => x.viewport).is(
+        spyDictionary["viewport"] = glMock.setup(x => x.viewport).is(
             (x: number, y: number, width: number, height: number) => { /* noop */ });
 
         // create shader
-        const createShaderName = ClassHelper.getMethodName(() => gl.createShader);
-        const shaderSourceName = ClassHelper.getMethodName(() => gl.shaderSource);
-        const compileShaderName = ClassHelper.getMethodName(() => gl.compileShader);
-        const getShaderParameterName = ClassHelper.getMethodName(() => gl.getShaderParameter);
-        spyDictionary[createShaderName] = glMock.setup(x => x.createShader)
+        spyDictionary["createShader"] = glMock.setup(x => x.createShader)
             .is((type: number) => null).Spy;
-        spyDictionary[shaderSourceName] = glMock.setup(x => x.shaderSource)
+        spyDictionary["shaderSource"] = glMock.setup(x => x.shaderSource)
             .is((shader: WebGLShader, source: string) => { /* noop */ }).Spy;
-        spyDictionary[compileShaderName] = glMock.setup(x => x.compileShader)
+        spyDictionary["compileShader"] = glMock.setup(x => x.compileShader)
             .is((shader: WebGLShader) => { /* noop */ }).Spy;
-        spyDictionary[getShaderParameterName] = glMock.setup(x => x.getShaderParameter)
+        spyDictionary["getShaderParameter"] = glMock.setup(x => x.getShaderParameter)
             .is((shader: WebGLShader, pName: number) => true).Spy;
 
         // init shaders
-        const createProgramName = ClassHelper.getMethodName(() => gl.createProgram);
-        const attatchShaderName = ClassHelper.getMethodName(() => gl.attachShader);
-        const linkProgramtName = ClassHelper.getMethodName(() => gl.linkProgram);
-        const getProgramParameterName = ClassHelper.getMethodName(() => gl.getProgramParameter);
-        const getShaderInfoLogName = ClassHelper.getMethodName(() => gl.getShaderInfoLog);
-        const useProgramName = ClassHelper.getMethodName(() => gl.useProgram);
         const shaderProgram = new Mock<WebGLProgram>();
-        spyDictionary[createProgramName] = glMock.setup(x => x.createProgram)
+        spyDictionary["createProgram"] = glMock.setup(x => x.createProgram)
             .is(() => shaderProgram.Object).Spy;
-        spyDictionary[attatchShaderName] = glMock.setup(x => x.attachShader)
+        spyDictionary["attatchShader"] = glMock.setup(x => x.attachShader)
             .is((program: WebGLProgram, shader: WebGLShader) => { /* noop */}).Spy;
-        spyDictionary[linkProgramtName] = glMock.setup(x => x.linkProgram)
+        spyDictionary["linkProgramt"] = glMock.setup(x => x.linkProgram)
             .is((shader: WebGLShader) => { /* noop */}).Spy;
-        spyDictionary[getProgramParameterName] = glMock.setup(x => x.getProgramParameter)
+        spyDictionary["getProgramParameter"] = glMock.setup(x => x.getProgramParameter)
             .is((shader: WebGLShader, pName: number) => true).Spy;
-        spyDictionary[getShaderInfoLogName] = glMock.setup(x => x.getShaderInfoLog)
+        spyDictionary["getShaderInfoLog"] = glMock.setup(x => x.getShaderInfoLog)
             .is((shader: WebGLShader) => "theres some shady shit going on").Spy;
-        spyDictionary[useProgramName] = glMock.setup(x => x.useProgram)
+        spyDictionary["useProgram"] = glMock.setup(x => x.useProgram)
             .is((shader: WebGLShader) => { /* noop */ }).Spy;
 
         // draw
-        const clearColorName = ClassHelper.getMethodName(() => gl.clearColor);
-        const clearName = ClassHelper.getMethodName(() => gl.clear);
-        spyDictionary[clearColorName] = glMock.setup(x => x.clearColor)
+        spyDictionary["clearColor"] = glMock.setup(x => x.clearColor)
             .is((red: number, green: number, blue: number, alpha: number) => { /* noop */ }).Spy;
-        spyDictionary[clearName] = glMock.setup(x => x.clear)
+        spyDictionary["clear"] = glMock.setup(x => x.clear)
             .is((mask: number) => { /* noop */ }).Spy;
 
 
         // drawGlArrays
-        const getAttribLocationName = ClassHelper.getMethodName(() => gl.getAttribLocation);
-        const getUniformLocationName = ClassHelper.getMethodName(() => gl.getUniformLocation);
-        const bufferDataName = ClassHelper.getMethodName(() => gl.bufferData);
-        const createBufferName = ClassHelper.getMethodName(() => gl.createBuffer);
-        const bindBufferName = ClassHelper.getMethodName(() => gl.bindBuffer);
-        const vertexAttribPointerName = ClassHelper.getMethodName(() => gl.vertexAttribPointer);
-        const enableVertexAttribArrayName = ClassHelper.getMethodName(() => gl.enableVertexAttribArray);
-        const uniformMatrix4fvName = ClassHelper.getMethodName(() => gl.uniformMatrix4fv);
-        const uniform1fName = ClassHelper.getMethodName(() => gl.uniform1f);
-        const drawArraysName = ClassHelper.getMethodName(() => gl.drawArrays);
-        spyDictionary[getAttribLocationName] = glMock.setup(x => x.getAttribLocation)
+        spyDictionary["getAttribLocation"] = glMock.setup(x => x.getAttribLocation)
             .is((shader: WebGLShader, name: string) => 1).Spy;
-        spyDictionary[getUniformLocationName] = glMock.setup(x => x.getUniformLocation)
+        spyDictionary["getUniformLocation"] = glMock.setup(x => x.getUniformLocation)
             .is((shader: WebGLShader, name: string) => 1).Spy;
-        spyDictionary[bufferDataName] = glMock.setup(x => x.bufferData)
+        spyDictionary["bufferData"] = glMock.setup(x => x.bufferData)
             .is(
                 (target: number, size: number | ArrayBufferView | ArrayBuffer, usage: number) =>
                 {/* noop */}
             ).Spy;
         const webglBuffer = new Mock<WebGLBuffer>();
-        spyDictionary[createBufferName] = glMock.setup(x => x.createBuffer)
+        spyDictionary["createBuffer"] = glMock.setup(x => x.createBuffer)
             .is(() => webglBuffer.Object).Spy;
-        spyDictionary[bindBufferName] = glMock.setup(x => x.bindBuffer)
+        spyDictionary["bindBuffer"] = glMock.setup(x => x.bindBuffer)
             .is((target: number, buffer: WebGLBuffer) => { /* noop */ }).Spy;
-        spyDictionary[vertexAttribPointerName] = glMock.setup(x => x.vertexAttribPointer)
+        spyDictionary["vertexAttribPointer"] = glMock.setup(x => x.vertexAttribPointer)
             .is(
                 (index: number, size: number, type: number, normalized: boolean,
                 stride: number, offset: number) =>
                 { /* noop */ }
             ).Spy;
-        spyDictionary[enableVertexAttribArrayName] = glMock.setup(x => x.enableVertexAttribArray)
+        spyDictionary["enableVertexAttribArray"] = glMock.setup(x => x.enableVertexAttribArray)
             .is((index: number) => { /* noop */ }).Spy;
-        spyDictionary[uniformMatrix4fvName] = glMock.setup(x => x.uniformMatrix4fv)
+        spyDictionary["uniformMatrix4fv"] = glMock.setup(x => x.uniformMatrix4fv)
             .is(
                 (uniformLocation: WebGLUniformLocation, transpose: boolean,
                 value: Float32Array | number[]) =>
                 { /* noop */ }).Spy;
-        spyDictionary[uniform1fName] = glMock.setup(x => x.uniform1f)
+        spyDictionary["uniform1f"] = glMock.setup(x => x.uniform1f)
             .is(
                 (uniformLocation: WebGLUniformLocation, value: number) =>
                 { /* noop */ }).Spy;
-        spyDictionary[drawArraysName] = glMock.setup(x => x.drawArrays)
+        spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays)
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;
 
         return spyDictionary;

@@ -14,10 +14,13 @@ import { Vec3 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
 import { Line } from "./shapes2d/line";
 import { Settings } from "../settings";
+import { BrowserHelper } from "../utils/browserHelper";
 
 export class WebGLRenderer
 {
+// region: member variables
     public gl: WebGLRenderingContext;
+    private _canvas: HTMLCanvasElement;
     private _glRenderMode: number;
     private _renderMode: RenderMode;
     private _pointSize: number;
@@ -34,8 +37,11 @@ export class WebGLRenderer
     private _lineFloat32Arrays: Array<Float32Array>;
     private _lineRenderMode: number;
     private _shaderProgram: WebGLShader;
+// end_region: member variables
+
+// region: shaders
     private _vertexShaderSource: string =
-`   attribute vec4 ${ShaderSettings.positionAttributeName};
+    `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
     uniform mat4 ${ShaderSettings.viewMatrixUniformName};
     uniform float ${ShaderSettings.pointSizeUniformName};
@@ -48,35 +54,35 @@ export class WebGLRenderer
     }`;
 
     private _fragmentShaderSource: string =
-`   precision mediump float;
+    `    precision mediump float;
     uniform vec4 u_fragColor;
     varying vec4 v_color;
     void main(void)
     {
         gl_FragColor = v_color;
     }`;
+// end_region: shaders
 
-    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext,
+// region: constructor
+    constructor(canvas: HTMLCanvasElement, browserHelper: BrowserHelper = new BrowserHelper(),
         drawingSettings: DrawingSettings | null = null, camera: Camera | null = null)
     {
-        this.gl = gl;
+        this._canvas = canvas;
+        this.gl = this.getContext(canvas, browserHelper);
 
         this.initializeDrawingSettings(drawingSettings);
 
         this.initializeCamera(camera);
 
-        this.setViewPortDimensions(canvasWidth, canvasHeight);
+        this.setViewPortDimensions(canvas.width, canvas.height);
         this.initShaders();
 
         this.initializeVertexBuffers();
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
     }
+// end_region: constructor
 
-    public setViewPortDimensions(newWidth: number, newHeight: number): void
-    {
-        this.gl.viewport(0, 0, newWidth, newHeight);
-    }
-
+// region: getters and setters
     public get renderMode(): RenderMode
     {
         return this._renderMode;
@@ -116,6 +122,13 @@ export class WebGLRenderer
     public set camera(value: Camera)
     {
         this._camera = value;
+    }
+// end_region: getters and setters
+
+// region: public methods
+    public setViewPortDimensions(newWidth: number, newHeight: number): void
+    {
+        this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
     public addXYZPointToScene(x: number, y: number, z: number = 0,
@@ -215,7 +228,39 @@ export class WebGLRenderer
             }
         }
     }
+// end_region: public methods
 
+// region: private methods
+    private getContext (canvas: HTMLCanvasElement, browserHelper: BrowserHelper): WebGLRenderingContext
+    {
+        let gl: WebGLRenderingContext | null;
+
+        const isIE = browserHelper.isIE();
+        const isEdge = browserHelper.isEdge();
+        const contextId = (isIE || isEdge) ? "experimental-webgl" : "webgl";
+
+        try
+        {
+            gl = canvas.getContext(contextId,
+                {
+                    alpha: false,
+                    antialias: false,
+                    depth: false
+                });
+
+        }
+        catch (e)
+        {
+            throw `error creating webgl context!: ${e.toString()}`;
+        }
+
+        if (gl === null)
+        {
+            throw `error creating webgl context!, gl === null`;
+        }
+
+        return gl;
+    }
     private initializeDrawingSettings(drawingSettings: DrawingSettings | null)
     {
         this._renderMode = (drawingSettings && drawingSettings.renderMode) || Settings.defaultRendereMode;
@@ -351,4 +396,5 @@ export class WebGLRenderer
 
         return result;
     }
+// end_region: private methods
 }

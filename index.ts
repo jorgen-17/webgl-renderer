@@ -1,5 +1,4 @@
 import { WebGLRenderer } from "./src/graphics/webglRenderer";
-import { ContextWrangler } from "./src/utils/contextWrangler";
 import { Color, ColorMapper } from "./src/graphics/colorMapper";
 import { Line } from "./src/graphics/shapes2d/line";
 import { Shape2d } from "./src/graphics/shapes2d/shape2d";
@@ -21,7 +20,6 @@ export
 {
     WebGLRenderer,
     DrawingSettings,
-    ContextWrangler,
     RGBColor,
     Color,
     ColorMapper,
