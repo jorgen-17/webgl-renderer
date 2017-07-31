@@ -203,7 +203,7 @@ export class WebGLRenderer
         this.initializeVertexBuffers();
     }
 
-    public draw()
+    protected draw()
     {
         this.gl.clearColor(this._backgroundColor.red,
             this._backgroundColor.green,
