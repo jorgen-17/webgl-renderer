@@ -35,6 +35,10 @@ describe("webglRenderer:", () =>
     const browserHelperMock = new Mock<BrowserHelper>();
     const browserHelper = browserHelperMock.Object;
 
+    const windowMock = new Mock<Window>();
+    const leWindow = windowMock.Object;
+    const animationFrameRequestId = 666;
+
     let renderer: WebGLRendererMock;
 
     beforeEach(() =>
@@ -51,6 +55,9 @@ describe("webglRenderer:", () =>
 
         browserHelperMock.setup(bh => bh.isIE).is(() => false);
         browserHelperMock.setup(bh => bh.isEdge).is(() => false);
+
+        windowMock.setup(win => win.requestAnimationFrame).is(() => animationFrameRequestId);
+        windowMock.setup(win => win.cancelAnimationFrame).is((requestId: number) => { /* no-op */ });
     });
 
     describe("getContext:", () =>
@@ -69,7 +76,7 @@ describe("webglRenderer:", () =>
             {
                 browserHelperMock.setup(bh => bh.isIE).is(() => true);
 
-                renderer = new WebGLRendererMock(canvas, browserHelper);
+                renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
 
                 expect(gl).toEqual(renderer.gl);
                 expect(browserHelper.isIE).toHaveBeenCalledTimes(1);
@@ -86,7 +93,7 @@ describe("webglRenderer:", () =>
             {
                 browserHelperMock.setup(bh => bh.isEdge).is(() => true);
 
-                renderer = new WebGLRendererMock(canvas, browserHelper);
+                renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
 
                 expect(gl).toEqual(renderer.gl);
                 expect(browserHelper.isEdge).toHaveBeenCalledTimes(1);
@@ -101,7 +108,7 @@ describe("webglRenderer:", () =>
 
             it("when not IE or Edge, uses webgl as contextId", () =>
             {
-                renderer = new WebGLRendererMock(canvas, browserHelper);
+                renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
 
                 expect(gl).toEqual(renderer.gl);
                 expect(canvas.getContext).toHaveBeenCalledTimes(1);
@@ -124,7 +131,7 @@ describe("webglRenderer:", () =>
 
             const expectedErrorMessage =
                 "error creating webgl context!: something is fucky-fucky-one-dolla";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper))
+            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
                 .toThrow(expectedErrorMessage);
         });
 
@@ -136,12 +143,30 @@ describe("webglRenderer:", () =>
                 .is((contextName: string, contextAttributes: {}) => null);
 
             const expectedErrorMessage = "error creating webgl context!, gl === null";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper))
+            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
                 .toThrow(expectedErrorMessage);
         });
     });
 
-    it("settings are used", () =>
+    it("start/stop", () =>
+    {
+        renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+
+        // randomly picked a gl function from the draw meothod to make sure it was getting called
+        expect(gl.clearColor).toHaveBeenCalledTimes(1);
+        expect(leWindow.requestAnimationFrame).toHaveBeenCalledTimes(1);
+
+        renderer.stop();
+
+        expect(leWindow.cancelAnimationFrame).toHaveBeenCalledTimes(1);
+        expect(leWindow.cancelAnimationFrame).toHaveBeenCalledWith(animationFrameRequestId);
+
+        renderer.start();
+        expect(gl.clearColor).toHaveBeenCalledTimes(2);
+        expect(leWindow.requestAnimationFrame).toHaveBeenCalledTimes(2);
+    });
+
+    it("settings are used:", () =>
     {
         const trianleMode: RenderMode = "triangles";
         const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
@@ -157,7 +182,7 @@ describe("webglRenderer:", () =>
         const upPosition = new Vec3(1, 2, 1);
         const camera = new Camera(eyePosition, lookAtPoint, upPosition);
 
-        renderer = new WebGLRendererMock(canvas, browserHelper, settings, camera);
+        renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, settings, camera);
 
         expect(trianleMode).toBe(renderer.renderMode);
         expect(backgroundColor).toBe(renderer.backgroundColor);
@@ -169,7 +194,7 @@ describe("webglRenderer:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
         });
 
         it("is set-able and get-able", () =>
@@ -229,7 +254,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
         });
 
         it("is set-able and get-able", () =>
@@ -241,9 +266,10 @@ describe("webglRenderer:", () =>
 
         it("sets the color that the renderer passes in when calling gl.clearColor", () =>
         {
-            renderer.mockDraw();
-
             const clearColorSpy = glSpiesDictionary["clearColor"];
+            clearColorSpy.calls.reset();
+
+            renderer.mockDraw();
 
             expect(gl.clearColor).toHaveBeenCalledTimes(1);
             expect(clearColorSpy.calls.all()[0].args).toEqual([
@@ -274,7 +300,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
         });
 
         it("is set-able and get-able", () =>
@@ -321,7 +347,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
         });
 
         it("is set-able and get-able", () =>
@@ -365,7 +391,7 @@ describe("webglRenderer:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
         });
 
         it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
@@ -615,7 +641,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
 
             line = WebglRendererTestHelper.getRandomLine(gl);
             point = WebglRendererTestHelper.getRandomPoint(gl);
@@ -829,7 +855,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -857,7 +883,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -885,7 +911,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRendererMock(canvas, browserHelper);
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -921,7 +947,7 @@ describe("webglRenderer:", () =>
 
             const expectedErrorString =
             "could not compile shader, shader info log: theres some shady shit going on";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper))
+            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
                 .toThrow(expectedErrorString);
         });
 
@@ -931,7 +957,7 @@ describe("webglRenderer:", () =>
             glMock.setup(x => x.createProgram).is(() => null);
 
             const expectedErrorString = "could not create shader program";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper))
+            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
                 .toThrow(expectedErrorString);
         });
 
@@ -942,7 +968,7 @@ describe("webglRenderer:", () =>
             .is((shader: WebGLShader, pName: number) => false);
 
             const expectedErrorString = "could not link shader program";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper))
+            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
                 .toThrow(expectedErrorString);
         });
     });

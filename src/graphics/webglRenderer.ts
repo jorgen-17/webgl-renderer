@@ -37,6 +37,8 @@ export class WebGLRenderer
     private _lineFloat32Arrays: Array<Float32Array>;
     private _lineRenderMode: number;
     private _shaderProgram: WebGLShader;
+    private _animationFrameRequestId: number;
+    private _window: Window;
 // end_region: member variables
 
 // region: shaders
@@ -65,7 +67,8 @@ export class WebGLRenderer
 
 // region: constructor
     constructor(canvas: HTMLCanvasElement, browserHelper: BrowserHelper = new BrowserHelper(),
-        drawingSettings: DrawingSettings | null = null, camera: Camera | null = null)
+        leWindow: Window | null = null, drawingSettings: DrawingSettings | null = null,
+        camera: Camera | null = null)
     {
         this._canvas = canvas;
         this.gl = this.getContext(canvas, browserHelper);
@@ -79,6 +82,9 @@ export class WebGLRenderer
 
         this.initializeVertexBuffers();
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
+
+        this._window = leWindow || window;
+        this.start();
     }
 // end_region: constructor
 
@@ -203,6 +209,18 @@ export class WebGLRenderer
         this.initializeVertexBuffers();
     }
 
+    public start()
+    {
+        this.renderLoop();
+    }
+
+    public stop()
+    {
+        this._window.cancelAnimationFrame(this._animationFrameRequestId);
+    }
+// end_region: public methods
+
+// region: protected methods
     protected draw()
     {
         this.gl.clearColor(this._backgroundColor.red,
@@ -228,7 +246,7 @@ export class WebGLRenderer
             }
         }
     }
-// end_region: public methods
+// end_region: protected methods
 
 // region: private methods
     private getContext (canvas: HTMLCanvasElement, browserHelper: BrowserHelper): WebGLRenderingContext
@@ -395,6 +413,12 @@ export class WebGLRenderer
         }
 
         return result;
+    }
+
+    private renderLoop(): void
+    {
+        this.draw();
+        this._animationFrameRequestId = this._window.requestAnimationFrame(this.renderLoop);
     }
 // end_region: private methods
 }

@@ -32,8 +32,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/colorMapper.spec.ts" },
         { pattern: "spec/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/graphics/camera.spec.ts" },
-        { pattern: "spec/utils/vector.spec.ts" },
-        { pattern: "spec/utils/contextWrangler.spec.ts" }
+        { pattern: "spec/utils/vector.spec.ts" }
     ],
 
 
