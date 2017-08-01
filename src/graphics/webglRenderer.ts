@@ -25,6 +25,7 @@ export class WebGLRenderer
     private _renderMode: RenderMode;
     private _pointSize: number;
     private _backgroundColor: RGBColor;
+    private _isFullscreen: boolean;
     private _camera: Camera;
     private _pointsVertexBuffer: VertexBuffer;
     private _linesVertexBuffer: VertexBuffer;
@@ -84,6 +85,7 @@ export class WebGLRenderer
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
 
         this._window = leWindow || window;
+        this.setupWindowCallbacks();
         this.start();
     }
 // end_region: constructor
@@ -118,6 +120,17 @@ export class WebGLRenderer
     public set pointSize(value: number)
     {
         this._pointSize = value;
+    }
+
+    public get isFullscreen(): boolean
+    {
+        return this._isFullscreen;
+    }
+
+    public set isFullscreen(value: boolean)
+    {
+        this._isFullscreen = value;
+        this.setupWindowCallbacks();
     }
 
     public get camera(): Camera
@@ -279,12 +292,14 @@ export class WebGLRenderer
 
         return gl;
     }
+
     private initializeDrawingSettings(drawingSettings: DrawingSettings | null)
     {
         this._renderMode = (drawingSettings && drawingSettings.renderMode) || Settings.defaultRendereMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
         this._pointSize = (drawingSettings && drawingSettings.pointSize) || Settings.defaultPointSize;
         this._backgroundColor = (drawingSettings && drawingSettings.backgroundColor) || Settings.defaultBackgroundColor;
+        this._isFullscreen = (drawingSettings && drawingSettings.fullscreen) || Settings.defaultIsFullScreen;
     }
 
     private initializeCamera(camera: Camera | null)
@@ -419,6 +434,22 @@ export class WebGLRenderer
     {
         this.draw();
         this._animationFrameRequestId = this._window.requestAnimationFrame(this.renderLoop);
+    }
+
+    private setupWindowCallbacks()
+    {
+        if (this._isFullscreen)
+        {
+            this._window.addEventListener("resize", () => { this.resizeCanvas(); }, false);
+            this.resizeCanvas();
+        }
+    }
+
+    private resizeCanvas = () =>
+    {
+        this.setViewPortDimensions(this._window.innerWidth, this._window.innerHeight);
+        this._canvas.width = this._window.innerWidth;
+        this._canvas.height = this._window.innerHeight;
     }
 // end_region: private methods
 }

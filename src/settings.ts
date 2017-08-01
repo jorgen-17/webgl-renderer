@@ -13,6 +13,7 @@ const defaultColor: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 };
 const defaultEyePosition = new Vec3(0, 0, 0);
 const defaultLookAtPoint = new Vec3(0, 0, -1);
 const defaultUpPosition = new Vec3(0, 1, 0);
+const defaultIsFullscreen = false;
 
 export let Settings =
 {
@@ -25,4 +26,5 @@ export let Settings =
     defaultEyePosition: defaultEyePosition,
     defaultLookAtPoint: defaultLookAtPoint,
     defaultUpPosition: defaultUpPosition,
+    defaultIsFullScreen: defaultIsFullscreen
 };

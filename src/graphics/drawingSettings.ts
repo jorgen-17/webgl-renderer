@@ -8,4 +8,5 @@ export interface DrawingSettings
     renderMode?: RenderMode;
     pointSize?: number;
     backgroundColor?: RGBColor;
+    fullscreen?: boolean;
 }

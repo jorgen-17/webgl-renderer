@@ -24,6 +24,7 @@ import { WebGLRendererMock } from "../../specHelpers/graphics/webglRendererMock"
 
 describe("webglRenderer:", () =>
 {
+// region: member variables
     const glMock = new Mock<WebGLRenderingContext>();
     const gl = glMock.Object;
     let glSpiesDictionary: StringDictionary<jasmine.Spy>;
@@ -40,7 +41,7 @@ describe("webglRenderer:", () =>
     const animationFrameRequestId = 666;
 
     let renderer: WebGLRendererMock;
-
+// end_region: member variables
     beforeEach(() =>
     {
         glSpiesDictionary = WebglRendererTestHelper.setupGlMockFunctions(glMock);
@@ -58,6 +59,73 @@ describe("webglRenderer:", () =>
 
         windowMock.setup(win => win.requestAnimationFrame).is(() => animationFrameRequestId);
         windowMock.setup(win => win.cancelAnimationFrame).is((requestId: number) => { /* no-op */ });
+        windowMock.setup(win => win.addEventListener).is((eventName: string) => { /* no-op */ });
+    });
+
+    describe("constructor:", () =>
+    {
+        it("settings are used when passed in", () =>
+        {
+            const trianleMode: RenderMode = "triangles";
+            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+            const pointSize = 15;
+            const isFullScreen = true;
+            const settings: DrawingSettings = {
+                renderMode: trianleMode,
+                backgroundColor: backgroundColor,
+                pointSize: pointSize,
+                fullscreen: isFullScreen
+            };
+
+            const eyePosition = new Vec3(1, 1, 1);
+            const lookAtPoint = new Vec3(1, 1, -2);
+            const upPosition = new Vec3(1, 2, 1);
+
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, settings);
+
+            expect(trianleMode).toEqual(renderer.renderMode);
+            expect(backgroundColor).toEqual(renderer.backgroundColor);
+            expect(pointSize).toEqual(renderer.pointSize);
+            expect(isFullScreen).toEqual(renderer.isFullscreen);
+        });
+        it("defaults are used when settings not passed in", () =>
+        {
+            const defaultCamera = new Camera(
+                Settings.defaultEyePosition,
+                Settings.defaultLookAtPoint,
+                Settings.defaultUpPosition
+            );
+
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+
+            expect(Settings.defaultRendereMode).toEqual(renderer.renderMode);
+            expect(Settings.defaultBackgroundColor).toEqual(renderer.backgroundColor);
+            expect(Settings.defaultPointSize).toEqual(renderer.pointSize);
+            expect(Settings.defaultIsFullScreen).toEqual(renderer.isFullscreen);
+        });
+        it("camera used when passed in", () =>
+        {
+            const eyePosition = new Vec3(1, 1, 1);
+            const lookAtPoint = new Vec3(1, 1, -2);
+            const upPosition = new Vec3(1, 2, 1);
+            const camera = new Camera(eyePosition, lookAtPoint, upPosition);
+
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, null, camera);
+
+            expect(camera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+        });
+        it("defaults camera used when camera not passed in", () =>
+        {
+            const defaultCamera = new Camera(
+                Settings.defaultEyePosition,
+                Settings.defaultLookAtPoint,
+                Settings.defaultUpPosition
+            );
+
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+
+            expect(defaultCamera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+        });
     });
 
     describe("getContext:", () =>
@@ -166,30 +234,6 @@ describe("webglRenderer:", () =>
         expect(leWindow.requestAnimationFrame).toHaveBeenCalledTimes(2);
     });
 
-    it("settings are used:", () =>
-    {
-        const trianleMode: RenderMode = "triangles";
-        const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
-        const pointSize = 15;
-        const settings: DrawingSettings = {
-            renderMode: trianleMode,
-            backgroundColor: backgroundColor,
-            pointSize: pointSize
-        };
-
-        const eyePosition = new Vec3(1, 1, 1);
-        const lookAtPoint = new Vec3(1, 1, -2);
-        const upPosition = new Vec3(1, 2, 1);
-        const camera = new Camera(eyePosition, lookAtPoint, upPosition);
-
-        renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, settings, camera);
-
-        expect(trianleMode).toBe(renderer.renderMode);
-        expect(backgroundColor).toBe(renderer.backgroundColor);
-        expect(pointSize).toBe(renderer.pointSize);
-        expect(camera.viewMatrix).toBe(renderer.camera.viewMatrix);
-    });
-
     describe("renderMode:", () =>
     {
         beforeEach(() =>
@@ -202,7 +246,7 @@ describe("webglRenderer:", () =>
             const trianleMode: RenderMode = "triangles";
             renderer.renderMode = trianleMode;
 
-            expect(trianleMode).toBe(renderer.renderMode);
+            expect(trianleMode).toEqual(renderer.renderMode);
         });
 
         it("determines the default renderMode used when addXYZPointToScene is called", () =>
@@ -335,6 +379,48 @@ describe("webglRenderer:", () =>
                 1,
                 pointSize
             ]);
+        });
+    });
+
+    describe("isFullscreen:", () =>
+    {
+        beforeEach(() =>
+        {
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const isFullScreen = true;
+
+            expect(Settings.defaultIsFullScreen).toBe(renderer.isFullscreen);
+
+            renderer.isFullscreen = isFullScreen;
+
+            expect(isFullScreen).toBe(renderer.isFullscreen);
+        });
+
+        xit("sets the uniform variable u_viewMatrix", () =>
+        {
+            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
+            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+
+            renderer.mockDraw();
+
+            const uniformMatrix4fvNameSpy = glSpiesDictionary["uniformMatrix4fv"];
+
+            expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
+            expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
+                1,
+                false,
+                new Camera().viewMatrix
+            ]);
+            uniformMatrix4fvNameSpy.calls.reset();
+
+            renderer.mockDraw();
+
+            expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
+
         });
     });
 
