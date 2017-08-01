@@ -232,7 +232,7 @@ declare module 'graphics/webglRenderer' {
 	    private initShaders();
 	    private createShader(shaderSource, type);
 	    private createUniforNotFoundErrorMessage(uniformsMap);
-	    private renderLoop();
+	    private renderLoop;
 	}
 
 }

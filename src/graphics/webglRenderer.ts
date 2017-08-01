@@ -415,7 +415,7 @@ export class WebGLRenderer
         return result;
     }
 
-    private renderLoop(): void
+    private renderLoop = () =>
     {
         this.draw();
         this._animationFrameRequestId = this._window.requestAnimationFrame(this.renderLoop);
