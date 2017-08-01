@@ -174,14 +174,23 @@ declare module 'graphics/shapes2d/line' {
 	}
 
 }
+declare module 'utils/browserHelper' {
+	export class BrowserHelper {
+	    isIE(): boolean;
+	    isEdge(): boolean;
+	}
+
+}
 declare module 'graphics/webglRenderer' {
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { DrawingSettings } from 'graphics/drawingSettings';
+	import { BrowserHelper } from 'utils/browserHelper';
 	export class WebGLRenderer {
 	    gl: WebGLRenderingContext;
+	    private _canvas;
 	    private _glRenderMode;
 	    private _renderMode;
 	    private _pointSize;
@@ -198,19 +207,24 @@ declare module 'graphics/webglRenderer' {
 	    private _lineFloat32Arrays;
 	    private _lineRenderMode;
 	    private _shaderProgram;
+	    private _animationFrameRequestId;
+	    private _window;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
-	    constructor(canvasWidth: number, canvasHeight: number, gl: WebGLRenderingContext, drawingSettings?: DrawingSettings | null, camera?: Camera | null);
-	    setViewPortDimensions(newWidth: number, newHeight: number): void;
+	    constructor(canvas: HTMLCanvasElement, browserHelper?: BrowserHelper, leWindow?: Window | null, drawingSettings?: DrawingSettings | null, camera?: Camera | null);
 	    renderMode: RenderMode;
 	    backgroundColor: RGBColor;
 	    pointSize: number;
 	    camera: Camera;
+	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    addXYZPointToScene(x: number, y: number, z?: number, r?: number, g?: number, b?: number, renderMode?: number): void;
 	    addShapeToScene(shape: Shape2d): void;
 	    addShapesToScene(shapes: Array<Shape2d>): void;
 	    removeAllVeriticies(): void;
-	    draw(): void;
+	    start(): void;
+	    stop(): void;
+	    protected draw(): void;
+	    private getContext(canvas, browserHelper);
 	    private initializeDrawingSettings(drawingSettings);
 	    private initializeCamera(camera);
 	    private initializeVertexBuffers();
@@ -218,20 +232,7 @@ declare module 'graphics/webglRenderer' {
 	    private initShaders();
 	    private createShader(shaderSource, type);
 	    private createUniforNotFoundErrorMessage(uniformsMap);
-	}
-
-}
-declare module 'utils/browserHelper' {
-	export class BrowserHelper {
-	    isIE(): boolean;
-	    isEdge(): boolean;
-	}
-
-}
-declare module 'utils/contextWrangler' {
-	import { BrowserHelper } from 'utils/browserHelper';
-	export class ContextWrangler {
-	    static getContext(canvas: HTMLCanvasElement, browserHelper?: BrowserHelper): WebGLRenderingContext;
+	    private renderLoop();
 	}
 
 }
@@ -363,7 +364,6 @@ declare module 'graphics/shapes2d/point' {
 }
 declare module 'webgl-renderer' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
-	import { ContextWrangler } from 'utils/contextWrangler';
 	import { Color, ColorMapper } from 'graphics/colorMapper';
 	import { Line } from 'graphics/shapes2d/line';
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
@@ -380,6 +380,7 @@ declare module 'webgl-renderer' {
 	import { Point } from 'graphics/shapes2d/point';
 	import { DrawingSettings } from 'graphics/drawingSettings';
 	import { Vec3 } from "cuon-matrix-ts";
-	export { WebGLRenderer, DrawingSettings, ContextWrangler, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3 };
+	import { BrowserHelper } from 'utils/browserHelper';
+	export { WebGLRenderer, DrawingSettings, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3, BrowserHelper };
 
 }
