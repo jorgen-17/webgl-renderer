@@ -39,6 +39,7 @@ describe("webglRenderer:", () =>
     const windowMock = new Mock<Window>();
     const leWindow = windowMock.Object;
     const animationFrameRequestId = 666;
+    let windowAddEventListenerSpy: jasmine.Spy;
 
     let renderer: WebGLRendererMock;
 // end_region: member variables
@@ -59,11 +60,15 @@ describe("webglRenderer:", () =>
 
         windowMock.setup(win => win.requestAnimationFrame).is(() => animationFrameRequestId);
         windowMock.setup(win => win.cancelAnimationFrame).is((requestId: number) => { /* no-op */ });
-        windowMock.setup(win => win.addEventListener).is((eventName: string) => { /* no-op */ });
+        windowAddEventListenerSpy = windowMock.setup(win => win.addEventListener).is((eventName: string) => { /* no-op */ }).Spy;
     });
 
     describe("constructor:", () =>
     {
+        beforeEach(() =>
+        {
+            windowAddEventListenerSpy.calls.reset();
+        });
         it("settings are used when passed in", () =>
         {
             const trianleMode: RenderMode = "triangles";
@@ -125,6 +130,19 @@ describe("webglRenderer:", () =>
             renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
 
             expect(defaultCamera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+        });
+        it("passing in fullScreen as true sets resize event handler on window", () =>
+        {
+            const settings: DrawingSettings = {
+                fullscreen: true
+            };
+
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, settings);
+
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
+            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
+            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
+            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
         });
     });
 
@@ -387,6 +405,7 @@ describe("webglRenderer:", () =>
         beforeEach(() =>
         {
             renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            windowAddEventListenerSpy.calls.reset();
         });
 
         it("is set-able and get-able", () =>
@@ -400,27 +419,22 @@ describe("webglRenderer:", () =>
             expect(isFullScreen).toBe(renderer.isFullscreen);
         });
 
-        xit("sets the uniform variable u_viewMatrix", () =>
+        it("setting fullscreen to true ", () =>
         {
-            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            const settings: DrawingSettings = {
+                fullscreen: false
+            };
 
-            renderer.mockDraw();
+            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, settings);
 
-            const uniformMatrix4fvNameSpy = glSpiesDictionary["uniformMatrix4fv"];
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(0);
 
-            expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
-            expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
-                1,
-                false,
-                new Camera().viewMatrix
-            ]);
-            uniformMatrix4fvNameSpy.calls.reset();
+            renderer.isFullscreen = true;
 
-            renderer.mockDraw();
-
-            expect(gl.uniformMatrix4fv).toHaveBeenCalledTimes(1);
-
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
+            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
+            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
+            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
         });
     });
 
