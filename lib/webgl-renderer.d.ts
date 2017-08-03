@@ -95,6 +95,7 @@ declare module 'settings' {
 	    defaultEyePosition: Vec3;
 	    defaultLookAtPoint: Vec3;
 	    defaultUpPosition: Vec3;
+	    defaultIsFullScreen: boolean;
 	};
 
 }
@@ -136,6 +137,7 @@ declare module 'graphics/drawingSettings' {
 	    renderMode?: RenderMode;
 	    pointSize?: number;
 	    backgroundColor?: RGBColor;
+	    fullscreen?: boolean;
 	}
 
 }
@@ -195,6 +197,7 @@ declare module 'graphics/webglRenderer' {
 	    private _renderMode;
 	    private _pointSize;
 	    private _backgroundColor;
+	    private _isFullscreen;
 	    private _camera;
 	    private _pointsVertexBuffer;
 	    private _linesVertexBuffer;
@@ -215,6 +218,7 @@ declare module 'graphics/webglRenderer' {
 	    renderMode: RenderMode;
 	    backgroundColor: RGBColor;
 	    pointSize: number;
+	    isFullscreen: boolean;
 	    camera: Camera;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    addXYZPointToScene(x: number, y: number, z?: number, r?: number, g?: number, b?: number, renderMode?: number): void;
@@ -233,6 +237,8 @@ declare module 'graphics/webglRenderer' {
 	    private createShader(shaderSource, type);
 	    private createUniforNotFoundErrorMessage(uniformsMap);
 	    private renderLoop;
+	    private setupWindowCallbacks();
+	    private resizeCanvas;
 	}
 
 }
