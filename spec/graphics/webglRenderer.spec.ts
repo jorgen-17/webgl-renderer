@@ -16,7 +16,7 @@ import { StringDictionary } from "../../src/utils/dictionary";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
-import { DrawingSettings } from "../../src/graphics/drawingSettings";
+import { RenderingOptions } from "../../src/graphics/drawingSettings";
 import { Point } from "../../src/graphics/shapes2d/point";
 import { Settings } from "../../src/settings";
 import { BrowserHelper } from "../../src/utils/browserHelper";
@@ -75,7 +75,7 @@ describe("webglRenderer:", () =>
             const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
             const pointSize = 15;
             const isFullScreen = true;
-            const settings: DrawingSettings = {
+            const settings: RenderingOptions = {
                 renderMode: trianleMode,
                 backgroundColor: backgroundColor,
                 pointSize: pointSize,
@@ -133,7 +133,7 @@ describe("webglRenderer:", () =>
         });
         it("passing in fullScreen as true sets resize event handler on window", () =>
         {
-            const settings: DrawingSettings = {
+            const settings: RenderingOptions = {
                 fullscreen: true
             };
 
@@ -421,7 +421,7 @@ describe("webglRenderer:", () =>
 
         it("setting fullscreen to true ", () =>
         {
-            const settings: DrawingSettings = {
+            const settings: RenderingOptions = {
                 fullscreen: false
             };
 

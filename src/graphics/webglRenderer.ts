@@ -6,7 +6,7 @@ import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shapes2d/shapeMode";
 import { RGBColor } from "./rgbColor";
 import { Camera } from "./camera";
-import { DrawingSettings } from "./drawingSettings";
+import { RenderingOptions } from "./drawingSettings";
 import { StringDictionary } from "../utils/dictionary";
 import { Constants } from "../constants";
 import { ShaderSettings } from "../shaderSettings";
@@ -25,8 +25,10 @@ export class WebGLRenderer
     private _renderMode: RenderMode;
     private _pointSize: number;
     private _backgroundColor: RGBColor;
-    private _isFullscreen: boolean;
     private _camera: Camera;
+    private _window: Window;
+    private _isFullscreen: boolean;
+    private _animationFrameRequestId: number;
     private _pointsVertexBuffer: VertexBuffer;
     private _linesVertexBuffer: VertexBuffer;
     private _lineStripVertexBuffer: VertexBuffer;
@@ -38,8 +40,6 @@ export class WebGLRenderer
     private _lineFloat32Arrays: Array<Float32Array>;
     private _lineRenderMode: number;
     private _shaderProgram: WebGLShader;
-    private _animationFrameRequestId: number;
-    private _window: Window;
 // end_region: member variables
 
 // region: shaders
@@ -68,15 +68,12 @@ export class WebGLRenderer
 
 // region: constructor
     constructor(canvas: HTMLCanvasElement, browserHelper: BrowserHelper = new BrowserHelper(),
-        leWindow: Window | null = null, drawingSettings: DrawingSettings | null = null,
-        camera: Camera | null = null)
+        renderingOptions: RenderingOptions = {})
     {
         this._canvas = canvas;
         this.gl = this.getContext(canvas, browserHelper);
 
-        this.initializeDrawingSettings(drawingSettings);
-
-        this.initializeCamera(camera);
+        this.initializeRenderingOptions(renderingOptions);
 
         this.setViewPortDimensions(canvas.width, canvas.height);
         this.initShaders();
@@ -84,7 +81,6 @@ export class WebGLRenderer
         this.initializeVertexBuffers();
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
 
-        this._window = leWindow || window;
         this.setupWindowCallbacks();
         this.start();
     }
@@ -293,25 +289,15 @@ export class WebGLRenderer
         return gl;
     }
 
-    private initializeDrawingSettings(drawingSettings: DrawingSettings | null)
+    private initializeRenderingOptions(renderingOptions: RenderingOptions | null)
     {
-        this._renderMode = (drawingSettings && drawingSettings.renderMode) || Settings.defaultRendereMode;
+        this._renderMode = (renderingOptions && renderingOptions.renderMode) || Settings.defaultRendereMode;
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
-        this._pointSize = (drawingSettings && drawingSettings.pointSize) || Settings.defaultPointSize;
-        this._backgroundColor = (drawingSettings && drawingSettings.backgroundColor) || Settings.defaultBackgroundColor;
-        this._isFullscreen = (drawingSettings && drawingSettings.fullscreen) || Settings.defaultIsFullScreen;
-    }
-
-    private initializeCamera(camera: Camera | null)
-    {
-        if (camera)
-        {
-            this._camera = camera;
-        }
-        else
-        {
-            this._camera = new Camera();
-        }
+        this._pointSize = (renderingOptions && renderingOptions.pointSize) || Settings.defaultPointSize;
+        this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
+        this._camera = (renderingOptions && renderingOptions.camera) || new Camera();
+        this._window = (renderingOptions && renderingOptions.window) || window;
+        this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
     }
 
     private initializeVertexBuffers()
