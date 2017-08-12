@@ -130,14 +130,27 @@ declare module 'graphics/vertexBuffer' {
 	}
 
 }
+declare module 'utils/browserHelper' {
+	export class BrowserHelper {
+	    isIE(): boolean;
+	    isEdge(): boolean;
+	}
+
+}
 declare module 'graphics/drawingSettings' {
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { RGBColor } from 'graphics/rgbColor';
-	export interface DrawingSettings {
+	import { Camera } from 'graphics/camera';
+	import { BrowserHelper } from 'utils/browserHelper';
+	export interface RenderingOptions {
+	    browserHelper?: BrowserHelper;
 	    renderMode?: RenderMode;
 	    pointSize?: number;
 	    backgroundColor?: RGBColor;
+	    camera?: Camera;
+	    window?: Window;
 	    fullscreen?: boolean;
+	    resizeCallback?: () => void;
 	}
 
 }
@@ -176,20 +189,12 @@ declare module 'graphics/shapes2d/line' {
 	}
 
 }
-declare module 'utils/browserHelper' {
-	export class BrowserHelper {
-	    isIE(): boolean;
-	    isEdge(): boolean;
-	}
-
-}
 declare module 'graphics/webglRenderer' {
 	import { Shape2d } from 'graphics/shapes2d/shape2d';
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
-	import { DrawingSettings } from 'graphics/drawingSettings';
-	import { BrowserHelper } from 'utils/browserHelper';
+	import { RenderingOptions } from 'graphics/drawingSettings';
 	export class WebGLRenderer {
 	    gl: WebGLRenderingContext;
 	    private _canvas;
@@ -197,8 +202,10 @@ declare module 'graphics/webglRenderer' {
 	    private _renderMode;
 	    private _pointSize;
 	    private _backgroundColor;
-	    private _isFullscreen;
 	    private _camera;
+	    private _window;
+	    private _isFullscreen;
+	    private _animationFrameRequestId;
 	    private _pointsVertexBuffer;
 	    private _linesVertexBuffer;
 	    private _lineStripVertexBuffer;
@@ -210,11 +217,9 @@ declare module 'graphics/webglRenderer' {
 	    private _lineFloat32Arrays;
 	    private _lineRenderMode;
 	    private _shaderProgram;
-	    private _animationFrameRequestId;
-	    private _window;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
-	    constructor(canvas: HTMLCanvasElement, browserHelper?: BrowserHelper, leWindow?: Window | null, drawingSettings?: DrawingSettings | null, camera?: Camera | null);
+	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
 	    renderMode: RenderMode;
 	    backgroundColor: RGBColor;
 	    pointSize: number;
@@ -229,8 +234,7 @@ declare module 'graphics/webglRenderer' {
 	    stop(): void;
 	    protected draw(): void;
 	    private getContext(canvas, browserHelper);
-	    private initializeDrawingSettings(drawingSettings);
-	    private initializeCamera(camera);
+	    private initializeRenderingOptions(renderingOptions);
 	    private initializeVertexBuffers();
 	    private drawGlArray(arr, renderMode);
 	    private initShaders();
@@ -384,9 +388,9 @@ declare module 'webgl-renderer' {
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { Point } from 'graphics/shapes2d/point';
-	import { DrawingSettings } from 'graphics/drawingSettings';
+	import { RenderingOptions } from 'graphics/drawingSettings';
 	import { Vec3 } from "cuon-matrix-ts";
 	import { BrowserHelper } from 'utils/browserHelper';
-	export { WebGLRenderer, DrawingSettings, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3, BrowserHelper };
+	export { WebGLRenderer, RenderingOptions, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3, BrowserHelper };
 
 }

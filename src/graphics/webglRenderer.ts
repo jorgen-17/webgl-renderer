@@ -67,10 +67,11 @@ export class WebGLRenderer
 // end_region: shaders
 
 // region: constructor
-    constructor(canvas: HTMLCanvasElement, browserHelper: BrowserHelper = new BrowserHelper(),
-        renderingOptions: RenderingOptions = {})
+    constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
         this._canvas = canvas;
+
+        let browserHelper = renderingOptions.browserHelper || new BrowserHelper();
         this.gl = this.getContext(canvas, browserHelper);
 
         this.initializeRenderingOptions(renderingOptions);
