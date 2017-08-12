@@ -16,7 +16,7 @@ import { StringDictionary } from "../../src/utils/dictionary";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
-import { RenderingOptions } from "../../src/graphics/drawingSettings";
+import { RenderingOptions } from "../../src/graphics/renderingOptions";
 import { Point } from "../../src/graphics/shapes2d/point";
 import { Settings } from "../../src/settings";
 import { BrowserHelper } from "../../src/utils/browserHelper";
@@ -147,6 +147,22 @@ describe("webglRenderer:", () =>
             expect(defaultCamera.viewMatrix).toEqual(renderer.camera.viewMatrix);
         });
         it("passing in fullScreen as true sets resize event handler on window", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
+            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
+            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
+            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
+        });
+        it("passing in resizeCallback is added as resize event handler on window " +
+            "when fullscreen is true", () =>
         {
             const options: RenderingOptions = {
                 browserHelper: browserHelper,

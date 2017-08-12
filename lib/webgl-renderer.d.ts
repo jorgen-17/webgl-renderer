@@ -137,11 +137,12 @@ declare module 'utils/browserHelper' {
 	}
 
 }
-declare module 'graphics/drawingSettings' {
+declare module 'graphics/renderingOptions' {
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { BrowserHelper } from 'utils/browserHelper';
+	import { WebGLRenderer } from 'graphics/webglRenderer';
 	export interface RenderingOptions {
 	    browserHelper?: BrowserHelper;
 	    renderMode?: RenderMode;
@@ -150,7 +151,7 @@ declare module 'graphics/drawingSettings' {
 	    camera?: Camera;
 	    window?: Window;
 	    fullscreen?: boolean;
-	    resizeCallback?: () => void;
+	    resizeCallback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	}
 
 }
@@ -194,7 +195,7 @@ declare module 'graphics/webglRenderer' {
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
-	import { RenderingOptions } from 'graphics/drawingSettings';
+	import { RenderingOptions } from 'graphics/renderingOptions';
 	export class WebGLRenderer {
 	    gl: WebGLRenderingContext;
 	    private _canvas;
@@ -206,6 +207,7 @@ declare module 'graphics/webglRenderer' {
 	    private _window;
 	    private _isFullscreen;
 	    private _animationFrameRequestId;
+	    private _resizeCallback;
 	    private _pointsVertexBuffer;
 	    private _linesVertexBuffer;
 	    private _lineStripVertexBuffer;
@@ -388,7 +390,7 @@ declare module 'webgl-renderer' {
 	import { RGBColor } from 'graphics/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { Point } from 'graphics/shapes2d/point';
-	import { RenderingOptions } from 'graphics/drawingSettings';
+	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { Vec3 } from "cuon-matrix-ts";
 	import { BrowserHelper } from 'utils/browserHelper';
 	export { WebGLRenderer, RenderingOptions, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3, BrowserHelper };

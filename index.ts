@@ -13,7 +13,7 @@ import { Triangle } from "./src/graphics/shapes2d/triangle";
 import { RGBColor } from "./src/graphics/rgbColor";
 import { Camera } from "./src/graphics/camera";
 import { Point } from "./src/graphics/shapes2d/point";
-import { RenderingOptions } from "./src/graphics/drawingSettings";
+import { RenderingOptions } from "./src/graphics/renderingOptions";
 import { Vec3 } from "cuon-matrix-ts";
 import { BrowserHelper } from "./src/utils/browserHelper";
 

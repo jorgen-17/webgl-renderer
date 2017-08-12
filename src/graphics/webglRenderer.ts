@@ -6,7 +6,7 @@ import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shapes2d/shapeMode";
 import { RGBColor } from "./rgbColor";
 import { Camera } from "./camera";
-import { RenderingOptions } from "./drawingSettings";
+import { RenderingOptions } from "./renderingOptions";
 import { StringDictionary } from "../utils/dictionary";
 import { Constants } from "../constants";
 import { ShaderSettings } from "../shaderSettings";
@@ -29,6 +29,8 @@ export class WebGLRenderer
     private _window: Window;
     private _isFullscreen: boolean;
     private _animationFrameRequestId: number;
+    private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
+        renderer: WebGLRenderer) => void;
     private _pointsVertexBuffer: VertexBuffer;
     private _linesVertexBuffer: VertexBuffer;
     private _lineStripVertexBuffer: VertexBuffer;
@@ -299,6 +301,7 @@ export class WebGLRenderer
         this._camera = (renderingOptions && renderingOptions.camera) || new Camera();
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
+        this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
     }
 
     private initializeVertexBuffers()
@@ -427,16 +430,20 @@ export class WebGLRenderer
     {
         if (this._isFullscreen)
         {
-            this._window.addEventListener("resize", () => { this.resizeCanvas(); }, false);
-            this.resizeCanvas();
+            this._window.addEventListener("resize",
+                () => {
+                    this._resizeCallback(this._canvas, this._window, this);
+                }, false);
+            this._resizeCallback(this._canvas, this._window, this);
         }
     }
 
-    private resizeCanvas = () =>
+    private resizeCanvas = (canvas: HTMLCanvasElement, window: Window,
+        renderer: WebGLRenderer) =>
     {
-        this.setViewPortDimensions(this._window.innerWidth, this._window.innerHeight);
-        this._canvas.width = this._window.innerWidth;
-        this._canvas.height = this._window.innerHeight;
+        renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
 // end_region: private methods
 }
