@@ -41,6 +41,13 @@ describe("webglRenderer:", () =>
     const animationFrameRequestId = 666;
     let windowAddEventListenerSpy: jasmine.Spy;
 
+    const resizeCallbackSpy = jasmine.createSpy("resizeCallback");
+    const resizeCallback = (canvasCB: HTMLCanvasElement, windowCB: Window,
+        rendererCB: WebGLRenderer) =>
+    {
+        resizeCallbackSpy(canvasCB, windowCB, rendererCB);
+    };
+
     const defaultOptions: RenderingOptions = {
         browserHelper: browserHelper,
         window: leWindow
@@ -75,6 +82,8 @@ describe("webglRenderer:", () =>
         beforeEach(() =>
         {
             windowAddEventListenerSpy.calls.reset();
+
+            resizeCallbackSpy.calls.reset();
         });
         it("settings are used when passed in", () =>
         {
@@ -161,8 +170,20 @@ describe("webglRenderer:", () =>
             expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
             expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
         });
-        it("passing in resizeCallback is added as resize event handler on window " +
-            "when fullscreen is true", () =>
+        it("passing in resizeCallback adds it as resize event handler on window", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+        });
+        it("not passing in resizeCallback does not add it as resize event handler on window", () =>
         {
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
@@ -172,10 +193,7 @@ describe("webglRenderer:", () =>
 
             renderer = new WebGLRendererMock(canvas, options);
 
-            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
-            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
-            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
-            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -437,15 +455,25 @@ describe("webglRenderer:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, defaultOptions);
             windowAddEventListenerSpy.calls.reset();
+
+            resizeCallbackSpy.calls.reset();
         });
 
         it("is set-able and get-able", () =>
         {
-            const isFullScreen = true;
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: false,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
 
             expect(Settings.defaultIsFullScreen).toBe(renderer.isFullscreen);
+
+            const isFullScreen = true;
 
             renderer.isFullscreen = isFullScreen;
 
@@ -457,6 +485,7 @@ describe("webglRenderer:", () =>
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 fullscreen: false,
+                resizeCallback: resizeCallback,
                 window: leWindow
             };
 
@@ -470,6 +499,49 @@ describe("webglRenderer:", () =>
             expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
             expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
             expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("resizeCallback:", () =>
+    {
+        beforeEach(() =>
+        {
+            windowAddEventListenerSpy.calls.reset();
+
+            resizeCallbackSpy.calls.reset();
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            resizeCallbackSpy.calls.reset();
+
+            let resizeCB = renderer.resizeCallback;
+            resizeCB(canvas, leWindow, renderer);
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+            resizeCallbackSpy.calls.reset();
+
+            const resizeCallbackSpy2 = jasmine.createSpy("resizeCallback2");
+            const resizeCallback2 = (canvasCB: HTMLCanvasElement, windowCB: Window,
+                rendererCB: WebGLRenderer) =>
+            {
+                resizeCallbackSpy2(canvasCB, windowCB, rendererCB);
+            };
+
+            renderer.resizeCallback = resizeCallback2;
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
+            expect(resizeCallbackSpy2).toHaveBeenCalledTimes(1);
         });
     });
 

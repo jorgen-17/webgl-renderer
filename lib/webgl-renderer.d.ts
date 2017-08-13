@@ -226,6 +226,7 @@ declare module 'graphics/webglRenderer' {
 	    backgroundColor: RGBColor;
 	    pointSize: number;
 	    isFullscreen: boolean;
+	    resizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    camera: Camera;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    addXYZPointToScene(x: number, y: number, z?: number, r?: number, g?: number, b?: number, renderMode?: number): void;

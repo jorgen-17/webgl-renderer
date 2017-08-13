@@ -132,6 +132,19 @@ export class WebGLRenderer
         this.setupWindowCallbacks();
     }
 
+    public get resizeCallback(): (canvas: HTMLCanvasElement,
+        window: Window, renderer: WebGLRenderer) => void
+    {
+        return this._resizeCallback;
+    }
+
+    public set resizeCallback(value: (canvas: HTMLCanvasElement,
+        window: Window, renderer: WebGLRenderer) => void)
+    {
+        this._resizeCallback = value;
+        this.setupWindowCallbacks();
+    }
+
     public get camera(): Camera
     {
         return this._camera;
