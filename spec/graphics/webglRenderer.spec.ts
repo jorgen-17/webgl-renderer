@@ -288,6 +288,7 @@ describe("webglRenderer:", () =>
     it("start/stop", () =>
     {
         renderer = new WebGLRendererMock(canvas, defaultOptions);
+        renderer.start();
 
         // randomly picked a gl function from the draw meothod to make sure it was getting called
         expect(gl.clearColor).toHaveBeenCalledTimes(1);
@@ -542,6 +543,21 @@ describe("webglRenderer:", () =>
 
             expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
             expect(resizeCallbackSpy2).toHaveBeenCalledTimes(1);
+        });
+
+        it("is actually called when window resize event is fired", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                resizeCallback: resizeCallback
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            resizeCallbackSpy.calls.reset();
+            window.dispatchEvent(new Event("resize"));
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
         });
     });
 

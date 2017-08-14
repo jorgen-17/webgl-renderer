@@ -85,7 +85,6 @@ export class WebGLRenderer
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
 
         this.setupWindowCallbacks();
-        this.start();
     }
 // end_region: constructor
 
