@@ -16,11 +16,14 @@ import { Line } from "./shapes2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
 
+import * as WebGLDebugUtil from "webgl-debug";
+
 export class WebGLRenderer
 {
 // region: member variables
     public gl: WebGLRenderingContext;
     private _canvas: HTMLCanvasElement;
+    private _browserHelper: BrowserHelper;
     private _glRenderMode: number;
     private _renderMode: RenderMode;
     private _pointSize: number;
@@ -71,10 +74,11 @@ export class WebGLRenderer
 // region: constructor
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
-        this._canvas = canvas;
-
-        let browserHelper = renderingOptions.browserHelper || new BrowserHelper();
-        this.gl = this.getContext(canvas, browserHelper);
+        // this._canvas = canvas;
+        this._canvas = WebGLDebugUtil.makeLostContextSimulatingCanvas(canvas);
+        (this._canvas as any).loseContextInNCalls(5);
+        this._browserHelper = renderingOptions.browserHelper || new BrowserHelper();
+        this.getContext();
 
         this.initializeRenderingOptions(renderingOptions);
 
@@ -273,23 +277,28 @@ export class WebGLRenderer
 // end_region: protected methods
 
 // region: private methods
-    private getContext (canvas: HTMLCanvasElement, browserHelper: BrowserHelper): WebGLRenderingContext
+    private setCanvasEventHandlers (): void
+    {
+        this._canvas.addEventListener("webglcontextlost", this.handleContextLost, false);
+        this._canvas.addEventListener("webglcontextrestored", this.handleContextRestored, false);
+    }
+
+    private getContext (): void
     {
         let gl: WebGLRenderingContext | null;
 
-        const isIE = browserHelper.isIE();
-        const isEdge = browserHelper.isEdge();
+        const isIE = this._browserHelper.isIE();
+        const isEdge = this._browserHelper.isEdge();
         const contextId = (isIE || isEdge) ? "experimental-webgl" : "webgl";
 
         try
         {
-            gl = canvas.getContext(contextId,
+            gl = this._canvas.getContext(contextId,
                 {
                     alpha: false,
                     antialias: false,
                     depth: false
                 });
-
         }
         catch (e)
         {
@@ -301,7 +310,19 @@ export class WebGLRenderer
             throw `error creating webgl context!, gl === null`;
         }
 
-        return gl;
+        this.gl = gl;
+    }
+
+    private handleContextLost = () =>
+    {
+        console.log("lost the context");
+        this.stop();
+    }
+
+    private handleContextRestored = () =>
+    {
+        console.log("restored the context");
+        this.start();
     }
 
     private initializeRenderingOptions(renderingOptions: RenderingOptions | null)
