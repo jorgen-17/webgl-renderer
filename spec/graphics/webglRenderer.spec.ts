@@ -16,7 +16,7 @@ import { StringDictionary } from "../../src/utils/dictionary";
 import { Line } from "../../src/graphics/shapes2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
-import { DrawingSettings } from "../../src/graphics/drawingSettings";
+import { RenderingOptions } from "../../src/graphics/renderingOptions";
 import { Point } from "../../src/graphics/shapes2d/point";
 import { Settings } from "../../src/settings";
 import { BrowserHelper } from "../../src/utils/browserHelper";
@@ -24,6 +24,7 @@ import { WebGLRendererMock } from "../../specHelpers/graphics/webglRendererMock"
 
 describe("webglRenderer:", () =>
 {
+// region: member variables
     const glMock = new Mock<WebGLRenderingContext>();
     const gl = glMock.Object;
     let glSpiesDictionary: StringDictionary<jasmine.Spy>;
@@ -38,9 +39,24 @@ describe("webglRenderer:", () =>
     const windowMock = new Mock<Window>();
     const leWindow = windowMock.Object;
     const animationFrameRequestId = 666;
+    let windowAddEventListenerSpy: jasmine.Spy;
+
+    const resizeCallbackSpy = jasmine.createSpy("resizeCallback");
+    const resizeCallback = (canvasCB: HTMLCanvasElement, windowCB: Window,
+        rendererCB: WebGLRenderer) =>
+    {
+        resizeCallbackSpy(canvasCB, windowCB, rendererCB);
+    };
+
+    const defaultOptions: RenderingOptions = {
+        browserHelper: browserHelper,
+        window: leWindow
+    };
 
     let renderer: WebGLRendererMock;
+// end_region: member variables
 
+// region: tests
     beforeEach(() =>
     {
         glSpiesDictionary = WebglRendererTestHelper.setupGlMockFunctions(glMock);
@@ -58,6 +74,127 @@ describe("webglRenderer:", () =>
 
         windowMock.setup(win => win.requestAnimationFrame).is(() => animationFrameRequestId);
         windowMock.setup(win => win.cancelAnimationFrame).is((requestId: number) => { /* no-op */ });
+        windowAddEventListenerSpy = windowMock.setup(win => win.addEventListener).is((eventName: string) => { /* no-op */ }).Spy;
+    });
+
+    describe("constructor:", () =>
+    {
+        beforeEach(() =>
+        {
+            windowAddEventListenerSpy.calls.reset();
+
+            resizeCallbackSpy.calls.reset();
+        });
+        it("settings are used when passed in", () =>
+        {
+            const trianleMode: RenderMode = "triangles";
+            const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+            const pointSize = 15;
+            const isFullScreen = true;
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                renderMode: trianleMode,
+                backgroundColor: backgroundColor,
+                pointSize: pointSize,
+                window: leWindow,
+                fullscreen: isFullScreen
+            };
+
+            const eyePosition = new Vec3(1, 1, 1);
+            const lookAtPoint = new Vec3(1, 1, -2);
+            const upPosition = new Vec3(1, 2, 1);
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(trianleMode).toEqual(renderer.renderMode);
+            expect(backgroundColor).toEqual(renderer.backgroundColor);
+            expect(pointSize).toEqual(renderer.pointSize);
+            expect(isFullScreen).toEqual(renderer.isFullscreen);
+        });
+        it("defaults are used when settings not passed in", () =>
+        {
+            const defaultCamera = new Camera(
+                Settings.defaultEyePosition,
+                Settings.defaultLookAtPoint,
+                Settings.defaultUpPosition
+            );
+
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
+
+            expect(Settings.defaultRendereMode).toEqual(renderer.renderMode);
+            expect(Settings.defaultBackgroundColor).toEqual(renderer.backgroundColor);
+            expect(Settings.defaultPointSize).toEqual(renderer.pointSize);
+            expect(Settings.defaultIsFullScreen).toEqual(renderer.isFullscreen);
+        });
+        it("camera used when passed in", () =>
+        {
+            const eyePosition = new Vec3(1, 1, 1);
+            const lookAtPoint = new Vec3(1, 1, -2);
+            const upPosition = new Vec3(1, 2, 1);
+            const camera = new Camera(eyePosition, lookAtPoint, upPosition);
+
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                camera: camera,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(camera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+        });
+        it("defaults camera used when camera not passed in", () =>
+        {
+            const defaultCamera = new Camera(
+                Settings.defaultEyePosition,
+                Settings.defaultLookAtPoint,
+                Settings.defaultUpPosition
+            );
+
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
+
+            expect(defaultCamera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+        });
+        it("passing in fullScreen as true sets resize event handler on window", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
+            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
+            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
+            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
+        });
+        it("passing in resizeCallback adds it as resize event handler on window", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+        });
+        it("not passing in resizeCallback does not add it as resize event handler on window", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
+        });
     });
 
     describe("getContext:", () =>
@@ -76,7 +213,7 @@ describe("webglRenderer:", () =>
             {
                 browserHelperMock.setup(bh => bh.isIE).is(() => true);
 
-                renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+                renderer = new WebGLRendererMock(canvas, defaultOptions);
 
                 expect(gl).toEqual(renderer.gl);
                 expect(browserHelper.isIE).toHaveBeenCalledTimes(1);
@@ -93,7 +230,7 @@ describe("webglRenderer:", () =>
             {
                 browserHelperMock.setup(bh => bh.isEdge).is(() => true);
 
-                renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+                renderer = new WebGLRendererMock(canvas, defaultOptions);
 
                 expect(gl).toEqual(renderer.gl);
                 expect(browserHelper.isEdge).toHaveBeenCalledTimes(1);
@@ -108,7 +245,7 @@ describe("webglRenderer:", () =>
 
             it("when not IE or Edge, uses webgl as contextId", () =>
             {
-                renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+                renderer = new WebGLRendererMock(canvas, defaultOptions);
 
                 expect(gl).toEqual(renderer.gl);
                 expect(canvas.getContext).toHaveBeenCalledTimes(1);
@@ -131,7 +268,7 @@ describe("webglRenderer:", () =>
 
             const expectedErrorMessage =
                 "error creating webgl context!: something is fucky-fucky-one-dolla";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
+            expect(() => renderer = new WebGLRendererMock(canvas, defaultOptions))
                 .toThrow(expectedErrorMessage);
         });
 
@@ -143,14 +280,15 @@ describe("webglRenderer:", () =>
                 .is((contextName: string, contextAttributes: {}) => null);
 
             const expectedErrorMessage = "error creating webgl context!, gl === null";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
+            expect(() => renderer = new WebGLRendererMock(canvas, defaultOptions))
                 .toThrow(expectedErrorMessage);
         });
     });
 
     it("start/stop", () =>
     {
-        renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+        renderer = new WebGLRendererMock(canvas, defaultOptions);
+        renderer.start();
 
         // randomly picked a gl function from the draw meothod to make sure it was getting called
         expect(gl.clearColor).toHaveBeenCalledTimes(1);
@@ -166,35 +304,11 @@ describe("webglRenderer:", () =>
         expect(leWindow.requestAnimationFrame).toHaveBeenCalledTimes(2);
     });
 
-    it("settings are used:", () =>
-    {
-        const trianleMode: RenderMode = "triangles";
-        const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
-        const pointSize = 15;
-        const settings: DrawingSettings = {
-            renderMode: trianleMode,
-            backgroundColor: backgroundColor,
-            pointSize: pointSize
-        };
-
-        const eyePosition = new Vec3(1, 1, 1);
-        const lookAtPoint = new Vec3(1, 1, -2);
-        const upPosition = new Vec3(1, 2, 1);
-        const camera = new Camera(eyePosition, lookAtPoint, upPosition);
-
-        renderer = new WebGLRendererMock(canvas, browserHelper, leWindow, settings, camera);
-
-        expect(trianleMode).toBe(renderer.renderMode);
-        expect(backgroundColor).toBe(renderer.backgroundColor);
-        expect(pointSize).toBe(renderer.pointSize);
-        expect(camera.viewMatrix).toBe(renderer.camera.viewMatrix);
-    });
-
     describe("renderMode:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("is set-able and get-able", () =>
@@ -202,7 +316,7 @@ describe("webglRenderer:", () =>
             const trianleMode: RenderMode = "triangles";
             renderer.renderMode = trianleMode;
 
-            expect(trianleMode).toBe(renderer.renderMode);
+            expect(trianleMode).toEqual(renderer.renderMode);
         });
 
         it("determines the default renderMode used when addXYZPointToScene is called", () =>
@@ -254,7 +368,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("is set-able and get-able", () =>
@@ -300,7 +414,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("is set-able and get-able", () =>
@@ -338,6 +452,115 @@ describe("webglRenderer:", () =>
         });
     });
 
+    describe("isFullscreen:", () =>
+    {
+        beforeEach(() =>
+        {
+            windowAddEventListenerSpy.calls.reset();
+
+            resizeCallbackSpy.calls.reset();
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: false,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(Settings.defaultIsFullScreen).toBe(renderer.isFullscreen);
+
+            const isFullScreen = true;
+
+            renderer.isFullscreen = isFullScreen;
+
+            expect(isFullScreen).toBe(renderer.isFullscreen);
+        });
+
+        it("setting fullscreen to true ", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: false,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(0);
+
+            renderer.isFullscreen = true;
+
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
+            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
+            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
+            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("resizeCallback:", () =>
+    {
+        beforeEach(() =>
+        {
+            windowAddEventListenerSpy.calls.reset();
+
+            resizeCallbackSpy.calls.reset();
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                resizeCallback: resizeCallback,
+                window: leWindow
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            resizeCallbackSpy.calls.reset();
+
+            let resizeCB = renderer.resizeCallback;
+            resizeCB(canvas, leWindow, renderer);
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+            resizeCallbackSpy.calls.reset();
+
+            const resizeCallbackSpy2 = jasmine.createSpy("resizeCallback2");
+            const resizeCallback2 = (canvasCB: HTMLCanvasElement, windowCB: Window,
+                rendererCB: WebGLRenderer) =>
+            {
+                resizeCallbackSpy2(canvasCB, windowCB, rendererCB);
+            };
+
+            renderer.resizeCallback = resizeCallback2;
+
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
+            expect(resizeCallbackSpy2).toHaveBeenCalledTimes(1);
+        });
+
+        it("is actually called when window resize event is fired", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                resizeCallback: resizeCallback
+            };
+
+            renderer = new WebGLRendererMock(canvas, options);
+
+            resizeCallbackSpy.calls.reset();
+            window.dispatchEvent(new Event("resize"));
+            expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe("camera:", () =>
     {
         const eyePosition = new Vec3(1, 1, 1);
@@ -347,7 +570,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("is set-able and get-able", () =>
@@ -391,7 +614,7 @@ describe("webglRenderer:", () =>
     {
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
@@ -641,7 +864,7 @@ describe("webglRenderer:", () =>
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
 
             line = WebglRendererTestHelper.getRandomLine(gl);
             point = WebglRendererTestHelper.getRandomPoint(gl);
@@ -855,7 +1078,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -883,7 +1106,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -911,7 +1134,7 @@ describe("webglRenderer:", () =>
                 return null;
             }).Spy;
 
-            renderer = new WebGLRendererMock(canvas, browserHelper, leWindow);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
 
@@ -947,7 +1170,7 @@ describe("webglRenderer:", () =>
 
             const expectedErrorString =
             "could not compile shader, shader info log: theres some shady shit going on";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
+            expect(() => renderer = new WebGLRendererMock(canvas, defaultOptions))
                 .toThrow(expectedErrorString);
         });
 
@@ -957,7 +1180,7 @@ describe("webglRenderer:", () =>
             glMock.setup(x => x.createProgram).is(() => null);
 
             const expectedErrorString = "could not create shader program";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
+            expect(() => renderer = new WebGLRendererMock(canvas, defaultOptions))
                 .toThrow(expectedErrorString);
         });
 
@@ -968,8 +1191,9 @@ describe("webglRenderer:", () =>
             .is((shader: WebGLShader, pName: number) => false);
 
             const expectedErrorString = "could not link shader program";
-            expect(() => renderer = new WebGLRendererMock(canvas, browserHelper, leWindow))
+            expect(() => renderer = new WebGLRendererMock(canvas, defaultOptions))
                 .toThrow(expectedErrorString);
         });
     });
+// end_region: tests
 });
