@@ -556,7 +556,7 @@ describe("webglRenderer:", () =>
             renderer = new WebGLRendererMock(canvas, options);
 
             resizeCallbackSpy.calls.reset();
-            window.dispatchEvent(new Event("resize"));
+            window.dispatchEvent(new CustomEvent("resize"));
             expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
         });
     });

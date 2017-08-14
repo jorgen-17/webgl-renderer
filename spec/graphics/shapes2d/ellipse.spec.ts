@@ -79,7 +79,7 @@ describe("ellipse:", () =>
                     1, 0.75, 0, color.red, color.green, color.blue, // vertex 30
                 ]);
 
-                expect(expectedVerticies).toEqual(circle.verticies.slice(0, expectedVerticies.length));
+                expect(expectedVerticies).toEqual(circle.verticies);
             });
         });
     });
@@ -134,7 +134,7 @@ describe("ellipse:", () =>
             1, 0.75, 0, color.red, color.green, color.blue, // vertex 30
         ]);
 
-        expect(expectedVerticies).toEqual(circle.verticies.slice(0, expectedVerticies.length));
+        expect(expectedVerticies).toEqual(circle.verticies);
 
         const newColor = new RGBColor(0.5, 0.5, 0.5);
 
@@ -185,6 +185,6 @@ describe("ellipse:", () =>
             1, 0.75, 0, newColor.red, newColor.green, newColor.blue, // vertex 30
         ]);
 
-        expect(expectedVerticies).toEqual(circle.verticies.slice(0, expectedVerticies.length));
+        expect(expectedVerticies).toEqual(circle.verticies);
     });
 });
