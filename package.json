@@ -12,7 +12,8 @@
         "cover": "./node_modules/.bin/codecov -f coverage/json/cover.json"
     },
     "dependencies": {
-        "cuon-matrix-ts": "^1.0.1"
+        "cuon-matrix-ts": "^1.0.1",
+        "webgl-debug": "^1.0.2"
     },
     "devDependencies": {
         "@types/jasmine": "^2.5.53",
@@ -33,7 +34,6 @@
         "ts-mocks": "^0.2.2",
         "tslint": "^5.5.0",
         "webpack": "^3.2.0",
-        "webgl-debug": "^1.0.2",
         "yargs": "^8.0.2"
     },
     "keywords": [
