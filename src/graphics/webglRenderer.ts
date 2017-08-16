@@ -16,8 +16,6 @@ import { Line } from "./shapes2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
 
-import * as WebGLDebugUtil from "webgl-debug";
-
 export class WebGLRenderer
 {
 // region: member variables
@@ -74,9 +72,8 @@ export class WebGLRenderer
 // region: constructor
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
-        // this._canvas = canvas;
-        this._canvas = WebGLDebugUtil.makeLostContextSimulatingCanvas(canvas);
-        (this._canvas as any).loseContextInNCalls(5);
+        this._canvas = canvas;
+
         this._browserHelper = renderingOptions.browserHelper || new BrowserHelper();
         this.getContext();
 
