@@ -73,7 +73,7 @@ export class WebGLRenderer
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
         this._canvas = canvas;
-
+        this.setCanvasEventHandlers();
         this._browserHelper = renderingOptions.browserHelper || new BrowserHelper();
         this.getContext();
 
