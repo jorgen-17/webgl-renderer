@@ -75,12 +75,10 @@ export class WebGLRenderer
         this._canvas = canvas;
         this.setCanvasEventHandlers();
         this._browserHelper = renderingOptions.browserHelper || new BrowserHelper();
-        this.getContext();
+
+        this.setupGlResources();
 
         this.initializeRenderingOptions(renderingOptions);
-
-        this.setViewPortDimensions(canvas.width, canvas.height);
-        this.initShaders();
 
         this.initializeVertexBuffers();
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
@@ -277,7 +275,14 @@ export class WebGLRenderer
     private setCanvasEventHandlers (): void
     {
         this._canvas.addEventListener("webglcontextlost", this.handleContextLost, false);
-        this._canvas.addEventListener("webglcontextrestored", this.handleContextRestored, false);
+    }
+
+    private setupGlResources()
+    {
+        this.getContext();
+
+        this.setViewPortDimensions(this._canvas.width, this._canvas.height);
+        this.initShaders();
     }
 
     private getContext (): void
@@ -312,13 +317,8 @@ export class WebGLRenderer
 
     private handleContextLost = () =>
     {
-        console.log("lost the context");
         this.stop();
-    }
-
-    private handleContextRestored = () =>
-    {
-        console.log("restored the context");
+        this.setupGlResources();
         this.start();
     }
 
