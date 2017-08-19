@@ -111,6 +111,10 @@ export class WebglRendererTestHelper
         spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays)
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;
 
+        // resize callback
+        spyDictionary["isContextLost"] = glMock.setup(x => x.isContextLost)
+            .is(() => false).Spy;
+
         return spyDictionary;
     }
 

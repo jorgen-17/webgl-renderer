@@ -40,6 +40,8 @@ describe("webglRenderer:", () =>
     const windowMock = new Mock<Window>();
     const leWindow = windowMock.Object;
     const animationFrameRequestId = 666;
+    let windowRequestAnimationFrameSpy: jasmine.Spy;
+    let windowCancelAnimationFrameSpy: jasmine.Spy;
     let windowAddEventListenerSpy: jasmine.Spy;
 
     const resizeCallbackSpy = jasmine.createSpy("resizeCallback");
@@ -66,14 +68,18 @@ describe("webglRenderer:", () =>
                         contextAttributes?: WebGLContextAttributes)
                         => WebGLRenderingContext | null>(c => c.getContext)
             .is((contextName: string, contextAttributes: {}) => gl).Spy;
-        canvasAddEventListenerSpy = canvasMock.setup(c => c.addEventListener).is((eventName: string) => { /* no-op */ }).Spy;
+        canvasAddEventListenerSpy = canvasMock.setup(c => c.addEventListener)
+            .is((eventName: string) => { /* no-op */ }).Spy;
 
         browserHelperMock.setup(bh => bh.isIE).is(() => false);
         browserHelperMock.setup(bh => bh.isEdge).is(() => false);
 
-        windowMock.setup(win => win.requestAnimationFrame).is(() => animationFrameRequestId);
-        windowMock.setup(win => win.cancelAnimationFrame).is((requestId: number) => { /* no-op */ });
-        windowAddEventListenerSpy = windowMock.setup(win => win.addEventListener).is((eventName: string) => { /* no-op */ }).Spy;
+        windowRequestAnimationFrameSpy = windowMock.setup(win => win.requestAnimationFrame)
+            .is(() => animationFrameRequestId).Spy;
+        windowCancelAnimationFrameSpy = windowMock.setup(win => win.cancelAnimationFrame)
+            .is((requestId: number) => { /* no-op */ }).Spy;
+        windowAddEventListenerSpy = windowMock.setup(win => win.addEventListener)
+            .is((eventName: string) => { /* no-op */ }).Spy;
     });
 
     describe("constructor:", () =>
@@ -286,7 +292,7 @@ describe("webglRenderer:", () =>
         });
     });
 
-    it("canvas lost handled", () =>
+    it("canvas lost/restored handled", () =>
     {
         let realCanvas = document.createElement("canvas");
         // "mocking" out real canvas method
@@ -304,7 +310,15 @@ describe("webglRenderer:", () =>
         let renderer = new WebGLRendererMock(realCanvas, options);
         renderer.start();
 
+        // confirm render loop terminated
+        windowCancelAnimationFrameSpy.calls.reset();
         realCanvas.dispatchEvent(new CustomEvent("webglcontextlost"));
+        expect(leWindow.cancelAnimationFrame).toHaveBeenCalledTimes(1);
+        expect(leWindow.cancelAnimationFrame).toHaveBeenCalledWith(animationFrameRequestId);
+
+        // confirm resources are setup again, and render loop started up again
+        windowRequestAnimationFrameSpy.calls.reset();
+        realCanvas.dispatchEvent(new CustomEvent("webglcontextrestored"));
     });
 
     it("start/stop", () =>

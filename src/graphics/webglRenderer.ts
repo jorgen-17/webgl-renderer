@@ -20,6 +20,7 @@ export class WebGLRenderer
 {
 // region: member variables
     public gl: WebGLRenderingContext;
+    private _isContextLost: boolean;
     private _canvas: HTMLCanvasElement;
     private _browserHelper: BrowserHelper;
     private _glRenderMode: number;
@@ -313,17 +314,20 @@ export class WebGLRenderer
             throw `error creating webgl context!, gl === null`;
         }
 
+        this._isContextLost = false;
         this.gl = gl;
     }
 
     private handleContextLost = (event: any) =>
     {
         event.preventDefault();
+        this._isContextLost = true;
         this.stop();
     }
 
     private handleContextRestored = () =>
     {
+        this._isContextLost = false;
         this.setupGlResources();
         this.start();
     }
@@ -468,7 +472,10 @@ export class WebGLRenderer
         {
             this._window.addEventListener("resize",
                 () => {
-                    this._resizeCallback(this._canvas, this._window, this);
+                    if (!this._isContextLost)
+                    {
+                        this._resizeCallback(this._canvas, this._window, this);
+                    }
                 }, false);
             this._resizeCallback(this._canvas, this._window, this);
         }
