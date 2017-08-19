@@ -275,6 +275,7 @@ export class WebGLRenderer
     private setCanvasEventHandlers (): void
     {
         this._canvas.addEventListener("webglcontextlost", this.handleContextLost, false);
+        this._canvas.addEventListener("webglcontextrestored", this.handleContextRestored, false);
     }
 
     private setupGlResources()
@@ -315,9 +316,14 @@ export class WebGLRenderer
         this.gl = gl;
     }
 
-    private handleContextLost = () =>
+    private handleContextLost = (event: any) =>
     {
+        event.preventDefault();
         this.stop();
+    }
+
+    private handleContextRestored = () =>
+    {
         this.setupGlResources();
         this.start();
     }
