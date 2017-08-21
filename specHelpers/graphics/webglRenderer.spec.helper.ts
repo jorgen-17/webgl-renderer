@@ -42,7 +42,7 @@ export class WebglRendererTestHelper
 
         // init viewport
         spyDictionary["viewport"] = glMock.setup(x => x.viewport).is(
-            (x: number, y: number, width: number, height: number) => { /* noop */ });
+            (x: number, y: number, width: number, height: number) => { /* noop */ }).Spy;
 
         // create shader
         spyDictionary["createShader"] = glMock.setup(x => x.createShader)

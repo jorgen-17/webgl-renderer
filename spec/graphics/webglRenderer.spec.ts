@@ -317,8 +317,15 @@ describe("webglRenderer:", () =>
         expect(leWindow.cancelAnimationFrame).toHaveBeenCalledWith(animationFrameRequestId);
 
         // confirm resources are setup again, and render loop started up again
+        const glViewPortSpy = glSpiesDictionary["viewport"];
+        const glCreateProgramSpy = glSpiesDictionary["createProgram"];
+        glViewPortSpy.calls.reset();
+        glCreateProgramSpy.calls.reset();
         windowRequestAnimationFrameSpy.calls.reset();
         realCanvas.dispatchEvent(new CustomEvent("webglcontextrestored"));
+        expect(gl.viewport).toHaveBeenCalledTimes(1);
+        expect(gl.createProgram).toHaveBeenCalledTimes(1);
+        expect(windowRequestAnimationFrameSpy).toHaveBeenCalledTimes(1);
     });
 
     it("start/stop", () =>
