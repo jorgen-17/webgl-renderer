@@ -318,11 +318,11 @@ export class WebGLRenderer
         this.gl = gl;
     }
 
-    private handleContextLost = (event: any) =>
+    private handleContextLost = (event: WebGLContextEvent) =>
     {
+        this.stop();
         event.preventDefault();
         this._isContextLost = true;
-        this.stop();
     }
 
     private handleContextRestored = () =>
@@ -397,6 +397,7 @@ export class WebGLRenderer
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.viewMatrix);
         this.gl.uniform1f(u_pointSize, this._pointSize);
         this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerVertex));
+        this.gl.deleteBuffer(vertexBuffer);
     }
 
     private initShaders(): void

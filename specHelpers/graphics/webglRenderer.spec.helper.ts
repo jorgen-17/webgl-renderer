@@ -110,6 +110,8 @@ export class WebglRendererTestHelper
                 { /* noop */ }).Spy;
         spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays)
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;
+        spyDictionary["deleteBuffer"] = glMock.setup(x => x.deleteBuffer)
+            .is((buffer: WebGLBuffer) => { /* noop */ }).Spy;
 
         // resize callback
         spyDictionary["isContextLost"] = glMock.setup(x => x.isContextLost)
