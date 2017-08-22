@@ -20,7 +20,9 @@ export class WebGLRenderer
 {
 // region: member variables
     public gl: WebGLRenderingContext;
+    private _isContextLost: boolean;
     private _canvas: HTMLCanvasElement;
+    private _browserHelper: BrowserHelper;
     private _glRenderMode: number;
     private _renderMode: RenderMode;
     private _pointSize: number;
@@ -72,14 +74,12 @@ export class WebGLRenderer
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
         this._canvas = canvas;
+        this.setCanvasEventHandlers();
+        this._browserHelper = renderingOptions.browserHelper || new BrowserHelper();
 
-        let browserHelper = renderingOptions.browserHelper || new BrowserHelper();
-        this.gl = this.getContext(canvas, browserHelper);
+        this.setupGlResources();
 
         this.initializeRenderingOptions(renderingOptions);
-
-        this.setViewPortDimensions(canvas.width, canvas.height);
-        this.initShaders();
 
         this.initializeVertexBuffers();
         this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
@@ -273,23 +273,36 @@ export class WebGLRenderer
 // end_region: protected methods
 
 // region: private methods
-    private getContext (canvas: HTMLCanvasElement, browserHelper: BrowserHelper): WebGLRenderingContext
+    private setCanvasEventHandlers (): void
+    {
+        this._canvas.addEventListener("webglcontextlost", this.handleContextLost, false);
+        this._canvas.addEventListener("webglcontextrestored", this.handleContextRestored, false);
+    }
+
+    private setupGlResources()
+    {
+        this.getContext();
+
+        this.setViewPortDimensions(this._canvas.width, this._canvas.height);
+        this.initShaders();
+    }
+
+    private getContext (): void
     {
         let gl: WebGLRenderingContext | null;
 
-        const isIE = browserHelper.isIE();
-        const isEdge = browserHelper.isEdge();
+        const isIE = this._browserHelper.isIE();
+        const isEdge = this._browserHelper.isEdge();
         const contextId = (isIE || isEdge) ? "experimental-webgl" : "webgl";
 
         try
         {
-            gl = canvas.getContext(contextId,
+            gl = this._canvas.getContext(contextId,
                 {
                     alpha: false,
                     antialias: false,
                     depth: false
                 });
-
         }
         catch (e)
         {
@@ -301,7 +314,22 @@ export class WebGLRenderer
             throw `error creating webgl context!, gl === null`;
         }
 
-        return gl;
+        this._isContextLost = false;
+        this.gl = gl;
+    }
+
+    private handleContextLost = (event: WebGLContextEvent) =>
+    {
+        this.stop();
+        event.preventDefault();
+        this._isContextLost = true;
+    }
+
+    private handleContextRestored = () =>
+    {
+        this._isContextLost = false;
+        this.setupGlResources();
+        this.start();
     }
 
     private initializeRenderingOptions(renderingOptions: RenderingOptions | null)
@@ -369,6 +397,7 @@ export class WebGLRenderer
         this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.viewMatrix);
         this.gl.uniform1f(u_pointSize, this._pointSize);
         this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerVertex));
+        this.gl.deleteBuffer(vertexBuffer);
     }
 
     private initShaders(): void
@@ -444,7 +473,10 @@ export class WebGLRenderer
         {
             this._window.addEventListener("resize",
                 () => {
-                    this._resizeCallback(this._canvas, this._window, this);
+                    if (!this._isContextLost)
+                    {
+                        this._resizeCallback(this._canvas, this._window, this);
+                    }
                 }, false);
             this._resizeCallback(this._canvas, this._window, this);
         }

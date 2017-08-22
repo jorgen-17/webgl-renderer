@@ -10,11 +10,12 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        //software under test
+        // software under test
         { pattern: "src/**/*.ts" },
 
         // test helpers
         { pattern: "specHelpers/**/*.ts" },
+        { pattern: "node_modules/custom-event-polyfill/custom-event-polyfill.js", included: true },
 
         // tests
         { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },

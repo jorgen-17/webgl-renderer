@@ -42,7 +42,7 @@ export class WebglRendererTestHelper
 
         // init viewport
         spyDictionary["viewport"] = glMock.setup(x => x.viewport).is(
-            (x: number, y: number, width: number, height: number) => { /* noop */ });
+            (x: number, y: number, width: number, height: number) => { /* noop */ }).Spy;
 
         // create shader
         spyDictionary["createShader"] = glMock.setup(x => x.createShader)
@@ -110,6 +110,12 @@ export class WebglRendererTestHelper
                 { /* noop */ }).Spy;
         spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays)
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;
+        spyDictionary["deleteBuffer"] = glMock.setup(x => x.deleteBuffer)
+            .is((buffer: WebGLBuffer) => { /* noop */ }).Spy;
+
+        // resize callback
+        spyDictionary["isContextLost"] = glMock.setup(x => x.isContextLost)
+            .is(() => false).Spy;
 
         return spyDictionary;
     }
