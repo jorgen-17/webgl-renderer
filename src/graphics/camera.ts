@@ -4,7 +4,10 @@ import { Constants } from "../constants";
 
 export class Camera
 {
+    private _mvpMatrix: Mat4;
+    private _modelMatrix: Mat4;
     private _viewMatrix: Mat4;
+    private _projectionMatrix: Mat4;
     private _eyePosition: Vec3;
     private _lookAtPoint: Vec3;
     private _upPosition: Vec3;
@@ -17,15 +20,37 @@ export class Camera
         this._lookAtPoint = lookAtPoint;
         this._upPosition = upPosition;
 
+        this._modelMatrix = new Mat4();
+
         this._viewMatrix = new Mat4();
         this._viewMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
             lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
             upPosition.x, upPosition.y, upPosition.z);
+
+        this._projectionMatrix = new Mat4();
+        this._projectionMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
+            lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
+            upPosition.x, upPosition.y, upPosition.z);
+    }
+
+    public get mvpMatrix(): Float32Array
+    {
+        return this._mvpMatrix.elements;
+    }
+
+    public get modelMatrix(): Float32Array
+    {
+        return this._modelMatrix.elements;
     }
 
     public get viewMatrix(): Float32Array
     {
         return this._viewMatrix.elements;
+    }
+
+    public get projectionMatrix(): Float32Array
+    {
+        return this._projectionMatrix.elements;
     }
 
     public get eyePosition(): Vec3
