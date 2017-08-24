@@ -48,7 +48,7 @@ describe("camera:", () =>
         camera.zoomIn();
 
         const expectedModelMatrix = new Float32Array(
-            [0.009999999776482582, 0, 0, 0, 0, 0.009999999776482582, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
+            [1.0499999523162842, 0, 0, 0, 0, 1.0499999523162842, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
 
         expect(expectedModelMatrix).toEqual(camera.modelMatrix);
     });
@@ -58,7 +58,7 @@ describe("camera:", () =>
         camera.zoomOut();
 
         const expectedModelMatrix = new Float32Array(
-            [-0.009999999776482582, -0, -0, -0, -0, -0.009999999776482582, -0, -0, 0, 0, 0, 0, 0, 0, 0, 1]);
+            [0.949999988079071, 0, 0, 0, 0, 0.949999988079071, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
 
         expect(expectedModelMatrix).toEqual(camera.modelMatrix);
     });

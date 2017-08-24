@@ -29,11 +29,11 @@ export class Camera
 
     public zoomIn(): void
     {
-        this._modelMatrix.scale(0.01, 0.01, 0);
+        this._modelMatrix.scale(1.05, 1.05, 0);
     }
 
     public zoomOut(): void
     {
-        this._modelMatrix.scale(-0.01, -0.01, 0);
+        this._modelMatrix.scale(0.95, 0.95, 0);
     }
 }
