@@ -50,12 +50,12 @@ export class WebGLRenderer
     private _vertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
-    uniform mat4 ${ShaderSettings.viewMatrixUniformName};
+    uniform mat4 ${ShaderSettings.modelMatrixUniformName};
     uniform float ${ShaderSettings.pointSizeUniformName};
     varying vec4 v_color;
     void main(void)
     {
-        gl_Position = ${ShaderSettings.viewMatrixUniformName} * ${ShaderSettings.positionAttributeName};
+        gl_Position = ${ShaderSettings.modelMatrixUniformName} * ${ShaderSettings.positionAttributeName};
         gl_PointSize = ${ShaderSettings.pointSizeUniformName};
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
@@ -370,13 +370,13 @@ export class WebGLRenderer
         const a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
         const a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
         const u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
-        const u_viewMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.viewMatrixUniformName);
+        const u_modelMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.modelMatrixUniformName);
 
-        if (!u_pointSize || !u_viewMatrix)
+        if (!u_pointSize || !u_modelMatrix)
         {
             const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
             uniformsMap[ShaderSettings.pointSizeUniformName] = u_pointSize;
-            uniformsMap[ShaderSettings.viewMatrixUniformName] = u_viewMatrix;
+            uniformsMap[ShaderSettings.modelMatrixUniformName] = u_modelMatrix;
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
         }
@@ -394,7 +394,7 @@ export class WebGLRenderer
         this.gl.vertexAttribPointer(a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(a_color);
-        this.gl.uniformMatrix4fv(u_viewMatrix, false, this._camera.viewMatrix);
+        this.gl.uniformMatrix4fv(u_modelMatrix, false, this._camera.modelMatrix);
         this.gl.uniform1f(u_pointSize, this._pointSize);
         this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerVertex));
         this.gl.deleteBuffer(vertexBuffer);

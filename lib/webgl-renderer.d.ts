@@ -66,24 +66,18 @@ declare module 'graphics/drawingMode' {
 
 }
 declare module 'graphics/camera' {
-	import { Vec3 } from "cuon-matrix-ts";
 	export class Camera {
-	    private _viewMatrix;
-	    private _eyePosition;
-	    private _lookAtPoint;
-	    private _upPosition;
-	    constructor(eyePosition?: Vec3, lookAtPoint?: Vec3, upPosition?: Vec3);
-	    readonly viewMatrix: Float32Array;
-	    readonly eyePosition: Vec3;
-	    readonly lookAtPoint: Vec3;
-	    readonly upPosition: Vec3;
-	    setCameraView(eyePosition: Vec3, lookAtPoint: Vec3, upPosition: Vec3): void;
-	    translateEyePosition(eyePosition: Vec3): void;
+	    private _modelMatrix;
+	    constructor();
+	    readonly modelMatrix: Float32Array;
+	    translateX(x: number): void;
+	    translateY(y: number): void;
+	    zoomIn(): void;
+	    zoomOut(): void;
 	}
 
 }
 declare module 'settings' {
-	import { Vec3 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/rgbColor';
 	export let Settings: {
 	    defaultRendereMode: "points";
@@ -92,9 +86,6 @@ declare module 'settings' {
 	    defaultBackgroundColor: RGBColor;
 	    defaultBackgroundAlpha: number;
 	    defaultColor: RGBColor;
-	    defaultEyePosition: Vec3;
-	    defaultLookAtPoint: Vec3;
-	    defaultUpPosition: Vec3;
 	    defaultIsFullScreen: boolean;
 	};
 
@@ -169,7 +160,7 @@ declare module 'shaderSettings' {
 	    positionAttributeName: string;
 	    colorAttributeName: string;
 	    pointSizeUniformName: string;
-	    viewMatrixUniformName: string;
+	    modelMatrixUniformName: string;
 	};
 
 }
@@ -198,7 +189,9 @@ declare module 'graphics/webglRenderer' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	export class WebGLRenderer {
 	    gl: WebGLRenderingContext;
+	    private _isContextLost;
 	    private _canvas;
+	    private _browserHelper;
 	    private _glRenderMode;
 	    private _renderMode;
 	    private _pointSize;
@@ -236,7 +229,11 @@ declare module 'graphics/webglRenderer' {
 	    start(): void;
 	    stop(): void;
 	    protected draw(): void;
-	    private getContext(canvas, browserHelper);
+	    private setCanvasEventHandlers();
+	    private setupGlResources();
+	    private getContext();
+	    private handleContextLost;
+	    private handleContextRestored;
 	    private initializeRenderingOptions(renderingOptions);
 	    private initializeVertexBuffers();
 	    private drawGlArray(arr, renderMode);
@@ -375,7 +372,7 @@ declare module 'graphics/shapes2d/point' {
 	}
 
 }
-declare module 'webgl-renderer' {
+declare module 'webgl-renderer/index' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Color, ColorMapper } from 'graphics/colorMapper';
 	import { Line } from 'graphics/shapes2d/line';

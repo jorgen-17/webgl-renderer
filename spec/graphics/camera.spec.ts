@@ -14,97 +14,52 @@ describe("camera:", () =>
 
     it("constructor intializes properties correctly", () =>
     {
-        camera = new Camera(Settings.defaultEyePosition,
-            Settings.defaultLookAtPoint, Settings.defaultUpPosition);
+        camera = new Camera();
 
-        expect(Settings.defaultEyePosition).toEqual(camera.eyePosition);
-        expect(Settings.defaultLookAtPoint).toEqual(camera.lookAtPoint);
-        expect(Settings.defaultUpPosition).toEqual(camera.upPosition);
+        const expectedModelMatrix = new Float32Array(
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
-        const expectedViewMatrix = new Float32Array(
-            [1, 0, -0, 0, -0, 1, -0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-
-        expect(expectedViewMatrix).toEqual(camera.viewMatrix);
+        expect(expectedModelMatrix).toEqual(camera.modelMatrix);
     });
 
 
-    it("constructor uses defaults from settings object", () =>
+    it("translateX sets the correct properties", () =>
     {
-        expect(Settings.defaultEyePosition).toEqual(camera.eyePosition);
-        expect(Settings.defaultLookAtPoint).toEqual(camera.lookAtPoint);
-        expect(Settings.defaultUpPosition).toEqual(camera.upPosition);
+        camera.translateX(0.5);
+
+        const expectedModelMatrix = new Float32Array(
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.5, 0, 0, 1]);
+
+        expect(expectedModelMatrix).toEqual(camera.modelMatrix);
     });
 
-    it("setCameraView sets the correct properties", () =>
+    it("translateY sets the correct properties", () =>
     {
-        let newEyePosition = new Vec3(5, 5, 5);
-        let newLookAtPoint = new Vec3(7, 7, 7);
-        let newUpPosition = new Vec3(5, 7, 3);
+        camera.translateY(-0.5);
 
-        camera.setCameraView(newEyePosition, newLookAtPoint, newUpPosition);
+        const expectedModelMatrix = new Float32Array(
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.5, 0, 1]);
 
-        expect(newEyePosition).toEqual(camera.eyePosition);
-        expect(newLookAtPoint).toEqual(camera.lookAtPoint);
-        expect(newUpPosition).toEqual(camera.upPosition);
-
-        const expectedViewMatrix = new Float32Array(
-            [
-                -0.8164966106414795,
-                0,
-                -0.5773502588272095,
-                0,
-                0.40824830532073975,
-                0.7071067690849304,
-                -0.5773502588272095,
-                0,
-                0.40824830532073975,
-                -0.7071067690849304,
-                -0.5773502588272095,
-                0,
-                0,
-                0,
-                8.660253524780273,
-                1
-            ]);
-
-        expect(expectedViewMatrix).toEqual(camera.viewMatrix);
+        expect(expectedModelMatrix).toEqual(camera.modelMatrix);
     });
 
-    it("translateEyePosition sets the correct properties", () =>
+    it("zoomIn sets the correct properties", () =>
     {
-        let newEyePosition = new Vec3(1, 1, 5);
+        camera.zoomIn();
 
-        camera.translateEyePosition(newEyePosition);
+        const expectedModelMatrix = new Float32Array(
+            [1.0499999523162842, 0, 0, 0, 0, 1.0499999523162842, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
 
-        const expectedNewLookAtPoint = new Vec3(newEyePosition.x, newEyePosition.y,
-            newEyePosition.z - 1);
-        const expectedNewUpPosition = new Vec3(newEyePosition.x, newEyePosition.y + 1,
-            newEyePosition.z);
+        expect(expectedModelMatrix).toEqual(camera.modelMatrix);
+    });
 
-        expect(newEyePosition).toEqual(camera.eyePosition);
-        expect(expectedNewLookAtPoint).toEqual(camera.lookAtPoint);
-        expect(expectedNewUpPosition).toEqual(camera.upPosition);
+    it("zoomOut sets the correct properties", () =>
+    {
+        camera.zoomOut();
 
-        const expectedViewMatrix = new Float32Array(
-            [
-                0.8944271802902222,
-                0.4472135901451111,
-                -0,
-                0,
-                -0.4472135901451111,
-                0.8944271802902222,
-                -0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                -0.4472135901451111,
-                -1.3416407108306885,
-                -5,
-                1
-            ]);
+        const expectedModelMatrix = new Float32Array(
+            [0.949999988079071, 0, 0, 0, 0, 0.949999988079071, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
 
-        expect(expectedViewMatrix).toEqual(camera.viewMatrix);
+        expect(expectedModelMatrix).toEqual(camera.modelMatrix);
     });
 });
