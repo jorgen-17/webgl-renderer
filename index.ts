@@ -16,6 +16,7 @@ import { Point } from "./src/graphics/shapes2d/point";
 import { RenderingOptions } from "./src/graphics/renderingOptions";
 import { Vec3 } from "cuon-matrix-ts";
 import { BrowserHelper } from "./src/utils/browserHelper";
+import { MouseHelper } from "./src/utils/mouseHelper";
 
 export
 {
@@ -37,5 +38,6 @@ export
     ShapeFactory,
     Camera,
     Vec3,
-    BrowserHelper
+    BrowserHelper,
+    MouseHelper
 };

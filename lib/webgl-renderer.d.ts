@@ -372,6 +372,13 @@ declare module 'graphics/shapes2d/point' {
 	}
 
 }
+declare module 'utils/mouseHelper' {
+	import { Vec3 } from "cuon-matrix-ts";
+	export class MouseHelper {
+	    static mouseEventToWebGlPoints(event: MouseEvent, canvas: HTMLCanvasElement): Vec3;
+	}
+
+}
 declare module 'webgl-renderer/index' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Color, ColorMapper } from 'graphics/colorMapper';
@@ -391,6 +398,7 @@ declare module 'webgl-renderer/index' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { Vec3 } from "cuon-matrix-ts";
 	import { BrowserHelper } from 'utils/browserHelper';
-	export { WebGLRenderer, RenderingOptions, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3, BrowserHelper };
+	import { MouseHelper } from 'utils/mouseHelper';
+	export { WebGLRenderer, RenderingOptions, RGBColor, Color, ColorMapper, ShapeMode, RenderMode, Shape2d, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, ShapeFactory, Camera, Vec3, BrowserHelper, MouseHelper };
 
 }
