@@ -4,38 +4,12 @@ import { Constants } from "../constants";
 
 export class Camera
 {
-    private _mvpMatrix: Mat4;
     private _modelMatrix: Mat4;
-    private _viewMatrix: Mat4;
-    private _projectionMatrix: Mat4;
-    private _eyePosition: Vec3;
-    private _lookAtPoint: Vec3;
-    private _upPosition: Vec3;
 
-    constructor(eyePosition: Vec3 = Settings.defaultEyePosition,
-        lookAtPoint: Vec3 = Settings.defaultLookAtPoint,
-        upPosition: Vec3 = Settings.defaultUpPosition)
+    constructor()
     {
-        this._eyePosition = eyePosition;
-        this._lookAtPoint = lookAtPoint;
-        this._upPosition = upPosition;
-
         this._modelMatrix = new Mat4();
-
-        this._viewMatrix = new Mat4();
-        this._viewMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
-            lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
-            upPosition.x, upPosition.y, upPosition.z);
-
-        this._projectionMatrix = new Mat4();
-        this._projectionMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
-            lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
-            upPosition.x, upPosition.y, upPosition.z);
-    }
-
-    public get mvpMatrix(): Float32Array
-    {
-        return this._mvpMatrix.elements;
+        this._modelMatrix.setIdentity();
     }
 
     public get modelMatrix(): Float32Array
@@ -43,47 +17,23 @@ export class Camera
         return this._modelMatrix.elements;
     }
 
-    public get viewMatrix(): Float32Array
+    public translateX(x: number): void
     {
-        return this._viewMatrix.elements;
+        this._modelMatrix.translate(x, 0, 0);
     }
 
-    public get projectionMatrix(): Float32Array
+    public translateY(y: number): void
     {
-        return this._projectionMatrix.elements;
+        this._modelMatrix.translate(0, y, 0);
     }
 
-    public get eyePosition(): Vec3
+    public zoomIn(): void
     {
-        return this._eyePosition;
+        this._modelMatrix.scale(0.01, 0.01, 0);
     }
 
-    public get lookAtPoint(): Vec3
+    public zoomOut(): void
     {
-        return this._lookAtPoint;
-    }
-
-    public get upPosition(): Vec3
-    {
-        return this._upPosition;
-    }
-
-    public setCameraView(eyePosition: Vec3, lookAtPoint: Vec3, upPosition: Vec3): void
-    {
-        this._eyePosition = eyePosition;
-        this._lookAtPoint = lookAtPoint;
-        this._upPosition = upPosition;
-
-        this._viewMatrix.setLookAt(eyePosition.x, eyePosition.y, eyePosition.z,
-            lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
-            upPosition.x, upPosition.y, upPosition.z);
-    }
-
-    public translateEyePosition(eyePosition: Vec3): void
-    {
-        let newLookAtPoint = new Vec3(eyePosition.x, eyePosition.y, eyePosition.z - 1);
-        let newUpPosition = new Vec3(eyePosition.x, eyePosition.y + 1, eyePosition.z);
-
-        this.setCameraView(eyePosition, newLookAtPoint, newUpPosition);
+        this._modelMatrix.scale(-0.01, -0.01, 0);
     }
 }

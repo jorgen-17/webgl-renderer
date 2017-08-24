@@ -118,11 +118,7 @@ describe("webglRenderer:", () =>
         });
         it("defaults are used when settings not passed in", () =>
         {
-            const defaultCamera = new Camera(
-                Settings.defaultEyePosition,
-                Settings.defaultLookAtPoint,
-                Settings.defaultUpPosition
-            );
+            const defaultCamera = new Camera();
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
 
@@ -136,7 +132,7 @@ describe("webglRenderer:", () =>
             const eyePosition = new Vec3(1, 1, 1);
             const lookAtPoint = new Vec3(1, 1, -2);
             const upPosition = new Vec3(1, 2, 1);
-            const camera = new Camera(eyePosition, lookAtPoint, upPosition);
+            const camera = new Camera();
 
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
@@ -146,19 +142,15 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGLRendererMock(canvas, options);
 
-            expect(camera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+            expect(camera.modelMatrix).toEqual(renderer.camera.modelMatrix);
         });
         it("defaults camera used when camera not passed in", () =>
         {
-            const defaultCamera = new Camera(
-                Settings.defaultEyePosition,
-                Settings.defaultLookAtPoint,
-                Settings.defaultUpPosition
-            );
+            const defaultCamera = new Camera();
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
 
-            expect(defaultCamera.viewMatrix).toEqual(renderer.camera.viewMatrix);
+            expect(defaultCamera.modelMatrix).toEqual(renderer.camera.modelMatrix);
         });
         it("passing in fullScreen as true sets resize event handler on window", () =>
         {
@@ -227,7 +219,7 @@ describe("webglRenderer:", () =>
                     {
                         alpha: false,
                         antialias: false,
-                        depth: true
+                        depth: false
                     });
             });
 
@@ -244,7 +236,7 @@ describe("webglRenderer:", () =>
                     {
                         alpha: false,
                         antialias: false,
-                        depth: true
+                        depth: false
                     });
             });
 
@@ -258,7 +250,7 @@ describe("webglRenderer:", () =>
                     {
                         alpha: false,
                         antialias: false,
-                        depth: true
+                        depth: false
                     });
             });
         });
@@ -612,7 +604,7 @@ describe("webglRenderer:", () =>
         const eyePosition = new Vec3(1, 1, 1);
         const lookAtPoint = new Vec3(1, 1, -2);
         const upPosition = new Vec3(1, 2, 1);
-        const camera = new Camera(eyePosition, lookAtPoint, upPosition);
+        const camera = new Camera();
         let renderer: WebGLRendererMock;
 
         beforeEach(() =>
@@ -624,7 +616,7 @@ describe("webglRenderer:", () =>
         {
             renderer.camera = camera;
 
-            expect(camera.viewMatrix).toBe(renderer.camera.viewMatrix);
+            expect(camera.modelMatrix).toBe(renderer.camera.modelMatrix);
         });
 
         it("sets the uniform variable u_viewMatrix", () =>
@@ -640,7 +632,7 @@ describe("webglRenderer:", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                new Camera().viewMatrix
+                new Camera().modelMatrix
             ]);
             uniformMatrix4fvNameSpy.calls.reset();
 
@@ -652,7 +644,7 @@ describe("webglRenderer:", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                camera.viewMatrix
+                camera.modelMatrix
             ]);
         });
     });
@@ -1121,7 +1113,7 @@ describe("webglRenderer:", () =>
                 {
                     return 0;
                 }
-                if (name === ShaderSettings.mvpMatrixUniformName)
+                if (name === ShaderSettings.modelMatrixUniformName)
                 {
                     return 1;
                 }
@@ -1136,7 +1128,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.mvpMatrixUniformName}: 1\n`;
+                `\t${ShaderSettings.modelMatrixUniformName}: 1\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
 
@@ -1149,7 +1141,7 @@ describe("webglRenderer:", () =>
                 {
                     return 1;
                 }
-                if (name === ShaderSettings.mvpMatrixUniformName)
+                if (name === ShaderSettings.modelMatrixUniformName)
                 {
                     return 0;
                 }
@@ -1164,7 +1156,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 1\n` +
-                `\t${ShaderSettings.mvpMatrixUniformName}: 0\n`;
+                `\t${ShaderSettings.modelMatrixUniformName}: 0\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
 
@@ -1177,7 +1169,7 @@ describe("webglRenderer:", () =>
                 {
                     return 0;
                 }
-                if (name === ShaderSettings.mvpMatrixUniformName)
+                if (name === ShaderSettings.modelMatrixUniformName)
                 {
                     return 0;
                 }
@@ -1192,7 +1184,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.mvpMatrixUniformName}: 0\n`;
+                `\t${ShaderSettings.modelMatrixUniformName}: 0\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
     });
