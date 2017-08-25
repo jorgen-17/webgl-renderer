@@ -13,3 +13,4 @@ On the upcoming versions I would like to add:
 9. cache getParameter() and getUniformLocation() to avoid performance cost
 10. we should probably avoid creating new buffers each draw call, or maybe always delete buffer after its drawn
 11. should i use a framebuffer or renderbuffer?
+12. avoid rendering objects not in view of the camera?
