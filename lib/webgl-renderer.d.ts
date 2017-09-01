@@ -114,8 +114,9 @@ declare module 'graphics/vertexBuffer' {
 	export class VertexBuffer {
 	    glRenderMode: number;
 	    verticiesStack: Array<Float32Vector>;
+	    private _vectorSizeLimit;
 	    private _topVertexVector;
-	    constructor(glRenderMode: number, gl: WebGLRenderingContext);
+	    constructor(glRenderMode: number, gl: WebGLRenderingContext, vectorSizeLimit?: number);
 	    addVertex(vertex: Float32Array): void;
 	    private glRenderModeValidator(glRenderMode, gl);
 	}

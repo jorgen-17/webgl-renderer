@@ -36,7 +36,7 @@ export class VertexBuffer
                 `we only accept verticies of ${Constants.floatsPerVertex} floats (x, y, z, r, g, b)`;
         }
 
-        if (this._vectorSizeLimit && (this._topVertexVector.size + vertex.length <= this._vectorSizeLimit))
+        if (!this._vectorSizeLimit || (this._topVertexVector.size + vertex.length <= this._vectorSizeLimit))
         {
             this._topVertexVector.addArray(vertex);
         }

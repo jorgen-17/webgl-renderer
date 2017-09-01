@@ -28,7 +28,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/shapes2d/octogon.spec.ts" },
         { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" },
         { pattern: "spec/graphics/shapes2d/shapeFactory.spec.ts" },
-        // { pattern: "spec/graphics/webglRenderer.spec.ts" },
+        { pattern: "spec/graphics/webglRenderer.spec.ts" },
         { pattern: "spec/graphics/vertexBuffer.spec.ts" },
         { pattern: "spec/graphics/colorMapper.spec.ts" },
         { pattern: "spec/graphics/renderModeMapper.spec.ts" },
