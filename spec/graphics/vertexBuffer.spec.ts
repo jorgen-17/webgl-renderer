@@ -108,15 +108,17 @@ describe("vertexBuffer:", () =>
             expect(() => vb.addVertex(vertexToAdd)).toThrow(expectedErrorMessage);
         });
 
-        it("add more verticies than webgl can handle should create " +
+        it("add more vertexLimit should create " +
             "new float32Vector and push old one on stack", () =>
         {
-            let verticies = WebglRendererTestHelper.getRandomVerticies(gl, 10832);
+            vb = new VertexBuffer(gl.POINTS, gl, 18);
+
+            let verticies = WebglRendererTestHelper.getRandomVerticies(gl, 2);
 
             WebglRendererTestHelper.addVerticiesToVertexBuffer(vb, verticies);
 
             expect(1).toEqual(vb.verticiesStack.length);
-            expect(64992).toEqual(vb.verticiesStack[0].size);
+            expect(12).toEqual(vb.verticiesStack[0].size);
             expect(verticies).toEqual(vb.verticiesStack[0].getTrimmedArray());
 
             let finalVertex = new Float32Array([1, 2, 3, 4, 5, 6]);
@@ -124,20 +126,20 @@ describe("vertexBuffer:", () =>
             vb.addVertex(finalVertex);
 
             expect(1).toEqual(vb.verticiesStack.length);
-            expect(64998).toEqual(vb.verticiesStack[0].size);
-            expect(finalVertex[0]).toEqual(vb.verticiesStack[0].getTrimmedArray()[64992]);
-            expect(finalVertex[1]).toEqual(vb.verticiesStack[0].getTrimmedArray()[64993]);
-            expect(finalVertex[2]).toEqual(vb.verticiesStack[0].getTrimmedArray()[64994]);
-            expect(finalVertex[3]).toEqual(vb.verticiesStack[0].getTrimmedArray()[64995]);
-            expect(finalVertex[4]).toEqual(vb.verticiesStack[0].getTrimmedArray()[64996]);
-            expect(finalVertex[5]).toEqual(vb.verticiesStack[0].getTrimmedArray()[64997]);
+            expect(18).toEqual(vb.verticiesStack[0].size);
+            expect(finalVertex[0]).toEqual(vb.verticiesStack[0].getTrimmedArray()[12]);
+            expect(finalVertex[1]).toEqual(vb.verticiesStack[0].getTrimmedArray()[13]);
+            expect(finalVertex[2]).toEqual(vb.verticiesStack[0].getTrimmedArray()[14]);
+            expect(finalVertex[3]).toEqual(vb.verticiesStack[0].getTrimmedArray()[15]);
+            expect(finalVertex[4]).toEqual(vb.verticiesStack[0].getTrimmedArray()[16]);
+            expect(finalVertex[5]).toEqual(vb.verticiesStack[0].getTrimmedArray()[17]);
 
             let newVertex = new Float32Array([6, 5, 4, 3, 2, 1]);
 
             vb.addVertex(newVertex);
 
             expect(2).toEqual(vb.verticiesStack.length);
-            expect(64998).toEqual(vb.verticiesStack[0].size);
+            expect(18).toEqual(vb.verticiesStack[0].size);
             expect(6).toEqual(vb.verticiesStack[1].size);
             expect(newVertex[0]).toEqual(vb.verticiesStack[1].getTrimmedArray()[0]);
             expect(newVertex[1]).toEqual(vb.verticiesStack[1].getTrimmedArray()[1]);
