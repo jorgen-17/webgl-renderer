@@ -15,7 +15,6 @@ declare module 'constants' {
 	    floatsPerTriangle: number;
 	    vertexBufferFloatLimit: number;
 	    defaultAlpha: number;
-	    lineGlRenderMode: "lineStrip";
 	};
 
 }
@@ -87,6 +86,7 @@ declare module 'settings' {
 	    defaultBackgroundAlpha: number;
 	    defaultColor: RGBColor;
 	    defaultIsFullScreen: boolean;
+	    defaultGpuMemoryEffeciency: boolean;
 	};
 
 }
@@ -143,6 +143,7 @@ declare module 'graphics/renderingOptions' {
 	    window?: Window;
 	    fullscreen?: boolean;
 	    resizeCallback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
+	    gpuMemoryEffeciency?: boolean;
 	}
 
 }
@@ -201,6 +202,7 @@ declare module 'graphics/webglRenderer' {
 	    private _isFullscreen;
 	    private _animationFrameRequestId;
 	    private _resizeCallback;
+	    private _gpuMemoryEffeciency;
 	    private _pointsVertexBuffer;
 	    private _linesVertexBuffer;
 	    private _lineStripVertexBuffer;
@@ -209,8 +211,7 @@ declare module 'graphics/webglRenderer' {
 	    private _triangleStripVertexBuffer;
 	    private _triangleFanVertexBuffer;
 	    private _vertexBuffers;
-	    private _lineFloat32Arrays;
-	    private _lineRenderMode;
+	    private _shapeScene;
 	    private _shaderProgram;
 	    private _vertexShaderSource;
 	    private _fragmentShaderSource;
@@ -219,6 +220,7 @@ declare module 'graphics/webglRenderer' {
 	    backgroundColor: RGBColor;
 	    pointSize: number;
 	    isFullscreen: boolean;
+	    gpuMemoryEffeciency: boolean;
 	    resizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    camera: Camera;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
@@ -226,6 +228,7 @@ declare module 'graphics/webglRenderer' {
 	    addShapeToScene(shape: Shape2d): void;
 	    addShapesToScene(shapes: Array<Shape2d>): void;
 	    removeAllVeriticies(): void;
+	    removeAllShapes(): void;
 	    start(): void;
 	    stop(): void;
 	    protected draw(): void;

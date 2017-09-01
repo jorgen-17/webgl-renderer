@@ -17,4 +17,7 @@ export interface RenderingOptions
     fullscreen?: boolean;
     resizeCallback?: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
+    // if true, we trim vertexBuffer(at the expense of CPU cycles) to send less data to the GPU
+    // if false sends extraneous data to the GPU but avoids the CPU hit of looping through vertexBuffer
+    gpuMemoryEffeciency?: boolean;
 }

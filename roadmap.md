@@ -14,3 +14,5 @@ On the upcoming versions I would like to add:
 10. we should probably avoid creating new buffers each draw call, or maybe always delete buffer after its drawn
 11. should i use a framebuffer or renderbuffer?
 12. avoid rendering objects not in view of the camera?
+13. reimplement shapes as triangle strps and fans to possibly be more efficient
+14. remove vertex buffer size limit to avoid CPU overhead

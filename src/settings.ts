@@ -11,6 +11,7 @@ const defaultShapeMode: ShapeMode = "points";
 const defaultBackgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 };
 const defaultColor: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 };
 const defaultIsFullscreen = false;
+const defaultGpuMemoryEffeciency = false;
 
 export let Settings =
 {
@@ -20,5 +21,6 @@ export let Settings =
     defaultBackgroundColor: defaultBackgroundColor,
     defaultBackgroundAlpha: 1,
     defaultColor: defaultColor,
-    defaultIsFullScreen: defaultIsFullscreen
+    defaultIsFullScreen: defaultIsFullscreen,
+    defaultGpuMemoryEffeciency: defaultGpuMemoryEffeciency
 };

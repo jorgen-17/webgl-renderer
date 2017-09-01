@@ -33,6 +33,7 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
+    private _gpuMemoryEffeciency: boolean;
     private _pointsVertexBuffer: VertexBuffer;
     private _linesVertexBuffer: VertexBuffer;
     private _lineStripVertexBuffer: VertexBuffer;
@@ -41,8 +42,7 @@ export class WebGLRenderer
     private _triangleStripVertexBuffer: VertexBuffer;
     private _triangleFanVertexBuffer: VertexBuffer;
     private _vertexBuffers: Array<VertexBuffer>;
-    private _lineFloat32Arrays: Array<Float32Array>;
-    private _lineRenderMode: number;
+    private _shapeScene: Array<Shape2d>;
     private _shaderProgram: WebGLShader;
 // end_region: member variables
 
@@ -82,7 +82,6 @@ export class WebGLRenderer
         this.initializeRenderingOptions(renderingOptions);
 
         this.initializeVertexBuffers();
-        this._lineRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, this.gl);
 
         this.setupWindowCallbacks();
     }
@@ -129,6 +128,16 @@ export class WebGLRenderer
     {
         this._isFullscreen = value;
         this.setupWindowCallbacks();
+    }
+
+    public get gpuMemoryEffeciency(): boolean
+    {
+        return this._gpuMemoryEffeciency;
+    }
+
+    public set gpuMemoryEffeciency(value: boolean)
+    {
+        this._gpuMemoryEffeciency = value;
     }
 
     public get resizeCallback(): (canvas: HTMLCanvasElement,
@@ -193,31 +202,7 @@ export class WebGLRenderer
 
     public addShapeToScene(shape: Shape2d): void
     {
-        if (shape.glRenderMode === this._lineRenderMode)
-        {
-            this._lineFloat32Arrays.push(shape.verticies);
-        }
-        else
-        {
-            let vertexIndex = 0;
-            for (let i = 0; i < shape.verticies.length; i += Constants.floatsPerVertex)
-            {
-                const x = shape.verticies[vertexIndex];
-                vertexIndex++;
-                const y = shape.verticies[vertexIndex];
-                vertexIndex++;
-                const z = shape.verticies[vertexIndex];
-                vertexIndex++;
-                const r = shape.verticies[vertexIndex];
-                vertexIndex++;
-                const g = shape.verticies[vertexIndex];
-                vertexIndex++;
-                const b = shape.verticies[vertexIndex];
-                vertexIndex++;
-
-                this.addXYZPointToScene(x, y, z, r, g, b, shape.glRenderMode);
-            }
-        }
+        this._shapeScene.push(shape);
     }
 
     public addShapesToScene(shapes: Array<Shape2d>): void
@@ -231,6 +216,11 @@ export class WebGLRenderer
     public removeAllVeriticies(): void
     {
         this.initializeVertexBuffers();
+    }
+
+    public removeAllShapes(): void
+    {
+        this._shapeScene = [];
     }
 
     public start()
@@ -258,15 +248,17 @@ export class WebGLRenderer
             {
                 if (verts.size > 0)
                 {
-                    this.drawGlArray(verts.getTrimmedArray(), vb.glRenderMode);
+                    const verticies = this._gpuMemoryEffeciency ? verts.getTrimmedArray() : verts.arr;
+                    this.drawGlArray(verticies, vb.glRenderMode);
                 }
             }
         }
-        for (let lineVerticies of this._lineFloat32Arrays)
+
+        if (this._shapeScene.length > 0)
         {
-            if (lineVerticies.length > 0)
+            for (let shape of this._shapeScene)
             {
-                this.drawGlArray(lineVerticies, this._lineRenderMode);
+                this.drawGlArray(shape.verticies, shape.glRenderMode);
             }
         }
     }
@@ -342,6 +334,7 @@ export class WebGLRenderer
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
         this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
+        this._gpuMemoryEffeciency = (renderingOptions && renderingOptions.gpuMemoryEffeciency) || Settings.defaultGpuMemoryEffeciency;
     }
 
     private initializeVertexBuffers()
@@ -362,7 +355,7 @@ export class WebGLRenderer
             this._triangleStripVertexBuffer,
             this._triangleFanVertexBuffer
         ];
-        this._lineFloat32Arrays = [];
+        this._shapeScene = [];
     }
 
     private drawGlArray(arr: Float32Array, renderMode: number): void
@@ -410,6 +403,7 @@ export class WebGLRenderer
         {
             throw "could not create shader program";
         }
+
         this._shaderProgram = shader;
         this.gl.attachShader(this._shaderProgram, vertexShader);
         this.gl.attachShader(this._shaderProgram, fragmentShader);

@@ -22,7 +22,7 @@ export class Line extends Shape2d
 
         this.computeVerticies();
 
-        this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant(Constants.lineGlRenderMode, gl);
+        this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant("lineStrip", gl);
     }
 
     public get verticies(): Float32Array
