@@ -104,7 +104,6 @@ describe("webglRenderer:", () =>
                 pointSize: pointSize,
                 window: leWindow,
                 fullscreen: isFullScreen,
-                gpuMemoryEffeciency: gpuMemoryEffeciency
             };
 
             let renderer = new WebGLRendererMock(canvas, options);
@@ -113,7 +112,6 @@ describe("webglRenderer:", () =>
             expect(backgroundColor).toEqual(renderer.backgroundColor);
             expect(pointSize).toEqual(renderer.pointSize);
             expect(isFullScreen).toEqual(renderer.isFullscreen);
-            expect(gpuMemoryEffeciency).toEqual(renderer.gpuMemoryEffeciency);
         });
         it("defaults are used when settings not passed in", () =>
         {
@@ -124,7 +122,6 @@ describe("webglRenderer:", () =>
             expect(Settings.defaultRendereMode).toEqual(renderer.renderMode);
             expect(Settings.defaultBackgroundColor).toEqual(renderer.backgroundColor);
             expect(Settings.defaultPointSize).toEqual(renderer.pointSize);
-            expect(Settings.defaultGpuMemoryEffeciency).toEqual(renderer.gpuMemoryEffeciency);
 
         });
         it("camera used when passed in", () =>
@@ -342,15 +339,10 @@ describe("webglRenderer:", () =>
     describe("renderMode:", () =>
     {
         let renderer: WebGLRendererMock;
-        let options: RenderingOptions = {
-            browserHelper: browserHelper,
-            window: leWindow,
-            gpuMemoryEffeciency: true
-        };
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, options);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("is set-able and get-able", () =>
@@ -605,73 +597,6 @@ describe("webglRenderer:", () =>
         });
     });
 
-    describe("gpuMemoryEffeciency:", () =>
-    {
-        const gpuMemoryEffeciency = true;
-        let renderer: WebGLRendererMock;
-
-        beforeEach(() =>
-        {
-            renderer = new WebGLRendererMock(canvas, defaultOptions);
-        });
-
-        it("is set-able and get-able", () =>
-        {
-            renderer.gpuMemoryEffeciency = gpuMemoryEffeciency;
-
-            expect(gpuMemoryEffeciency).toBe(renderer.gpuMemoryEffeciency);
-        });
-
-        it("trims the verticies of the vertex buffers going into the GPU", () =>
-        {
-            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-
-            const bufferDataSpy = glSpiesDictionary["bufferData"];
-            const drawArraysSpy = glSpiesDictionary["drawArrays"];
-
-            renderer.mockDraw();
-
-            expect(gl.bufferData).toHaveBeenCalledTimes(1);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(1);
-
-            const expectedInefficientVerticies = WebglRendererTestHelper.concatTwoFloat32Arrays(pointsVerticies,
-                new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
-
-            expect(bufferDataSpy.calls.all()[0].args).toEqual([
-                gl.ARRAY_BUFFER,
-                expectedInefficientVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[0].args).toEqual([
-                gl.POINTS,
-                0,
-                16
-            ]);
-            bufferDataSpy.calls.reset();
-            drawArraysSpy.calls.reset();
-
-            renderer.gpuMemoryEffeciency = true;
-
-            renderer.mockDraw();
-
-            expect(gl.bufferData).toHaveBeenCalledTimes(1);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(1);
-
-            expect(bufferDataSpy.calls.all()[0].args).toEqual([
-                gl.ARRAY_BUFFER,
-                pointsVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[0].args).toEqual([
-                gl.POINTS,
-                0,
-                10
-            ]);
-        });
-    });
-
     describe("camera:", () =>
     {
         const eyePosition = new Vec3(1, 1, 1);
@@ -725,15 +650,10 @@ describe("webglRenderer:", () =>
     describe("verticies:", () =>
     {
         let renderer: WebGLRendererMock;
-        let options: RenderingOptions = {
-            browserHelper: browserHelper,
-            window: leWindow,
-            gpuMemoryEffeciency: true
-        };
 
         beforeEach(() =>
         {
-            renderer = new WebGLRendererMock(canvas, options);
+            renderer = new WebGLRendererMock(canvas, defaultOptions);
         });
 
         it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>

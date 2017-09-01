@@ -144,7 +144,6 @@ declare module 'graphics/renderingOptions' {
 	    window?: Window;
 	    fullscreen?: boolean;
 	    resizeCallback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
-	    gpuMemoryEffeciency?: boolean;
 	}
 
 }
@@ -203,7 +202,6 @@ declare module 'graphics/webglRenderer' {
 	    private _isFullscreen;
 	    private _animationFrameRequestId;
 	    private _resizeCallback;
-	    private _gpuMemoryEffeciency;
 	    private _pointsVertexBuffer;
 	    private _linesVertexBuffer;
 	    private _lineStripVertexBuffer;
@@ -221,7 +219,6 @@ declare module 'graphics/webglRenderer' {
 	    backgroundColor: RGBColor;
 	    pointSize: number;
 	    isFullscreen: boolean;
-	    gpuMemoryEffeciency: boolean;
 	    resizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    camera: Camera;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;

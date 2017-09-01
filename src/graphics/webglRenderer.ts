@@ -33,7 +33,6 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-    private _gpuMemoryEffeciency: boolean;
     private _pointsVertexBuffer: VertexBuffer;
     private _linesVertexBuffer: VertexBuffer;
     private _lineStripVertexBuffer: VertexBuffer;
@@ -128,16 +127,6 @@ export class WebGLRenderer
     {
         this._isFullscreen = value;
         this.setupWindowCallbacks();
-    }
-
-    public get gpuMemoryEffeciency(): boolean
-    {
-        return this._gpuMemoryEffeciency;
-    }
-
-    public set gpuMemoryEffeciency(value: boolean)
-    {
-        this._gpuMemoryEffeciency = value;
     }
 
     public get resizeCallback(): (canvas: HTMLCanvasElement,
@@ -248,8 +237,7 @@ export class WebGLRenderer
             {
                 if (verts.size > 0)
                 {
-                    const verticies = this._gpuMemoryEffeciency ? verts.getTrimmedArray() : verts.arr;
-                    this.drawGlArray(verticies, vb.glRenderMode);
+                    this.drawGlArray(verts.getTrimmedArray(), vb.glRenderMode);
                 }
             }
         }
@@ -334,7 +322,6 @@ export class WebGLRenderer
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
         this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
-        this._gpuMemoryEffeciency = (renderingOptions && renderingOptions.gpuMemoryEffeciency) || Settings.defaultGpuMemoryEffeciency;
     }
 
     private initializeVertexBuffers()
