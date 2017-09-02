@@ -1,8 +1,8 @@
 import { Mock } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
-import { RGBColor } from "../../../src/graphics/rgbColor";
-import { Rectangle } from "../../../src/graphics/shapes2d/rectangle";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
+import { Rectangle } from "../../../../src/graphics/shape/shape2d/rectangle";
 
 
 describe("rectangle:", () =>

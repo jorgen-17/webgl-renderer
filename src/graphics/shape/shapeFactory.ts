@@ -1,20 +1,20 @@
-import { Shape2d } from "./shape2d";
-import { ShapeMode } from "./shapeMode";
-import { Ellipse } from "./ellipse";
-import { Triangle } from "./triangle";
-import { Rectangle } from "./rectangle";
-import { Hexagon } from "./hexagon";
-import { Octogon } from "./octogon";
-import { RGBColor } from "../rgbColor";
+import { Shape } from "./shape";
+import { Shape2dMode } from "./shape2d/shape2dMode";
+import { Ellipse } from "./shape2d/ellipse";
+import { Triangle } from "./shape2d/triangle";
+import { Rectangle } from "./shape2d/rectangle";
+import { Hexagon } from "./shape2d/hexagon";
+import { Octogon } from "./shape2d/octogon";
+import { RGBColor } from "../color/rgbColor";
 import { Precision } from "../precision";
 import { Vec3 } from "cuon-matrix-ts";
 
 export class ShapeFactory
 {
-    public static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
-        gl: WebGLRenderingContext, rgbColor?: RGBColor): Shape2d
+    public static createShape(point1: Vec3, point2: Vec3, shape2dMode: Shape2dMode,
+        gl: WebGLRenderingContext, rgbColor?: RGBColor): Shape
     {
-        switch (shapeMode)
+        switch (shape2dMode)
         {
             case "triangles":
                 return this.createTriangle(point1, point2, gl, rgbColor);
@@ -27,7 +27,7 @@ export class ShapeFactory
             case "ellipses":
                 return this.createEllipse(point1, point2, gl, rgbColor);
             default:
-                throw Error(`cannot recognize shape type ${shapeMode}`);
+                throw Error(`cannot recognize shape type ${shape2dMode}`);
         }
     }
 

@@ -2,12 +2,12 @@ import { Mock } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
 import { StringDictionary } from "../../src/utils/dictionary";
-import { Line } from "../../src/graphics/shapes2d/line";
+import { Line } from "../../src/graphics/shape/shape2d/line";
 import { Constants } from "../../src/constants";
-import { RGBColor } from "../../src/graphics/rgbColor";
+import { RGBColor } from "../../src/graphics/color/rgbColor";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { RenderMode, RenderModeMapper } from "../../src/graphics/renderModeMapper";
-import { Point } from "../../src/graphics/shapes2d/point";
+import { Point } from "../../src/graphics/shape/shape2d/point";
 import { VertexBuffer } from "../../src/graphics/vertexBuffer";
 import { Settings } from "../../src/settings";
 

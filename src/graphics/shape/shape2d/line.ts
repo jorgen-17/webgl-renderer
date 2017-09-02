@@ -1,12 +1,12 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/float32Vector";
-import { RGBColor } from "../rgbColor";
-import { Constants } from "../../constants";
-import { RenderModeMapper } from "../renderModeMapper";
+import { Shape } from "../shape";
+import { Float32Vector } from "../../../utils/float32Vector";
+import { RGBColor } from "../../color/rgbColor";
+import { Constants } from "../../../constants";
+import { RenderModeMapper } from "../../renderModeMapper";
 
-export class Line extends Shape2d
+export class Line extends Shape
 {
     private _vertexPositions: Array<Vec3> ;
 

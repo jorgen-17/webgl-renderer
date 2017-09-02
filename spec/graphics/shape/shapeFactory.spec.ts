@@ -1,13 +1,13 @@
 import { Mock } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Ellipse } from "../../../src/graphics/shapes2d/ellipse";
+import { Ellipse } from "../../../src/graphics/shape/shape2d/ellipse";
 import { Precision } from "../../../src/graphics/precision";
-import { RGBColor } from "../../../src/graphics/rgbColor";
-import { Triangle } from "../../../src/graphics/shapes2d/triangle";
-import { ShapeFactory } from "../../../src/graphics/shapes2d/shapeFactory";
+import { RGBColor } from "../../../src/graphics/color/rgbColor";
+import { Triangle } from "../../../src/graphics/shape/shape2d/triangle";
+import { ShapeFactory } from "../../../src/graphics/shape/shapeFactory";
 import { Constants } from "../../../src/constants";
-import { ShapeMode } from "../../../src/graphics/shapes2d/shapeMode";
+import { Shape2dMode } from "../../../src/graphics/shape/shape2d/shape2dMode";
 
 describe("shapeFactory:", () =>
 {
@@ -63,7 +63,7 @@ describe("shapeFactory:", () =>
     {
         const createShape = () =>
         {
-            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode,
+            const notShape = ShapeFactory.createShape(point1, point2, "notShape" as Shape2dMode,
                 gl, color);
         };
 

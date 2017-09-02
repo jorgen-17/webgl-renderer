@@ -1,13 +1,13 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape2d } from "./shape2d";
-import { Float32Vector } from "../../utils/float32Vector";
-import { BoundingRectangle } from "./boundingRectangle";
-import { ThirdPoints } from "./midpoint";
-import { RGBColor } from "../rgbColor";
-import { Constants } from "../../constants";
+import { Shape } from "../shape";
+import { Float32Vector } from "../../../utils/float32Vector";
+import { BoundingRectangle } from "../boundingRectangle";
+import { ThirdPoints } from "../midpoint";
+import { RGBColor } from "../../color/rgbColor";
+import { Constants } from "../../../constants";
 
-export class Octogon extends Shape2d
+export class Octogon extends Shape
 {
     private static readonly numberOfVerticies: number = 18;
 

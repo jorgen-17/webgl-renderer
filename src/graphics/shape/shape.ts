@@ -1,12 +1,12 @@
 import { Vec3 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../../utils/float32Vector";
-import { RGBColor } from "../rgbColor";
+import { RGBColor } from "./../color/rgbColor";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Constants } from "../../constants";
 import { Settings } from "../../settings";
 
-export abstract class Shape2d {
+export abstract class Shape {
     protected _verticies: Float32Vector;
     public glRenderMode: number;
     protected boundingRect: BoundingRectangle;

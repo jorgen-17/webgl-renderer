@@ -1,4 +1,4 @@
-import { BoundingRectangle } from "../../../src/graphics/shapes2d/boundingRectangle";
+import { BoundingRectangle } from "../../../src/graphics/shape/boundingRectangle";
 import { Vec3 } from "cuon-matrix-ts";
 
 describe("BoundingRectangle ", () =>

@@ -1,5 +1,5 @@
-import { RGBColor } from "../../src/graphics/rgbColor";
-import { Color, ColorMapper } from "../../src/graphics/colorMapper";
+import { RGBColor } from "../../src/graphics/color/rgbColor";
+import { Color, ColorMapper } from "../../src/graphics/color/colorMapper";
 
 describe("colorMapper:", () =>
 {

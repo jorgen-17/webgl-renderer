@@ -1,23 +1,23 @@
 import { Mock, Setup } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Ellipse } from "../../src/graphics/shapes2d/ellipse";
+import { Ellipse } from "../../src/graphics/shape/shape2d/ellipse";
 import { Precision } from "../../src/graphics/precision";
-import { RGBColor } from "../../src/graphics/rgbColor";
-import { Triangle } from "../../src/graphics/shapes2d/triangle";
-import { ShapeFactory } from "../../src/graphics/shapes2d/shapeFactory";
+import { RGBColor } from "../../src/graphics/color/rgbColor";
+import { Triangle } from "../../src/graphics/shape/shape2d/triangle";
+import { ShapeFactory } from "../../src/graphics/shape/shapeFactory";
 import { Constants } from "../../src/constants";
 import { ShaderSettings } from "../../src/shaderSettings";
-import { ShapeMode } from "../../src/graphics/shapes2d/shapeMode";
+import { Shape2dMode } from "../../src/graphics/shape/shape2d/shape2dMode";
 import { WebGLRenderer } from "../../src/graphics/webglRenderer";
 import { WebglRendererTestHelper } from "../../specHelpers/graphics/webglRenderer.spec.helper";
-import { Shape2d } from "../../src/graphics/shapes2d/shape2d";
+import { Shape } from "../../src/graphics/shape/shape";
 import { StringDictionary } from "../../src/utils/dictionary";
-import { Line } from "../../src/graphics/shapes2d/line";
+import { Line } from "../../src/graphics/shape/shape2d/line";
 import { RenderMode } from "../../src/graphics/renderModeMapper";
 import { Camera } from "../../src/graphics/camera";
 import { RenderingOptions } from "../../src/graphics/renderingOptions";
-import { Point } from "../../src/graphics/shapes2d/point";
+import { Point } from "../../src/graphics/shape/shape2d/point";
 import { Settings } from "../../src/settings";
 import { BrowserHelper } from "../../src/utils/browserHelper";
 import { WebGLRendererMock } from "../../specHelpers/graphics/webglRendererMock";
@@ -895,11 +895,11 @@ describe("webglRenderer:", () =>
         const blue = new RGBColor(0.0, 0.0, 1.0);
         let line: Line;
         let point: Point;
-        let redTriangle: Shape2d;
-        let orangeSquare: Shape2d;
-        let yellowHexagon: Shape2d;
-        let greenOctogon: Shape2d;
-        let blueEllipse: Shape2d;
+        let redTriangle: Shape;
+        let orangeSquare: Shape;
+        let yellowHexagon: Shape;
+        let greenOctogon: Shape;
+        let blueEllipse: Shape;
 
         beforeEach(() =>
         {

@@ -1,7 +1,7 @@
-import { ShapeMode } from "./shapes2d/shapeMode";
+import { Shape2dMode } from "./shape/shape2d/shape2dMode";
 import { RenderMode } from "./renderModeMapper";
 import { DrawingMode } from "./drawingMode";
-import { RGBColor } from "./rgbColor";
+import { RGBColor } from "./color/rgbColor";
 import { Camera } from "./camera";
 import { BrowserHelper } from "../utils/browserHelper";
 import { WebGLRenderer } from "./webglRenderer";

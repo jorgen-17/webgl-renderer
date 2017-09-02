@@ -1,8 +1,8 @@
 import { Vec3 } from "cuon-matrix-ts";
 import { Mock } from "ts-mocks";
 
-import { Point } from "../../../src/graphics/shapes2d/point";
-import { RGBColor } from "../../../src/graphics/rgbColor";
+import { Point } from "../../../../src/graphics/shape/shape2d/point";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
 
 describe("point:", () =>
 {

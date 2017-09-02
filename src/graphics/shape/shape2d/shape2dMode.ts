@@ -1,4 +1,4 @@
-export type ShapeMode = "points" |
+export type Shape2dMode = "points" |
                         "lines" |
                         "triangles" |
                         "rectangles" |

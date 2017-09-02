@@ -1,11 +1,11 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { RGBColor } from "../rgbColor";
-import { Shape2d } from "./shape2d";
-import { Constants } from "../../constants";
-import { Float32Vector } from "../../utils/float32Vector";
+import { RGBColor } from "../../color/rgbColor";
+import { Shape } from "../shape";
+import { Constants } from "../../../constants";
+import { Float32Vector } from "../../../utils/float32Vector";
 
-export class Point extends Shape2d
+export class Point extends Shape
 {
     private _location: Vec3;
 

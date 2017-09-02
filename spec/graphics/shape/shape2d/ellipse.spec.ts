@@ -1,9 +1,9 @@
 import { Mock } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Ellipse } from "../../../src/graphics/shapes2d/ellipse";
-import { Precision } from "../../../src/graphics/precision";
-import { RGBColor } from "../../../src/graphics/rgbColor";
+import { Ellipse } from "../../../../src/graphics/shape/shape2d/ellipse";
+import { Precision } from "../../../../src/graphics/precision";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
 
 describe("ellipse:", () =>
 {

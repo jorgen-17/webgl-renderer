@@ -1,7 +1,7 @@
 import { Mock } from "ts-mocks";
 
-import { RGBColor } from "../../src/graphics/rgbColor";
-import { Color, ColorMapper } from "../../src/graphics/colorMapper";
+import { RGBColor } from "../../src/graphics/color/rgbColor";
+import { Color, ColorMapper } from "../../src/graphics/color/colorMapper";
 import { RenderMode, RenderModeMapper } from "../../src/graphics/renderModeMapper";
 
 describe("renderModeMapper:", () =>

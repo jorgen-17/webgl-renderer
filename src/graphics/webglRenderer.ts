@@ -1,10 +1,10 @@
-﻿import { Shape2d } from "./shapes2d/shape2d";
+﻿import { Shape} from "./shape/shape";
 import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
-import { ShapeMode } from "./shapes2d/shapeMode";
-import { RGBColor } from "./rgbColor";
+import { Shape2dMode } from "./shape/shape2d/shape2dMode";
+import { RGBColor } from "./color/rgbColor";
 import { Camera } from "./camera";
 import { RenderingOptions } from "./renderingOptions";
 import { StringDictionary } from "../utils/dictionary";
@@ -12,7 +12,7 @@ import { Constants } from "../constants";
 import { ShaderSettings } from "../shaderSettings";
 import { Vec3 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
-import { Line } from "./shapes2d/line";
+import { Line } from "./shape/shape2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
 
@@ -41,7 +41,7 @@ export class WebGLRenderer
     private _triangleStripVertexBuffer: VertexBuffer;
     private _triangleFanVertexBuffer: VertexBuffer;
     private _vertexBuffers: Array<VertexBuffer>;
-    private _shapeScene: Array<Shape2d>;
+    private _shapeScene: Array<Shape>;
     private _shaderProgram: WebGLShader;
 // end_region: member variables
 
@@ -189,12 +189,12 @@ export class WebGLRenderer
         }
     }
 
-    public addShapeToScene(shape: Shape2d): void
+    public addShapeToScene(shape: Shape): void
     {
         this._shapeScene.push(shape);
     }
 
-    public addShapesToScene(shapes: Array<Shape2d>): void
+    public addShapesToScene(shapes: Array<Shape>): void
     {
         for (let shape of shapes)
         {

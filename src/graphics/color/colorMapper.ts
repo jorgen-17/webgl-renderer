@@ -1,4 +1,4 @@
-import { RGBColor } from "./rgbColor";
+import { RGBColor } from "../color/rgbColor";
 
 export type Color = "red" |
                     "orange" |

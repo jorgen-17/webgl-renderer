@@ -13,8 +13,5 @@ export let Constants =
     floatsPerVertex: floatsPerVertex,
     verticiesPerTriangle: verticiesPerTriangle,
     floatsPerTriangle: floatsPerTriangle,
-    // closest number to 65k(gl vertex limit)
-    // that is also divisible by floatsPerVertex
-    vertexBufferFloatLimit: 64998,
     defaultAlpha: 1.0
 };
