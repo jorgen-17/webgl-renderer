@@ -281,7 +281,7 @@ export class WebGLRenderer
                 {
                     alpha: false,
                     antialias: false,
-                    depth: false
+                    depth: true
                 });
         }
         catch (e)

@@ -216,7 +216,7 @@ describe("webglRenderer:", () =>
                     {
                         alpha: false,
                         antialias: false,
-                        depth: false
+                        depth: true
                     });
             });
 
@@ -233,7 +233,7 @@ describe("webglRenderer:", () =>
                     {
                         alpha: false,
                         antialias: false,
-                        depth: false
+                        depth: true
                     });
             });
 
@@ -247,7 +247,7 @@ describe("webglRenderer:", () =>
                     {
                         alpha: false,
                         antialias: false,
-                        depth: false
+                        depth: true
                     });
             });
         });
