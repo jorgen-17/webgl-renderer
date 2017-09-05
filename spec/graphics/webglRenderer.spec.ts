@@ -907,15 +907,15 @@ describe("webglRenderer:", () =>
 
             line = WebglRendererTestHelper.getRandomLine(gl);
             point = WebglRendererTestHelper.getRandomPoint(gl);
-            redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            redTriangle = ShapeFactory.createShape2d(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, red);
-            orangeSquare = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            orangeSquare = ShapeFactory.createShape2d(new Vec3(0, 0), new Vec3(1, -1),
                 "rectangles", gl, orange);
-            yellowHexagon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(-1, -1),
+            yellowHexagon = ShapeFactory.createShape2d(new Vec3(0, 0), new Vec3(-1, -1),
                 "hexagons", gl, yellow);
-            greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            greenOctogon = ShapeFactory.createShape2d(new Vec3(0, 0), new Vec3(1, -1),
                 "octogons", gl, green);
-            blueEllipse = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            blueEllipse = ShapeFactory.createShape2d(new Vec3(0, 0), new Vec3(1, -1),
                 "ellipses", gl, blue);
         });
 

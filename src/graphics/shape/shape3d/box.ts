@@ -82,6 +82,5 @@ export class Box extends Shape
             rightFaceRect.bottomRight, rightFaceRect.bottomLeft);
 
         this._verticies = new Float32Vector(array, array.length);
-
     }
 }
