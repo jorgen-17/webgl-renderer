@@ -1,4 +1,4 @@
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../../utils/float32Vector";
 import { RGBColor } from "./../color/rgbColor";
@@ -11,9 +11,11 @@ export abstract class Shape {
     public glRenderMode: number;
     protected boundingRect: BoundingRectangle;
     private _rgbColor: RGBColor;
+    private _modelMatrix: Mat4;
     constructor(rgbColor: RGBColor = Settings.defaultColor, point1: Vec3 | null = null, point2: Vec3 | null = null)
     {
         this._rgbColor = rgbColor;
+        this._modelMatrix = new Mat4().setIdentity();
 
         if (point1 && point2)
         {
@@ -35,6 +37,11 @@ export abstract class Shape {
     public get verticies(): Float32Array
     {
         return this._verticies.arr;
+    }
+
+    public get modelMatrix(): Float32Array
+    {
+        return this._modelMatrix.elements;
     }
 
     protected abstract computeVerticies(): void;

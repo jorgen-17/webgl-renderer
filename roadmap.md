@@ -16,3 +16,4 @@ On the upcoming versions I would like to add:
 12. avoid rendering objects not in view of the camera?
 13. reimplement shapes as triangle strps and fans to possibly be more efficient
 14. figure out more efficient way to reduce cycles for verticies added directly to vertexBuffers(i.e. no looping through every frame)
+15. look into instanced rendering

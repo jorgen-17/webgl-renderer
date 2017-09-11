@@ -31,6 +31,9 @@ describe("webglRenderer:", () =>
 
     const canvasMock = new Mock<HTMLCanvasElement>();
     const canvas = canvasMock.Object;
+    const width = 800;
+    const height = 600;
+    const aspectRatio = (width / height);
     let getContextSpy: jasmine.Spy;
     let canvasAddEventListenerSpy: jasmine.Spy;
 
@@ -115,7 +118,7 @@ describe("webglRenderer:", () =>
         });
         it("defaults are used when settings not passed in", () =>
         {
-            const defaultCamera = new Camera();
+            const defaultCamera = new Camera(aspectRatio);
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
 
@@ -124,12 +127,12 @@ describe("webglRenderer:", () =>
             expect(Settings.defaultPointSize).toEqual(renderer.pointSize);
 
         });
-        it("camera used when passed in", () =>
+        it("camera aspectRatioused when passed in", () =>
         {
             const eyePosition = new Vec3(1, 1, 1);
             const lookAtPoint = new Vec3(1, 1, -2);
             const upPosition = new Vec3(1, 2, 1);
-            const camera = new Camera();
+            const camera = new Camera(aspectRatio);
 
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
@@ -139,15 +142,15 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGLRendererMock(canvas, options);
 
-            expect(camera.modelMatrix).toEqual(renderer.camera.modelMatrix);
+            expect(camera.vpMatrix.elements).toEqual(renderer.camera.vpMatrix.elements);
         });
         it("defaults camera used when camera not passed in", () =>
         {
-            const defaultCamera = new Camera();
+            const defaultCamera = new Camera(aspectRatio);
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
 
-            expect(defaultCamera.modelMatrix).toEqual(renderer.camera.modelMatrix);
+            expect(defaultCamera.vpMatrix.elements).toEqual(renderer.camera.vpMatrix.elements);
         });
         it("passing in fullScreen as true sets resize event handler on window", () =>
         {
@@ -602,7 +605,7 @@ describe("webglRenderer:", () =>
         const eyePosition = new Vec3(1, 1, 1);
         const lookAtPoint = new Vec3(1, 1, -2);
         const upPosition = new Vec3(1, 2, 1);
-        const camera = new Camera();
+        const camera = new Camera(aspectRatio);
         let renderer: WebGLRendererMock;
 
         beforeEach(() =>
@@ -614,7 +617,7 @@ describe("webglRenderer:", () =>
         {
             renderer.camera = camera;
 
-            expect(camera.modelMatrix).toBe(renderer.camera.modelMatrix);
+            expect(camera.vpMatrix.elements).toBe(renderer.camera.vpMatrix.elements);
         });
 
         it("sets the uniform variable u_viewMatrix", () =>
@@ -630,7 +633,7 @@ describe("webglRenderer:", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                new Camera().modelMatrix
+                new Camera(aspectRatio).vpMatrix
             ]);
             uniformMatrix4fvNameSpy.calls.reset();
 
@@ -642,7 +645,7 @@ describe("webglRenderer:", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                camera.modelMatrix
+                camera.vpMatrix.elements
             ]);
         });
     });
@@ -1150,7 +1153,7 @@ describe("webglRenderer:", () =>
                 {
                     return 0;
                 }
-                if (name === ShaderSettings.modelMatrixUniformName)
+                if (name === ShaderSettings.mvpMatrixUniformName)
                 {
                     return 1;
                 }
@@ -1165,7 +1168,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.modelMatrixUniformName}: 1\n`;
+                `\t${ShaderSettings.mvpMatrixUniformName}: 1\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
 
@@ -1178,7 +1181,7 @@ describe("webglRenderer:", () =>
                 {
                     return 1;
                 }
-                if (name === ShaderSettings.modelMatrixUniformName)
+                if (name === ShaderSettings.mvpMatrixUniformName)
                 {
                     return 0;
                 }
@@ -1193,7 +1196,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 1\n` +
-                `\t${ShaderSettings.modelMatrixUniformName}: 0\n`;
+                `\t${ShaderSettings.mvpMatrixUniformName}: 0\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
 
@@ -1206,7 +1209,7 @@ describe("webglRenderer:", () =>
                 {
                     return 0;
                 }
-                if (name === ShaderSettings.modelMatrixUniformName)
+                if (name === ShaderSettings.mvpMatrixUniformName)
                 {
                     return 0;
                 }
@@ -1221,7 +1224,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.modelMatrixUniformName}: 0\n`;
+                `\t${ShaderSettings.mvpMatrixUniformName}: 0\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
     });

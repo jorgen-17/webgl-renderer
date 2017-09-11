@@ -64,28 +64,57 @@ declare module 'graphics/drawingMode' {
 
 }
 declare module 'graphics/camera' {
+	import { Mat4, Vec3 } from "cuon-matrix-ts";
 	export class Camera {
-	    private _modelMatrix;
-	    constructor();
-	    readonly modelMatrix: Float32Array;
-	    translateX(x: number): void;
-	    translateY(y: number): void;
-	    zoomIn(): void;
-	    zoomOut(): void;
+	    private _vpMatrix;
+	    private _viewMatrix;
+	    private _projectionMatrix;
+	    private _eyePosition;
+	    private _aspectRatio;
+	    private _fieldOfView;
+	    private _near;
+	    private _far;
+	    private _lookAtPoint;
+	    private _upPosition;
+	    constructor(aspectRatio: number, fieldOfView?: number, near?: number, far?: number, eyePosition?: Vec3, lookAtPoint?: Vec3, upPosition?: Vec3);
+	    readonly vpMatrix: Mat4;
+	    readonly viewMatrix: Mat4;
+	    readonly projectionMatrix: Mat4;
+	    aspectRatio: number;
+	    fieldOfView: number;
+	    near: number;
+	    far: number;
+	    eyePosition: Vec3;
+	    lookAtPoint: Vec3;
+	    upPosition: Vec3;
+	    panX(xOffset: number): void;
+	    panY(yOffset: number): void;
+	    zoomIn(zOffset?: number): void;
+	    zoomOut(zOffset?: number): void;
+	    private updateView();
+	    private updatePerspective();
+	    private updateViewProjectionMatrix();
 	}
 
 }
 declare module 'settings' {
+	import { Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/color/rgbColor';
 	export let Settings: {
 	    defaultRendereMode: "points";
-	    defaultshape2dMode: "points";
+	    defaultShapeMode: "points";
 	    defaultPointSize: number;
 	    defaultBackgroundColor: RGBColor;
 	    defaultBackgroundAlpha: number;
 	    defaultColor: RGBColor;
+	    defaultEyePosition: Vec3;
+	    defaultLookAtPoint: Vec3;
+	    defaultUpPosition: Vec3;
+	    defaultFieldOfView: number;
+	    defaultNear: number;
+	    defaultFar: number;
+	    defaultModelMatrix: Mat4;
 	    defaultIsFullScreen: boolean;
-	    defaultGpuMemoryEffeciency: boolean;
 	};
 
 }
@@ -99,9 +128,11 @@ declare module 'graphics/shape/shape' {
 	    glRenderMode: number;
 	    protected boundingRect: BoundingRectangle;
 	    private _rgbColor;
+	    private _modelMatrix;
 	    constructor(rgbColor?: RGBColor, point1?: Vec3 | null, point2?: Vec3 | null);
 	    rgbColor: RGBColor;
 	    readonly verticies: Float32Array;
+	    readonly modelMatrix: Float32Array;
 	    protected abstract computeVerticies(): void;
 	    protected addXYZAndColorToFloat32Array(array: Float32Array, index: number, x: number, y: number, z: number): void;
 	    protected addTriangleToFloat32Array(array: Float32Array, index: number, vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3): void;
@@ -160,7 +191,7 @@ declare module 'shaderSettings' {
 	    positionAttributeName: string;
 	    colorAttributeName: string;
 	    pointSizeUniformName: string;
-	    modelMatrixUniformName: string;
+	    mvpMatrixUniformName: string;
 	};
 
 }
@@ -236,7 +267,7 @@ declare module 'graphics/webglRenderer' {
 	    private handleContextRestored;
 	    private initializeRenderingOptions(renderingOptions);
 	    private initializeVertexBuffers();
-	    private drawGlArray(arr, renderMode);
+	    private drawGlArray(arr, renderMode, modelMatrix?);
 	    private initShaders();
 	    private createShader(shaderSource, type);
 	    private createUniforNotFoundErrorMessage(uniformsMap);
@@ -398,7 +429,7 @@ declare module 'utils/mouseHelper' {
 	}
 
 }
-declare module 'webgl-renderer/index' {
+declare module 'webgl-renderer' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/color/rgbColor';

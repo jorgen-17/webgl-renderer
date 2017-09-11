@@ -10,7 +10,7 @@ import { RenderingOptions } from "./renderingOptions";
 import { StringDictionary } from "../utils/dictionary";
 import { Constants } from "../constants";
 import { ShaderSettings } from "../shaderSettings";
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec3, Mat4 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
 import { Line } from "./shape/shape2d/line";
 import { Settings } from "../settings";
@@ -49,12 +49,12 @@ export class WebGLRenderer
     private _vertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
-    uniform mat4 ${ShaderSettings.modelMatrixUniformName};
+    uniform mat4 ${ShaderSettings.mvpMatrixUniformName};
     uniform float ${ShaderSettings.pointSizeUniformName};
     varying vec4 v_color;
     void main(void)
     {
-        gl_Position = ${ShaderSettings.modelMatrixUniformName} * ${ShaderSettings.positionAttributeName};
+        gl_Position = ${ShaderSettings.mvpMatrixUniformName} * ${ShaderSettings.positionAttributeName};
         gl_PointSize = ${ShaderSettings.pointSizeUniformName};
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
@@ -318,7 +318,7 @@ export class WebGLRenderer
         this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
         this._pointSize = (renderingOptions && renderingOptions.pointSize) || Settings.defaultPointSize;
         this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
-        this._camera = (renderingOptions && renderingOptions.camera) || new Camera();
+        this._camera = (renderingOptions && renderingOptions.camera) || new Camera((this._canvas.width / this._canvas.height));
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
         this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
@@ -345,18 +345,19 @@ export class WebGLRenderer
         this._shapeScene = [];
     }
 
-    private drawGlArray(arr: Float32Array, renderMode: number): void
+    private drawGlArray(arr: Float32Array, renderMode: number,
+        modelMatrix: Mat4 = Settings.defaultModelMatrix): void
     {
         const a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
         const a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
         const u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
-        const u_modelMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.modelMatrixUniformName);
+        const u_mvpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.mvpMatrixUniformName);
 
-        if (!u_pointSize || !u_modelMatrix)
+        if (!u_pointSize || !u_mvpMatrix)
         {
             const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
             uniformsMap[ShaderSettings.pointSizeUniformName] = u_pointSize;
-            uniformsMap[ShaderSettings.modelMatrixUniformName] = u_modelMatrix;
+            uniformsMap[ShaderSettings.mvpMatrixUniformName] = u_mvpMatrix;
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
         }
@@ -374,7 +375,7 @@ export class WebGLRenderer
         this.gl.vertexAttribPointer(a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(a_color);
-        this.gl.uniformMatrix4fv(u_modelMatrix, false, this._camera.modelMatrix);
+        this.gl.uniformMatrix4fv(u_mvpMatrix, false, this._camera.viewMatrix.multiply(modelMatrix).elements);
         this.gl.uniform1f(u_pointSize, this._pointSize);
         this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerVertex));
         this.gl.deleteBuffer(vertexBuffer);
