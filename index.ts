@@ -5,7 +5,7 @@ import { Color, ColorMapper } from "./src/graphics/color/colorMapper";
 import { RenderMode } from "./src/graphics/renderModeMapper";
 import { Shape } from "./src/graphics/shape/shape";
 import { ShapeFactory } from "./src/graphics/shape/shapeFactory";
-import { Shape2dMode } from "./src/graphics/shape/shape2d/shape2dMode";
+import { ShapeMode } from "./src/graphics/shape/shapeMode";
 import { Line } from "./src/graphics/shape/shape2d/line";
 import { Ellipse } from "./src/graphics/shape/shape2d/ellipse";
 import { Rectangle } from "./src/graphics/shape/shape2d/rectangle";
@@ -13,7 +13,6 @@ import { Hexagon } from "./src/graphics/shape/shape2d/hexagon";
 import { Octogon } from "./src/graphics/shape/shape2d/octogon";
 import { Triangle } from "./src/graphics/shape/shape2d/triangle";
 import { Point } from "./src/graphics/shape/shape2d/point";
-import { Shape3dMode } from "./src/graphics/shape/shape3d/shape3dMode";
 import { Box } from "./src/graphics/shape/shape3d/box";
 import { Camera } from "./src/graphics/camera";
 import { RenderingOptions } from "./src/graphics/renderingOptions";
@@ -32,7 +31,7 @@ export
     RenderMode,
     Shape,
     ShapeFactory,
-    Shape2dMode,
+    ShapeMode,
     Ellipse,
     Triangle,
     Rectangle,
@@ -40,7 +39,6 @@ export
     Hexagon,
     Octogon,
     Point,
-    Shape3dMode,
     Box,
     Camera,
     BrowserHelper,

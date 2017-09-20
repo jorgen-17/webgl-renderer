@@ -5,10 +5,12 @@ import { RGBColor } from "./../color/rgbColor";
 import { BoundingRectangle } from "./boundingRectangle";
 import { Constants } from "../../constants";
 import { Settings } from "../../settings";
+import { ShapeMode } from "./shapeMode";
 
 export abstract class Shape {
-    protected _verticies: Float32Vector;
     public glRenderMode: number;
+    public shapeMode: ShapeMode;
+    protected _verticies: Float32Vector;
     protected boundingRect: BoundingRectangle;
     private _rgbColor: RGBColor;
     private _modelMatrix: Mat4;
@@ -39,9 +41,9 @@ export abstract class Shape {
         return this._verticies.arr;
     }
 
-    public get modelMatrix(): Float32Array
+    public get modelMatrix(): Mat4
     {
-        return this._modelMatrix.elements;
+        return this._modelMatrix;
     }
 
     protected abstract computeVerticies(): void;

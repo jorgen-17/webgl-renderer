@@ -1,20 +1,28 @@
-﻿import { Shape} from "./shape/shape";
+﻿import { Vec3, Mat4 } from "cuon-matrix-ts";
+
+import { Shape} from "./shape/shape";
 import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
-import { Shape2dMode } from "./shape/shape2d/shape2dMode";
+import { ShapeMode } from "./shape/shapeMode";
+import { Triangle } from "./shape/shape2d/triangle";
 import { RGBColor } from "./color/rgbColor";
 import { Camera } from "./camera";
 import { RenderingOptions } from "./renderingOptions";
 import { StringDictionary } from "../utils/dictionary";
 import { Constants } from "../constants";
 import { ShaderSettings } from "../shaderSettings";
-import { Vec3, Mat4 } from "cuon-matrix-ts";
 import { ShaderType } from "./shaderType";
 import { Line } from "./shape/shape2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
+import { ShapeBuffer } from "./shape/shapeBuffer";
+import { Rectangle } from "./shape/shape2d/rectangle";
+import { Hexagon } from "./shape/shape2d/hexagon";
+import { Octogon } from "./shape/shape2d/octogon";
+import { Ellipse } from "./shape/shape2d/ellipse";
+import { Box } from "./shape/shape3d/box";
 
 export class WebGLRenderer
 {
@@ -41,8 +49,15 @@ export class WebGLRenderer
     private _triangleStripVertexBuffer: VertexBuffer;
     private _triangleFanVertexBuffer: VertexBuffer;
     private _vertexBuffers: Array<VertexBuffer>;
-    private _shapeScene: Array<Shape>;
+    private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
+    private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
+    private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
+    private _octogonsShapeBuffer: ShapeBuffer<Octogon>;
+    private _ellipsesShapeBuffer: ShapeBuffer<Ellipse>;
+    private _boxShapeBuffer: ShapeBuffer<Box>;
+    private _shapeBuffers: Array<ShapeBuffer<Shape>>;
     private _shaderProgram: WebGLShader;
+    private _instancedArraysExt: ANGLE_instanced_arrays;
 // end_region: member variables
 
 // region: shaders
@@ -81,6 +96,7 @@ export class WebGLRenderer
         this.initializeRenderingOptions(renderingOptions);
 
         this.initializeVertexBuffers();
+        this.initializaShapeBuffers();
 
         this.setupWindowCallbacks();
     }
@@ -189,9 +205,25 @@ export class WebGLRenderer
         }
     }
 
-    public addShapeToScene(shape: Shape): void
+    public addShapeToScene(shape: Shape): string
     {
-        this._shapeScene.push(shape);
+        switch (shape.shapeMode)
+        {
+            case "triangles":
+                return this._trianglesShapeBuffer.addShape(shape as Triangle);
+            case "rectangles":
+                return this._rectanglesShapeBuffer.addShape(shape as Rectangle);
+            case "hexagons":
+                return this._hexagonsShapeBuffer.addShape(shape as Hexagon);
+            case "octogons":
+                return this._octogonsShapeBuffer.addShape(shape as Octogon);
+            case "ellipses":
+                return this._ellipsesShapeBuffer.addShape(shape as Ellipse);
+            case "box":
+                return this._boxShapeBuffer.addShape(shape as Box);
+        }
+
+        return "";
     }
 
     public addShapesToScene(shapes: Array<Shape>): void
@@ -209,7 +241,28 @@ export class WebGLRenderer
 
     public removeAllShapes(): void
     {
-        this._shapeScene = [];
+        this.initializaShapeBuffers();
+    }
+
+    public removeShape(id: string, shapeMode?: ShapeMode): boolean
+    {
+        switch (shapeMode)
+        {
+            case "triangles":
+                return this._trianglesShapeBuffer.removeShape(id);
+            case "rectangles":
+                return this._trianglesShapeBuffer.removeShape(id);
+            case "hexagons":
+                return this._trianglesShapeBuffer.removeShape(id);
+            case "octogons":
+                return this._trianglesShapeBuffer.removeShape(id);
+            case "ellipses":
+                return this._trianglesShapeBuffer.removeShape(id);
+            case "box":
+                return this._trianglesShapeBuffer.removeShape(id);
+        }
+
+        return this.removeShapeFromUnspecifiedBuffer(id);
     }
 
     public start()
@@ -241,14 +294,6 @@ export class WebGLRenderer
                 }
             }
         }
-
-        if (this._shapeScene.length > 0)
-        {
-            for (let shape of this._shapeScene)
-            {
-                this.drawGlArray(shape.verticies, shape.glRenderMode);
-            }
-        }
     }
 // end_region: protected methods
 
@@ -262,6 +307,7 @@ export class WebGLRenderer
     private setupGlResources()
     {
         this.getContext();
+        this.getGlExtensions();
 
         this.setViewPortDimensions(this._canvas.width, this._canvas.height);
         this.initShaders();
@@ -296,6 +342,11 @@ export class WebGLRenderer
 
         this._isContextLost = false;
         this.gl = gl;
+    }
+
+    private getGlExtensions(): void
+    {
+        this._instancedArraysExt = this.gl.getExtension(Settings.instancedArrayExtensionName);
     }
 
     private handleContextLost = (event: WebGLContextEvent) =>
@@ -342,7 +393,24 @@ export class WebGLRenderer
             this._triangleStripVertexBuffer,
             this._triangleFanVertexBuffer
         ];
-        this._shapeScene = [];
+    }
+
+    private initializaShapeBuffers()
+    {
+        this._trianglesShapeBuffer = new ShapeBuffer<Triangle>();
+        this._rectanglesShapeBuffer = new ShapeBuffer<Rectangle>();
+        this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>();
+        this._octogonsShapeBuffer = new ShapeBuffer<Octogon>();
+        this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>();
+        this._boxShapeBuffer = new ShapeBuffer<Box>();
+        this._shapeBuffers = [
+            this._trianglesShapeBuffer,
+            this._rectanglesShapeBuffer,
+            this._hexagonsShapeBuffer,
+            this._octogonsShapeBuffer,
+            this._ellipsesShapeBuffer,
+            this._boxShapeBuffer
+        ];
     }
 
     private drawGlArray(arr: Float32Array, renderMode: number,
@@ -368,7 +436,7 @@ export class WebGLRenderer
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(a_position, Constants.floatsPerPoint, this.gl.FLOAT,
             false, bytesPerVertex, 0);
         this.gl.enableVertexAttribArray(a_position);
@@ -470,6 +538,20 @@ export class WebGLRenderer
         renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        renderer.camera.aspectRatio = (this._canvas.width / this._canvas.height);
+    }
+
+    private removeShapeFromUnspecifiedBuffer(id: string): boolean
+    {
+        for (let shapeBuffer of this._shapeBuffers)
+        {
+            if (shapeBuffer.removeShape(id))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 // end_region: private methods
 }

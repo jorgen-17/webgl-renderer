@@ -41,8 +41,7 @@ describe("camera:", () =>
         camera.panY(-0.5);
 
         const expectedModelMatrix = new Float32Array(
-            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.5, 0, 1]);
-
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.5, 0, 1]); 
         expect(expectedModelMatrix).toEqual(camera.vpMatrix.elements);
     });
 

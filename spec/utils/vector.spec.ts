@@ -160,6 +160,113 @@ describe("Float32Vector:", () =>
         });
     });
 
+    describe("remove:", () =>
+    {
+        describe("without size limit:", () =>
+        {
+            it("should not throw if index in of bounds", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                expect(() => vec.remove(2)).not.toThrow("index(2) is out of bounds");
+                expect(() => vec.remove(1)).not.toThrow("index(1) is out of bounds");
+                expect(() => vec.remove(0)).not.toThrow("index(0) is out of bounds");
+            });
+            it("should throw if index out of bounds", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                expect(() => vec.remove(3)).toThrow("index(3) is out of bounds");
+                expect(() => vec.remove(-1)).toThrow("index(-1) is out of bounds");
+                expect(() => vec.remove(7)).toThrow("index(7) is out of bounds");
+            });
+            it("should default count to 1 if its 0 or negative or not provided", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                vec.remove(1);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                vec.remove(1, -1);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                vec.remove(1, 0);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+            });
+            it("should remove single value, shift values after, and zero out the end of the array", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                vec.remove(1);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                vec.remove(2);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 0.0]));
+            });
+            it("should remove multiple values, shift values after, and zero out the end of the array", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(1, 3);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 5.0, 6.0, 0.0, 0.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(3, 5);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 3.0, 0.0, 0.0, 0.0]));
+            });
+        });
+
+        describe("with size limit:", () =>
+        {
+            it("should not throw if index in of bounds", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                expect(() => vec.remove(2)).not.toThrow("index(2) is out of bounds");
+                expect(() => vec.remove(1)).not.toThrow("index(1) is out of bounds");
+                expect(() => vec.remove(0)).not.toThrow("index(0) is out of bounds");
+            });
+            it("should throw if index out of bounds", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                expect(() => vec.remove(3)).toThrow("index(3) is out of bounds");
+                expect(() => vec.remove(-1)).toThrow("index(-1) is out of bounds");
+                expect(() => vec.remove(7)).toThrow("index(7) is out of bounds");
+            });
+            it("should default count to 1 if its 0 or negative or not provided", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                vec.remove(1);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                vec.remove(1, -1);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                vec.remove(1, 0);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+            });
+            it("should remove single value, shift values after, and zero out the end of the array", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                vec.remove(1);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 3.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                vec.remove(2);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 0.0]));
+            });
+            it("should remove multiple values, shift values after, and zero out the end of the array", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(1, 3);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 5.0, 6.0, 0.0, 0.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(3, 5);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 3.0, 0.0, 0.0, 0.0]));
+            });
+        });
+    });
+
     describe("getTrimmedArray:", () =>
     {
         it("if arr.length === size returns the array without copying it", () =>

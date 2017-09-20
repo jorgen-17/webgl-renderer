@@ -1,7 +1,8 @@
-export type Shape2dMode = "points" |
+export type ShapeMode = "points" |
                         "lines" |
                         "triangles" |
                         "rectangles" |
                         "hexagons" |
                         "octogons" |
-                        "ellipses";
+                        "ellipses" |
+                        "box";

@@ -13,11 +13,12 @@ import { Settings } from "../../src/settings";
 
 export class WebglRendererTestHelper
 {
-    public static setupGlMockFunctions (glMock: Mock<WebGLRenderingContext>):
-        StringDictionary<jasmine.Spy>
+    public static setupGlMockFunctions (glMock: Mock<WebGLRenderingContext>,
+        instancedArrayExtension: ANGLE_instanced_arrays)
+        : StringDictionary<jasmine.Spy>
     {
         const gl = glMock.Object;
-        let spyDictionary = {};
+        let spyDictionary: StringDictionary<jasmine.Spy> = {};
 
         // vertex buffer constants
         glMock.setup(x => x.POINTS).is(0x0000);
@@ -39,6 +40,17 @@ export class WebglRendererTestHelper
         glMock.setup(x => x.ARRAY_BUFFER).is(0x8892);
         glMock.setup(x => x.STATIC_DRAW).is(0x88E4);
         glMock.setup(x => x.FLOAT).is(0x1406);
+
+        // getExtensions
+        spyDictionary["getExtension"] = glMock.setup(x => x.getExtension).is(
+            (extensionName: string) =>
+            {
+                if (extensionName === Settings.instancedArrayExtensionName)
+                {
+                    return instancedArrayExtension;
+                }
+            }).Spy;
+
 
         // init viewport
         spyDictionary["viewport"] = glMock.setup(x => x.viewport).is(
@@ -257,5 +269,28 @@ export class WebglRendererTestHelper
         }
 
         return newArr;
+    }
+
+    public static setupInstancedArrayMocks(instancedArrayExtensionMock: Mock<ANGLE_instanced_arrays>)
+        : StringDictionary<jasmine.Spy>
+    {
+        let spyDictionary: StringDictionary<jasmine.Spy> = {};
+
+        instancedArrayExtensionMock.setup(ia => ia.VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE)
+            .is(0x88FE);
+
+        spyDictionary["drawArraysInstancedANGLE"] = instancedArrayExtensionMock
+            .setup(ia => ia.drawArraysInstancedANGLE)
+            .is((mode: number, first: number, count: number,
+                primcount: number) => { /* do nothing */ }).Spy;
+        spyDictionary["drawElementsInstancedANGLE"] = instancedArrayExtensionMock
+            .setup(ia => ia.drawElementsInstancedANGLE)
+            .is((mode: number, count: number, type: number, offset: number,
+                primcount: number) => { /* do nothing */ }).Spy;
+        spyDictionary["vertexAttribDivisorANGLE"] = instancedArrayExtensionMock
+            .setup(ia => ia.vertexAttribDivisorANGLE)
+            .is((index: number, divisor: number) => { /* do nothing */ }).Spy;
+
+        return spyDictionary;
     }
 }
