@@ -26,7 +26,7 @@ export class ShapeBuffer<S extends Shape>
         const index = Object.keys(this._shapes).length;
         this._shapes[id] = {shape, index};
         // populate verticies
-        this._colorVerticies.addArray(shape.)
+        // this._colorVerticies.addArray(shape.)
 
         return id;
     }
