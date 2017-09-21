@@ -60,22 +60,28 @@ export class Float32Vector
         return true;
     }
 
-    public remove(index: number, count: number = 1)
+    public remove(start: number, count: number = 1)
     {
-        if (index < 0 || index >= this.arr.length)
+        if (start < 0 || start >= this.arr.length)
         {
-            throw `index(${index}) is out of bounds`;
+            throw `index(${start}) is out of bounds`;
         }
 
         count = count > 0 ? count : 1;
 
-        for (let i = index + count; i < this.arr.length; i++)
+        let insertionIndex = start;
+        for (let i = insertionIndex + count; i < this.size; i++)
         {
-            this.arr[index] = this.arr[i];
-            index++;
+            this.arr[insertionIndex] = this.arr[i];
+            insertionIndex++;
         }
 
-        this.arr.fill(0, index);
+        this.arr.fill(0, insertionIndex);
+
+        const countOverflowed = start + count >= this.size;
+        const numberDeleted = countOverflowed ?
+            (this.size - start) : (this.size - count);
+        this.size -= numberDeleted;
     }
 
     public getTrimmedArray(): Float32Array

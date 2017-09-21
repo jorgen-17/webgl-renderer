@@ -23,6 +23,10 @@ export class ShapeBuffer<S extends Shape>
     public addShape(shape: S): string
     {
         const id = cuid();
+        const index = Object.keys(this._shapes).length;
+        this._shapes[id] = {shape, index};
+        // populate verticies
+        this._colorVerticies.addArray(shape.)
 
         return id;
     }

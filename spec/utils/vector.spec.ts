@@ -211,6 +211,35 @@ describe("Float32Vector:", () =>
                 vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
                 vec.remove(3, 5);
                 expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 3.0, 0.0, 0.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(0, 6);
+                expect(vec.arr).toEqual(new Float32Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
+            });
+            it("should update size variable correctly", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(1, 3);
+                expect(vec.size).toBe(3);
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(3, 5);
+                expect(vec.size).toBe(3);
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(0, 6);
+                expect(vec.size).toBe(0);
+            });
+            it("add after remove should append values correctly", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+                vec.remove(1, 3);
+                vec.addNumber(7.0);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 5.0, 6.0, 7.0, 0.0, 0.0]));
+
+                vec.remove(1, 3);
+                vec.addArray([8.0, 9.0, 10.0]);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
             });
         });
 
@@ -263,6 +292,35 @@ describe("Float32Vector:", () =>
                 vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
                 vec.remove(3, 5);
                 expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 3.0, 0.0, 0.0, 0.0]));
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(0, 6);
+                expect(vec.arr).toEqual(new Float32Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
+            });
+            it("should update size variable correctly", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(1, 3);
+                expect(vec.size).toBe(3);
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(3, 5);
+                expect(vec.size).toBe(3);
+
+                vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(0, 6);
+                expect(vec.size).toBe(0);
+            });
+            it("add after remove should append values correctly", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 6);
+                vec.remove(1, 3);
+                vec.addNumber(7.0);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 5.0, 6.0, 7.0, 0.0, 0.0]));
+
+                vec.remove(1, 3);
+                vec.addArray([8.0, 9.0, 10.0]);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
             });
         });
     });
