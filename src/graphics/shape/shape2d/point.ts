@@ -4,9 +4,12 @@ import { RGBColor } from "../../color/rgbColor";
 import { Shape } from "../shape";
 import { Constants } from "../../../constants";
 import { Float32Vector } from "../../../utils/float32Vector";
+import { ShapeMode } from "../shapeMode";
 
 export class Point extends Shape
 {
+    public shapeMode: ShapeMode = "points";
+    public numberOfPositionVerticies = 1;
     private _location: Vec3;
 
     constructor(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
@@ -17,7 +20,6 @@ export class Point extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.POINTS;
-        this.shapeMode = "points";
     }
 
     protected computeVerticies(): void

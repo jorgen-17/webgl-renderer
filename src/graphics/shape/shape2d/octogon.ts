@@ -6,11 +6,12 @@ import { BoundingRectangle } from "../boundingRectangle";
 import { ThirdPoints } from "../midpoint";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
+import { ShapeMode } from "../shapeMode";
 
 export class Octogon extends Shape
 {
-    private static readonly numberOfVerticies: number = 18;
-
+    public shapeMode: ShapeMode = "octogons";
+    public numberOfPositionVerticies = 18;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(rgbColor, point1, point2);
@@ -18,12 +19,11 @@ export class Octogon extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = "octogons";
     }
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(Octogon.numberOfVerticies * Constants.floatsPerPoint);
+        let arr = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
 
         const topThirds = ThirdPoints.between(this._boundingRect.topLeft, this._boundingRect.topRight);
         const rightThirds = ThirdPoints.between(this._boundingRect.topRight, this._boundingRect.bottomRight);

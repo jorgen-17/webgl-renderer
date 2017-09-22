@@ -32,7 +32,7 @@ describe("hexagon:", () =>
             {
                 const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
-                expect(72).toEqual(hexagon.verticies.length);
+                expect(72).toEqual(hexagon.positions.length);
 
                 const expectedVerticies = new Float32Array([
                     0.6666666865348816, 1, 0, color.red, color.green, color.blue, // vertex 1
@@ -49,7 +49,7 @@ describe("hexagon:", () =>
                     1, 0.75, 0, color.red, color.green, color.blue, // vertex 12
                 ]);
 
-                expect(expectedVerticies).toEqual(hexagon.verticies);
+                expect(expectedVerticies).toEqual(hexagon.positions);
             });
         });
     });
@@ -58,7 +58,7 @@ describe("hexagon:", () =>
     {
         const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
-        expect(72).toEqual(hexagon.verticies.length);
+        expect(72).toEqual(hexagon.positions.length);
 
         let expectedVerticies = new Float32Array([
             0.6666666865348816, 1, 0, color.red, color.green, color.blue, // vertex 1
@@ -75,13 +75,13 @@ describe("hexagon:", () =>
             1, 0.75, 0, color.red, color.green, color.blue, // vertex 12
         ]);
 
-        expect(expectedVerticies).toEqual(hexagon.verticies);
+        expect(expectedVerticies).toEqual(hexagon.positions);
 
         const newColor = new RGBColor(0.5, 0.5, 0.5);
 
         hexagon.rgbColor = newColor;
 
-        expect(72).toEqual(hexagon.verticies.length);
+        expect(72).toEqual(hexagon.positions.length);
 
         expectedVerticies = new Float32Array([
             0.6666666865348816, 1, 0, newColor.red, newColor.green, newColor.blue, // vertex 1
@@ -98,6 +98,6 @@ describe("hexagon:", () =>
             1, 0.75, 0, newColor.red, newColor.green, newColor.blue, // vertex 12
         ]);
 
-        expect(expectedVerticies).toEqual(hexagon.verticies);
+        expect(expectedVerticies).toEqual(hexagon.positions);
     });
 });

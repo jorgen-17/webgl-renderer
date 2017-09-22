@@ -33,7 +33,7 @@ describe("rectangle:", () =>
             {
                 const box = new Box(new Vec3(0.0, 0.0), new Vec3(0.5, 0.25), gl, color);
 
-                expect(216).toEqual(box.verticies.length);
+                expect(216).toEqual(box.positions.length);
 
                 const expectedVerticies = new Float32Array([
                     // front face
@@ -80,7 +80,7 @@ describe("rectangle:", () =>
                     0.5, 0, 0, color.red, color.green, color.blue, // vertex 36
                 ]);
 
-                expect(expectedVerticies).toEqual(box.verticies);
+                expect(expectedVerticies).toEqual(box.positions);
             });
         });
     });
@@ -89,7 +89,7 @@ describe("rectangle:", () =>
     {
         const box = new Box(new Vec3(0.0, 0.0), new Vec3(0.5, 0.25), gl, color);
 
-        expect(216).toEqual(box.verticies.length);
+        expect(216).toEqual(box.positions.length);
 
         let expectedVerticies = new Float32Array([
             // front face
@@ -136,13 +136,13 @@ describe("rectangle:", () =>
             0.5, 0, 0, color.red, color.green, color.blue, // vertex 36
         ]);
 
-        expect(expectedVerticies).toEqual(box.verticies);
+        expect(expectedVerticies).toEqual(box.positions);
 
         const newColor = new RGBColor(0.5, 0.5, 0.5);
 
         box.rgbColor = newColor;
 
-        expect(216).toEqual(box.verticies.length);
+        expect(216).toEqual(box.positions.length);
 
         expectedVerticies = new Float32Array([
             // front face
@@ -189,6 +189,6 @@ describe("rectangle:", () =>
             0.5, 0, 0, newColor.red, newColor.green, newColor.blue, // vertex 36
         ]);
 
-        expect(expectedVerticies).toEqual(box.verticies);
+        expect(expectedVerticies).toEqual(box.positions);
     });
 });

@@ -34,7 +34,7 @@ describe("ellipse:", () =>
                 const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl,
                     Precision.Low, color);
 
-                expect(180).toEqual(circle.verticies.length);
+                expect(180).toEqual(circle.positions.length);
 
                 const expectedVerticies = new Float32Array([
                     // triangle 1
@@ -79,7 +79,7 @@ describe("ellipse:", () =>
                     1, 0.75, 0, color.red, color.green, color.blue, // vertex 30
                 ]);
 
-                expect(expectedVerticies).toEqual(circle.verticies);
+                expect(expectedVerticies).toEqual(circle.positions);
             });
         });
     });
@@ -89,7 +89,7 @@ describe("ellipse:", () =>
         const circle = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl,
                     Precision.Low, color);
 
-        expect(180).toEqual(circle.verticies.length);
+        expect(180).toEqual(circle.positions.length);
 
         let expectedVerticies = new Float32Array([
             // triangle 1
@@ -134,13 +134,13 @@ describe("ellipse:", () =>
             1, 0.75, 0, color.red, color.green, color.blue, // vertex 30
         ]);
 
-        expect(expectedVerticies).toEqual(circle.verticies);
+        expect(expectedVerticies).toEqual(circle.positions);
 
         const newColor = new RGBColor(0.5, 0.5, 0.5);
 
         circle.rgbColor = newColor;
 
-        expect(180).toEqual(circle.verticies.length);
+        expect(180).toEqual(circle.positions.length);
 
         expectedVerticies = new Float32Array([
             // triangle 1
@@ -185,6 +185,6 @@ describe("ellipse:", () =>
             1, 0.75, 0, newColor.red, newColor.green, newColor.blue, // vertex 30
         ]);
 
-        expect(expectedVerticies).toEqual(circle.verticies);
+        expect(expectedVerticies).toEqual(circle.positions);
     });
 });

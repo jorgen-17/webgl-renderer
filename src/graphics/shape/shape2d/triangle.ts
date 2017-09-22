@@ -6,10 +6,12 @@ import { BoundingRectangle } from "../boundingRectangle";
 import { Midpoint } from "../midpoint";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
+import { ShapeMode } from "../shapeMode";
 
 export class Triangle extends Shape
 {
-    private static readonly numberOfVerticies: number = 3;
+    public shapeMode: ShapeMode = "triangles";
+    public numberOfPositionVerticies = 3;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
@@ -18,14 +20,13 @@ export class Triangle extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = "triangles";
     }
 
     protected computeVerticies(): void
     {
         const topPoint = Midpoint.between(this._boundingRect.topLeft, this._boundingRect.topRight);
 
-        let array = new Float32Array(Triangle.numberOfVerticies * Constants.floatsPerPoint);
+        let array = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
 
         let insertionIndex = 0;
 

@@ -30,7 +30,7 @@ describe("line:", () =>
             [point.x, point.y, point.z,
             color.red, color.green, color.blue]);
 
-        expect(expectedVerticies).toEqual(line.verticies);
+        expect(expectedVerticies).toEqual(line.positions);
     });
 
     it("can addVertex", () =>
@@ -47,7 +47,7 @@ describe("line:", () =>
             point2.x, point2.y, point2.z,
             color.red, color.green, color.blue]);
 
-        expect(expectedVerticies).toEqual(line.verticies);
+        expect(expectedVerticies).toEqual(line.positions);
     });
 
     it("when color is set, it should recalculate verticies", () =>
@@ -64,7 +64,7 @@ describe("line:", () =>
             point2.x, point2.y, point2.z,
             color.red, color.green, color.blue]);
 
-        expect(expectedVerticies).toEqual(line.verticies);
+        expect(expectedVerticies).toEqual(line.positions);
 
         const color2 = new RGBColor(0.75, 0.75, 0.75);
 
@@ -74,6 +74,6 @@ describe("line:", () =>
             point2.x, point2.y, point2.z,
             color2.red, color2.green, color2.blue]);
 
-        expect(expectedVerticies).toEqual(line.verticies);
+        expect(expectedVerticies).toEqual(line.positions);
     });
 });

@@ -5,9 +5,12 @@ import { Float32Vector } from "../../../utils/float32Vector";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
 import { RenderModeMapper } from "../../renderModeMapper";
+import { ShapeMode } from "../shapeMode";
 
 export class Line extends Shape
 {
+    public shapeMode: ShapeMode = "lines";
+    public numberOfPositionVerticies = 1;
     private _verticies: Float32Vector;
     private _vertexPositions: Array<Vec3>;
 
@@ -23,10 +26,10 @@ export class Line extends Shape
 
         this.computeVerticies();
 
-        this.glRenderMode = RenderModeMapper.renderModeToWebGlConstant("lineStrip", gl);
+        this.glRenderMode = gl.LINE_STRIP;
     }
 
-    public get verticies(): Float32Array
+    public get positions(): Float32Array
     {
         return this._verticies.getTrimmedArray();
     }
@@ -43,12 +46,12 @@ export class Line extends Shape
         }
 
         this._verticies = new Float32Vector(arr);
-        this.shapeMode = "lines";
     }
 
     public addVertex(vertex: Vec3): void
     {
         this._vertexPositions.push(vertex);
+        this.numberOfPositionVerticies++;
 
         let array = new Float32Array(Constants.floatsPerPoint);
         this.addXYZAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);

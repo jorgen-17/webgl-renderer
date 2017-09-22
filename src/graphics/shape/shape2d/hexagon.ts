@@ -6,11 +6,12 @@ import { BoundingRectangle } from "../boundingRectangle";
 import { Midpoint, ThirdPoints } from "../midpoint";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
+import { ShapeMode } from "../shapeMode";
 
 export class Hexagon extends Shape
 {
-    private static readonly numberOfVerticies: number = 12;
-
+    public shapeMode: ShapeMode = "hexagons";
+    public numberOfPositionVerticies = 12;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(rgbColor, point1, point2);
@@ -18,12 +19,11 @@ export class Hexagon extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = "hexagons";
     }
 
     protected computeVerticies(): void
     {
-        const arr = new Float32Array(Hexagon.numberOfVerticies * Constants.floatsPerPoint);
+        const arr = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
 
         const topThirds = ThirdPoints.between(this._boundingRect.topLeft,
             this._boundingRect.topRight);

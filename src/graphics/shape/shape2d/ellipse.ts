@@ -7,6 +7,7 @@ import { Midpoint } from "../midpoint";
 import { Precision } from "../../precision";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
+import { ShapeMode } from "../shapeMode";
 
 export class Ellipse extends Shape
 {
@@ -17,14 +18,14 @@ export class Ellipse extends Shape
     private static readonly lowPrecisionNumberOfPointsAlongCurve: number = 8 + Ellipse.numberOfEndPoints;
     private static readonly lowPrecisionNumberOfVerticies: number =
         Ellipse.lowPrecisionNumberOfPointsAlongCurve * Constants.verticiesPerTriangle;
-
+    public shapeMode: ShapeMode = "ellipses";
+    public numberOfPositionVerticies: number;
     private center: Vec3;
     private leftEndPoint: Vec3;
     private rightEndPoint: Vec3;
     private horizontalRadius: number;
     private verticalRadius: number;
     private precision: Precision;
-
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
         precision: Precision = Precision.High, rgbColor?: RGBColor)
     {
@@ -40,7 +41,8 @@ export class Ellipse extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = "ellipses";
+        this.numberOfPositionVerticies = this.precision === Precision.High ? Ellipse.highPrecisionNumberOfVerticies
+            : Ellipse.lowPrecisionNumberOfVerticies;
     }
 
     protected computeVerticies(): void

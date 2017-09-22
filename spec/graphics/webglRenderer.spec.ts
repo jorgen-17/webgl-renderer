@@ -950,7 +950,7 @@ describe("webglRenderer:", () =>
             // point drawn
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
-                point.verticies,
+                point.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[0].args).toEqual([
@@ -962,7 +962,7 @@ describe("webglRenderer:", () =>
             // line drawn
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.verticies,
+                line.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
@@ -974,7 +974,7 @@ describe("webglRenderer:", () =>
             // redTriangle drawn
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.verticies,
+                redTriangle.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
@@ -986,7 +986,7 @@ describe("webglRenderer:", () =>
             // orangeSquare drawn
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
+                orangeSquare.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
@@ -998,7 +998,7 @@ describe("webglRenderer:", () =>
             // yellowHexagon drawn
             expect(bufferDataSpy.calls.all()[4].args).toEqual([
                 gl.ARRAY_BUFFER,
-                yellowHexagon.verticies,
+                yellowHexagon.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[4].args).toEqual([
@@ -1010,7 +1010,7 @@ describe("webglRenderer:", () =>
             // greenOctogon drawn
             expect(bufferDataSpy.calls.all()[5].args).toEqual([
                 gl.ARRAY_BUFFER,
-                greenOctogon.verticies,
+                greenOctogon.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[5].args).toEqual([
@@ -1022,7 +1022,7 @@ describe("webglRenderer:", () =>
             // blueEllipse drawn
             expect(bufferDataSpy.calls.all()[6].args).toEqual([
                 gl.ARRAY_BUFFER,
-                blueEllipse.verticies,
+                blueEllipse.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[6].args).toEqual([
@@ -1055,7 +1055,7 @@ describe("webglRenderer:", () =>
             // point drawn
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
-                point.verticies,
+                point.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[0].args).toEqual([
@@ -1067,7 +1067,7 @@ describe("webglRenderer:", () =>
             // line drawn
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.verticies,
+                line.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
@@ -1079,7 +1079,7 @@ describe("webglRenderer:", () =>
             // redTriangle drawn
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.verticies,
+                redTriangle.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
@@ -1091,7 +1091,7 @@ describe("webglRenderer:", () =>
             // orangeSquare drawn
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
+                orangeSquare.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
@@ -1103,7 +1103,7 @@ describe("webglRenderer:", () =>
             // yellowHexagon drawn
             expect(bufferDataSpy.calls.all()[4].args).toEqual([
                 gl.ARRAY_BUFFER,
-                yellowHexagon.verticies,
+                yellowHexagon.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[4].args).toEqual([
@@ -1115,7 +1115,7 @@ describe("webglRenderer:", () =>
             // greenOctogon drawn
             expect(bufferDataSpy.calls.all()[5].args).toEqual([
                 gl.ARRAY_BUFFER,
-                greenOctogon.verticies,
+                greenOctogon.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[5].args).toEqual([
@@ -1127,7 +1127,7 @@ describe("webglRenderer:", () =>
             // blueEllipse drawn
             expect(bufferDataSpy.calls.all()[6].args).toEqual([
                 gl.ARRAY_BUFFER,
-                blueEllipse.verticies,
+                blueEllipse.positions,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[6].args).toEqual([

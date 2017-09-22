@@ -5,11 +5,12 @@ import { Float32Vector } from "../../../utils/float32Vector";
 import { BoundingRectangle } from "../boundingRectangle";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
+import { ShapeMode } from "../shapeMode";
 
 export class Rectangle extends Shape
 {
-    private static readonly numberOfVerticies: number = 6;
-
+    public shapeMode: ShapeMode = "rectangles";
+    public numberOfPositionVerticies = 6;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(rgbColor, point1, point2);
@@ -17,11 +18,10 @@ export class Rectangle extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = "rectangles";
     }
     protected computeVerticies(): void
     {
-        let array = new Float32Array(Rectangle.numberOfVerticies * Constants.floatsPerPoint);
+        let array = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
 
         let insertionIndex = 0;
 

@@ -8,9 +8,10 @@ import { Settings } from "../../settings";
 import { ShapeMode } from "./shapeMode";
 
 export abstract class Shape {
-    public glRenderMode: number;
-    public shapeMode: ShapeMode;
     public rgbColor: RGBColor;
+    public glRenderMode: number;
+    public abstract shapeMode: ShapeMode;
+    public abstract numberOfPositionVerticies: number;
     protected _positions: Float32Vector;
     protected _boundingRect: BoundingRectangle;
     private _modelMatrix: Mat4;
@@ -25,7 +26,7 @@ export abstract class Shape {
         }
     }
 
-    public get verticies(): Float32Array
+    public get positions(): Float32Array
     {
         return this._positions.arr;
     }

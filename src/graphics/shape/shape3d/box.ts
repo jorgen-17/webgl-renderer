@@ -5,10 +5,12 @@ import { Float32Vector } from "../../../utils/float32Vector";
 import { BoundingRectangle } from "../boundingRectangle";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
+import { ShapeMode } from "../shapeMode";
 
 export class Box extends Shape
 {
-    private static readonly numberOfVerticies: number = 36;
+    public shapeMode: ShapeMode = "box";
+    public numberOfPositionVerticies = 36;
     private _backFaceZ: number;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
@@ -27,7 +29,7 @@ export class Box extends Shape
     }
     protected computeVerticies(): void
     {
-        let array = new Float32Array(Box.numberOfVerticies * Constants.floatsPerPoint);
+        let array = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
 
         let insertionIndex = 0;
 
