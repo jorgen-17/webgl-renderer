@@ -432,7 +432,7 @@ export class WebGLRenderer
 
         const floatSize = arr.BYTES_PER_ELEMENT;
         const bytesPerPoint = floatSize * Constants.floatsPerPoint;
-        const bytesPerVertex = floatSize * Constants.floatsPerVertex;
+        const bytesPerVertex = floatSize * Constants.floatsPerPoint;
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
@@ -445,7 +445,7 @@ export class WebGLRenderer
         this.gl.enableVertexAttribArray(a_color);
         this.gl.uniformMatrix4fv(u_mvpMatrix, false, this._camera.viewMatrix.multiply(modelMatrix).elements);
         this.gl.uniform1f(u_pointSize, this._pointSize);
-        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerVertex));
+        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerPoint));
         this.gl.deleteBuffer(vertexBuffer);
     }
 

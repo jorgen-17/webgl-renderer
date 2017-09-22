@@ -30,11 +30,11 @@ export class Ellipse extends Shape
     {
         super(rgbColor, point1, point2);
 
-        this.horizontalRadius = (this.boundingRect.topRight.x - this.boundingRect.topLeft.x) / 2;
-        this.verticalRadius = (this.boundingRect.topLeft.y - this.boundingRect.bottomLeft.y) / 2;
-        this.center = Midpoint.between(this.boundingRect.topLeft, this.boundingRect.bottomRight);
-        this.leftEndPoint = Midpoint.between(this.boundingRect.topLeft, this.boundingRect.bottomLeft);
-        this.rightEndPoint = Midpoint.between(this.boundingRect.topRight, this.boundingRect.bottomRight);
+        this.horizontalRadius = (this._boundingRect.topRight.x - this._boundingRect.topLeft.x) / 2;
+        this.verticalRadius = (this._boundingRect.topLeft.y - this._boundingRect.bottomLeft.y) / 2;
+        this.center = Midpoint.between(this._boundingRect.topLeft, this._boundingRect.bottomRight);
+        this.leftEndPoint = Midpoint.between(this._boundingRect.topLeft, this._boundingRect.bottomLeft);
+        this.rightEndPoint = Midpoint.between(this._boundingRect.topRight, this._boundingRect.bottomRight);
         this.precision = precision;
 
         this.computeVerticies();
@@ -56,7 +56,7 @@ export class Ellipse extends Shape
             numberOfVerticies = Ellipse.lowPrecisionNumberOfVerticies;
         }
 
-        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerVertex);
+        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerPoint);
 
         let x = this.leftEndPoint.x;
         // divide by 2 because of horizontal symmetry, subtract one because of duplicate vertex inserted at middle
@@ -77,20 +77,20 @@ export class Ellipse extends Shape
             const newPointAboveCenter = new Vec3(x, y + this.center.y);
             const newPointBelowCenter = new Vec3(x, this.center.y - y);
 
-            this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, newPointAboveCenter);
+            this.addTriangleToPositions(insertionIndex, previousPointAboveCenter, this.center, newPointAboveCenter);
             insertionIndex += Constants.floatsPerTriangle;
-            this.addTriangleToFloat32Array(arr, insertionIndex, previousPointBelowCenter, this.center, newPointBelowCenter);
+            this.addTriangleToPositions(insertionIndex, previousPointBelowCenter, this.center, newPointBelowCenter);
             insertionIndex += Constants.floatsPerTriangle;
 
             previousPointAboveCenter = newPointAboveCenter;
             previousPointBelowCenter = newPointBelowCenter;
         }
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, previousPointAboveCenter, this.center, this.rightEndPoint);
+        this.addTriangleToPositions(insertionIndex, previousPointAboveCenter, this.center, this.rightEndPoint);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(arr, insertionIndex, previousPointBelowCenter, this.center, this.rightEndPoint);
+        this.addTriangleToPositions(insertionIndex, previousPointBelowCenter, this.center, this.rightEndPoint);
 
-        this._verticies = new Float32Vector(arr, arr.length);
+        this._positions = new Float32Vector(arr, arr.length);
     }
 
     private getYDistanceFromCenterForX(x: number): number

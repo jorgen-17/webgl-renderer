@@ -21,11 +21,10 @@ export class Point extends Shape
 
     protected computeVerticies(): void
     {
-        let vertex = new Float32Array(Constants.floatsPerVertex);
+        let vertex = new Float32Array(Constants.floatsPerPoint);
+        this._positions = new Float32Vector(vertex, vertex.length);
 
-        this.addXYZAndColorToFloat32Array(vertex, 0, this._location.x,
+        this.addXYZToPositions(0, this._location.x,
             this._location.y, this._location.z);
-
-        this._verticies = new Float32Vector(vertex, vertex.length);
     }
 }

@@ -158,7 +158,7 @@ export class WebglRendererTestHelper
     public static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
         color: RGBColor = Settings.defaultColor): Float32Array
     {
-        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerVertex);
+        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerPoint);
 
         for (let i = 0; i < numberOfVerticies; i++)
         {
@@ -171,7 +171,7 @@ export class WebglRendererTestHelper
                 color.green,
                 color.blue
             ]);
-            arr.set(xyzRGB, (i * Constants.floatsPerVertex));
+            arr.set(xyzRGB, (i * Constants.floatsPerPoint));
         }
 
         return arr;
@@ -182,18 +182,18 @@ export class WebglRendererTestHelper
     {
         if (arr.length % 6 !== 0)
         {
-            throw `incorrect number of floats, must be divisible by ${Constants.floatsPerVertex}`;
+            throw `incorrect number of floats, must be divisible by ${Constants.floatsPerPoint}`;
         }
 
-        const numberOfVerticies = (arr.length / Constants.floatsPerVertex);
+        const numberOfVerticies = (arr.length / Constants.floatsPerPoint);
         for (let i = 0; i < numberOfVerticies; i++)
         {
-            const x = arr[i * Constants.floatsPerVertex];
-            const y = arr[(i * Constants.floatsPerVertex) + 1];
-            const z = arr[(i * Constants.floatsPerVertex) + 2];
-            const r = arr[(i * Constants.floatsPerVertex) + 3];
-            const g = arr[(i * Constants.floatsPerVertex) + 4];
-            const b = arr[(i * Constants.floatsPerVertex) + 5];
+            const x = arr[i * Constants.floatsPerPoint];
+            const y = arr[(i * Constants.floatsPerPoint) + 1];
+            const z = arr[(i * Constants.floatsPerPoint) + 2];
+            const r = arr[(i * Constants.floatsPerPoint) + 3];
+            const g = arr[(i * Constants.floatsPerPoint) + 4];
+            const b = arr[(i * Constants.floatsPerPoint) + 5];
             if (renderMode && gl)
             {
                 const glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, gl);
@@ -210,18 +210,18 @@ export class WebglRendererTestHelper
     {
         if (arr.length % 6 !== 0)
         {
-            throw `incorrect number of floats, must be divisible by ${Constants.floatsPerVertex}`;
+            throw `incorrect number of floats, must be divisible by ${Constants.floatsPerPoint}`;
         }
 
-        const numberOfVerticies = (arr.length / Constants.floatsPerVertex);
+        const numberOfVerticies = (arr.length / Constants.floatsPerPoint);
         for (let i = 0; i < numberOfVerticies; i++)
         {
-            const x = arr[i * Constants.floatsPerVertex];
-            const y = arr[(i * Constants.floatsPerVertex) + 1];
-            const z = arr[(i * Constants.floatsPerVertex) + 2];
-            const r = arr[(i * Constants.floatsPerVertex) + 3];
-            const g = arr[(i * Constants.floatsPerVertex) + 4];
-            const b = arr[(i * Constants.floatsPerVertex) + 5];
+            const x = arr[i * Constants.floatsPerPoint];
+            const y = arr[(i * Constants.floatsPerPoint) + 1];
+            const z = arr[(i * Constants.floatsPerPoint) + 2];
+            const r = arr[(i * Constants.floatsPerPoint) + 3];
+            const g = arr[(i * Constants.floatsPerPoint) + 4];
+            const b = arr[(i * Constants.floatsPerPoint) + 5];
 
             vertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
         }

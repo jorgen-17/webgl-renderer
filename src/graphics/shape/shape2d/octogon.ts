@@ -22,12 +22,12 @@ export class Octogon extends Shape
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(Octogon.numberOfVerticies * Constants.floatsPerVertex);
+        let arr = new Float32Array(Octogon.numberOfVerticies * Constants.floatsPerPoint);
 
-        const topThirds = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.topRight);
-        const rightThirds = ThirdPoints.between(this.boundingRect.topRight, this.boundingRect.bottomRight);
-        const bottomThirds = ThirdPoints.between(this.boundingRect.bottomLeft, this.boundingRect.bottomRight);
-        const leftThirds = ThirdPoints.between(this.boundingRect.topLeft, this.boundingRect.bottomLeft);
+        const topThirds = ThirdPoints.between(this._boundingRect.topLeft, this._boundingRect.topRight);
+        const rightThirds = ThirdPoints.between(this._boundingRect.topRight, this._boundingRect.bottomRight);
+        const bottomThirds = ThirdPoints.between(this._boundingRect.bottomLeft, this._boundingRect.bottomRight);
+        const leftThirds = ThirdPoints.between(this._boundingRect.topLeft, this._boundingRect.bottomLeft);
 
         const topLeftThird = topThirds.first;
         const topRightThird = topThirds.second;
@@ -40,30 +40,30 @@ export class Octogon extends Shape
 
         let insertionIndex = 0;
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, leftTopThird,
+        this.addTriangleToPositions(insertionIndex, leftTopThird,
             topLeftThird, leftBottomThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, leftBottomThird,
+        this.addTriangleToPositions(insertionIndex, leftBottomThird,
             topLeftThird, bottomLeftThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, bottomLeftThird,
+        this.addTriangleToPositions(insertionIndex, bottomLeftThird,
             topLeftThird, bottomRightThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, topLeftThird,
+        this.addTriangleToPositions(insertionIndex, topLeftThird,
             bottomRightThird, topRightThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, topRightThird,
+        this.addTriangleToPositions(insertionIndex, topRightThird,
             bottomRightThird, rightBottomThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToFloat32Array(arr, insertionIndex, topRightThird,
+        this.addTriangleToPositions(insertionIndex, topRightThird,
             rightBottomThird, rightTopThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this._verticies = new Float32Vector(arr, arr.length);
+        this._positions = new Float32Vector(arr, arr.length);
     }
 }

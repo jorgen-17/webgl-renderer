@@ -10,35 +10,24 @@ import { ShapeMode } from "./shapeMode";
 export abstract class Shape {
     public glRenderMode: number;
     public shapeMode: ShapeMode;
-    protected _verticies: Float32Vector;
-    protected boundingRect: BoundingRectangle;
-    private _rgbColor: RGBColor;
+    public rgbColor: RGBColor;
+    protected _positions: Float32Vector;
+    protected _boundingRect: BoundingRectangle;
     private _modelMatrix: Mat4;
     constructor(rgbColor: RGBColor = Settings.defaultColor, point1: Vec3 | null = null, point2: Vec3 | null = null)
     {
-        this._rgbColor = rgbColor;
+        this.rgbColor = rgbColor;
         this._modelMatrix = new Mat4().setIdentity();
 
         if (point1 && point2)
         {
-            this.boundingRect = new BoundingRectangle(point1, point2);
+            this._boundingRect = new BoundingRectangle(point1, point2);
         }
-    }
-
-    public get rgbColor(): RGBColor
-    {
-        return this._rgbColor;
-    }
-
-    public set rgbColor(value: RGBColor)
-    {
-        this._rgbColor = value;
-        this.computeVerticies();
     }
 
     public get verticies(): Float32Array
     {
-        return this._verticies.arr;
+        return this._positions.arr;
     }
 
     public get modelMatrix(): Mat4
@@ -48,25 +37,21 @@ export abstract class Shape {
 
     protected abstract computeVerticies(): void;
 
-    protected addXYZAndColorToFloat32Array(array: Float32Array, index: number,
-        x: number, y: number, z: number)
+    protected addXYZToPositions(index: number, x: number, y: number, z: number)
     {
-        array[index] = x;
-        array[index + 1] = y;
-        array[index + 2] = z;
-        array[index + 3] = this._rgbColor.red;
-        array[index + 4] = this._rgbColor.green;
-        array[index + 5] = this._rgbColor.blue;
+        this._positions[index] = x;
+        this._positions[index + 1] = y;
+        this._positions[index + 2] = z;
     }
 
-    protected addTriangleToFloat32Array(array: Float32Array, index: number,
+    protected addTriangleToPositions(index: number,
         vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3)
     {
-        this.addXYZAndColorToFloat32Array(array, index, vertex1Position.x,
+        this.addXYZToPositions(index, vertex1Position.x,
             vertex1Position.y, vertex1Position.z);
-        this.addXYZAndColorToFloat32Array(array, (index + Constants.floatsPerVertex), vertex2Position.x,
+        this.addXYZToPositions((index + Constants.floatsPerPoint), vertex2Position.x,
             vertex2Position.y, vertex2Position.z);
-        this.addXYZAndColorToFloat32Array(array, (index + (Constants.floatsPerVertex * 2)),
+        this.addXYZToPositions((index + (Constants.floatsPerPoint * 2)),
             vertex3Position.x, vertex3Position.y, vertex3Position.z);
     }
 }

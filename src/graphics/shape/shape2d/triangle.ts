@@ -22,15 +22,15 @@ export class Triangle extends Shape
 
     protected computeVerticies(): void
     {
-        const topPoint = Midpoint.between(this.boundingRect.topLeft, this.boundingRect.topRight);
+        const topPoint = Midpoint.between(this._boundingRect.topLeft, this._boundingRect.topRight);
 
-        let array = new Float32Array(Triangle.numberOfVerticies * Constants.floatsPerVertex);
+        let array = new Float32Array(Triangle.numberOfVerticies * Constants.floatsPerPoint);
 
         let insertionIndex = 0;
 
-        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft,
-            topPoint, this.boundingRect.bottomRight);
+        this.addTriangleToPositions(insertionIndex, this._boundingRect.bottomLeft,
+            topPoint, this._boundingRect.bottomRight);
 
-        this._verticies = new Float32Vector(array, array.length);
+        this._positions = new Float32Vector(array, array.length);
     }
 }

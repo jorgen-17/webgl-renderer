@@ -20,17 +20,17 @@ export class Rectangle extends Shape
     }
     protected computeVerticies(): void
     {
-        let array = new Float32Array(Rectangle.numberOfVerticies * Constants.floatsPerVertex);
+        let array = new Float32Array(Rectangle.numberOfVerticies * Constants.floatsPerPoint);
 
         let insertionIndex = 0;
 
-        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.topLeft,
-            this.boundingRect.topRight, this.boundingRect.bottomLeft);
+        this.addTriangleToPositions(insertionIndex, this._boundingRect.topLeft,
+            this._boundingRect.topRight, this._boundingRect.bottomLeft);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft,
-            this.boundingRect.topRight, this.boundingRect.bottomRight);
+        this.addTriangleToPositions(insertionIndex, this._boundingRect.bottomLeft,
+            this._boundingRect.topRight, this._boundingRect.bottomRight);
 
-        this._verticies = new Float32Vector(array, array.length);
+        this._positions = new Float32Vector(array, array.length);
     }
 }

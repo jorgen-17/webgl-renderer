@@ -15,10 +15,10 @@ export class Box extends Shape
     {
         super(rgbColor, point1, point2);
 
-        const length = this.boundingRect.topRight.x - this.boundingRect.topLeft.x;
-        const height = this.boundingRect.topRight.y - this.boundingRect.bottomRight.y;
+        const length = this._boundingRect.topRight.x - this._boundingRect.topLeft.x;
+        const height = this._boundingRect.topRight.y - this._boundingRect.bottomRight.y;
         const depth = Math.min(length, height);
-        this._backFaceZ = this.boundingRect.bottomLeft.z + depth;
+        this._backFaceZ = this._boundingRect.bottomLeft.z + depth;
 
         this.computeVerticies();
 
@@ -26,61 +26,61 @@ export class Box extends Shape
     }
     protected computeVerticies(): void
     {
-        let array = new Float32Array(Box.numberOfVerticies * Constants.floatsPerVertex);
+        let array = new Float32Array(Box.numberOfVerticies * Constants.floatsPerPoint);
 
         let insertionIndex = 0;
 
         // front face
-        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.topLeft,
-            this.boundingRect.topRight, this.boundingRect.bottomLeft);
+        this.addTriangleToPositions(insertionIndex, this._boundingRect.topLeft,
+            this._boundingRect.topRight, this._boundingRect.bottomLeft);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(array, insertionIndex, this.boundingRect.bottomLeft,
-            this.boundingRect.topRight, this.boundingRect.bottomRight);
+        this.addTriangleToPositions(insertionIndex, this._boundingRect.bottomLeft,
+            this._boundingRect.topRight, this._boundingRect.bottomRight);
         insertionIndex += Constants.floatsPerTriangle;
 
         // right face
-        const rightFaceRect = new BoundingRectangle(this.boundingRect.topRight,
-            new Vec3(this.boundingRect.bottomRight.x,this.boundingRect.bottomRight.y, this._backFaceZ));
-        this.addTriangleToFloat32Array(array, insertionIndex, rightFaceRect.topLeft,
+        const rightFaceRect = new BoundingRectangle(this._boundingRect.topRight,
+            new Vec3(this._boundingRect.bottomRight.x, this._boundingRect.bottomRight.y, this._backFaceZ));
+        this.addTriangleToPositions(insertionIndex, rightFaceRect.topLeft,
             rightFaceRect.topRight, rightFaceRect.bottomLeft);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(array, insertionIndex, rightFaceRect.bottomLeft,
+        this.addTriangleToPositions(insertionIndex, rightFaceRect.bottomLeft,
             rightFaceRect.topRight, rightFaceRect.bottomRight);
         insertionIndex += Constants.floatsPerTriangle;
 
         // left face
-        const leftFaceRect = new BoundingRectangle(this.boundingRect.topLeft,
-            new Vec3(this.boundingRect.bottomLeft.x,this.boundingRect.bottomLeft.y, this._backFaceZ));
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.topLeft,
+        const leftFaceRect = new BoundingRectangle(this._boundingRect.topLeft,
+            new Vec3(this._boundingRect.bottomLeft.x, this._boundingRect.bottomLeft.y, this._backFaceZ));
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.topLeft,
             leftFaceRect.topRight, leftFaceRect.bottomLeft);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.bottomLeft,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.bottomLeft,
             leftFaceRect.topRight, leftFaceRect.bottomRight);
         insertionIndex += Constants.floatsPerTriangle;
 
         // back face
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.topRight,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.topRight,
             rightFaceRect.topRight, leftFaceRect.bottomRight);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.bottomRight,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.bottomRight,
             rightFaceRect.topRight, rightFaceRect.bottomRight);
         insertionIndex += Constants.floatsPerTriangle;
 
         // top face
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.topRight,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.topRight,
             rightFaceRect.topRight, leftFaceRect.topLeft);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.topLeft,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.topLeft,
             rightFaceRect.topRight, rightFaceRect.topLeft);
         insertionIndex += Constants.floatsPerTriangle;
 
         // bottom face
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.bottomRight,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.bottomRight,
             rightFaceRect.bottomRight, leftFaceRect.bottomLeft);
         insertionIndex += Constants.floatsPerTriangle;
-        this.addTriangleToFloat32Array(array, insertionIndex, leftFaceRect.bottomLeft,
+        this.addTriangleToPositions(insertionIndex, leftFaceRect.bottomLeft,
             rightFaceRect.bottomRight, rightFaceRect.bottomLeft);
 
-        this._verticies = new Float32Vector(array, array.length);
+        this._positions = new Float32Vector(array, array.length);
     }
 }
