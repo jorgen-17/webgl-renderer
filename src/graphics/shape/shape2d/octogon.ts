@@ -18,6 +18,7 @@ export class Octogon extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
+        this.shapeMode = "octogons";
     }
 
     protected computeVerticies(): void

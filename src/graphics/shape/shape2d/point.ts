@@ -17,6 +17,7 @@ export class Point extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.POINTS;
+        this.shapeMode = "points";
     }
 
     protected computeVerticies(): void

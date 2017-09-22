@@ -40,6 +40,7 @@ export class Ellipse extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
+        this.shapeMode = "ellipses";
     }
 
     protected computeVerticies(): void

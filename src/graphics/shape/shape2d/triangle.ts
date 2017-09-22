@@ -18,6 +18,7 @@ export class Triangle extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
+        this.shapeMode = "triangles";
     }
 
     protected computeVerticies(): void

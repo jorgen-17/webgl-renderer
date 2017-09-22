@@ -17,6 +17,7 @@ export class Rectangle extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
+        this.shapeMode = "rectangles";
     }
     protected computeVerticies(): void
     {

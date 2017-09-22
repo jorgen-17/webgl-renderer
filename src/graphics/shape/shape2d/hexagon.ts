@@ -18,6 +18,7 @@ export class Hexagon extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
+        this.shapeMode = "hexagons";
     }
 
     protected computeVerticies(): void

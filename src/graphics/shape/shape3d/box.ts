@@ -23,6 +23,7 @@ export class Box extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
+        this.shapeMode = "box";
     }
     protected computeVerticies(): void
     {

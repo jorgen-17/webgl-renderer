@@ -43,6 +43,7 @@ export class Line extends Shape
         }
 
         this._verticies = new Float32Vector(arr);
+        this.shapeMode = "lines";
     }
 
     public addVertex(vertex: Vec3): void
