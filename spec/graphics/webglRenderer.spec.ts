@@ -367,11 +367,13 @@ describe("webglRenderer:", () =>
         {
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             renderer.renderMode = "points";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies);
+            // add shape instead
 
             const linesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
             renderer.renderMode = "lines";
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies);
+            // add shape instead
 
             const bufferDataSpy = glSpiesDictionary["bufferData"];
             const drawArraysSpy = glSpiesDictionary["drawArrays"];
@@ -473,7 +475,8 @@ describe("webglRenderer:", () =>
         it("sets the uniform variable u_pointSize", () =>
         {
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // add shape instead
 
             renderer.mockDraw();
 
@@ -630,7 +633,8 @@ describe("webglRenderer:", () =>
         it("sets the uniform variable u_viewMatrix", () =>
         {
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // add shape instead
 
             renderer.mockDraw();
 
@@ -654,243 +658,6 @@ describe("webglRenderer:", () =>
                 false,
                 camera.vpMatrix.elements
             ]);
-        });
-    });
-
-    describe("verticies:", () =>
-    {
-        let renderer: WebGLRendererMock;
-
-        beforeEach(() =>
-        {
-            renderer = new WebGLRendererMock(canvas, defaultOptions);
-        });
-
-        it("addXYZPointToScene to different vertex buffers sends verticies to webgl", () =>
-        {
-            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-
-            const linesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies, "lines", gl);
-
-            const lineStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineStripVerticies, "lineStrip", gl);
-
-            const lineLoopVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineLoopVerticies, "lineLoop", gl);
-
-            const trianglesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, trianglesVerticies, "triangles", gl);
-
-            const triangleStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleStripVerticies, "triangleStrip", gl);
-
-            const triangleFanVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleFanVerticies, "triangleFan", gl);
-
-            renderer.mockDraw();
-
-            const bufferDataSpy = glSpiesDictionary["bufferData"];
-            const drawArraysSpy = glSpiesDictionary["drawArrays"];
-
-            expect(gl.bufferData).toHaveBeenCalledTimes(7);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(7);
-
-            expect(bufferDataSpy.calls.all()[0].args).toEqual([
-                gl.ARRAY_BUFFER,
-                pointsVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[0].args).toEqual([
-                gl.POINTS,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[1].args).toEqual([
-                gl.ARRAY_BUFFER,
-                linesVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[1].args).toEqual([
-                gl.LINES,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[2].args).toEqual([
-                gl.ARRAY_BUFFER,
-                lineStripVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[2].args).toEqual([
-                gl.LINE_STRIP,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[3].args).toEqual([
-                gl.ARRAY_BUFFER,
-                lineLoopVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[3].args).toEqual([
-                gl.LINE_LOOP,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
-                gl.ARRAY_BUFFER,
-                trianglesVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[5].args).toEqual([
-                gl.ARRAY_BUFFER,
-                triangleStripVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[5].args).toEqual([
-                gl.TRIANGLE_STRIP,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[6].args).toEqual([
-                gl.ARRAY_BUFFER,
-                triangleFanVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[6].args).toEqual([
-                gl.TRIANGLE_FAN,
-                0,
-                10
-            ]);
-        });
-
-        it("removeAllVeriticies removes all verticies added as verticies", () =>
-        {
-            const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-
-            const linesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, linesVerticies, "lines", gl);
-
-            const lineStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineStripVerticies, "lineStrip", gl);
-
-            const lineLoopVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, lineLoopVerticies, "lineLoop", gl);
-
-            const trianglesVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, trianglesVerticies, "triangles", gl);
-
-            const triangleStripVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleStripVerticies, "triangleStrip", gl);
-
-            const triangleFanVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, triangleFanVerticies, "triangleFan", gl);
-
-            renderer.mockDraw();
-
-            const bufferDataSpy = glSpiesDictionary["bufferData"];
-            const drawArraysSpy = glSpiesDictionary["drawArrays"];
-
-            expect(gl.bufferData).toHaveBeenCalledTimes(7);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(7);
-
-            expect(bufferDataSpy.calls.all()[0].args).toEqual([
-                gl.ARRAY_BUFFER,
-                pointsVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[0].args).toEqual([
-                gl.POINTS,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[1].args).toEqual([
-                gl.ARRAY_BUFFER,
-                linesVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[1].args).toEqual([
-                gl.LINES,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[2].args).toEqual([
-                gl.ARRAY_BUFFER,
-                lineStripVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[2].args).toEqual([
-                gl.LINE_STRIP,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[3].args).toEqual([
-                gl.ARRAY_BUFFER,
-                lineLoopVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[3].args).toEqual([
-                gl.LINE_LOOP,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
-                gl.ARRAY_BUFFER,
-                trianglesVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[5].args).toEqual([
-                gl.ARRAY_BUFFER,
-                triangleStripVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[5].args).toEqual([
-                gl.TRIANGLE_STRIP,
-                0,
-                10
-            ]);
-
-            expect(bufferDataSpy.calls.all()[6].args).toEqual([
-                gl.ARRAY_BUFFER,
-                triangleFanVerticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[6].args).toEqual([
-                gl.TRIANGLE_FAN,
-                0,
-                10
-            ]);
-            bufferDataSpy.calls.reset();
-            drawArraysSpy.calls.reset();
-
-            renderer.removeAllVeriticies();
-
-            renderer.mockDraw();
-
-            expect(gl.bufferData).toHaveBeenCalledTimes(0);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -950,7 +717,7 @@ describe("webglRenderer:", () =>
             // point drawn
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
-                point.positions,
+                point.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[0].args).toEqual([
@@ -962,7 +729,7 @@ describe("webglRenderer:", () =>
             // line drawn
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.positions,
+                line.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
@@ -974,7 +741,7 @@ describe("webglRenderer:", () =>
             // redTriangle drawn
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.positions,
+                redTriangle.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
@@ -986,7 +753,7 @@ describe("webglRenderer:", () =>
             // orangeSquare drawn
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.positions,
+                orangeSquare.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
@@ -998,7 +765,7 @@ describe("webglRenderer:", () =>
             // yellowHexagon drawn
             expect(bufferDataSpy.calls.all()[4].args).toEqual([
                 gl.ARRAY_BUFFER,
-                yellowHexagon.positions,
+                yellowHexagon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[4].args).toEqual([
@@ -1010,7 +777,7 @@ describe("webglRenderer:", () =>
             // greenOctogon drawn
             expect(bufferDataSpy.calls.all()[5].args).toEqual([
                 gl.ARRAY_BUFFER,
-                greenOctogon.positions,
+                greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[5].args).toEqual([
@@ -1022,7 +789,7 @@ describe("webglRenderer:", () =>
             // blueEllipse drawn
             expect(bufferDataSpy.calls.all()[6].args).toEqual([
                 gl.ARRAY_BUFFER,
-                blueEllipse.positions,
+                blueEllipse.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[6].args).toEqual([
@@ -1055,7 +822,7 @@ describe("webglRenderer:", () =>
             // point drawn
             expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
-                point.positions,
+                point.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[0].args).toEqual([
@@ -1067,7 +834,7 @@ describe("webglRenderer:", () =>
             // line drawn
             expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
-                line.positions,
+                line.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
@@ -1079,7 +846,7 @@ describe("webglRenderer:", () =>
             // redTriangle drawn
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
-                redTriangle.positions,
+                redTriangle.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[2].args).toEqual([
@@ -1091,7 +858,7 @@ describe("webglRenderer:", () =>
             // orangeSquare drawn
             expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
-                orangeSquare.positions,
+                orangeSquare.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[3].args).toEqual([
@@ -1103,7 +870,7 @@ describe("webglRenderer:", () =>
             // yellowHexagon drawn
             expect(bufferDataSpy.calls.all()[4].args).toEqual([
                 gl.ARRAY_BUFFER,
-                yellowHexagon.positions,
+                yellowHexagon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[4].args).toEqual([
@@ -1115,7 +882,7 @@ describe("webglRenderer:", () =>
             // greenOctogon drawn
             expect(bufferDataSpy.calls.all()[5].args).toEqual([
                 gl.ARRAY_BUFFER,
-                greenOctogon.positions,
+                greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[5].args).toEqual([
@@ -1127,7 +894,7 @@ describe("webglRenderer:", () =>
             // blueEllipse drawn
             expect(bufferDataSpy.calls.all()[6].args).toEqual([
                 gl.ARRAY_BUFFER,
-                blueEllipse.positions,
+                blueEllipse.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[6].args).toEqual([
@@ -1169,7 +936,8 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // add shape instead
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
@@ -1197,7 +965,8 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // add shape instead
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
@@ -1225,7 +994,8 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
             const pointsVerticies = WebglRendererTestHelper.getRandomVerticies(gl);
-            WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
+            // add shape instead
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +

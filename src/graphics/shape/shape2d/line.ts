@@ -10,17 +10,15 @@ import { ShapeMode } from "../shapeMode";
 export class Line extends Shape
 {
     public shapeMode: ShapeMode = "lines";
-    public numberOfPositionVerticies = 1;
-    private _verticies: Float32Vector;
     private _vertexPositions: Array<Vec3>;
+    private _verticiesVector: Float32Vector;
 
     constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(rgbColor);
+        super(1, rgbColor);
 
-        let array = new Float32Array(Constants.floatsPerPoint);
+        let array = new Float32Vector();
 
-        this._vertexPositions = new Array<Vec3>();
         this._vertexPositions = new Array<Vec3>();
         this._vertexPositions.push(point);
 
@@ -29,14 +27,16 @@ export class Line extends Shape
         this.glRenderMode = gl.LINE_STRIP;
     }
 
-    public get positions(): Float32Array
+    public get verticies(): Float32Array
+
     {
-        return this._verticies.getTrimmedArray();
+        return this._verticiesVector.getTrimmedArray();
     }
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(this._vertexPositions.length * Constants.floatsPerPoint);
+        let arr = new Float32Array(this._vertexPositions.length *
+            (Constants.floatsPerPoint + Constants.floatsPerColor));
 
         for (let i = 0; i < this._vertexPositions.length; i++)
         {
@@ -45,17 +45,17 @@ export class Line extends Shape
             this.addXYZAndColorToFloat32Array(arr, insertionIndex, vertexPosition.x, vertexPosition.y, vertexPosition.z);
         }
 
-        this._verticies = new Float32Vector(arr);
+        this._verticiesVector = new Float32Vector(arr);
     }
 
     public addVertex(vertex: Vec3): void
     {
         this._vertexPositions.push(vertex);
-        this.numberOfPositionVerticies++;
+        this.numberOfVerticies++;
 
         let array = new Float32Array(Constants.floatsPerPoint);
         this.addXYZAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);
-        this._verticies.addArray(array);
+        this._verticiesVector.addArray(array);
     }
 
     private addXYZAndColorToFloat32Array(array: Float32Array, index: number,

@@ -31,7 +31,7 @@ describe("point:", () =>
         ]);
 
         expect(blue).toEqual(point.rgbColor);
-        expect(expectedVertex).toEqual(point.positions);
+        expect(expectedVertex).toEqual(point.verticies);
         expect(gl.POINTS).toEqual(point.glRenderMode);
     });
 
@@ -54,7 +54,7 @@ describe("point:", () =>
         ]);
 
         expect(green).toEqual(point.rgbColor);
-        expect(expectedVertex).toEqual(point.positions);
+        expect(expectedVertex).toEqual(point.verticies);
         expect(gl.POINTS).toEqual(point.glRenderMode);
     });
 });

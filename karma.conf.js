@@ -28,6 +28,7 @@ module.exports = function(config) {
         // { pattern: "spec/graphics/shape/shape3d/box.spec.ts" },
         { pattern: "spec/graphics/shape/midpoint.spec.ts" },
         { pattern: "spec/graphics/shape/boundingRectangle.spec.ts" },
+        { pattern: "spec/graphics/shape/shapeBuffer.spec.ts" },
         // { pattern: "spec/graphics/shape/shapeFactory.spec.ts" },
         // { pattern: "spec/graphics/webglRenderer.spec.ts" },
         // { pattern: "spec/graphics/vertexBuffer.spec.ts" },

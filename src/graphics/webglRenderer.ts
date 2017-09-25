@@ -41,14 +41,7 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-    private _pointsVertexBuffer: VertexBuffer;
-    private _linesVertexBuffer: VertexBuffer;
-    private _lineStripVertexBuffer: VertexBuffer;
-    private _lineLoopVertexBuffer: VertexBuffer;
-    private _trianglesVertexBuffer: VertexBuffer;
-    private _triangleStripVertexBuffer: VertexBuffer;
-    private _triangleFanVertexBuffer: VertexBuffer;
-    private _vertexBuffers: Array<VertexBuffer>;
+
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
@@ -57,6 +50,10 @@ export class WebGLRenderer
     private _boxShapeBuffer: ShapeBuffer<Box>;
     private _shapeBuffers: Array<ShapeBuffer<Shape>>;
     private _shaderProgram: WebGLShader;
+    private _a_position: number;
+    private _a_color: number;
+    private _u_pointSize: WebGLUniformLocation  | null;
+    private _u_mvpMatrix: WebGLUniformLocation  | null;
     private _instancedArraysExt: ANGLE_instanced_arrays;
 // end_region: member variables
 
@@ -95,7 +92,6 @@ export class WebGLRenderer
 
         this.initializeRenderingOptions(renderingOptions);
 
-        this.initializeVertexBuffers();
         this.initializaShapeBuffers();
 
         this.setupWindowCallbacks();
@@ -175,36 +171,6 @@ export class WebGLRenderer
         this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    public addXYZPointToScene(x: number, y: number, z: number = 0,
-        r: number = Settings.defaultColor.red, g: number = Settings.defaultColor.green,
-        b: number = Settings.defaultColor.blue, renderMode: number = this._glRenderMode): void
-    {
-        switch (renderMode)
-        {
-            case this.gl.POINTS:
-                this._pointsVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-            case this.gl.LINES:
-                this._linesVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-            case this.gl.LINE_STRIP:
-                this._lineStripVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-            case this.gl.LINE_LOOP:
-                this._lineLoopVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-            case this.gl.TRIANGLES:
-                this._trianglesVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-            case this.gl.TRIANGLE_STRIP:
-                this._triangleStripVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-            case this.gl.TRIANGLE_FAN:
-                this._triangleFanVertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
-                break;
-        }
-    }
-
     public addShapeToScene(shape: Shape): string
     {
         switch (shape.shapeMode)
@@ -234,11 +200,6 @@ export class WebGLRenderer
         }
     }
 
-    public removeAllVeriticies(): void
-    {
-        this.initializeVertexBuffers();
-    }
-
     public removeAllShapes(): void
     {
         this.initializaShapeBuffers();
@@ -251,18 +212,40 @@ export class WebGLRenderer
             case "triangles":
                 return this._trianglesShapeBuffer.removeShape(id);
             case "rectangles":
-                return this._trianglesShapeBuffer.removeShape(id);
+                return this._rectanglesShapeBuffer.removeShape(id);
             case "hexagons":
-                return this._trianglesShapeBuffer.removeShape(id);
+                return this._hexagonsShapeBuffer.removeShape(id);
             case "octogons":
-                return this._trianglesShapeBuffer.removeShape(id);
+                return this._octogonsShapeBuffer.removeShape(id);
             case "ellipses":
-                return this._trianglesShapeBuffer.removeShape(id);
+                return this._ellipsesShapeBuffer.removeShape(id);
             case "box":
-                return this._trianglesShapeBuffer.removeShape(id);
+                return this._boxShapeBuffer.removeShape(id);
         }
 
         return this.removeShapeFromUnspecifiedBuffer(id);
+    }
+
+    public updateShapeColor(id: string, newColor: RGBColor,
+        shapeMode?: ShapeMode): boolean
+    {
+        switch (shapeMode)
+        {
+            case "triangles":
+                return this._trianglesShapeBuffer.updateColor(id, newColor);
+            case "rectangles":
+                return this._rectanglesShapeBuffer.updateColor(id, newColor);
+            case "hexagons":
+                return this._hexagonsShapeBuffer.updateColor(id, newColor);
+            case "octogons":
+                return this._octogonsShapeBuffer.updateColor(id, newColor);
+            case "ellipses":
+                return this._ellipsesShapeBuffer.updateColor(id, newColor);
+            case "box":
+                return this._boxShapeBuffer.updateColor(id, newColor);
+        }
+
+        return this.updateShapeColorFromUnspecifiedBuffer(id, newColor);
     }
 
     public start()
@@ -284,14 +267,11 @@ export class WebGLRenderer
             this._backgroundColor.blue, Settings.defaultBackgroundAlpha);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-        for (let vb of this._vertexBuffers)
+        for (let sb of this._shapeBuffers)
         {
-            for (let verts of vb.verticiesStack)
+            if (sb.count > 0)
             {
-                if (verts.size > 0)
-                {
-                    this.drawGlArray(verts.getTrimmedArray(), vb.glRenderMode);
-                }
+                // s
             }
         }
     }
@@ -307,10 +287,11 @@ export class WebGLRenderer
     private setupGlResources()
     {
         this.getContext();
-        this.getGlExtensions();
 
         this.setViewPortDimensions(this._canvas.width, this._canvas.height);
         this.initShaders();
+
+        this.getShaderVariables();
     }
 
     private getContext (): void
@@ -344,11 +325,6 @@ export class WebGLRenderer
         this.gl = gl;
     }
 
-    private getGlExtensions(): void
-    {
-        this._instancedArraysExt = this.gl.getExtension(Settings.instancedArrayExtensionName);
-    }
-
     private handleContextLost = (event: WebGLContextEvent) =>
     {
         this.stop();
@@ -375,26 +351,6 @@ export class WebGLRenderer
         this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
     }
 
-    private initializeVertexBuffers()
-    {
-        this._pointsVertexBuffer = new VertexBuffer(this.gl.POINTS, this.gl);
-        this._linesVertexBuffer = new VertexBuffer(this.gl.LINES, this.gl);
-        this._lineStripVertexBuffer = new VertexBuffer(this.gl.LINE_STRIP, this.gl);
-        this._lineLoopVertexBuffer = new VertexBuffer(this.gl.LINE_LOOP, this.gl);
-        this._trianglesVertexBuffer = new VertexBuffer(this.gl.TRIANGLES, this.gl);
-        this._triangleStripVertexBuffer = new VertexBuffer(this.gl.TRIANGLE_STRIP, this.gl);
-        this._triangleFanVertexBuffer = new VertexBuffer(this.gl.TRIANGLE_FAN, this.gl);
-        this._vertexBuffers = [
-            this._pointsVertexBuffer,
-            this._linesVertexBuffer,
-            this._lineStripVertexBuffer,
-            this._lineLoopVertexBuffer,
-            this._trianglesVertexBuffer,
-            this._triangleStripVertexBuffer,
-            this._triangleFanVertexBuffer
-        ];
-    }
-
     private initializaShapeBuffers()
     {
         this._trianglesShapeBuffer = new ShapeBuffer<Triangle>();
@@ -413,19 +369,21 @@ export class WebGLRenderer
         ];
     }
 
-    private drawGlArray(arr: Float32Array, renderMode: number,
-        modelMatrix: Mat4 = Settings.defaultModelMatrix): void
+    private getShaderVariables(): void
     {
-        const a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
-        const a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
-        const u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
-        const u_mvpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.mvpMatrixUniformName);
+        this._a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
+        this._a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
+        this._u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
+        this._u_mvpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.mvpMatrixUniformName);
+    }
 
-        if (!u_pointSize || !u_mvpMatrix)
+    private drawShapeBuffer(arr: Float32Array, shapeBuffer: ShapeBuffer<Shape>): void
+    {
+        if (!this._u_pointSize || !this._u_mvpMatrix)
         {
             const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
-            uniformsMap[ShaderSettings.pointSizeUniformName] = u_pointSize;
-            uniformsMap[ShaderSettings.mvpMatrixUniformName] = u_mvpMatrix;
+            uniformsMap[ShaderSettings.pointSizeUniformName] = this._u_pointSize;
+            uniformsMap[ShaderSettings.mvpMatrixUniformName] = this._u_mvpMatrix;
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
         }
@@ -434,18 +392,20 @@ export class WebGLRenderer
         const bytesPerPoint = floatSize * Constants.floatsPerPoint;
         const bytesPerVertex = floatSize * Constants.floatsPerPoint;
 
+        const shapePrototype = shapeBuffer.first;
+
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW); // ur cutieful
-        this.gl.vertexAttribPointer(a_position, Constants.floatsPerPoint, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPoint, this.gl.FLOAT,
             false, bytesPerVertex, 0);
-        this.gl.enableVertexAttribArray(a_position);
-        this.gl.vertexAttribPointer(a_color, Constants.floatsPerColor, this.gl.FLOAT,
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
-        this.gl.enableVertexAttribArray(a_color);
-        this.gl.uniformMatrix4fv(u_mvpMatrix, false, this._camera.viewMatrix.multiply(modelMatrix).elements);
-        this.gl.uniform1f(u_pointSize, this._pointSize);
-        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerPoint));
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.uniformMatrix4fv(this._u_mvpMatrix, false, this._camera.vpMatrix.elements);
+        this.gl.uniform1f(this._u_pointSize, this._pointSize);
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (arr.length / Constants.floatsPerPoint));
         this.gl.deleteBuffer(vertexBuffer);
     }
 
@@ -546,6 +506,19 @@ export class WebGLRenderer
         for (let shapeBuffer of this._shapeBuffers)
         {
             if (shapeBuffer.removeShape(id))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean
+    {
+        for (let shapeBuffer of this._shapeBuffers)
+        {
+            if (shapeBuffer.updateColor(id, newColor))
             {
                 return true;
             }

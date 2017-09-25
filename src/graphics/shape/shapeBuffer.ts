@@ -1,4 +1,4 @@
-import { cuid } from "cuid";
+import * as cuid from "cuid";
 import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../../utils/float32Vector";
@@ -10,32 +10,42 @@ import { RGBColor } from "../color/rgbColor";
 
 export class ShapeBuffer<S extends Shape>
 {
-    private _positionVerticies: Float32Vector;
-    private _colorVerticies: Float32Vector;
-    private _modelMatrixVerticies: Float32Vector;
+    private _verticies: Float32Vector;
+    private _trimmedArray: Float32Array;
     private _shapes: StringDictionary<{shape: S, index: number}>;
+    private _protoShape: S;
 
     constructor()
     {
-        this._positionVerticies = new Float32Vector();
-        this._colorVerticies = new Float32Vector();
-        this._modelMatrixVerticies = new Float32Vector();
+        this._verticies = new Float32Vector();
+        this._trimmedArray = new Float32Array(0);
         this._shapes = {};
+    }
+
+    public get verticies(): Float32Array
+    {
+        return this._trimmedArray;
+    }
+
+    public get count(): number
+    {
+        return Object.keys(this._shapes).length;
+    }
+
+    public get first(): S
+    {
+        const firstKey = Object.keys(this._shapes)[0];
+        return this._shapes[firstKey].shape;
     }
 
     public addShape(shape: S): string
     {
         const id = cuid();
-        const index = Object.keys(this._shapes).length;
+        const index = this.count;
         this._shapes[id] = {shape, index};
 
-        this._positionVerticies.addArray(shape.positions)
-        this._colorVerticies.addArray([
-            shape.rgbColor.red,
-            shape.rgbColor.green,
-            shape.rgbColor.blue
-        ]);
-        this._modelMatrixVerticies.addArray(shape.modelMatrix.elements);
+        this._verticies.addArray(shape.verticies);
+        this._trimmedArray = this._verticies.getTrimmedArray();
 
         return id;
     }
@@ -47,13 +57,12 @@ export class ShapeBuffer<S extends Shape>
             const shape = this._shapes[id].shape;
             const index = this._shapes[id].index;
 
-            const positionCount = shape.numberOfPositionVerticies * Constants.floatsPerPoint;
+            const positionCount = shape.numberOfVerticies * Constants.floatsPerPoint;
             const positionIndex = index * positionCount;
-            this._positionVerticies.remove(positionIndex, positionCount);
-            const colorIndex = index * Constants.floatsPerColor;
-            this._colorVerticies.remove(colorIndex, Constants.floatsPerColor);
-            const modelMatrixIndex = index * Constants.floatsPerMat4;
-            this._modelMatrixVerticies.remove(modelMatrixIndex, Constants.floatsPerMat4);
+            this._verticies.remove(positionIndex, positionCount);
+            this._trimmedArray = this._verticies.getTrimmedArray();
+
+            // reorder indicies
 
             delete this._shapes[id];
 
@@ -70,12 +79,11 @@ export class ShapeBuffer<S extends Shape>
             const shape = this._shapes[id].shape;
             const index = this._shapes[id].index;
 
-            const colorIndex = index * Constants.floatsPerColor;
-            this._colorVerticies[colorIndex] = newColor.red;
-            this._colorVerticies[colorIndex + 1] = newColor.green;
-            this._colorVerticies[colorIndex + 2] = newColor.blue;
-
             shape.rgbColor = newColor;
+
+            // update verticies
+            // this._verticies =
+            this._trimmedArray = this._verticies.getTrimmedArray();
 
             return true;
         }

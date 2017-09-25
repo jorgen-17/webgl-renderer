@@ -177,35 +177,6 @@ export class WebglRendererTestHelper
         return arr;
     }
 
-    public static addVerticiesToRenderer(renderer: WebGLRenderer, arr: Float32Array,
-        renderMode: RenderMode | null = null, gl: WebGLRenderingContext | null = null)
-    {
-        if (arr.length % 6 !== 0)
-        {
-            throw `incorrect number of floats, must be divisible by ${Constants.floatsPerPoint}`;
-        }
-
-        const numberOfVerticies = (arr.length / Constants.floatsPerPoint);
-        for (let i = 0; i < numberOfVerticies; i++)
-        {
-            const x = arr[i * Constants.floatsPerPoint];
-            const y = arr[(i * Constants.floatsPerPoint) + 1];
-            const z = arr[(i * Constants.floatsPerPoint) + 2];
-            const r = arr[(i * Constants.floatsPerPoint) + 3];
-            const g = arr[(i * Constants.floatsPerPoint) + 4];
-            const b = arr[(i * Constants.floatsPerPoint) + 5];
-            if (renderMode && gl)
-            {
-                const glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, gl);
-                renderer.addXYZPointToScene(x, y, z, r, g, b, glRenderMode);
-            }
-            else
-            {
-                renderer.addXYZPointToScene(x, y, z, r, g, b);
-            }
-        }
-    }
-
     public static addVerticiesToVertexBuffer(vertexBuffer: VertexBuffer, arr: Float32Array)
     {
         if (arr.length % 6 !== 0)
@@ -243,16 +214,7 @@ export class WebglRendererTestHelper
         return ((((Math.random() *  100) / 100) % 2) === 0) ? 1 : -1;
     }
 
-    public static concatTwoFloat32Arrays(arr1: Float32Array, arr2: Float32Array): Float32Array
-    {
-        let concated = new Float32Array(arr1.length + arr2.length);
-        concated.set(arr1);
-        concated.set(arr2, arr1.length);
-
-        return concated;
-    }
-
-    public static concatMultipleFloat32Arrays(arrs: Array<Float32Array>): Float32Array
+    public static concatFloat32Arrays(arrs: Array<Float32Array>): Float32Array
     {
         let newArrayLength = 0;
         arrs.forEach(arr => {

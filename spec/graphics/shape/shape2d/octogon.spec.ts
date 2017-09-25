@@ -32,7 +32,7 @@ describe("octogon:", () =>
             {
                 const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
-                expect(108).toEqual(octogon.positions.length);
+                expect(108).toEqual(octogon.verticies.length);
 
                 const expectedVerticies = new Float32Array([
                     // triangle 1
@@ -61,7 +61,7 @@ describe("octogon:", () =>
                     1, 0.8333333730697632, 0, color.red, color.green, color.blue, // vertex 18
                 ]);
 
-                expect(expectedVerticies).toEqual(octogon.positions);
+                expect(expectedVerticies).toEqual(octogon.verticies);
             });
         });
     });
@@ -70,7 +70,7 @@ describe("octogon:", () =>
     {
         const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
 
-        expect(108).toEqual(octogon.positions.length);
+        expect(108).toEqual(octogon.verticies.length);
 
         let expectedVerticies = new Float32Array([
             // triangle 1
@@ -99,13 +99,13 @@ describe("octogon:", () =>
             1, 0.8333333730697632, 0, color.red, color.green, color.blue, // vertex 18
         ]);
 
-        expect(expectedVerticies).toEqual(octogon.positions);
+        expect(expectedVerticies).toEqual(octogon.verticies);
 
         const newColor = new RGBColor(0.5, 0.5, 0.5);
 
         octogon.rgbColor = newColor;
 
-        expect(108).toEqual(octogon.positions.length);
+        expect(108).toEqual(octogon.verticies.length);
 
         expectedVerticies = new Float32Array([
             // triangle 1
@@ -134,6 +134,6 @@ describe("octogon:", () =>
             1, 0.8333333730697632, 0, newColor.red, newColor.green, newColor.blue, // vertex 18
         ]);
 
-        expect(expectedVerticies).toEqual(octogon.positions);
+        expect(expectedVerticies).toEqual(octogon.verticies);
     });
 });

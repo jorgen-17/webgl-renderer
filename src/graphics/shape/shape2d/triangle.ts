@@ -10,12 +10,12 @@ import { ShapeMode } from "../shapeMode";
 
 export class Triangle extends Shape
 {
+    public static readonly numberOfVerticies = 3;
     public shapeMode: ShapeMode = "triangles";
-    public numberOfPositionVerticies = 3;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(rgbColor, point1, point2);
+        super(Triangle.numberOfVerticies, rgbColor, point1, point2);
 
         this.computeVerticies();
 
@@ -26,13 +26,9 @@ export class Triangle extends Shape
     {
         const topPoint = Midpoint.between(this._boundingRect.topLeft, this._boundingRect.topRight);
 
-        let array = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
-
         let insertionIndex = 0;
 
-        this.addTriangleToPositions(insertionIndex, this._boundingRect.bottomLeft,
+        this.addTriangleToVerticies(insertionIndex, this._boundingRect.bottomLeft,
             topPoint, this._boundingRect.bottomRight);
-
-        this._positions = new Float32Vector(array, array.length);
     }
 }

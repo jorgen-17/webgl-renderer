@@ -10,11 +10,11 @@ import { ShapeMode } from "../shapeMode";
 
 export class Hexagon extends Shape
 {
+    private static readonly numberOfVerticies = 12;
     public shapeMode: ShapeMode = "hexagons";
-    public numberOfPositionVerticies = 12;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(rgbColor, point1, point2);
+        super(Hexagon.numberOfVerticies, rgbColor, point1, point2);
 
         this.computeVerticies();
 
@@ -23,8 +23,6 @@ export class Hexagon extends Shape
 
     protected computeVerticies(): void
     {
-        const arr = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
-
         const topThirds = ThirdPoints.between(this._boundingRect.topLeft,
             this._boundingRect.topRight);
         const topFirstThird = topThirds.first;
@@ -38,21 +36,19 @@ export class Hexagon extends Shape
 
         let insertionIndex = 0;
 
-        this.addTriangleToPositions(insertionIndex, topFirstThird,
+        this.addTriangleToVerticies(insertionIndex, topFirstThird,
             bottomFirstThird, midLeft);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, topFirstThird,
+        this.addTriangleToVerticies(insertionIndex, topFirstThird,
             bottomFirstThird, bottomSecondThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, topFirstThird,
+        this.addTriangleToVerticies(insertionIndex, topFirstThird,
             topSecondThird, bottomSecondThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, topSecondThird,
+        this.addTriangleToVerticies(insertionIndex, topSecondThird,
             bottomSecondThird, midRight);
-
-        this._positions = new Float32Vector(arr, arr.length);
     }
 }

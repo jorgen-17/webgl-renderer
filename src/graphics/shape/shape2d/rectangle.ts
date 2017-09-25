@@ -9,11 +9,11 @@ import { ShapeMode } from "../shapeMode";
 
 export class Rectangle extends Shape
 {
+    private static readonly numberOfVerticies = 6;
     public shapeMode: ShapeMode = "rectangles";
-    public numberOfPositionVerticies = 6;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(rgbColor, point1, point2);
+        super(Rectangle.numberOfVerticies, rgbColor, point1, point2);
 
         this.computeVerticies();
 
@@ -21,17 +21,13 @@ export class Rectangle extends Shape
     }
     protected computeVerticies(): void
     {
-        let array = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
-
         let insertionIndex = 0;
 
-        this.addTriangleToPositions(insertionIndex, this._boundingRect.topLeft,
+        this.addTriangleToVerticies(insertionIndex, this._boundingRect.topLeft,
             this._boundingRect.topRight, this._boundingRect.bottomLeft);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, this._boundingRect.bottomLeft,
+        this.addTriangleToVerticies(insertionIndex, this._boundingRect.bottomLeft,
             this._boundingRect.topRight, this._boundingRect.bottomRight);
-
-        this._positions = new Float32Vector(array, array.length);
     }
 }

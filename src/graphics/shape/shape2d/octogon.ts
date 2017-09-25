@@ -10,11 +10,11 @@ import { ShapeMode } from "../shapeMode";
 
 export class Octogon extends Shape
 {
+    private static readonly numberOfVerticies = 18;
     public shapeMode: ShapeMode = "octogons";
-    public numberOfPositionVerticies = 18;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(rgbColor, point1, point2);
+        super(Octogon.numberOfVerticies, rgbColor, point1, point2);
 
         this.computeVerticies();
 
@@ -23,8 +23,6 @@ export class Octogon extends Shape
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(this.numberOfPositionVerticies * Constants.floatsPerPoint);
-
         const topThirds = ThirdPoints.between(this._boundingRect.topLeft, this._boundingRect.topRight);
         const rightThirds = ThirdPoints.between(this._boundingRect.topRight, this._boundingRect.bottomRight);
         const bottomThirds = ThirdPoints.between(this._boundingRect.bottomLeft, this._boundingRect.bottomRight);
@@ -41,30 +39,28 @@ export class Octogon extends Shape
 
         let insertionIndex = 0;
 
-        this.addTriangleToPositions(insertionIndex, leftTopThird,
+        this.addTriangleToVerticies(insertionIndex, leftTopThird,
             topLeftThird, leftBottomThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, leftBottomThird,
+        this.addTriangleToVerticies(insertionIndex, leftBottomThird,
             topLeftThird, bottomLeftThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, bottomLeftThird,
+        this.addTriangleToVerticies(insertionIndex, bottomLeftThird,
             topLeftThird, bottomRightThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, topLeftThird,
+        this.addTriangleToVerticies(insertionIndex, topLeftThird,
             bottomRightThird, topRightThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, topRightThird,
+        this.addTriangleToVerticies(insertionIndex, topRightThird,
             bottomRightThird, rightBottomThird);
         insertionIndex += Constants.floatsPerTriangle;
 
-        this.addTriangleToPositions(insertionIndex, topRightThird,
+        this.addTriangleToVerticies(insertionIndex, topRightThird,
             rightBottomThird, rightTopThird);
         insertionIndex += Constants.floatsPerTriangle;
-
-        this._positions = new Float32Vector(arr, arr.length);
     }
 }
