@@ -41,7 +41,6 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
@@ -52,7 +51,10 @@ export class WebGLRenderer
     private _shaderProgram: WebGLShader;
     private _a_position: number;
     private _a_color: number;
-    private _a_modelMatrix: number;
+    private _a_modelMatrixRow0: number;
+    private _a_modelMatrixRow1: number;
+    private _a_modelMatrixRow2: number;
+    private _a_modelMatrixRow3: number;
     private _u_pointSize: WebGLUniformLocation  | null;
     private _u_vpMatrix: WebGLUniformLocation  | null;
     private _instancedArraysExt: ANGLE_instanced_arrays;
@@ -375,7 +377,10 @@ export class WebGLRenderer
     {
         this._a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
         this._a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
-        this._a_modelMatrix = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.modelMatrixAttributeName);
+        this._a_modelMatrixRow0 = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.modelMatrixAttributeName);
+        this._a_modelMatrixRow1 = this._a_modelMatrixRow0 + 1;
+        this._a_modelMatrixRow2 = this._a_modelMatrixRow0 + 2;
+        this._a_modelMatrixRow3 = this._a_modelMatrixRow0 + 3;
         this._u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
         this._u_vpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.vpMatrixUniformName);
     }
@@ -395,6 +400,13 @@ export class WebGLRenderer
         const floatSize = verticies.BYTES_PER_ELEMENT;
         const bytesPerPoint = floatSize * Constants.floatsPerPoint;
         const bytesPerVertex = floatSize * Constants.floatsPerVertex;
+        const floatsPerRow = Constants.floatsPerRowOfMat4;
+        const bytesPerRow = floatsPerRow * floatSize;
+        const bytesPerMatrix = bytesPerRow * floatSize;
+        const modelMatrixRow0Offset = bytesPerRow * 0;
+        const modelMatrixRow1Offset = bytesPerRow * 1;
+        const modelMatrixRow2Offset = bytesPerRow * 2;
+        const modelMatrixRow3Offset = bytesPerRow * 3;
 
         const shapePrototype = shapeBuffer.first;
 
@@ -407,9 +419,18 @@ export class WebGLRenderer
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.vertexAttribPointer(this._a_modelMatrix, Constants.floatsPerMat4, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
-        this.gl.enableVertexAttribArray(this._a_modelMatrix);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4, this.gl.FLOAT,
+            false, bytesPerVertex, bytesPerPoint);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4, this.gl.FLOAT,
+            false, bytesPerVertex, bytesPerPoint);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4, this.gl.FLOAT,
+            false, bytesPerVertex, bytesPerPoint);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
         this.gl.uniform1f(this._u_pointSize, this._pointSize);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerVertex));
