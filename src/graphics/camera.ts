@@ -127,7 +127,7 @@ export class Camera
 
     public set lookAtPoint(value: Vec3)
     {
-        this._lookAtPoint;
+        this._lookAtPoint = value;
 
         this.updateView();
     }
