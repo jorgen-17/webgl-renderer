@@ -57,12 +57,13 @@ export class ShapeBuffer<S extends Shape>
             const shape = this._shapes[id].shape;
             const index = this._shapes[id].index;
 
-            const positionCount = shape.numberOfVerticies * Constants.floatsPerPoint;
-            const positionIndex = index * positionCount;
-            this._verticies.remove(positionIndex, positionCount);
+            const verticiesCount = shape.numberOfVerticies * Constants.floatsPerVertex;
+            const verticiesIndex = index * verticiesCount;
+
+            this._verticies.remove(verticiesIndex, verticiesCount);
             this._trimmedArray = this._verticies.getTrimmedArray();
 
-            // reorder indicies
+            this.reorderIndicies(index);
 
             delete this._shapes[id];
 
@@ -81,13 +82,25 @@ export class ShapeBuffer<S extends Shape>
 
             shape.rgbColor = newColor;
 
-            // update verticies
-            // this._verticies =
+            const verticiesCount = shape.numberOfVerticies * Constants.floatsPerVertex;
+            const verticiesIndex = index * verticiesCount;
+
+            this._verticies.overwrite(verticiesIndex, shape.verticies);
             this._trimmedArray = this._verticies.getTrimmedArray();
 
             return true;
         }
 
         return false;
+    }
+
+    private reorderIndicies(deletedIndex: number) {
+        for (let key of Object.keys(this._shapes))
+        {
+            if (this._shapes[key].index > deletedIndex)
+            {
+                this._shapes[key].index--;
+            }
+        }
     }
 }

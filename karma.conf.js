@@ -35,6 +35,7 @@ module.exports = function(config) {
         { pattern: "spec/graphics/colorMapper.spec.ts" },
         { pattern: "spec/graphics/renderModeMapper.spec.ts" },
         // { pattern: "spec/graphics/camera.spec.ts" },
+        { pattern: "spec/utils/float32ArrayUtils.spec.ts" },
         { pattern: "spec/utils/vector.spec.ts" },
         { pattern: "spec/utils/mouseHelper.spec.ts" }
     ],
@@ -47,7 +48,7 @@ module.exports = function(config) {
 
     karmaTypescriptConfig: {
         coverageOptions: {
-            instrumentation: true, // set to false if you need to debug though source ts
+            instrumentation: false, // set to false if you need to debug though source ts
             exclude: [
                 /\.(d|spec|test|mock|snapshots)\.ts/i,
                 /specHelpers\//i,

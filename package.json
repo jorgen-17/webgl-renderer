@@ -12,6 +12,7 @@
     "cover": "./node_modules/.bin/codecov -f coverage/json/cover.json"
   },
   "dependencies": {
+    "generic-slice": "^0.0.1",
     "cuon-matrix-ts": "^1.0.2"
   },
   "devDependencies": {
@@ -23,11 +24,11 @@
     "jasmine-core": "^2.6.4",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-edge-launcher": "^0.4.1",
+    "karma-edge-launcher": "^0.4.2",
     "karma-firefox-launcher": "^1.0.1",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.0",
-    "karma-typescript": "^3.0.4",
+    "karma-typescript": "^3.0.7",
     "source-map-loader": "^0.2.1",
     "ts-loader": "^2.2.2",
     "ts-mocks": "^0.2.2",
