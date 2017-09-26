@@ -927,7 +927,7 @@ describe("webglRenderer:", () =>
                 {
                     return 0;
                 }
-                if (name === ShaderSettings.mvpMatrixUniformName)
+                if (name === ShaderSettings.vpMatrixUniformName)
                 {
                     return 1;
                 }
@@ -943,7 +943,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.mvpMatrixUniformName}: 1\n`;
+                `\t${ShaderSettings.vpMatrixUniformName}: 1\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
 
@@ -956,7 +956,7 @@ describe("webglRenderer:", () =>
                 {
                     return 1;
                 }
-                if (name === ShaderSettings.mvpMatrixUniformName)
+                if (name === ShaderSettings.vpMatrixUniformName)
                 {
                     return 0;
                 }
@@ -972,7 +972,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 1\n` +
-                `\t${ShaderSettings.mvpMatrixUniformName}: 0\n`;
+                `\t${ShaderSettings.vpMatrixUniformName}: 0\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
 
@@ -985,7 +985,7 @@ describe("webglRenderer:", () =>
                 {
                     return 0;
                 }
-                if (name === ShaderSettings.mvpMatrixUniformName)
+                if (name === ShaderSettings.vpMatrixUniformName)
                 {
                     return 0;
                 }
@@ -1001,7 +1001,7 @@ describe("webglRenderer:", () =>
             `cannot find uniform in shader program\n` +
             `potential culprits:\n` +
                 `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.mvpMatrixUniformName}: 0\n`;
+                `\t${ShaderSettings.vpMatrixUniformName}: 0\n`;
             expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
         });
     });

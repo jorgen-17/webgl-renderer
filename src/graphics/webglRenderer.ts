@@ -52,8 +52,9 @@ export class WebGLRenderer
     private _shaderProgram: WebGLShader;
     private _a_position: number;
     private _a_color: number;
+    private _a_modelMatrix: number;
     private _u_pointSize: WebGLUniformLocation  | null;
-    private _u_mvpMatrix: WebGLUniformLocation  | null;
+    private _u_vpMatrix: WebGLUniformLocation  | null;
     private _instancedArraysExt: ANGLE_instanced_arrays;
 // end_region: member variables
 
@@ -61,12 +62,13 @@ export class WebGLRenderer
     private _vertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
-    uniform mat4 ${ShaderSettings.mvpMatrixUniformName};
+    attribute mat4 ${ShaderSettings.modelMatrixAttributeName};
+    uniform mat4 ${ShaderSettings.vpMatrixUniformName};
     uniform float ${ShaderSettings.pointSizeUniformName};
     varying vec4 v_color;
     void main(void)
     {
-        gl_Position = ${ShaderSettings.mvpMatrixUniformName} * ${ShaderSettings.positionAttributeName};
+        gl_Position = ${ShaderSettings.vpMatrixUniformName} * ${ShaderSettings.modelMatrixAttributeName} * ${ShaderSettings.positionAttributeName};
         gl_PointSize = ${ShaderSettings.pointSizeUniformName};
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
@@ -271,7 +273,7 @@ export class WebGLRenderer
         {
             if (sb.count > 0)
             {
-                // s
+                this.drawShapeBuffer(sb);
             }
         }
     }
@@ -373,39 +375,44 @@ export class WebGLRenderer
     {
         this._a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
         this._a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
+        this._a_modelMatrix = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.modelMatrixAttributeName);
         this._u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
-        this._u_mvpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.mvpMatrixUniformName);
+        this._u_vpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.vpMatrixUniformName);
     }
 
-    private drawShapeBuffer(arr: Float32Array, shapeBuffer: ShapeBuffer<Shape>): void
+    private drawShapeBuffer(shapeBuffer: ShapeBuffer<Shape>): void
     {
-        if (!this._u_pointSize || !this._u_mvpMatrix)
+        if (!this._u_pointSize || !this._u_vpMatrix)
         {
             const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
             uniformsMap[ShaderSettings.pointSizeUniformName] = this._u_pointSize;
-            uniformsMap[ShaderSettings.mvpMatrixUniformName] = this._u_mvpMatrix;
+            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
         }
 
-        const floatSize = arr.BYTES_PER_ELEMENT;
+        const verticies = shapeBuffer.verticies;
+        const floatSize = verticies.BYTES_PER_ELEMENT;
         const bytesPerPoint = floatSize * Constants.floatsPerPoint;
-        const bytesPerVertex = floatSize * Constants.floatsPerPoint;
+        const bytesPerVertex = floatSize * Constants.floatsPerVertex;
 
         const shapePrototype = shapeBuffer.first;
 
         let vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPoint, this.gl.FLOAT,
             false, bytesPerVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.uniformMatrix4fv(this._u_mvpMatrix, false, this._camera.vpMatrix.elements);
+        this.gl.vertexAttribPointer(this._a_modelMatrix, Constants.floatsPerMat4, this.gl.FLOAT,
+            false, bytesPerVertex, bytesPerPoint);
+        this.gl.enableVertexAttribArray(this._a_modelMatrix);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
         this.gl.uniform1f(this._u_pointSize, this._pointSize);
-        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (arr.length / Constants.floatsPerPoint));
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerVertex));
         this.gl.deleteBuffer(vertexBuffer);
     }
 

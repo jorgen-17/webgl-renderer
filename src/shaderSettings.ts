@@ -2,6 +2,7 @@ export let ShaderSettings =
 {
     positionAttributeName: "a_position",
     colorAttributeName: "a_color",
+    modelMatrixAttributeName: "a_modelMatrix",
     pointSizeUniformName: "u_pointSize",
-    mvpMatrixUniformName: "u_mvpMatrix"
+    vpMatrixUniformName: "u_vpMatrix"
 };
