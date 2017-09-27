@@ -399,14 +399,16 @@ export class WebGLRenderer
         const verticies = shapeBuffer.verticies;
         const floatSize = verticies.BYTES_PER_ELEMENT;
         const bytesPerPoint = floatSize * Constants.floatsPerPoint;
+        const bytesPerColor = floatSize * Constants.floatsPerPoint;
+        const bytesPerPointColor = bytesPerPoint + bytesPerColor;
         const bytesPerVertex = floatSize * Constants.floatsPerVertex;
         const floatsPerRow = Constants.floatsPerRowOfMat4;
         const bytesPerRow = floatsPerRow * floatSize;
         const bytesPerMatrix = bytesPerRow * floatSize;
-        const modelMatrixRow0Offset = bytesPerRow * 0;
-        const modelMatrixRow1Offset = bytesPerRow * 1;
-        const modelMatrixRow2Offset = bytesPerRow * 2;
-        const modelMatrixRow3Offset = bytesPerRow * 3;
+        const modelMatrixRow0Offset = bytesPerPointColor + (bytesPerRow * 0);
+        const modelMatrixRow1Offset = bytesPerPointColor + (bytesPerRow * 1);
+        const modelMatrixRow2Offset = bytesPerPointColor + (bytesPerRow * 2);
+        const modelMatrixRow3Offset = bytesPerPointColor + (bytesPerRow * 3);
 
         const shapePrototype = shapeBuffer.first;
 
@@ -420,16 +422,16 @@ export class WebGLRenderer
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(this._a_color);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4, this.gl.FLOAT,
-            false, bytesPerVertex, bytesPerPoint);
+            false, bytesPerVertex, modelMatrixRow0Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4, this.gl.FLOAT,
-            false, bytesPerVertex, bytesPerPoint);
+            false, bytesPerVertex, modelMatrixRow1Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4, this.gl.FLOAT,
-            false, bytesPerVertex, bytesPerPoint);
+            false, bytesPerVertex, modelMatrixRow2Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4, this.gl.FLOAT,
-            false, bytesPerVertex, bytesPerPoint);
+            false, bytesPerVertex, modelMatrixRow3Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
         this.gl.uniform1f(this._u_pointSize, this._pointSize);
