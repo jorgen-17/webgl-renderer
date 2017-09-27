@@ -421,16 +421,16 @@ export class WebGLRenderer
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
             false, bytesPerVertex, bytesPerPoint);
         this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4Row, this.gl.FLOAT,
             false, bytesPerVertex, modelMatrixRow0Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4Row, this.gl.FLOAT,
             false, bytesPerVertex, modelMatrixRow1Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4Row, this.gl.FLOAT,
             false, bytesPerVertex, modelMatrixRow2Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4Row, this.gl.FLOAT,
             false, bytesPerVertex, modelMatrixRow3Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
