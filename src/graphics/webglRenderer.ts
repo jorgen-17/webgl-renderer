@@ -402,7 +402,7 @@ export class WebGLRenderer
         const bytesPerColor = floatSize * Constants.floatsPerPoint;
         const bytesPerPointColor = bytesPerPoint + bytesPerColor;
         const bytesPerVertex = floatSize * Constants.floatsPerVertex;
-        const floatsPerRow = Constants.floatsPerRowOfMat4;
+        const floatsPerRow = Constants.floatsPerMat4Row;
         const bytesPerRow = floatsPerRow * floatSize;
         const bytesPerMatrix = bytesPerRow * floatSize;
         const modelMatrixRow0Offset = bytesPerPointColor + (bytesPerRow * 0);
