@@ -40,14 +40,25 @@ export class ShapeBuffer<S extends Shape>
 
     public addShape(shape: S): string
     {
-        const id = cuid();
-        const index = this.count;
-        this._shapes[id] = {shape, index};
-
-        this._verticies.addArray(shape.verticies);
+        const id = this.introduceShape(shape);
         this._trimmedArray = this._verticies.getTrimmedArray();
 
         return id;
+    }
+
+    public addShapes(shapes: Array<S>): Array<string>
+    {
+        let ids = new Array<string>();
+
+        for (let i = 0; i < shapes.length; i++)
+        {
+            const shape = shapes[i];
+            const id = this.introduceShape(shape);
+            ids[i] = id;
+        }
+        this._trimmedArray = this._verticies.getTrimmedArray();
+
+        return ids;
     }
 
     public removeShape(id: string): boolean
@@ -102,5 +113,16 @@ export class ShapeBuffer<S extends Shape>
                 this._shapes[key].index--;
             }
         }
+    }
+
+    private introduceShape(shape: S): string
+    {
+        const id = cuid();
+        const index = this.count;
+        this._shapes[id] = {shape, index};
+
+        this._verticies.addArray(shape.verticies);
+
+        return id;
     }
 }

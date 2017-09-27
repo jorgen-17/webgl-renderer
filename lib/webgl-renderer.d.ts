@@ -11,6 +11,7 @@ declare module 'constants' {
 	    floatsPerPoint: number;
 	    floatsPerColor: number;
 	    verticiesPerTriangle: number;
+	    floatsPerMat4Row: number;
 	    floatsPerMat4: number;
 	    floatsPerVertex: number;
 	    floatsPerTriangle: number;
@@ -274,9 +275,11 @@ declare module 'graphics/shape/shapeBuffer' {
 	    readonly count: number;
 	    readonly first: S;
 	    addShape(shape: S): string;
+	    addShapes(shapes: Array<S>): Array<string>;
 	    removeShape(id: string): boolean;
 	    updateColor(id: string, newColor: RGBColor): boolean;
 	    private reorderIndicies(deletedIndex);
+	    private introduceShape(shape);
 	}
 
 }
@@ -397,7 +400,10 @@ declare module 'graphics/webglRenderer' {
 	    private _shaderProgram;
 	    private _a_position;
 	    private _a_color;
-	    private _a_modelMatrix;
+	    private _a_modelMatrixRow0;
+	    private _a_modelMatrixRow1;
+	    private _a_modelMatrixRow2;
+	    private _a_modelMatrixRow3;
 	    private _u_pointSize;
 	    private _u_vpMatrix;
 	    private _instancedArraysExt;
@@ -412,7 +418,8 @@ declare module 'graphics/webglRenderer' {
 	    camera: Camera;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    addShapeToScene(shape: Shape): string;
-	    addShapesToScene(shapes: Array<Shape>): void;
+	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
+	    addHeterogenoeusShapesArrayToScene<S extends Shape>(shapes: Array<S>): void;
 	    removeAllShapes(): void;
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
 	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;

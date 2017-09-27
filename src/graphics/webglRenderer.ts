@@ -196,7 +196,35 @@ export class WebGLRenderer
         return "";
     }
 
-    public addShapesToScene(shapes: Array<Shape>): void
+    public addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>
+    {
+        const shape = shapes.pop();
+
+        if (!shape)
+        {
+            return new Array<string>();
+        }
+
+        switch (shape.shapeMode)
+        {
+            case "triangles":
+                return this._trianglesShapeBuffer.addShapes(shapes as Array<Triangle>);
+            case "rectangles":
+                return this._rectanglesShapeBuffer.addShapes(shapes as Array<Rectangle>);
+            case "hexagons":
+                return this._hexagonsShapeBuffer.addShapes(shapes as Array<Hexagon>);
+            case "octogons":
+                return this._octogonsShapeBuffer.addShapes(shapes as Array<Octogon>);
+            case "ellipses":
+                return this._ellipsesShapeBuffer.addShapes(shapes as Array<Ellipse>);
+            case "box":
+                return this._boxShapeBuffer.addShapes(shapes as Array<Box>);
+        }
+
+        return new Array<string>();
+    }
+
+    public addHeterogenoeusShapesArrayToScene<S extends Shape>(shapes: Array<S>): void
     {
         for (let shape of shapes)
         {

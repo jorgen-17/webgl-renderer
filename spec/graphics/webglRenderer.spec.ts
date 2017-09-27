@@ -801,7 +801,7 @@ describe("webglRenderer:", () =>
 
         it("removeAllShapes, removes all shapes", () =>
         {
-            renderer.addShapesToScene([
+            renderer.addHeterogenoeusShapesArrayToScene([
                 point,
                 line,
                 redTriangle,
