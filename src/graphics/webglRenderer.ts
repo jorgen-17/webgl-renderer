@@ -385,12 +385,12 @@ export class WebGLRenderer
 
     private initializaShapeBuffers()
     {
-        this._trianglesShapeBuffer = new ShapeBuffer<Triangle>();
-        this._rectanglesShapeBuffer = new ShapeBuffer<Rectangle>();
-        this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>();
-        this._octogonsShapeBuffer = new ShapeBuffer<Octogon>();
-        this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>();
-        this._boxShapeBuffer = new ShapeBuffer<Box>();
+        this._trianglesShapeBuffer = new ShapeBuffer<Triangle>(this.gl);
+        this._rectanglesShapeBuffer = new ShapeBuffer<Rectangle>(this.gl);
+        this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>(this.gl);
+        this._octogonsShapeBuffer = new ShapeBuffer<Octogon>(this.gl);
+        this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>(this.gl);
+        this._boxShapeBuffer = new ShapeBuffer<Box>(this.gl);
         this._shapeBuffers = [
             this._trianglesShapeBuffer,
             this._rectanglesShapeBuffer,
@@ -425,46 +425,31 @@ export class WebGLRenderer
         }
 
         const verticies = shapeBuffer.verticies;
-        const floatSize = verticies.BYTES_PER_ELEMENT;
-        const bytesPerPoint = floatSize * Constants.floatsPerPoint;
-        const bytesPerColor = floatSize * Constants.floatsPerPoint;
-        const bytesPerPointColor = bytesPerPoint + bytesPerColor;
-        const bytesPerVertex = floatSize * Constants.floatsPerVertex;
-        const floatsPerRow = Constants.floatsPerMat4Row;
-        const bytesPerRow = floatsPerRow * floatSize;
-        const bytesPerMatrix = bytesPerRow * floatSize;
-        const modelMatrixRow0Offset = bytesPerPointColor + (bytesPerRow * 0);
-        const modelMatrixRow1Offset = bytesPerPointColor + (bytesPerRow * 1);
-        const modelMatrixRow2Offset = bytesPerPointColor + (bytesPerRow * 2);
-        const modelMatrixRow3Offset = bytesPerPointColor + (bytesPerRow * 3);
-
         const shapePrototype = shapeBuffer.first;
 
-        let vertexBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPoint, this.gl.FLOAT,
-            false, bytesPerVertex, 0);
+            false, Constants.bytesPerVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, bytesPerVertex, bytesPerPoint);
+            false, Constants.bytesPerVertex, Constants.bytesPerPoint);
         this.gl.enableVertexAttribArray(this._a_color);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, bytesPerVertex, modelMatrixRow0Offset);
+            false, Constants.bytesPerVertex, Constants.modelMatrixRow0Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, bytesPerVertex, modelMatrixRow1Offset);
+            false, Constants.bytesPerVertex, Constants.modelMatrixRow1Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, bytesPerVertex, modelMatrixRow2Offset);
+            false, Constants.bytesPerVertex, Constants.modelMatrixRow2Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, bytesPerVertex, modelMatrixRow3Offset);
+            false, Constants.bytesPerVertex, Constants.modelMatrixRow3Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
         this.gl.uniform1f(this._u_pointSize, this._pointSize);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerVertex));
-        this.gl.deleteBuffer(vertexBuffer);
     }
 
     private initShaders(): void

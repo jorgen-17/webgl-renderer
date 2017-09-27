@@ -14,12 +14,16 @@ export class ShapeBuffer<S extends Shape>
     private _trimmedArray: Float32Array;
     private _shapes: StringDictionary<{shape: S, index: number}>;
     private _protoShape: S;
+    private _gl: WebGLRenderingContext;
+    private _webglBuffer: WebGLBuffer | null;
 
-    constructor()
+    constructor(gl: WebGLRenderingContext)
     {
         this._verticies = new Float32Vector();
         this._trimmedArray = new Float32Array(0);
         this._shapes = {};
+        this._gl = gl;
+        this._webglBuffer = this._gl.createBuffer();
     }
 
     public get verticies(): Float32Array
@@ -38,10 +42,16 @@ export class ShapeBuffer<S extends Shape>
         return this._shapes[firstKey].shape;
     }
 
+    public get webglBuffer(): WebGLBuffer | null
+    {
+        return this._webglBuffer;
+    }
+
     public addShape(shape: S): string
     {
         const id = this.introduceShape(shape);
         this._trimmedArray = this._verticies.getTrimmedArray();
+        this.refreshWebglBuffer();
 
         return id;
     }
@@ -57,6 +67,7 @@ export class ShapeBuffer<S extends Shape>
             ids[i] = id;
         }
         this._trimmedArray = this._verticies.getTrimmedArray();
+        this.refreshWebglBuffer();
 
         return ids;
     }
@@ -73,6 +84,7 @@ export class ShapeBuffer<S extends Shape>
 
             this._verticies.remove(verticiesIndex, verticiesCount);
             this._trimmedArray = this._verticies.getTrimmedArray();
+            this.refreshWebglBuffer();
 
             this.reorderIndicies(index);
 
@@ -98,6 +110,7 @@ export class ShapeBuffer<S extends Shape>
 
             this._verticies.overwrite(verticiesIndex, shape.verticies);
             this._trimmedArray = this._verticies.getTrimmedArray();
+            this.refreshWebglBuffer();
 
             return true;
         }
@@ -124,5 +137,11 @@ export class ShapeBuffer<S extends Shape>
         this._verticies.addArray(shape.verticies);
 
         return id;
+    }
+
+    private refreshWebglBuffer()
+    {
+        this._gl.deleteBuffer(this._webglBuffer);
+        this._webglBuffer = this._gl.createBuffer();
     }
 }

@@ -15,6 +15,12 @@ declare module 'constants' {
 	    floatsPerMat4: number;
 	    floatsPerVertex: number;
 	    floatsPerTriangle: number;
+	    bytesPerVertex: number;
+	    bytesPerPoint: number;
+	    modelMatrixRow0Offset: number;
+	    modelMatrixRow1Offset: number;
+	    modelMatrixRow2Offset: number;
+	    modelMatrixRow3Offset: number;
 	    defaultAlpha: number;
 	};
 
@@ -270,16 +276,20 @@ declare module 'graphics/shape/shapeBuffer' {
 	    private _trimmedArray;
 	    private _shapes;
 	    private _protoShape;
-	    constructor();
+	    private _gl;
+	    private _webglBuffer;
+	    constructor(gl: WebGLRenderingContext);
 	    readonly verticies: Float32Array;
 	    readonly count: number;
 	    readonly first: S;
+	    readonly webglBuffer: WebGLBuffer | null;
 	    addShape(shape: S): string;
 	    addShapes(shapes: Array<S>): Array<string>;
 	    removeShape(id: string): boolean;
 	    updateColor(id: string, newColor: RGBColor): boolean;
 	    private reorderIndicies(deletedIndex);
 	    private introduceShape(shape);
+	    private refreshWebglBuffer();
 	}
 
 }

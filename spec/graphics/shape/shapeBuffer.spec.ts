@@ -27,11 +27,15 @@ describe("shapeFactory:", () =>
     {
         glMock.setup(x => x.TRIANGLES).is(0x0004);
         glMock.setup(x => x.TRIANGLE_STRIP).is(0x0005);
+        glMock.setup(x => x.createBuffer)
+        .is(() => 1);
+        glMock.setup(x => x.deleteBuffer)
+        .is((buffer: WebGLBuffer) => { /* noop */ });
     });
 
     beforeEach(() =>
     {
-        triangleBuffer = new ShapeBuffer<Triangle>();
+        triangleBuffer = new ShapeBuffer<Triangle>(gl);
         orangeTriangle = new Triangle(new Vec3(0, 0), new Vec3(0.5, 0.5), gl, orange);
         greenTriangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(0.75, 0.75), gl, green);
         blueTriangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, blue);

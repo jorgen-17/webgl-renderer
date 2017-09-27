@@ -1,3 +1,5 @@
+
+
 export let ShaderSettings =
 {
     positionAttributeName: "a_position",
