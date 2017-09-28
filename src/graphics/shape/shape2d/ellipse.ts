@@ -80,16 +80,16 @@ export class Ellipse extends Shape
             const newPointBelowCenter = new Vec3(x, this.center.y - y);
 
             this.addTriangleToVerticies(insertionIndex, previousPointAboveCenter, this.center, newPointAboveCenter);
-            insertionIndex += Constants.floatsPerTriangle;
+            insertionIndex += Constants.verticiesPerTriangle;
             this.addTriangleToVerticies(insertionIndex, previousPointBelowCenter, this.center, newPointBelowCenter);
-            insertionIndex += Constants.floatsPerTriangle;
+            insertionIndex += Constants.verticiesPerTriangle;
 
             previousPointAboveCenter = newPointAboveCenter;
             previousPointBelowCenter = newPointBelowCenter;
         }
 
         this.addTriangleToVerticies(insertionIndex, previousPointAboveCenter, this.center, this.rightEndPoint);
-        insertionIndex += Constants.floatsPerTriangle;
+        insertionIndex += Constants.verticiesPerTriangle;
         this.addTriangleToVerticies(insertionIndex, previousPointBelowCenter, this.center, this.rightEndPoint);
     }
 

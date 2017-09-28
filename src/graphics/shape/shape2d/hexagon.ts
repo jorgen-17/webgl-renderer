@@ -38,15 +38,15 @@ export class Hexagon extends Shape
 
         this.addTriangleToVerticies(insertionIndex, topFirstThird,
             bottomFirstThird, midLeft);
-        insertionIndex += Constants.floatsPerTriangle;
+        insertionIndex += Constants.verticiesPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, topFirstThird,
             bottomFirstThird, bottomSecondThird);
-        insertionIndex += Constants.floatsPerTriangle;
+        insertionIndex += Constants.verticiesPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, topFirstThird,
             topSecondThird, bottomSecondThird);
-        insertionIndex += Constants.floatsPerTriangle;
+        insertionIndex += Constants.verticiesPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, topSecondThird,
             bottomSecondThird, midRight);
