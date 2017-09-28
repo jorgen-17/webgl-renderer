@@ -25,7 +25,7 @@ export class Rectangle extends Shape
 
         this.addTriangleToVerticies(insertionIndex, this._boundingRect.topLeft,
             this._boundingRect.topRight, this._boundingRect.bottomLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, this._boundingRect.bottomLeft,
             this._boundingRect.topRight, this._boundingRect.bottomRight);

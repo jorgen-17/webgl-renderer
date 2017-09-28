@@ -41,23 +41,23 @@ export class Octogon extends Shape
 
         this.addTriangleToVerticies(insertionIndex, leftTopThird,
             topLeftThird, leftBottomThird);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, leftBottomThird,
             topLeftThird, bottomLeftThird);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, bottomLeftThird,
             topLeftThird, bottomRightThird);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, topLeftThird,
             bottomRightThird, topRightThird);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, topRightThird,
             bottomRightThird, rightBottomThird);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         this.addTriangleToVerticies(insertionIndex, topRightThird,
             rightBottomThird, rightTopThird);

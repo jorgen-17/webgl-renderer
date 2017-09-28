@@ -34,51 +34,51 @@ export class Box extends Shape
         // front face
         this.addTriangleToVerticies(insertionIndex, this._boundingRect.topLeft,
             this._boundingRect.topRight, this._boundingRect.bottomLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToVerticies(insertionIndex, this._boundingRect.bottomLeft,
             this._boundingRect.topRight, this._boundingRect.bottomRight);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         // right face
         const rightFaceRect = new BoundingRectangle(this._boundingRect.topRight,
             new Vec3(this._boundingRect.bottomRight.x, this._boundingRect.bottomRight.y, this._backFaceZ));
         this.addTriangleToVerticies(insertionIndex, rightFaceRect.topLeft,
             rightFaceRect.topRight, rightFaceRect.bottomLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToVerticies(insertionIndex, rightFaceRect.bottomLeft,
             rightFaceRect.topRight, rightFaceRect.bottomRight);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         // left face
         const leftFaceRect = new BoundingRectangle(this._boundingRect.topLeft,
             new Vec3(this._boundingRect.bottomLeft.x, this._boundingRect.bottomLeft.y, this._backFaceZ));
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.topLeft,
             leftFaceRect.topRight, leftFaceRect.bottomLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.bottomLeft,
             leftFaceRect.topRight, leftFaceRect.bottomRight);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         // back face
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.topRight,
             rightFaceRect.topRight, leftFaceRect.bottomRight);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.bottomRight,
             rightFaceRect.topRight, rightFaceRect.bottomRight);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         // top face
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.topRight,
             rightFaceRect.topRight, leftFaceRect.topLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.topLeft,
             rightFaceRect.topRight, rightFaceRect.topLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
 
         // bottom face
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.bottomRight,
             rightFaceRect.bottomRight, leftFaceRect.bottomLeft);
-        insertionIndex += Constants.verticiesPerTriangle;
+        insertionIndex += Constants.floatsPerTriangle;
         this.addTriangleToVerticies(insertionIndex, leftFaceRect.bottomLeft,
             rightFaceRect.bottomRight, rightFaceRect.bottomLeft);
     }
