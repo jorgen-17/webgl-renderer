@@ -202,7 +202,9 @@ export class Camera
 
     private updateViewProjectionMatrix()
     {
-        this._vpMatrix = this._projectionMatrix.multiply(this.viewMatrix);
+        this._vpMatrix = new Mat4().setIdentity();
+        this._vpMatrix.multiply(this._projectionMatrix);
+        this._vpMatrix.multiply(this._viewMatrix);
     }
 // end_region: private methods
 }
