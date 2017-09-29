@@ -198,7 +198,7 @@ export class WebGLRenderer
 
     public addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>
     {
-        const shape = shapes.pop();
+        const shape = shapes[0];
 
         if (!shape)
         {
