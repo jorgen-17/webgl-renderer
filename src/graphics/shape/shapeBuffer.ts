@@ -60,12 +60,23 @@ export class ShapeBuffer<S extends Shape>
     {
         let ids = new Array<string>();
 
+        if (shapes.length < 1)
+        {
+            return ids;
+        }
+
+        const exampleShape = shapes[0];
+        const numberOfFloatsPerShape = exampleShape.numberOfVerticies * Constants.floatsPerVertex;
+        const numberOfFloatsBeingAdded = numberOfFloatsPerShape * shapes.length;
+        this._verticies.resize(numberOfFloatsBeingAdded);
+
         for (let i = 0; i < shapes.length; i++)
         {
             const shape = shapes[i];
             const id = this.introduceShape(shape);
             ids[i] = id;
         }
+
         this._trimmedArray = this._verticies.getTrimmedArray();
         this.refreshWebglBuffer();
 

@@ -18,6 +18,18 @@ export class Float32Vector
         this._bestFit = bestFit;
     }
 
+    public resize(newSize: number)
+    {
+        if (newSize <= this.arr.length)
+        {
+            return;
+        }
+
+        let oldArr = this.arr;
+        this.arr = new Float32Array(newSize);
+        this.arr.set(oldArr);
+    }
+
     public addNumber(number: number): boolean
     {
         const newSize = this.size + 1;
@@ -33,9 +45,7 @@ export class Float32Vector
 
         if (newSize >= this.arr.length)
         {
-            let oldArr = this.arr;
-            this.arr = new Float32Array(newArrayLength);
-            this.arr.set(oldArr);
+            this.resize(newArrayLength);
         }
         this.arr[this.size] = number;
         this.size = newSize;
@@ -64,9 +74,7 @@ export class Float32Vector
 
         if (newSize >= this.arr.length)
         {
-            let oldArr = this.arr;
-            this.arr = new Float32Array(newArrayLength);
-            this.arr.set(oldArr);
+            this.resize(newArrayLength);
         }
         this.arr.set(arr, this.size);
         this.size = newSize;

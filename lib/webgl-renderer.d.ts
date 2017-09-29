@@ -38,6 +38,7 @@ declare module 'utils/float32Vector' {
 	    private _sizeLimit;
 	    private _bestFit;
 	    constructor(arr?: Float32Array, sizeLimit?: number, bestFit?: boolean);
+	    resize(newSize: number): void;
 	    addNumber(number: number): boolean;
 	    addArray(arr: Float32Array | Array<number>): boolean;
 	    remove(start: number, count?: number): void;
