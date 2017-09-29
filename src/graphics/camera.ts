@@ -150,7 +150,6 @@ export class Camera
     {
         this._eyePosition = new Vec3(this._eyePosition.x + xOffset, this._eyePosition.y, this._eyePosition.z);
         this._lookAtPoint = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z - 1);
-        this._upPosition = new Vec3(this._eyePosition.x, this._eyePosition.y + 1, this._eyePosition.z);
 
         this.updateView();
     }
@@ -159,7 +158,6 @@ export class Camera
     {
         this._eyePosition = new Vec3(this._eyePosition.x, this._eyePosition.y + yOffset, this._eyePosition.z);
         this._lookAtPoint = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z - 1);
-        this._upPosition = new Vec3(this._eyePosition.x, this._eyePosition.y + 1, this._eyePosition.z);
 
         this.updateView();
     }
@@ -168,7 +166,6 @@ export class Camera
     {
         this._eyePosition = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z - zOffset);
         this._lookAtPoint = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z - 1);
-        this._upPosition = new Vec3(this._eyePosition.x, this._eyePosition.y + 1, this._eyePosition.z);
 
         this.updateView();
     }
@@ -177,7 +174,6 @@ export class Camera
     {
         this._eyePosition = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z + zOffset);
         this._lookAtPoint = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z - 1);
-        this._upPosition = new Vec3(this._eyePosition.x, this._eyePosition.y + 1, this._eyePosition.z);
 
         this.updateView();
     }
