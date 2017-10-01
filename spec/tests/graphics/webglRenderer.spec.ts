@@ -24,7 +24,7 @@ import { BrowserHelper } from "../../../src/utils/browserHelper";
 
 describe("webglRenderer:", () =>
 {
-// region: member variables
+    //#region: member variables
     const instancedArrayExtensionMock = new Mock<ANGLE_instanced_arrays>();
     const instancedArrayExtension = instancedArrayExtensionMock.Object;
     let instancedArraysSpiesDictionary: StringDictionary<jasmine.Spy>;
@@ -62,9 +62,9 @@ describe("webglRenderer:", () =>
         browserHelper: browserHelper,
         window: leWindow
     };
-// end_region: member variables
+    //#endregion: member variables
 
-// region: tests
+    //#region: tests
     beforeEach(() =>
     {
         instancedArraysSpiesDictionary =
@@ -1057,5 +1057,5 @@ describe("webglRenderer:", () =>
                 .toThrow(expectedErrorString);
         });
     });
-// end_region: tests
+    //#endregion: tests
 });

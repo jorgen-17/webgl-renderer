@@ -25,7 +25,7 @@ import { Box } from "./shape/shape3d/box";
 
 export class WebGLRenderer
 {
-// region: member variables
+    //#region: member variables
     public gl: WebGLRenderingContext;
     private _isContextLost: boolean;
     private _canvas: HTMLCanvasElement;
@@ -57,9 +57,9 @@ export class WebGLRenderer
     private _u_pointSize: WebGLUniformLocation  | null;
     private _u_vpMatrix: WebGLUniformLocation  | null;
     private _instancedArraysExt: ANGLE_instanced_arrays;
-// end_region: member variables
+    //#endregion
 
-// region: shaders
+    //#region: shaders
     private _vertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
@@ -82,9 +82,9 @@ export class WebGLRenderer
     {
         gl_FragColor = v_color;
     }`;
-// end_region: shaders
+    //#endregion: shaders
 
-// region: constructor
+    //#region: constructor
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
         this._canvas = canvas;
@@ -99,9 +99,9 @@ export class WebGLRenderer
 
         this.setupWindowCallbacks();
     }
-// end_region: constructor
+    //#endregion: constructor
 
-// region: getters and setters
+    //#region: getters and setters
     public get renderMode(): RenderMode
     {
         return this._renderMode;
@@ -166,9 +166,9 @@ export class WebGLRenderer
     {
         this._camera = value;
     }
-// end_region: getters and setters
+    //#endregion: getters and setters
 
-// region: public methods
+    //#region: public methods
     public setViewPortDimensions(newWidth: number, newHeight: number): void
     {
         this.gl.viewport(0, 0, newWidth, newHeight);
@@ -288,9 +288,9 @@ export class WebGLRenderer
     {
         this._window.cancelAnimationFrame(this._animationFrameRequestId);
     }
-// end_region: public methods
+    //#endregion: public methods
 
-// region: protected methods
+    //#region: protected methods
     protected draw()
     {
         this.gl.clearColor(this._backgroundColor.red,
@@ -306,9 +306,9 @@ export class WebGLRenderer
             }
         }
     }
-// end_region: protected methods
+    //#endregion: protected methods
 
-// region: private methods
+    //#region: private methods
     private setCanvasEventHandlers (): void
     {
         this._canvas.addEventListener("webglcontextlost", this.handleContextLost, false);
@@ -568,5 +568,5 @@ export class WebGLRenderer
 
         return false;
     }
-// end_region: private methods
+    //#endregion: private methods
 }

@@ -4,7 +4,7 @@ import { Constants } from "../constants";
 
 export class Camera
 {
-// region: instance variables
+    //#region: instance variables
     private _vpMatrix: Mat4;
     private _viewMatrix: Mat4;
     private _projectionMatrix: Mat4;
@@ -15,9 +15,9 @@ export class Camera
     private _far: number;
     private _lookAtPoint: Vec3;
     private _upPosition: Vec3;
-// end_region: instance variables
+    //#endregion: instance variables
 
-// region: constructor
+    //#region: constructor
     constructor(aspectRatio: number,
         fieldOfView: number = Settings.defaultFieldOfView,
         near: number = Settings.defaultNear,
@@ -42,9 +42,9 @@ export class Camera
         this._far = far;
         this.updatePerspective();
     }
-// end_region: constructor
+    //#endregion: constructor
 
-// region: getters and setters
+    //#region: getters and setters
     public get vpMatrix(): Mat4
     {
         return this._vpMatrix;
@@ -143,9 +143,9 @@ export class Camera
 
         this.updateView();
     }
-// end_region: getters and setters
+    //#endregion: getters and setters
 
-// region: public methods
+    //#region: public methods
     public panX(xOffset: number): void
     {
         this._eyePosition = new Vec3(this._eyePosition.x + xOffset, this._eyePosition.y, this._eyePosition.z);
@@ -177,9 +177,9 @@ export class Camera
 
         this.updateView();
     }
-// end_region: public methods
+    //#endregion: public methods
 
-// region: private methods
+    //#region: private methods
     private updateView()
     {
         this._viewMatrix.setLookAt(this.eyePosition.x, this.eyePosition.y, this.eyePosition.z,
@@ -202,5 +202,5 @@ export class Camera
         this._vpMatrix.multiply(this._projectionMatrix);
         this._vpMatrix.multiply(this._viewMatrix);
     }
-// end_region: private methods
+    //#endregion: private methods
 }
