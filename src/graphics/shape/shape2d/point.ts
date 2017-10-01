@@ -1,12 +1,13 @@
 import { Vec3 } from "cuon-matrix-ts";
 
+import { StaticShape } from "../staticShape";
 import { RGBColor } from "../../color/rgbColor";
-import { Shape } from "../shape";
 import { Constants } from "../../../constants";
 import { Float32Vector } from "../../../utils/float32Vector";
 import { ShapeMode } from "../shapeMode";
 
-export class Point extends Shape
+
+export class Point extends StaticShape
 {
     private static readonly numberOfVerticies = 1;
     public shapeMode: ShapeMode = "points";
@@ -24,7 +25,9 @@ export class Point extends Shape
 
     protected computeVerticies(): void
     {
-        this.addXYZColorAndModelMatToVerticies(0, this._location.x,
+        let array = new Float32Array(Constants.floatsPerStaticVertex);
+        this.addXYZAndColorToFloat32Array(array, 0, this._location.x,
             this._location.y, this._location.z);
+        this._verticies = array;
     }
 }

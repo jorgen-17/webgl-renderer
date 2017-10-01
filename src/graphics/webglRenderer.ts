@@ -3,7 +3,6 @@
 import { Shape} from "./shape/shape";
 import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
-import { VertexBuffer } from "./vertexBuffer";
 import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shape/shapeMode";
 import { Triangle } from "./shape/shape2d/triangle";
@@ -449,7 +448,7 @@ export class WebGLRenderer
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
         this.gl.uniform1f(this._u_pointSize, this._pointSize);
-        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerVertex));
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
     private initShaders(): void

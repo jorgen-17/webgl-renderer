@@ -22,6 +22,7 @@
     "custom-event-polyfill": "^0.3.0",
     "dts-generator": "^2.1.0",
     "jasmine-core": "^2.6.4",
+    "jasmine-snapshot": "^1.7.8",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-edge-launcher": "^0.4.2",

@@ -13,15 +13,13 @@ export abstract class Shape {
     public abstract shapeMode: ShapeMode;
     protected _verticies: Float32Array;
     protected _boundingRect: BoundingRectangle;
-    private _modelMatrix: Mat4;
-    private _rgbColor: RGBColor;
+    protected _rgbColor: RGBColor;
     constructor(numberOfVerticies: number, rgbColor: RGBColor = Settings.defaultColor,
         point1: Vec3 | null = null, point2: Vec3 | null = null)
     {
         this.numberOfVerticies = numberOfVerticies;
         this._rgbColor = rgbColor;
-        this._verticies = new Float32Array(numberOfVerticies * Constants.floatsPerVertex);
-        this._modelMatrix = new Mat4().setIdentity();
+        this._verticies = new Float32Array(numberOfVerticies * Constants.floatsPerDynamicVertex);
 
         if (point1 && point2)
         {
@@ -32,17 +30,6 @@ export abstract class Shape {
     public get verticies(): Float32Array
     {
         return this._verticies;
-    }
-
-    public get modelMatrix(): Mat4
-    {
-        return this._modelMatrix;
-    }
-
-    public set modelMatrix(value: Mat4)
-    {
-        this._modelMatrix = value;
-        this.computeVerticies();
     }
 
     public get rgbColor(): RGBColor
@@ -57,43 +44,4 @@ export abstract class Shape {
     }
 
     protected abstract computeVerticies(): void;
-
-    protected addXYZColorAndModelMatToVerticies(index: number, x: number, y: number, z: number)
-    {
-        const modelMatrixVerts = this._modelMatrix.elements;
-
-        this._verticies[index] = x;
-        this._verticies[index + 1] = y;
-        this._verticies[index + 2] = z;
-        this._verticies[index + 3] = this._rgbColor.red;
-        this._verticies[index + 4] = this._rgbColor.green;
-        this._verticies[index + 5] = this._rgbColor.blue;
-        this._verticies[index + 6] = modelMatrixVerts[0];
-        this._verticies[index + 7] = modelMatrixVerts[1];
-        this._verticies[index + 8] = modelMatrixVerts[2];
-        this._verticies[index + 9] = modelMatrixVerts[3];
-        this._verticies[index + 10] = modelMatrixVerts[4];
-        this._verticies[index + 11] = modelMatrixVerts[5];
-        this._verticies[index + 12] = modelMatrixVerts[6];
-        this._verticies[index + 13] = modelMatrixVerts[7];
-        this._verticies[index + 14] = modelMatrixVerts[8];
-        this._verticies[index + 15] = modelMatrixVerts[9];
-        this._verticies[index + 16] = modelMatrixVerts[10];
-        this._verticies[index + 17] = modelMatrixVerts[11];
-        this._verticies[index + 18] = modelMatrixVerts[12];
-        this._verticies[index + 19] = modelMatrixVerts[13];
-        this._verticies[index + 20] = modelMatrixVerts[14];
-        this._verticies[index + 21] = modelMatrixVerts[15];
-    }
-
-    protected addTriangleToVerticies(index: number,
-        vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3)
-    {
-        this.addXYZColorAndModelMatToVerticies(index, vertex1Position.x,
-            vertex1Position.y, vertex1Position.z);
-        this.addXYZColorAndModelMatToVerticies((index + Constants.floatsPerVertex), vertex2Position.x,
-            vertex2Position.y, vertex2Position.z);
-        this.addXYZColorAndModelMatToVerticies((index + (Constants.floatsPerVertex * 2)),
-            vertex3Position.x, vertex3Position.y, vertex3Position.z);
-    }
 }

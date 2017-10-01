@@ -1,13 +1,13 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape } from "../shape";
+import { DynamicShape } from "../dynamicShape";
 import { Float32Vector } from "../../../utils/float32Vector";
 import { BoundingRectangle } from "../boundingRectangle";
 import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
 import { ShapeMode } from "../shapeMode";
 
-export class Box extends Shape
+export class Box extends DynamicShape
 {
     private static readonly numberOfVerticies = 36;
     public shapeMode: ShapeMode = "box";

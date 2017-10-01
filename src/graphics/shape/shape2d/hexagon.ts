@@ -1,6 +1,6 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape } from "../shape";
+import { DynamicShape } from "../dynamicShape";
 import { Float32Vector } from "../../../utils/float32Vector";
 import { BoundingRectangle } from "../boundingRectangle";
 import { Midpoint, ThirdPoints } from "../midpoint";
@@ -8,7 +8,7 @@ import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
 import { ShapeMode } from "../shapeMode";
 
-export class Hexagon extends Shape
+export class Hexagon extends DynamicShape
 {
     private static readonly numberOfVerticies = 12;
     public shapeMode: ShapeMode = "hexagons";

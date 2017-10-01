@@ -5,10 +5,11 @@ const floatsPerColor = 3; // r, g, and b
 const verticiesPerTriangle = 3; // obvious, but avoids random 3 everywhere
 const floatsPerMat4Row = 4; // same as above
 const floatsPerMat4 = 16; // same as above
-const floatsPerVertex = floatsPerPoint + floatsPerColor + floatsPerMat4; // position + color + modelMatrix
-const floatsPerTriangle = verticiesPerTriangle * floatsPerVertex;
+const floatsPerStaticVertex = floatsPerColor + floatsPerPoint;
+const floatsPerDynamicVertex = floatsPerPoint + floatsPerColor + floatsPerMat4; // position + color + modelMatrix
+const floatsPerTriangle = verticiesPerTriangle * floatsPerDynamicVertex;
 const floatSize = Float32Array.BYTES_PER_ELEMENT;
-const bytesPerVertex = floatSize * floatsPerVertex;
+const bytesPerVertex = floatSize * floatsPerDynamicVertex;
 const bytesPerPoint = floatSize * floatsPerPoint;
 const bytesPerColor = floatSize * floatsPerPoint;
 const bytesPerPointColor = bytesPerPoint + bytesPerColor;
@@ -26,7 +27,8 @@ export let Constants =
     verticiesPerTriangle: verticiesPerTriangle,
     floatsPerMat4Row: floatsPerMat4Row,
     floatsPerMat4: floatsPerMat4,
-    floatsPerVertex: floatsPerVertex,
+    floatsPerStaticVertex: floatsPerStaticVertex,
+    floatsPerDynamicVertex: floatsPerDynamicVertex,
     floatsPerTriangle: floatsPerTriangle,
     bytesPerVertex: bytesPerVertex,
     bytesPerPoint: bytesPerPoint,
