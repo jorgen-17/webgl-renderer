@@ -1,4 +1,5 @@
-﻿import { Vec3, Mat4 } from "cuon-matrix-ts";
+﻿//#region imports
+import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { Shape} from "./shape/shape";
 import { Float32Vector } from "../utils/float32Vector";
@@ -22,6 +23,7 @@ import { Hexagon } from "./shape/shape2d/hexagon";
 import { Octogon } from "./shape/shape2d/octogon";
 import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
+//#endregion
 
 export class WebGLRenderer
 {
