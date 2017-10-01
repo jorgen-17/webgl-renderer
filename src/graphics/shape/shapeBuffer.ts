@@ -3,12 +3,12 @@ import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../../utils/float32Vector";
 import { StringDictionary } from "../../utils/dictionary";
-import { Shape } from "./shape";
+import { DynamicShape } from "./dynamicShape";
 import { Settings } from "../../settings";
 import { Constants } from "../../constants";
 import { RGBColor } from "../color/rgbColor";
 
-export class ShapeBuffer<S extends Shape>
+export class DynamicShapeBuffer<S extends DynamicShape>
 {
     private _verticies: Float32Vector;
     private _trimmedArray: Float32Array;

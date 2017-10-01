@@ -33,7 +33,7 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/shape/boundingRectangle.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeBuffer.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeFactory.spec.ts" },
-        // { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
+        { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
         { pattern: "spec/tests/graphics/colorMapper.spec.ts" },
         { pattern: "spec/tests/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/tests/graphics/camera.spec.ts" },

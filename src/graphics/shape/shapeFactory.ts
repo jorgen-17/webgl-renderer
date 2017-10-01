@@ -1,6 +1,6 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape } from "./shape";
+import { DynamicShape } from "./dynamicShape";
 import { ShapeMode } from "./shapeMode";
 import { Ellipse } from "./shape2d/ellipse";
 import { Triangle } from "./shape2d/triangle";
@@ -14,7 +14,7 @@ import { Box } from "./shape3d/box";
 export class ShapeFactory
 {
     public static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
-        gl: WebGLRenderingContext, rgbColor?: RGBColor): Shape
+        gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape
     {
         switch (shapeMode)
         {

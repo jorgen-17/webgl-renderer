@@ -1,5 +1,5 @@
 import { Mock } from "ts-mocks";
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { StringDictionary } from "../../../src/utils/dictionary";
 import { Line } from "../../../src/graphics/shape/shape2d/line";
@@ -154,10 +154,10 @@ export class WebglRendererTestHelper
         return new Point(location, gl);
     }
 
-    public static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
+    public static getRandomDynamicVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
         color: RGBColor = Settings.defaultColor): Float32Array
     {
-        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerPoint);
+        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerDynamicVertex);
 
         for (let i = 0; i < numberOfVerticies; i++)
         {
@@ -170,7 +170,12 @@ export class WebglRendererTestHelper
                 color.green,
                 color.blue
             ]);
-            arr.set(xyzRGB, (i * Constants.floatsPerPoint));
+            const xyzRGBModelMatrix = this.concatFloat32Arrays([
+                xyzRGB,
+                new Mat4().setIdentity().elements
+            ]);
+
+            arr.set(xyzRGBModelMatrix, (i * Constants.floatsPerDynamicVertex));
         }
 
         return arr;

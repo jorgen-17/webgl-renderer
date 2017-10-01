@@ -9,7 +9,6 @@ import { WebGLRenderer } from "./webglRenderer";
 export interface RenderingOptions
 {
     browserHelper?: BrowserHelper;
-    renderMode?: RenderMode;
     pointSize?: number;
     backgroundColor?: RGBColor;
     camera?: Camera;

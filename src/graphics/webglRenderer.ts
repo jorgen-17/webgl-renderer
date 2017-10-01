@@ -1,7 +1,6 @@
 ﻿//#region imports
 import { Vec3, Mat4 } from "cuon-matrix-ts";
 
-import { Shape} from "./shape/shape";
 import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { DrawingMode } from "./drawingMode";
@@ -17,12 +16,13 @@ import { ShaderType } from "./shaderType";
 import { Line } from "./shape/shape2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
-import { ShapeBuffer } from "./shape/shapeBuffer";
+import { DynamicShapeBuffer } from "./shape/shapeBuffer";
 import { Rectangle } from "./shape/shape2d/rectangle";
 import { Hexagon } from "./shape/shape2d/hexagon";
 import { Octogon } from "./shape/shape2d/octogon";
 import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
+import { DynamicShape } from "./shape/dynamicShape";
 //#endregion
 
 export class WebGLRenderer
@@ -32,8 +32,6 @@ export class WebGLRenderer
     private _isContextLost: boolean;
     private _canvas: HTMLCanvasElement;
     private _browserHelper: BrowserHelper;
-    private _glRenderMode: number;
-    private _renderMode: RenderMode;
     private _pointSize: number;
     private _backgroundColor: RGBColor;
     private _camera: Camera;
@@ -42,13 +40,13 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-    private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
-    private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
-    private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
-    private _octogonsShapeBuffer: ShapeBuffer<Octogon>;
-    private _ellipsesShapeBuffer: ShapeBuffer<Ellipse>;
-    private _boxShapeBuffer: ShapeBuffer<Box>;
-    private _shapeBuffers: Array<ShapeBuffer<Shape>>;
+    private _trianglesShapeBuffer: DynamicShapeBuffer<Triangle>;
+    private _rectanglesShapeBuffer: DynamicShapeBuffer<Rectangle>;
+    private _hexagonsShapeBuffer: DynamicShapeBuffer<Hexagon>;
+    private _octogonsShapeBuffer: DynamicShapeBuffer<Octogon>;
+    private _ellipsesShapeBuffer: DynamicShapeBuffer<Ellipse>;
+    private _boxShapeBuffer: DynamicShapeBuffer<Box>;
+    private _shapeBuffers: Array<DynamicShapeBuffer<DynamicShape>>;
     private _shaderProgram: WebGLShader;
     private _a_position: number;
     private _a_color: number;
@@ -104,17 +102,6 @@ export class WebGLRenderer
     //#endregion: constructor
 
     //#region: getters and setters
-    public get renderMode(): RenderMode
-    {
-        return this._renderMode;
-    }
-
-    public set renderMode(renderMode: RenderMode)
-    {
-        this._renderMode = renderMode;
-        this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
-    }
-
     public get backgroundColor(): RGBColor
     {
         return this._backgroundColor;
@@ -176,7 +163,7 @@ export class WebGLRenderer
         this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    public addShapeToScene(shape: Shape): string
+    public addDynamicShapeToScene(shape: DynamicShape): string
     {
         switch (shape.shapeMode)
         {
@@ -197,7 +184,7 @@ export class WebGLRenderer
         return "";
     }
 
-    public addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>
+    public addHomogenoeusDynamicShapesArrayToScene(shapes: Array<DynamicShape>): Array<string>
     {
         const shape = shapes[0];
 
@@ -225,11 +212,11 @@ export class WebGLRenderer
         return new Array<string>();
     }
 
-    public addHeterogenoeusShapesArrayToScene<S extends Shape>(shapes: Array<S>): void
+    public addHeterogenoeusDynamicShapesArrayToScene<S extends DynamicShape>(shapes: Array<S>): void
     {
         for (let shape of shapes)
         {
-            this.addShapeToScene(shape);
+            this.addDynamicShapeToScene(shape);
         }
     }
 
@@ -304,7 +291,7 @@ export class WebGLRenderer
         {
             if (sb.count > 0)
             {
-                this.drawShapeBuffer(sb);
+                this.drawDynamicShapeBuffer(sb);
             }
         }
     }
@@ -374,8 +361,6 @@ export class WebGLRenderer
 
     private initializeRenderingOptions(renderingOptions: RenderingOptions | null)
     {
-        this._renderMode = (renderingOptions && renderingOptions.renderMode) || Settings.defaultRendereMode;
-        this._glRenderMode = RenderModeMapper.renderModeToWebGlConstant(this._renderMode, this.gl);
         this._pointSize = (renderingOptions && renderingOptions.pointSize) || Settings.defaultPointSize;
         this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
         this._camera = (renderingOptions && renderingOptions.camera) || new Camera((this._canvas.width / this._canvas.height));
@@ -386,12 +371,12 @@ export class WebGLRenderer
 
     private initializaShapeBuffers()
     {
-        this._trianglesShapeBuffer = new ShapeBuffer<Triangle>(this.gl);
-        this._rectanglesShapeBuffer = new ShapeBuffer<Rectangle>(this.gl);
-        this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>(this.gl);
-        this._octogonsShapeBuffer = new ShapeBuffer<Octogon>(this.gl);
-        this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>(this.gl);
-        this._boxShapeBuffer = new ShapeBuffer<Box>(this.gl);
+        this._trianglesShapeBuffer = new DynamicShapeBuffer<Triangle>(this.gl);
+        this._rectanglesShapeBuffer = new DynamicShapeBuffer<Rectangle>(this.gl);
+        this._hexagonsShapeBuffer = new DynamicShapeBuffer<Hexagon>(this.gl);
+        this._octogonsShapeBuffer = new DynamicShapeBuffer<Octogon>(this.gl);
+        this._ellipsesShapeBuffer = new DynamicShapeBuffer<Ellipse>(this.gl);
+        this._boxShapeBuffer = new DynamicShapeBuffer<Box>(this.gl);
         this._shapeBuffers = [
             this._trianglesShapeBuffer,
             this._rectanglesShapeBuffer,
@@ -414,7 +399,7 @@ export class WebGLRenderer
         this._u_vpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.vpMatrixUniformName);
     }
 
-    private drawShapeBuffer(shapeBuffer: ShapeBuffer<Shape>): void
+    private drawDynamicShapeBuffer(shapeBuffer: DynamicShapeBuffer<DynamicShape>): void
     {
         if (!this._u_pointSize || !this._u_vpMatrix)
         {
