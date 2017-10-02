@@ -390,8 +390,7 @@ describe("webglRenderer:", () =>
         });
     });
 
-    // add this back when i fix points
-    xdescribe("pointSize:", () =>
+    describe("pointSize:", () =>
     {
         const pointSize = 15;
         let renderer: WebGLRendererMock;
@@ -410,9 +409,9 @@ describe("webglRenderer:", () =>
 
         it("sets the uniform variable u_pointSize", () =>
         {
-            const pointsVerticies = WebglRendererTestHelper.getRandomDynamicVerticies(gl);
-            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-            // add shape instead
+            const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+                "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+            renderer.addDynamicShapeToScene(redTriangle);
 
             renderer.mockDraw();
 
@@ -1012,11 +1011,13 @@ describe("webglRenderer:", () =>
         });
     });
 
-    // add this back when i fix points
-    xdescribe("when uniforms not found in shader, " +
+    describe("when uniforms not found in shader, " +
         "draw throws and createUniforNotFoundErrorMessage " +
         "generates the correct error message", () =>
     {
+        const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+        "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+
         it("when u_pointSize is missing and u_viewMatrix is found", () =>
         {
             let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
@@ -1034,9 +1035,7 @@ describe("webglRenderer:", () =>
             }).Spy;
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            const pointsVerticies = WebglRendererTestHelper.getRandomDynamicVerticies(gl);
-            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-            // add shape instead
+            renderer.addDynamicShapeToScene(redTriangle);
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
@@ -1063,9 +1062,7 @@ describe("webglRenderer:", () =>
             }).Spy;
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            const pointsVerticies = WebglRendererTestHelper.getRandomDynamicVerticies(gl);
-            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-            // add shape instead
+            renderer.addDynamicShapeToScene(redTriangle);
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
@@ -1092,9 +1089,7 @@ describe("webglRenderer:", () =>
             }).Spy;
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            const pointsVerticies = WebglRendererTestHelper.getRandomDynamicVerticies(gl);
-            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-            // add shape instead
+            renderer.addDynamicShapeToScene(redTriangle);
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
