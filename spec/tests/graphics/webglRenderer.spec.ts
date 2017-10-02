@@ -1,3 +1,4 @@
+//#region: imports
 import { Mock, Setup } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
@@ -20,6 +21,7 @@ import { RenderingOptions } from "../../../src/graphics/renderingOptions";
 import { Point } from "../../../src/graphics/shape/shape2d/point";
 import { Settings } from "../../../src/settings";
 import { BrowserHelper } from "../../../src/utils/browserHelper";
+//#endregion: imports
 
 describe("webglRenderer:", () =>
 {
@@ -544,12 +546,15 @@ describe("webglRenderer:", () =>
         });
     });
 
-    xdescribe("camera:", () =>
+    describe("camera:", () =>
     {
         const eyePosition = new Vec3(1, 1, 1);
         const lookAtPoint = new Vec3(1, 1, -2);
         const upPosition = new Vec3(1, 2, 1);
-        const camera = new Camera(aspectRatio);
+        const camera = new Camera(aspectRatio, 45, 0.25, 5,
+            new Vec3(0.5, 0.5, 0.5),
+            new Vec3(0.25, 0.25, 0.25),
+            new Vec3(0.5, 1, 0.5));
         let renderer: WebGLRendererMock;
 
         beforeEach(() =>
@@ -566,9 +571,9 @@ describe("webglRenderer:", () =>
 
         it("sets the uniform variable u_viewMatrix", () =>
         {
-            const pointsVerticies = WebglRendererTestHelper.getRandomDynamicVerticies(gl);
-            // WebglRendererTestHelper.addVerticiesToRenderer(renderer, pointsVerticies, "points", gl);
-            // add shape instead
+            const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+                "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+            renderer.addDynamicShapeToScene(redTriangle);
 
             renderer.mockDraw();
 
@@ -578,7 +583,7 @@ describe("webglRenderer:", () =>
             expect(uniformMatrix4fvNameSpy.calls.all()[0].args).toEqual([
                 1,
                 false,
-                new Camera(aspectRatio).vpMatrix
+                new Camera(aspectRatio).vpMatrix.elements
             ]);
             uniformMatrix4fvNameSpy.calls.reset();
 
@@ -595,7 +600,7 @@ describe("webglRenderer:", () =>
         });
     });
 
-    xdescribe("shapes:", () =>
+    describe("shapes:", () =>
     {
         let renderer: WebGLRendererMock;
         const red = new RGBColor(1.0, 0.0, 0.0);
@@ -611,6 +616,7 @@ describe("webglRenderer:", () =>
         let yellowHexagon: DynamicShape;
         let greenOctogon: DynamicShape;
         let blueEllipse: DynamicShape;
+        let cyanBox: DynamicShape;
 
         beforeEach(() =>
         {
@@ -628,82 +634,322 @@ describe("webglRenderer:", () =>
                 "octogons", gl, green);
             blueEllipse = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "ellipses", gl, blue);
+            cyanBox = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+                "box", gl, cyan);
         });
 
-        it("addShapeToScene sends their verticies to webgl", () =>
+        it("addDynamicShapeToScene sends their verticies to webgl", () =>
         {
             renderer.addDynamicShapeToScene(redTriangle);
             renderer.addDynamicShapeToScene(orangeSquare);
             renderer.addDynamicShapeToScene(yellowHexagon);
             renderer.addDynamicShapeToScene(greenOctogon);
             renderer.addDynamicShapeToScene(blueEllipse);
+            renderer.addDynamicShapeToScene(cyanBox);
 
             renderer.mockDraw();
 
             const bufferDataSpy = glSpiesDictionary["bufferData"];
             const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(7);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(7);
+            expect(gl.bufferData).toHaveBeenCalledTimes(6);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
 
             // redTriangle drawn
-            expect(bufferDataSpy.calls.all()[2].args).toEqual([
+            expect(bufferDataSpy.calls.all()[0].args).toEqual([
                 gl.ARRAY_BUFFER,
                 redTriangle.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[2].args).toEqual([
+            expect(drawArraysSpy.calls.all()[0].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 3
             ]);
 
             // orangeSquare drawn
-            expect(bufferDataSpy.calls.all()[3].args).toEqual([
+            expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
                 orangeSquare.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[3].args).toEqual([
+            expect(drawArraysSpy.calls.all()[1].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 6
             ]);
 
             // yellowHexagon drawn
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
+            expect(bufferDataSpy.calls.all()[2].args).toEqual([
                 gl.ARRAY_BUFFER,
                 yellowHexagon.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
+            expect(drawArraysSpy.calls.all()[2].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 12
             ]);
 
             // greenOctogon drawn
-            expect(bufferDataSpy.calls.all()[5].args).toEqual([
+            expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
                 greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[5].args).toEqual([
+            expect(drawArraysSpy.calls.all()[3].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 18
             ]);
 
             // blueEllipse drawn
-            expect(bufferDataSpy.calls.all()[6].args).toEqual([
+            expect(bufferDataSpy.calls.all()[4].args).toEqual([
                 gl.ARRAY_BUFFER,
                 blueEllipse.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[6].args).toEqual([
+            expect(drawArraysSpy.calls.all()[4].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 1206
+            ]);
+
+            // cyanBox drawn
+            expect(bufferDataSpy.calls.all()[5].args).toEqual([
+                gl.ARRAY_BUFFER,
+                cyanBox.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[5].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                36
+            ]);
+        });
+
+        it("addHeterogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
+        {
+            renderer.addHeterogenoeusDynamicShapesArrayToScene([
+                redTriangle,
+                redTriangle,
+                orangeSquare,
+                yellowHexagon,
+                greenOctogon,
+                blueEllipse,
+                cyanBox
+            ]);
+
+            renderer.mockDraw();
+
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
+
+            expect(gl.bufferData).toHaveBeenCalledTimes(6);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
+
+            // redTriangle drawn
+            expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                gl.ARRAY_BUFFER,
+                WebglRendererTestHelper.concatFloat32Arrays([
+                    redTriangle.verticies,
+                    redTriangle.verticies
+                ]),
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                6
+            ]);
+
+
+            // orangeSquare drawn
+            expect(bufferDataSpy.calls.all()[1].args).toEqual([
+                gl.ARRAY_BUFFER,
+                orangeSquare.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[1].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                6
+            ]);
+
+            // yellowHexagon drawn
+            expect(bufferDataSpy.calls.all()[2].args).toEqual([
+                gl.ARRAY_BUFFER,
+                yellowHexagon.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[2].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                12
+            ]);
+
+            // greenOctogon drawn
+            expect(bufferDataSpy.calls.all()[3].args).toEqual([
+                gl.ARRAY_BUFFER,
+                greenOctogon.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[3].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                18
+            ]);
+
+            // blueEllipse drawn
+            expect(bufferDataSpy.calls.all()[4].args).toEqual([
+                gl.ARRAY_BUFFER,
+                blueEllipse.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[4].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                1206
+            ]);
+
+            // cyanBox drawn
+            expect(bufferDataSpy.calls.all()[5].args).toEqual([
+                gl.ARRAY_BUFFER,
+                cyanBox.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[5].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                36
+            ]);
+        });
+
+        it("addHomogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
+        {
+            renderer.addHomogenoeusDynamicShapesArrayToScene([
+                redTriangle,
+                redTriangle
+            ]);
+            renderer.addHomogenoeusDynamicShapesArrayToScene([
+                orangeSquare,
+                orangeSquare,
+                orangeSquare
+            ]);
+            renderer.addHomogenoeusDynamicShapesArrayToScene([
+                yellowHexagon,
+                yellowHexagon
+            ]);
+            renderer.addHomogenoeusDynamicShapesArrayToScene([
+                greenOctogon
+            ]);
+            renderer.addHomogenoeusDynamicShapesArrayToScene([
+                blueEllipse,
+                blueEllipse
+            ]);
+            renderer.addHomogenoeusDynamicShapesArrayToScene([
+                cyanBox,
+                cyanBox,
+                cyanBox,
+                cyanBox
+            ]);
+
+            renderer.mockDraw();
+
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
+
+            expect(gl.bufferData).toHaveBeenCalledTimes(6);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
+
+            // redTriangle drawn
+            expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                gl.ARRAY_BUFFER,
+                WebglRendererTestHelper.concatFloat32Arrays([
+                    redTriangle.verticies,
+                    redTriangle.verticies
+                ]),
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                6
+            ]);
+
+            // orangeSquare drawn
+            expect(bufferDataSpy.calls.all()[1].args).toEqual([
+                gl.ARRAY_BUFFER,
+                WebglRendererTestHelper.concatFloat32Arrays([
+                    orangeSquare.verticies,
+                    orangeSquare.verticies,
+                    orangeSquare.verticies
+                ]),
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[1].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                18
+            ]);
+
+            // yellowHexagon drawn
+            expect(bufferDataSpy.calls.all()[2].args).toEqual([
+                gl.ARRAY_BUFFER,
+                WebglRendererTestHelper.concatFloat32Arrays([
+                    yellowHexagon.verticies,
+                    yellowHexagon.verticies
+                ]),
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[2].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                24
+            ]);
+
+            // greenOctogon drawn
+            expect(bufferDataSpy.calls.all()[3].args).toEqual([
+                gl.ARRAY_BUFFER,
+                greenOctogon.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[3].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                18
+            ]);
+
+            // blueEllipse drawn
+            expect(bufferDataSpy.calls.all()[4].args).toEqual([
+                gl.ARRAY_BUFFER,
+                WebglRendererTestHelper.concatFloat32Arrays([
+                    blueEllipse.verticies,
+                    blueEllipse.verticies
+                ]),
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[4].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                2412
+            ]);
+
+            // cyanBox drawn
+            expect(bufferDataSpy.calls.all()[5].args).toEqual([
+                gl.ARRAY_BUFFER,
+                WebglRendererTestHelper.concatFloat32Arrays([
+                    cyanBox.verticies,
+                    cyanBox.verticies,
+                    cyanBox.verticies,
+                    cyanBox.verticies
+                ]),
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[5].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                144
             ]);
         });
 
@@ -714,7 +960,8 @@ describe("webglRenderer:", () =>
                 orangeSquare,
                 yellowHexagon,
                 greenOctogon,
-                blueEllipse
+                blueEllipse,
+                cyanBox
             ]);
 
             renderer.mockDraw();
@@ -722,68 +969,37 @@ describe("webglRenderer:", () =>
             const bufferDataSpy = glSpiesDictionary["bufferData"];
             const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(7);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(7);
+            expect(gl.bufferData).toHaveBeenCalledTimes(6);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
+            bufferDataSpy.calls.reset();
+            drawArraysSpy.calls.reset();
 
-            // redTriangle drawn
-            expect(bufferDataSpy.calls.all()[2].args).toEqual([
-                gl.ARRAY_BUFFER,
-                redTriangle.verticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[2].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                3
-            ]);
+            renderer.removeAllShapes();
 
-            // orangeSquare drawn
-            expect(bufferDataSpy.calls.all()[3].args).toEqual([
-                gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[3].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                6
+            renderer.mockDraw();
+
+            expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+        });
+
+        it("removeAllShapes, removes all shapes", () =>
+        {
+            renderer.addHeterogenoeusDynamicShapesArrayToScene([
+                redTriangle,
+                orangeSquare,
+                yellowHexagon,
+                greenOctogon,
+                blueEllipse,
+                cyanBox
             ]);
 
-            // yellowHexagon drawn
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
-                gl.ARRAY_BUFFER,
-                yellowHexagon.verticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                12
-            ]);
+            renderer.mockDraw();
 
-            // greenOctogon drawn
-            expect(bufferDataSpy.calls.all()[5].args).toEqual([
-                gl.ARRAY_BUFFER,
-                greenOctogon.verticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[5].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                18
-            ]);
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
-            // blueEllipse drawn
-            expect(bufferDataSpy.calls.all()[6].args).toEqual([
-                gl.ARRAY_BUFFER,
-                blueEllipse.verticies,
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[6].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                1206
-            ]);
+            expect(gl.bufferData).toHaveBeenCalledTimes(6);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
             bufferDataSpy.calls.reset();
             drawArraysSpy.calls.reset();
 

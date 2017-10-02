@@ -52,7 +52,7 @@ module.exports = function(config) {
         coverageOptions: {
             instrumentation: true, // set to false if you need to debug though source ts
             exclude: [
-                /\.(d|spec|test|tests|mock|snapshots)\.ts/i,
+                /\.(d|spec|test|tests|mock|snapshot)\.ts/i,
                 /spec\/helpers\//i,
                 /utils\/browserHelper\.ts/i
             ]
