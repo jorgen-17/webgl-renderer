@@ -94,7 +94,7 @@ describe("shapeFactory:", () =>
 
     describe("deleteShape", () =>
     {
-        it("should append verticies to verticies array", () =>
+        it("should remove verticies from verticies array", () =>
         {
             const orangeTriangleId = triangleBuffer.addShape(orangeTriangle);
             const greenTriangleId = triangleBuffer.addShape(greenTriangle);
@@ -145,9 +145,9 @@ describe("shapeFactory:", () =>
         });
     });
 
-    describe("deleteShape", () =>
+    describe("updateColor", () =>
     {
-        it("should append verticies to verticies array", () =>
+        it("should modify verticies from verticies array", () =>
         {
             const orangeTriangleId = triangleBuffer.addShape(orangeTriangle);
             const greenTriangleId = triangleBuffer.addShape(greenTriangle);

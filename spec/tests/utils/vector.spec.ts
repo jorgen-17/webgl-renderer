@@ -436,6 +436,13 @@ describe("Float32Vector:", () =>
                     0, 0, 0, 0, 0]));
                 expect(vec.size).toBe(5);
             });
+            it("should do nothing if pass in empty array", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
+                vec.overwrite(1, []);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 3.0]));
+                expect(vec.size).toBe(3);
+            });
             it("add after update should append values correctly", () =>
             {
                 let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]));
@@ -497,6 +504,13 @@ describe("Float32Vector:", () =>
                 vec.overwrite(1, [4.0, 3.0, 2.0, 1.0]);
                 expect(vec.arr).toEqual(new Float32Array([1.0, 4.0, 3.0, 2.0]));
                 expect(vec.size).toBe(4);
+            });
+            it("should do nothing if pass in empty array", () =>
+            {
+                let vec = new Float32Vector(new Float32Array([1.0, 2.0, 3.0]), 3);
+                vec.overwrite(1, []);
+                expect(vec.arr).toEqual(new Float32Array([1.0, 2.0, 3.0]));
+                expect(vec.size).toBe(3);
             });
             it("add after update should append values correctly", () =>
             {

@@ -1,9 +1,11 @@
 import { Mock } from "ts-mocks";
 import { Vec3, Mat4 } from "cuon-matrix-ts";
+import { expectjs, registerSnapshots } from "jasmine-snapshot";
 
 import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { Triangle } from "../../../../../src/graphics/shape/shape2d/triangle";
 import { WebglRendererTestHelper } from "../../../../../spec/helpers/graphics/webglRenderer.spec.helper";
+import { triangleSnapshots } from "../../../../snapshots/graphics/shape/shape2d/triangle.snapshot";
 
 
 describe("triangle:", () =>
@@ -15,6 +17,7 @@ describe("triangle:", () =>
     beforeAll(() =>
     {
         glMock.setup(x => x.TRIANGLES).is(0x0004);
+        registerSnapshots(triangleSnapshots, "triangle:");
     });
 
     describe("constructor:", () =>
@@ -35,16 +38,7 @@ describe("triangle:", () =>
 
                 expect(66).toEqual(triangle.verticies.length);
 
-                const expectedVerticies = WebglRendererTestHelper.concatFloat32Arrays([
-                    new Float32Array([0.5, 0.5, 0, color.red, color.green, color.blue]),
-                    new Mat4().setIdentity().elements,
-                    new Float32Array([0.75, 1, 0, color.red, color.green, color.blue]),
-                    new Mat4().setIdentity().elements,
-                    new Float32Array([1, 0.5, 0, color.red, color.green, color.blue]),
-                    new Mat4().setIdentity().elements
-                ]);
-
-                expect(expectedVerticies).toEqual(triangle.verticies);
+                expectjs(triangle.verticies).toMatchSnapshot();
             });
         });
     });
@@ -52,26 +46,21 @@ describe("triangle:", () =>
     it("when color is set, it should recalculate verticies", () =>
     {
         const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
-        let expectedVerticies = WebglRendererTestHelper.concatFloat32Arrays([
-            new Float32Array([0.5, 0.5, 0, color.red, color.green, color.blue]),
-            new Mat4().setIdentity().elements,
-            new Float32Array([0.75, 1, 0, color.red, color.green, color.blue]),
-            new Mat4().setIdentity().elements,
-            new Float32Array([1, 0.5, 0, color.red, color.green, color.blue]),
-            new Mat4().setIdentity().elements
-        ]);
-        expect(expectedVerticies).toEqual(triangle.verticies);
+        expectjs(triangle.verticies).toMatchSnapshot();
+
 
         const newColor = new RGBColor(0.5, 0.5, 0.5);
         triangle.rgbColor = newColor;
-        expectedVerticies = WebglRendererTestHelper.concatFloat32Arrays([
-            new Float32Array([0.5, 0.5, 0, newColor.red, newColor.green, newColor.blue]),
-            new Mat4().setIdentity().elements,
-            new Float32Array([0.75, 1, 0, newColor.red, newColor.green, newColor.blue]),
-            new Mat4().setIdentity().elements,
-            new Float32Array([1, 0.5, 0, newColor.red, newColor.green, newColor.blue]),
-            new Mat4().setIdentity().elements
-        ]);
-        expect(expectedVerticies).toEqual(triangle.verticies);
+        expectjs(triangle.verticies).toMatchSnapshot();
+    });
+
+    it("when modelMatrix is set, it should recalculate verticies", () =>
+    {
+        const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, color);
+        expectjs(triangle.verticies).toMatchSnapshot();
+
+        const newMat = triangle.modelMatrix.rotate(45, -0.4, -0.4, -0.4);
+        triangle.modelMatrix = newMat;
+        expectjs(triangle.verticies).toMatchSnapshot();
     });
 });

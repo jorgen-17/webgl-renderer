@@ -112,7 +112,7 @@ export class Float32Vector
             throw `index(${start}) is out of bounds`;
         }
 
-        if (!(values.length > 0))
+        if (values.length < 1)
         {
             return;
         }
