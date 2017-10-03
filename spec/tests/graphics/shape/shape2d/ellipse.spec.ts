@@ -7,6 +7,8 @@ import { Precision } from "../../../../../src/graphics/precision";
 import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
 import { ellipseSnapshots } from "../../../../snapshots/graphics/shape/shape2d/ellipse.snapshot";
+import { Constants } from "../../../../../src/constants";
+import { Settings } from "../../../../../src/settings";
 
 describe("ellipse:", () =>
 {
@@ -29,6 +31,14 @@ describe("ellipse:", () =>
 
             expect(color).toBe(ellipse.rgbColor);
             expect(gl.TRIANGLES).toBe(ellipse.glRenderMode);
+        });
+
+        it("should default color if not preovided", () =>
+        {
+            const ellipse = new Ellipse(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl,
+                Precision.Low);
+
+            expect(ellipse.rgbColor).toEqual(Settings.defaultColor);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

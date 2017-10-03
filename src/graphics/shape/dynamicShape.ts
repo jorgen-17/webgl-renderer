@@ -10,8 +10,8 @@ import { Shape } from "./shape";
 
 export abstract class DynamicShape extends Shape {
     private _modelMatrix: Mat4;
-    constructor(numberOfVerticies: number, rgbColor: RGBColor = Settings.defaultColor,
-        point1: Vec3 | null = null, point2: Vec3 | null = null)
+    constructor(numberOfVerticies: number, point1: Vec3, point2: Vec3,
+        rgbColor: RGBColor = Settings.defaultColor)
     {
         super(numberOfVerticies, rgbColor, point1, point2);
 

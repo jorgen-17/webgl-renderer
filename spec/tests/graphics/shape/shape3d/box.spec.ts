@@ -6,6 +6,7 @@ import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { Box } from "../../../../../src/graphics/shape/shape3d/box";
 import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
 import { boxSnapshots } from "../../../../snapshots/graphics/shape/shape3d/box.snapshot";
+import { Settings } from "../../../../../src/settings";
 
 describe("box:", () =>
 {
@@ -28,6 +29,13 @@ describe("box:", () =>
 
             expect(color).toBe(box.rgbColor);
             expect(gl.TRIANGLES).toBe(box.glRenderMode);
+        });
+
+        it("should default color if not preovided", () =>
+        {
+            const box = new Box(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl);
+
+            expect(box.rgbColor).toEqual(Settings.defaultColor);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

@@ -30,7 +30,7 @@ export class Ellipse extends DynamicShape
         precision: Precision = Precision.High, rgbColor?: RGBColor)
     {
         super(precision === Precision.High ? Ellipse.highPrecisionNumberOfVerticies :
-            Ellipse.lowPrecisionNumberOfVerticies, rgbColor, point1, point2);
+            Ellipse.lowPrecisionNumberOfVerticies, point1, point2, rgbColor);
 
         this.horizontalRadius = (this._boundingRect.topRight.x - this._boundingRect.topLeft.x) / 2;
         this.verticalRadius = (this._boundingRect.topLeft.y - this._boundingRect.bottomLeft.y) / 2;

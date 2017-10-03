@@ -6,6 +6,7 @@ import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { Hexagon } from "../../../../../src/graphics/shape/shape2d/hexagon";
 import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
 import { hexagonSnapshots } from "../../../../snapshots/graphics/shape/shape2d/hexagon.snapshot";
+import { Settings } from "../../../../../src/settings";
 
 describe("hexagon:", () =>
 {
@@ -27,6 +28,13 @@ describe("hexagon:", () =>
 
             expect(color).toBe(hexagon.rgbColor);
             expect(gl.TRIANGLES).toBe(hexagon.glRenderMode);
+        });
+
+        it("should default color if not preovided", () =>
+        {
+            const hexagon = new Hexagon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl);
+
+            expect(hexagon.rgbColor).toEqual(Settings.defaultColor);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

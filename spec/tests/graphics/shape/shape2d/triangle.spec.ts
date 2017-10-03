@@ -6,6 +6,7 @@ import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { Triangle } from "../../../../../src/graphics/shape/shape2d/triangle";
 import { WebglRendererTestHelper } from "../../../../../spec/helpers/graphics/webglRenderer.spec.helper";
 import { triangleSnapshots } from "../../../../snapshots/graphics/shape/shape2d/triangle.snapshot";
+import { Settings } from "../../../../../src/settings";
 
 
 describe("triangle:", () =>
@@ -28,6 +29,13 @@ describe("triangle:", () =>
 
             expect(color).toBe(triangle.rgbColor);
             expect(gl.TRIANGLES).toBe(triangle.glRenderMode);
+        });
+
+        it("should default color if not preovided", () =>
+        {
+            const triangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl);
+
+            expect(triangle.rgbColor).toEqual(Settings.defaultColor);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

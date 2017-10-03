@@ -6,6 +6,7 @@ import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { Octogon } from "../../../../../src/graphics/shape/shape2d/octogon";
 import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
 import { octogonSnapshots } from "../../../../snapshots/graphics/shape/shape2d/octogon.snapshot";
+import { Settings } from "../../../../../src/settings";
 
 describe("octogon:", () =>
 {
@@ -27,6 +28,13 @@ describe("octogon:", () =>
 
             expect(color).toBe(octogon.rgbColor);
             expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
+        });
+
+        it("should default color if not preovided", () =>
+        {
+            const octogon = new Octogon(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl);
+
+            expect(octogon.rgbColor).toEqual(Settings.defaultColor);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

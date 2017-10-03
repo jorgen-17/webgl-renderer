@@ -90,6 +90,11 @@ describe("shapeFactory:", () =>
             expect(triangleBuffer.updateColor(orangeTriangleId, blue)).toBe(true);
             expect(triangleBuffer.removeShape(orangeTriangleId)).toBe(true);
         });
+        it("adding array of empty shapes shouldnt do anything", () =>
+        {
+            triangleBuffer.addShapes([]);
+            expect(new Float32Array(0)).toEqual(triangleBuffer.verticies);
+        });
     });
 
     describe("deleteShape", () =>

@@ -15,7 +15,7 @@ export class Box extends DynamicShape
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(Box.numberOfVerticies, rgbColor, point1, point2);
+        super(Box.numberOfVerticies, point1, point2, rgbColor);
 
         const length = this._boundingRect.topRight.x - this._boundingRect.topLeft.x;
         const height = this._boundingRect.topRight.y - this._boundingRect.bottomRight.y;

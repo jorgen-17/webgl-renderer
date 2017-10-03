@@ -15,7 +15,7 @@ export class Triangle extends DynamicShape
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(Triangle.numberOfVerticies, rgbColor, point1, point2);
+        super(Triangle.numberOfVerticies, point1, point2, rgbColor);
 
         this.computeVerticies();
 

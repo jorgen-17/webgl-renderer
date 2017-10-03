@@ -6,6 +6,7 @@ import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
 import { Rectangle } from "../../../../../src/graphics/shape/shape2d/rectangle";
 import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
 import { rectangleSnapshots } from "../../../../snapshots/graphics/shape/shape2d/rectangle.snapshot";
+import { Settings } from "../../../../../src/settings";
 
 describe("rectangle:", () =>
 {
@@ -28,6 +29,13 @@ describe("rectangle:", () =>
 
             expect(color).toBe(rectangle.rgbColor);
             expect(gl.TRIANGLES).toBe(rectangle.glRenderMode);
+        });
+
+        it("should default color if not preovided", () =>
+        {
+            const square = new Rectangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl);
+
+            expect(square.rgbColor).toEqual(Settings.defaultColor);
         });
 
         describe("should initialize vertex positions and color correctly ", () =>

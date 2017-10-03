@@ -13,7 +13,7 @@ export class Rectangle extends DynamicShape
     public shapeMode: ShapeMode = "rectangles";
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(Rectangle.numberOfVerticies, rgbColor, point1, point2);
+        super(Rectangle.numberOfVerticies, point1, point2, rgbColor);
 
         this.computeVerticies();
 

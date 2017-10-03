@@ -14,7 +14,7 @@ export class Octogon extends DynamicShape
     public shapeMode: ShapeMode = "octogons";
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(Octogon.numberOfVerticies, rgbColor, point1, point2);
+        super(Octogon.numberOfVerticies, point1, point2, rgbColor);
 
         this.computeVerticies();
 
