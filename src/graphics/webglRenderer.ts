@@ -212,12 +212,16 @@ export class WebGLRenderer
         return new Array<string>();
     }
 
-    public addHeterogenoeusDynamicShapesArrayToScene<S extends DynamicShape>(shapes: Array<S>): void
+    public addHeterogenoeusDynamicShapesArrayToScene<S extends DynamicShape>(shapes: Array<S>): Array<string>
     {
+        let shapeIds = new Array<string>();
+
         for (let shape of shapes)
         {
-            this.addDynamicShapeToScene(shape);
+            shapeIds.push(this.addDynamicShapeToScene(shape));
         }
+
+        return shapeIds;
     }
 
     public removeAllShapes(): void

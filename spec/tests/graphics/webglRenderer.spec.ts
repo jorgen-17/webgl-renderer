@@ -727,6 +727,21 @@ describe("webglRenderer:", () =>
             ]);
         });
 
+        it("addDynamicShapeToScene with unrecognized shapemode doesnt draw anything", () =>
+        {
+            redTriangle.shapeMode = "notShape" as ShapeMode;
+            const id = renderer.addDynamicShapeToScene(redTriangle);
+            expect(id).toEqual("");
+
+            renderer.mockDraw();
+
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
+
+            expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+        });
+
         it("addHeterogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
         {
             renderer.addHeterogenoeusDynamicShapesArrayToScene([
@@ -952,30 +967,30 @@ describe("webglRenderer:", () =>
             ]);
         });
 
-        it("removeAllShapes, removes all shapes", () =>
+        it("addHomogenoeusDynamicShapesArrayToScene with unrecognized shapemode doesnt draw anything", () =>
         {
-            renderer.addHeterogenoeusDynamicShapesArrayToScene([
-                redTriangle,
-                orangeSquare,
-                yellowHexagon,
-                greenOctogon,
-                blueEllipse,
-                cyanBox
-            ]);
+            redTriangle.shapeMode = "notShape" as ShapeMode;
+            const id = renderer.addHomogenoeusDynamicShapesArrayToScene([redTriangle]);
+            expect(id).toEqual([]);
 
             renderer.mockDraw();
 
             const bufferDataSpy = glSpiesDictionary["bufferData"];
             const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(6);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
-            bufferDataSpy.calls.reset();
-            drawArraysSpy.calls.reset();
+            expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+        });
 
-            renderer.removeAllShapes();
+        it("addHomogenoeusDynamicShapesArrayToScene with empty array doesnt draw anything", () =>
+        {
+            const id = renderer.addHomogenoeusDynamicShapesArrayToScene([]);
+            expect(id).toEqual([]);
 
             renderer.mockDraw();
+
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
@@ -1006,6 +1021,56 @@ describe("webglRenderer:", () =>
 
             renderer.mockDraw();
 
+            expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+        });
+
+        it("removeShape with shapeMode makes sure it doesnt get drawn", () =>
+        {
+            let shapeIds: Array<string> = renderer.addHeterogenoeusDynamicShapesArrayToScene([
+                redTriangle,
+                orangeSquare,
+                yellowHexagon,
+                greenOctogon,
+            ]);
+            renderer.mockDraw();
+            const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
+            expect(gl.bufferData).toHaveBeenCalledTimes(4);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(4);
+            bufferDataSpy.calls.reset();
+            drawArraysSpy.calls.reset();
+            renderer.removeShape(shapeIds[0], redTriangle.shapeMode);
+            renderer.removeShape(shapeIds[1], orangeSquare.shapeMode);
+            renderer.removeShape(shapeIds[2], yellowHexagon.shapeMode);
+            renderer.removeShape(shapeIds[3], greenOctogon.shapeMode);
+            renderer.mockDraw();
+            expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+
+            shapeIds = renderer.addHomogenoeusDynamicShapesArrayToScene([
+                blueEllipse,
+                blueEllipse
+            ]);
+            renderer.mockDraw();
+            expect(gl.bufferData).toHaveBeenCalledTimes(1);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+            bufferDataSpy.calls.reset();
+            drawArraysSpy.calls.reset();
+            renderer.removeShape(shapeIds[0], blueEllipse.shapeMode);
+            renderer.removeShape(shapeIds[1], blueEllipse.shapeMode);
+            renderer.mockDraw();
+            expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+
+            let shapeId = renderer.addDynamicShapeToScene(cyanBox);
+            renderer.mockDraw();
+            expect(gl.bufferData).toHaveBeenCalledTimes(1);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+            bufferDataSpy.calls.reset();
+            drawArraysSpy.calls.reset();
+            renderer.removeShape(shapeId, cyanBox.shapeMode);
+            renderer.mockDraw();
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
         });
