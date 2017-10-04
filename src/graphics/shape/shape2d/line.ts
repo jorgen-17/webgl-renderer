@@ -15,7 +15,7 @@ export class Line extends Shape
 
     constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
-        super(1, Constants.floatsPerLineVertex, rgbColor);
+        super(1, Constants.floatsPerPositionColor, rgbColor);
 
         let array = new Float32Vector();
 
@@ -35,11 +35,11 @@ export class Line extends Shape
 
     protected computeVerticies(): void
     {
-        let arr = new Float32Array(this._vertexPositions.length * Constants.floatsPerLineVertex);
+        let arr = new Float32Array(this._vertexPositions.length * Constants.floatsPerPositionColor);
 
         for (let i = 0; i < this._vertexPositions.length; i++)
         {
-            const insertionIndex = i * Constants.floatsPerLineVertex;
+            const insertionIndex = i * Constants.floatsPerPositionColor;
             const vertexPosition = this._vertexPositions[i];
             this.addXYZAndColorToFloat32Array(arr, insertionIndex, vertexPosition.x, vertexPosition.y, vertexPosition.z);
         }
@@ -52,7 +52,7 @@ export class Line extends Shape
         this._vertexPositions.push(vertex);
         this.numberOfVerticies++;
 
-        let array = new Float32Array(Constants.floatsPerLineVertex);
+        let array = new Float32Array(Constants.floatsPerPositionColor);
         this.addXYZAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);
         this._verticiesVector.addArray(array);
     }

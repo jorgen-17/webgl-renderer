@@ -11,9 +11,9 @@ import { Shape } from "./shape";
 
 export class ShapeBuffer<S extends Shape>
 {
-    private _verticies: Float32Vector;
-    private _trimmedArray: Float32Array;
-    private _shapes: StringDictionary<{shape: S, index: number}>;
+    protected _verticies: Float32Vector;
+    protected _trimmedArray: Float32Array;
+    protected _shapes: StringDictionary<{shape: S, index: number}>;
     private _gl: WebGLRenderingContext;
     private _webglBuffer: WebGLBuffer | null;
 
@@ -129,6 +129,13 @@ export class ShapeBuffer<S extends Shape>
         return false;
     }
 
+
+    protected refreshWebglBuffer()
+    {
+        this._gl.deleteBuffer(this._webglBuffer);
+        this._webglBuffer = this._gl.createBuffer();
+    }
+
     private reorderIndicies(deletedIndex: number) {
         for (let key of Object.keys(this._shapes))
         {
@@ -148,11 +155,5 @@ export class ShapeBuffer<S extends Shape>
         this._verticies.addArray(shape.verticies);
 
         return id;
-    }
-
-    private refreshWebglBuffer()
-    {
-        this._gl.deleteBuffer(this._webglBuffer);
-        this._webglBuffer = this._gl.createBuffer();
     }
 }

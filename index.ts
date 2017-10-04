@@ -3,6 +3,7 @@ import { Vec3, Mat4 } from "cuon-matrix-ts";
 import { RGBColor } from "./src/graphics/color/rgbColor";
 import { Color, ColorMapper } from "./src/graphics/color/colorMapper";
 import { RenderMode } from "./src/graphics/renderModeMapper";
+import { Shape } from "./src/graphics/shape/shape";
 import { DynamicShape } from "./src/graphics/shape/dynamicShape";
 import { ShapeFactory } from "./src/graphics/shape/shapeFactory";
 import { ShapeMode } from "./src/graphics/shape/shapeMode";
@@ -29,6 +30,7 @@ export
     Color,
     ColorMapper,
     RenderMode,
+    Shape,
     DynamicShape,
     ShapeFactory,
     ShapeMode,

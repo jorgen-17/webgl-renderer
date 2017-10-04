@@ -110,7 +110,6 @@ describe("webglRenderer:", () =>
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 backgroundColor: backgroundColor,
-                pointSize: pointSize,
                 window: leWindow,
                 fullscreen: isFullScreen,
             };
@@ -118,7 +117,6 @@ describe("webglRenderer:", () =>
             let renderer = new WebGLRendererMock(canvas, options);
 
             expect(backgroundColor).toEqual(renderer.backgroundColor);
-            expect(pointSize).toEqual(renderer.pointSize);
             expect(isFullScreen).toEqual(renderer.isFullscreen);
         });
         it("defaults are used when settings not passed in", () =>
@@ -128,7 +126,6 @@ describe("webglRenderer:", () =>
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
 
             expect(Settings.defaultBackgroundColor).toEqual(renderer.backgroundColor);
-            expect(Settings.defaultPointSize).toEqual(renderer.pointSize);
 
         });
         it("camera aspectRatioused when passed in", () =>
@@ -320,7 +317,7 @@ describe("webglRenderer:", () =>
         windowRequestAnimationFrameSpy.calls.reset();
         realCanvas.dispatchEvent(new CustomEvent("webglcontextrestored"));
         expect(gl.viewport).toHaveBeenCalledTimes(1);
-        expect(gl.createProgram).toHaveBeenCalledTimes(1);
+        expect(gl.createProgram).toHaveBeenCalledTimes(2);
         expect(windowRequestAnimationFrameSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -341,99 +338,6 @@ describe("webglRenderer:", () =>
         renderer.start();
         expect(gl.clearColor).toHaveBeenCalledTimes(2);
         expect(leWindow.requestAnimationFrame).toHaveBeenCalledTimes(2);
-    });
-
-    describe("backgroundColor:", () =>
-    {
-        const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
-        let renderer: WebGLRendererMock;
-
-        beforeEach(() =>
-        {
-            renderer = new WebGLRendererMock(canvas, defaultOptions);
-        });
-
-        it("is set-able and get-able", () =>
-        {
-            renderer.backgroundColor = backgroundColor;
-
-            expect(backgroundColor).toBe(renderer.backgroundColor);
-        });
-
-        it("sets the color that the renderer passes in when calling gl.clearColor", () =>
-        {
-            const clearColorSpy = glSpiesDictionary["clearColor"];
-            clearColorSpy.calls.reset();
-
-            renderer.mockDraw();
-
-            expect(gl.clearColor).toHaveBeenCalledTimes(1);
-            expect(clearColorSpy.calls.all()[0].args).toEqual([
-                Settings.defaultBackgroundColor.red,
-                Settings.defaultBackgroundColor.green,
-                Settings.defaultBackgroundColor.blue,
-                Settings.defaultBackgroundAlpha,
-            ]);
-            clearColorSpy.calls.reset();
-
-            renderer.backgroundColor = backgroundColor;
-
-            renderer.mockDraw();
-
-            expect(gl.clearColor).toHaveBeenCalledTimes(1);
-            expect(clearColorSpy.calls.all()[0].args).toEqual([
-                backgroundColor.red,
-                backgroundColor.green,
-                backgroundColor.blue,
-                Settings.defaultBackgroundAlpha,
-            ]);
-        });
-    });
-
-    describe("pointSize:", () =>
-    {
-        const pointSize = 15;
-        let renderer: WebGLRendererMock;
-
-        beforeEach(() =>
-        {
-            renderer = new WebGLRendererMock(canvas, defaultOptions);
-        });
-
-        it("is set-able and get-able", () =>
-        {
-            renderer.pointSize = pointSize;
-
-            expect(pointSize).toBe(renderer.pointSize);
-        });
-
-        it("sets the uniform variable u_pointSize", () =>
-        {
-            const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
-            renderer.addShapeToScene(redTriangle);
-
-            renderer.mockDraw();
-
-            const uniform1fSpy = glSpiesDictionary["uniform1f"];
-
-            expect(gl.uniform1f).toHaveBeenCalledTimes(1);
-            expect(uniform1fSpy.calls.all()[0].args).toEqual([
-                1,
-                Settings.defaultPointSize
-            ]);
-            uniform1fSpy.calls.reset();
-
-            renderer.pointSize = pointSize;
-
-            renderer.mockDraw();
-
-            expect(gl.uniform1f).toHaveBeenCalledTimes(1);
-            expect(uniform1fSpy.calls.all()[0].args).toEqual([
-                1,
-                pointSize
-            ]);
-        });
     });
 
     describe("isFullscreen:", () =>
@@ -1467,88 +1371,59 @@ describe("webglRenderer:", () =>
         "draw throws and createUniforNotFoundErrorMessage " +
         "generates the correct error message", () =>
     {
-        const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-        "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
-
-        it("when u_pointSize is missing and u_viewMatrix is found", () =>
+        describe("and when drawing points", () =>
         {
-            let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
-            .is((shader: WebGLShader, name: string) =>
+            const point = new Point(new Vec3(0.5, 0.5), gl);
+
+            it("when u_vpMatrix is missing", () =>
             {
-                if (name === ShaderSettings.pointSizeUniformName)
+                let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
+                .is((shader: WebGLShader, name: string) =>
                 {
-                    return 0;
-                }
-                if (name === ShaderSettings.vpMatrixUniformName)
-                {
-                    return 1;
-                }
-                return null;
-            }).Spy;
+                    if (name === ShaderSettings.vpMatrixUniformName)
+                    {
+                        return 0;
+                    }
+                    return null;
+                }).Spy;
 
-            let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            renderer.addShapeToScene(redTriangle);
+                let renderer = new WebGLRendererMock(canvas, defaultOptions);
+                renderer.addShapeToScene(point);
 
-            const expectedErrorString =
-            `cannot find uniform in shader program\n` +
-            `potential culprits:\n` +
-                `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.vpMatrixUniformName}: 1\n`;
-            expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
+                const expectedErrorString =
+                `cannot find uniform in shader program\n` +
+                `potential culprits:\n` +
+                    `\t${ShaderSettings.vpMatrixUniformName}: 0\n`;
+                expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
+            });
         });
 
-        it("when u_pointSize is found and u_viewMatrix is missing", () =>
+        describe("and when drawing dynamic shapes", () =>
         {
-            let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
-            .is((shader: WebGLShader, name: string) =>
+            const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+
+            it("when u_vpMatrix is missing", () =>
             {
-                if (name === ShaderSettings.pointSizeUniformName)
+                let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
+                .is((shader: WebGLShader, name: string) =>
                 {
-                    return 1;
-                }
-                if (name === ShaderSettings.vpMatrixUniformName)
-                {
-                    return 0;
-                }
-                return null;
-            }).Spy;
+                    if (name === ShaderSettings.vpMatrixUniformName)
+                    {
+                        return 0;
+                    }
+                    return null;
+                }).Spy;
 
-            let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            renderer.addShapeToScene(redTriangle);
+                let renderer = new WebGLRendererMock(canvas, defaultOptions);
+                renderer.addShapeToScene(redTriangle);
 
-            const expectedErrorString =
-            `cannot find uniform in shader program\n` +
-            `potential culprits:\n` +
-                `\t${ShaderSettings.pointSizeUniformName}: 1\n` +
-                `\t${ShaderSettings.vpMatrixUniformName}: 0\n`;
-            expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
-        });
-
-        it("when u_pointSize is missing and u_viewMatrix is missing", () =>
-        {
-            let getUniformLocationSpy = glMock.setup(x => x.getUniformLocation)
-            .is((shader: WebGLShader, name: string) =>
-            {
-                if (name === ShaderSettings.pointSizeUniformName)
-                {
-                    return 0;
-                }
-                if (name === ShaderSettings.vpMatrixUniformName)
-                {
-                    return 0;
-                }
-                return null;
-            }).Spy;
-
-            let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            renderer.addShapeToScene(redTriangle);
-
-            const expectedErrorString =
-            `cannot find uniform in shader program\n` +
-            `potential culprits:\n` +
-                `\t${ShaderSettings.pointSizeUniformName}: 0\n` +
-                `\t${ShaderSettings.vpMatrixUniformName}: 0\n`;
-            expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
+                const expectedErrorString =
+                `cannot find uniform in shader program\n` +
+                `potential culprits:\n` +
+                    `\t${ShaderSettings.vpMatrixUniformName}: 0\n`;
+                expect(() => renderer.mockDraw()).toThrow(expectedErrorString);
+            });
         });
     });
 

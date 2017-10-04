@@ -5,6 +5,7 @@ import { RGBColor } from "../../color/rgbColor";
 import { Constants } from "../../../constants";
 import { Float32Vector } from "../../../utils/float32Vector";
 import { ShapeMode } from "../shapeMode";
+import { Settings } from "../../../settings";
 
 
 export class Point extends Shape
@@ -15,7 +16,7 @@ export class Point extends Shape
     private _pointSize: number;
 
     constructor(location: Vec3, gl: WebGLRenderingContext,
-        rgbColor?: RGBColor, pointSize: number = 5)
+        rgbColor?: RGBColor, pointSize: number = Settings.defaultPointSize)
     {
         super(Point.numberOfVerticies, Constants.floatsPerPointVertex, rgbColor);
 
@@ -26,24 +27,32 @@ export class Point extends Shape
         this.glRenderMode = gl.POINTS;
     }
 
-    protected computeVerticies(): void
+    public get pointSize(): number
     {
-        let array = new Float32Array(Constants.floatsPerLineVertex + 1);
-        this.addXYZColorAndPointSizeToFloat32Array(array, 0, this._location.x,
-            this._location.y, this._location.z);
-        this._verticies = array;
+        return this._pointSize;
     }
 
+    public set pointSize(value: number)
+    {
+        this._pointSize = value;
+        this.computeVerticies();
+    }
 
-    private addXYZColorAndPointSizeToFloat32Array(array: Float32Array, index: number,
+    protected computeVerticies(): void
+    {
+        this.addXYZColorAndPointSize(0, this._location.x,
+            this._location.y, this._location.z);
+    }
+
+    private addXYZColorAndPointSize( index: number,
         x: number, y: number, z: number)
     {
-        array[index] = x;
-        array[index + 1] = y;
-        array[index + 2] = z;
-        array[index + 3] = this.rgbColor.red;
-        array[index + 4] = this.rgbColor.green;
-        array[index + 5] = this.rgbColor.blue;
-        array[index + 6] = this._pointSize;
+        this._verticies[index] = x;
+        this._verticies[index + 1] = y;
+        this._verticies[index + 2] = z;
+        this._verticies[index + 3] = this.rgbColor.red;
+        this._verticies[index + 4] = this.rgbColor.green;
+        this._verticies[index + 5] = this.rgbColor.blue;
+        this._verticies[index + 6] = this._pointSize;
     }
 }

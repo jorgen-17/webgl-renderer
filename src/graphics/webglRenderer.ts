@@ -25,6 +25,7 @@ import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
 import { Shape } from "./shape/shape";
 import { DynamicShape } from "./shape/dynamicShape";
+import { PointBuffer } from "./shape/pointBuffer";
 //#endregion
 
 export class WebGLRenderer
@@ -34,7 +35,6 @@ export class WebGLRenderer
     private _isContextLost: boolean;
     private _canvas: HTMLCanvasElement;
     private _browserHelper: BrowserHelper;
-    private _pointSize: number;
     private _backgroundColor: RGBColor;
     private _camera: Camera;
     private _window: Window;
@@ -42,7 +42,7 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-    private _pointsShapeBuffer: ShapeBuffer<Point>;
+    private _pointsShapeBuffer: PointBuffer;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
@@ -54,6 +54,7 @@ export class WebGLRenderer
     private _dynamicShapeShaderProgram: WebGLShader;
     private _a_position: number;
     private _a_color: number;
+    private _a_pointSize: number;
     private _a_modelMatrixRow0: number;
     private _a_modelMatrixRow1: number;
     private _a_modelMatrixRow2: number;
@@ -74,14 +75,16 @@ export class WebGLRenderer
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
 
-    private _staticVertexShaderSource: string =
+    private _pointVertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
+    attribute float ${ShaderSettings.pointSizeAttributeName};
     uniform mat4 ${ShaderSettings.vpMatrixUniformName};
     varying vec4 v_color;
     void main(void)
     {
         gl_Position = ${ShaderSettings.vpMatrixUniformName} * ${ShaderSettings.positionAttributeName};
+        gl_PointSize = ${ShaderSettings.pointSizeAttributeName};
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
 
@@ -121,16 +124,6 @@ export class WebGLRenderer
     public set backgroundColor(backgroundColor: RGBColor)
     {
         this._backgroundColor = backgroundColor;
-    }
-
-    public get pointSize(): number
-    {
-        return this._pointSize;
-    }
-
-    public set pointSize(value: number)
-    {
-        this._pointSize = value;
     }
 
     public get isFullscreen(): boolean
@@ -291,6 +284,11 @@ export class WebGLRenderer
         return this.updateShapeColorFromUnspecifiedBuffer(id, newColor);
     }
 
+    public updatePointSize(id: string, newPointSize: number): boolean
+    {
+        return this._pointsShapeBuffer.updatePointSize(id, newPointSize);
+    }
+
     public start()
     {
         this.renderLoop();
@@ -310,15 +308,15 @@ export class WebGLRenderer
             this._backgroundColor.blue, Settings.defaultBackgroundAlpha);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-        // switch shader program
-        // look for shader variables
+        this.gl.useProgram(this._pointShaderProgram);
+        this.getPointShaderVariables();
         if (this._pointsShapeBuffer.count > 0)
         {
             this.drawPointShapeBuffer(this._pointsShapeBuffer);
         }
 
-        // switch shader program
-        // look for shader variables
+        this.gl.useProgram(this._dynamicShapeShaderProgram);
+        this.getDynamicShapeShaderVariables();
         for (let sb of this._dynamicShapeBuffers)
         {
             if (sb.count > 0)
@@ -341,9 +339,11 @@ export class WebGLRenderer
         this.getContext();
 
         this.setViewPortDimensions(this._canvas.width, this._canvas.height);
-        this.initShaders();
 
-        this.getShaderVariables();
+        this.initShaders(this._dynamicVertexShaderSource,
+            this._fragmentShaderSource, this._dynamicShapeShaderProgram);
+        this.initShaders(this._pointVertexShaderSource,
+            this._fragmentShaderSource, this._pointShaderProgram);
     }
 
     private getContext (): void
@@ -393,7 +393,6 @@ export class WebGLRenderer
 
     private initializeRenderingOptions(renderingOptions: RenderingOptions | null)
     {
-        this._pointSize = (renderingOptions && renderingOptions.pointSize) || Settings.defaultPointSize;
         this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
         this._camera = (renderingOptions && renderingOptions.camera) || new Camera((this._canvas.width / this._canvas.height));
         this._window = (renderingOptions && renderingOptions.window) || window;
@@ -418,18 +417,29 @@ export class WebGLRenderer
             this._boxShapeBuffer
         ];
 
-        this._pointsShapeBuffer = new ShapeBuffer<Point>(this.gl);
+        this._pointsShapeBuffer = new PointBuffer(this.gl);
     }
 
-    private getShaderVariables(): void
+    private getDynamicShapeShaderVariables(): void
     {
-        this._a_position = this.gl.getAttribLocation(this._dynamicShapeShaderProgram, ShaderSettings.positionAttributeName);
-        this._a_color = this.gl.getAttribLocation(this._dynamicShapeShaderProgram, ShaderSettings.colorAttributeName);
+        this.getShaderVariables(this._dynamicShapeShaderProgram);
         this._a_modelMatrixRow0 = this.gl.getAttribLocation(this._dynamicShapeShaderProgram, ShaderSettings.modelMatrixAttributeName);
         this._a_modelMatrixRow1 = this._a_modelMatrixRow0 + 1;
         this._a_modelMatrixRow2 = this._a_modelMatrixRow0 + 2;
         this._a_modelMatrixRow3 = this._a_modelMatrixRow0 + 3;
-        this._u_vpMatrix = this.gl.getUniformLocation(this._dynamicShapeShaderProgram, ShaderSettings.vpMatrixUniformName);
+    }
+
+    private getPointShaderVariables(): void
+    {
+        this.getShaderVariables(this._pointShaderProgram);
+        this._a_pointSize = this.gl.getAttribLocation(this._pointShaderProgram, ShaderSettings.positionAttributeName);
+    }
+
+    private getShaderVariables(shader: WebGLShader): void
+    {
+        this._a_position = this.gl.getAttribLocation(shader, ShaderSettings.positionAttributeName);
+        this._a_color = this.gl.getAttribLocation(shader, ShaderSettings.colorAttributeName);
+        this._u_vpMatrix = this.gl.getUniformLocation(shader, ShaderSettings.vpMatrixUniformName);
     }
 
     private drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void
@@ -448,13 +458,16 @@ export class WebGLRenderer
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, 0);
+            false, Constants.bytesPerPointVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, Constants.bytesPerPoint);
+            false, Constants.bytesPerPointVertex, Constants.bytesPerPosition);
         this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.vertexAttribPointer(this._a_pointSize, Constants.floatsPerPointSize, this.gl.FLOAT,
+            false, Constants.bytesPerPointVertex, Constants.bytesPerPositionColor);
+        this.gl.enableVertexAttribArray(this._a_pointSize);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
-        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerLineVertex));
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerPointVertex));
     }
 
     private drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
@@ -473,31 +486,32 @@ export class WebGLRenderer
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, 0);
+            false, Constants.bytesPerDynamicVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, Constants.bytesPerPoint);
+            false, Constants.bytesPerDynamicVertex, Constants.bytesPerPosition);
         this.gl.enableVertexAttribArray(this._a_color);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, Constants.modelMatrixRow0Offset);
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow0Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, Constants.modelMatrixRow1Offset);
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow1Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, Constants.modelMatrixRow2Offset);
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow2Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
         this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerVertex, Constants.modelMatrixRow3Offset);
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow3Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
-    private initShaders(): void
+    private initShaders(vertexSource: string, fragmentSource: string,
+        shaderProgram: WebGLShader): void
     {
-        const fragmentShader = this.createShader(this._fragmentShaderSource, "fragment");
-        const vertexShader = this.createShader(this._dynamicVertexShaderSource, "vertex");
+        const vertexShader = this.createShader(vertexSource, "vertex");
+        const fragmentShader = this.createShader(fragmentSource, "fragment");
 
         let shader: WebGLProgram | null = this.gl.createProgram();
         if (shader === null)
@@ -505,17 +519,15 @@ export class WebGLRenderer
             throw "could not create shader program";
         }
 
-        this._dynamicShapeShaderProgram = shader;
-        this.gl.attachShader(this._dynamicShapeShaderProgram, vertexShader);
-        this.gl.attachShader(this._dynamicShapeShaderProgram, fragmentShader);
-        this.gl.linkProgram(this._dynamicShapeShaderProgram);
+        shaderProgram = shader;
+        this.gl.attachShader(shaderProgram, vertexShader);
+        this.gl.attachShader(shaderProgram, fragmentShader);
+        this.gl.linkProgram(shaderProgram);
 
-        if (!this.gl.getProgramParameter(this._dynamicShapeShaderProgram, this.gl.LINK_STATUS))
+        if (!this.gl.getProgramParameter(shaderProgram, this.gl.LINK_STATUS))
         {
             throw "could not link shader program";
         }
-
-        this.gl.useProgram(this._dynamicShapeShaderProgram);
     }
 
     private createShader(shaderSource: string, type: ShaderType): WebGLShader | null
