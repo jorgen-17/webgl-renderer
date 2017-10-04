@@ -1,19 +1,19 @@
+//#region imports
 import * as cuid from "cuid";
 import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../../utils/float32Vector";
 import { StringDictionary } from "../../utils/dictionary";
-import { DynamicShape } from "./dynamicShape";
 import { Settings } from "../../settings";
 import { Constants } from "../../constants";
 import { RGBColor } from "../color/rgbColor";
+import { Shape } from "./shape";
 
-export class DynamicShapeBuffer<S extends DynamicShape>
+export class ShapeBuffer<S extends Shape>
 {
     private _verticies: Float32Vector;
     private _trimmedArray: Float32Array;
     private _shapes: StringDictionary<{shape: S, index: number}>;
-    private _protoShape: S;
     private _gl: WebGLRenderingContext;
     private _webglBuffer: WebGLBuffer | null;
 

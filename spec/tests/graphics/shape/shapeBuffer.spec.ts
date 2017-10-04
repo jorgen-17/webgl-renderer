@@ -3,12 +3,12 @@ import { Mock } from "ts-mocks";
 
 import { RGBColor } from "../../../../src/graphics/color/rgbColor";
 import { Triangle } from "../../../../src/graphics/shape/shape2d/triangle";
-import { DynamicShapeBuffer } from "../../../../src/graphics/shape/shapeBuffer";
+import { ShapeBuffer } from "../../../../src/graphics/shape/shapeBuffer";
 import { WebglRendererTestHelper } from "../../../helpers/graphics/webglRenderer.spec.helper";
 
 describe("shapeFactory:", () =>
 {
-    let triangleBuffer: DynamicShapeBuffer<Triangle>;
+    let triangleBuffer: ShapeBuffer<Triangle>;
 
     const point1 = new Vec3(0.5, 0.5);
     const point2 = new Vec3(1, 1);
@@ -35,7 +35,7 @@ describe("shapeFactory:", () =>
 
     beforeEach(() =>
     {
-        triangleBuffer = new DynamicShapeBuffer<Triangle>(gl);
+        triangleBuffer = new ShapeBuffer<Triangle>(gl);
         orangeTriangle = new Triangle(new Vec3(0, 0), new Vec3(0.5, 0.5), gl, orange);
         greenTriangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(0.75, 0.75), gl, green);
         blueTriangle = new Triangle(new Vec3(0.5, 0.5), new Vec3(1.0, 1.0), gl, blue);

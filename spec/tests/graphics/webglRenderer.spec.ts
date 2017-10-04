@@ -411,7 +411,7 @@ describe("webglRenderer:", () =>
         {
             const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
-            renderer.addDynamicShapeToScene(redTriangle);
+            renderer.addShapeToScene(redTriangle);
 
             renderer.mockDraw();
 
@@ -572,7 +572,7 @@ describe("webglRenderer:", () =>
         {
             const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
-            renderer.addDynamicShapeToScene(redTriangle);
+            renderer.addShapeToScene(redTriangle);
 
             renderer.mockDraw();
 
@@ -639,12 +639,12 @@ describe("webglRenderer:", () =>
 
         it("addDynamicShapeToScene sends their verticies to webgl", () =>
         {
-            renderer.addDynamicShapeToScene(redTriangle);
-            renderer.addDynamicShapeToScene(orangeSquare);
-            renderer.addDynamicShapeToScene(yellowHexagon);
-            renderer.addDynamicShapeToScene(greenOctogon);
-            renderer.addDynamicShapeToScene(blueEllipse);
-            renderer.addDynamicShapeToScene(cyanBox);
+            renderer.addShapeToScene(redTriangle);
+            renderer.addShapeToScene(orangeSquare);
+            renderer.addShapeToScene(yellowHexagon);
+            renderer.addShapeToScene(greenOctogon);
+            renderer.addShapeToScene(blueEllipse);
+            renderer.addShapeToScene(cyanBox);
 
             renderer.mockDraw();
 
@@ -730,7 +730,7 @@ describe("webglRenderer:", () =>
         it("addDynamicShapeToScene with unrecognized shapemode doesnt draw anything", () =>
         {
             redTriangle.shapeMode = "notShape" as ShapeMode;
-            const id = renderer.addDynamicShapeToScene(redTriangle);
+            const id = renderer.addShapeToScene(redTriangle);
             expect(id).toEqual("");
 
             renderer.mockDraw();
@@ -744,7 +744,7 @@ describe("webglRenderer:", () =>
 
         it("addHeterogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
         {
-            renderer.addHeterogenoeusDynamicShapesArrayToScene([
+            renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
                 redTriangle,
                 orangeSquare,
@@ -841,27 +841,27 @@ describe("webglRenderer:", () =>
 
         it("addHomogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
         {
-            renderer.addHomogenoeusDynamicShapesArrayToScene([
+            renderer.addHomogenoeusShapesArrayToScene([
                 redTriangle,
                 redTriangle
             ]);
-            renderer.addHomogenoeusDynamicShapesArrayToScene([
+            renderer.addHomogenoeusShapesArrayToScene([
                 orangeSquare,
                 orangeSquare,
                 orangeSquare
             ]);
-            renderer.addHomogenoeusDynamicShapesArrayToScene([
+            renderer.addHomogenoeusShapesArrayToScene([
                 yellowHexagon,
                 yellowHexagon
             ]);
-            renderer.addHomogenoeusDynamicShapesArrayToScene([
+            renderer.addHomogenoeusShapesArrayToScene([
                 greenOctogon
             ]);
-            renderer.addHomogenoeusDynamicShapesArrayToScene([
+            renderer.addHomogenoeusShapesArrayToScene([
                 blueEllipse,
                 blueEllipse
             ]);
-            renderer.addHomogenoeusDynamicShapesArrayToScene([
+            renderer.addHomogenoeusShapesArrayToScene([
                 cyanBox,
                 cyanBox,
                 cyanBox,
@@ -970,7 +970,7 @@ describe("webglRenderer:", () =>
         it("addHomogenoeusDynamicShapesArrayToScene with unrecognized shapemode doesnt draw anything", () =>
         {
             redTriangle.shapeMode = "notShape" as ShapeMode;
-            const id = renderer.addHomogenoeusDynamicShapesArrayToScene([redTriangle]);
+            const id = renderer.addHomogenoeusShapesArrayToScene([redTriangle]);
             expect(id).toEqual([]);
 
             renderer.mockDraw();
@@ -984,7 +984,7 @@ describe("webglRenderer:", () =>
 
         it("addHomogenoeusDynamicShapesArrayToScene with empty array doesnt draw anything", () =>
         {
-            const id = renderer.addHomogenoeusDynamicShapesArrayToScene([]);
+            const id = renderer.addHomogenoeusShapesArrayToScene([]);
             expect(id).toEqual([]);
 
             renderer.mockDraw();
@@ -998,7 +998,7 @@ describe("webglRenderer:", () =>
 
         it("removeAllShapes, removes all shapes", () =>
         {
-            renderer.addHeterogenoeusDynamicShapesArrayToScene([
+            renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
                 orangeSquare,
                 yellowHexagon,
@@ -1027,7 +1027,7 @@ describe("webglRenderer:", () =>
 
         it("removeShape with shapeMode makes sure it doesnt get drawn", () =>
         {
-            let shapeIds: Array<string> = renderer.addHeterogenoeusDynamicShapesArrayToScene([
+            let shapeIds: Array<string> = renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
                 orangeSquare,
                 yellowHexagon,
@@ -1048,7 +1048,7 @@ describe("webglRenderer:", () =>
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
 
-            shapeIds = renderer.addHomogenoeusDynamicShapesArrayToScene([
+            shapeIds = renderer.addHomogenoeusShapesArrayToScene([
                 blueEllipse,
                 blueEllipse
             ]);
@@ -1063,7 +1063,7 @@ describe("webglRenderer:", () =>
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
 
-            let shapeId = renderer.addDynamicShapeToScene(cyanBox);
+            let shapeId = renderer.addShapeToScene(cyanBox);
             renderer.mockDraw();
             expect(gl.bufferData).toHaveBeenCalledTimes(1);
             expect(gl.drawArrays).toHaveBeenCalledTimes(1);
@@ -1077,7 +1077,7 @@ describe("webglRenderer:", () =>
 
         it("removeShape without shapeMode makes sure it doesnt get drawn", () =>
         {
-            let shapeIds: Array<string> = renderer.addHeterogenoeusDynamicShapesArrayToScene([
+            let shapeIds: Array<string> = renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
                 orangeSquare,
                 yellowHexagon,
@@ -1098,7 +1098,7 @@ describe("webglRenderer:", () =>
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
 
-            shapeIds = renderer.addHomogenoeusDynamicShapesArrayToScene([
+            shapeIds = renderer.addHomogenoeusShapesArrayToScene([
                 blueEllipse,
                 blueEllipse
             ]);
@@ -1113,7 +1113,7 @@ describe("webglRenderer:", () =>
             expect(gl.bufferData).toHaveBeenCalledTimes(0);
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
 
-            let shapeId = renderer.addDynamicShapeToScene(cyanBox);
+            let shapeId = renderer.addShapeToScene(cyanBox);
             renderer.mockDraw();
             expect(gl.bufferData).toHaveBeenCalledTimes(1);
             expect(gl.drawArrays).toHaveBeenCalledTimes(1);
@@ -1127,7 +1127,7 @@ describe("webglRenderer:", () =>
 
         it("removeShape with wrong id returns false, but true if successful", () =>
         {
-            let id = renderer.addDynamicShapeToScene(redTriangle);
+            let id = renderer.addShapeToScene(redTriangle);
             renderer.mockDraw();
             const bufferDataSpy = glSpiesDictionary["bufferData"];
             const drawArraysSpy = glSpiesDictionary["drawArrays"];
@@ -1165,7 +1165,7 @@ describe("webglRenderer:", () =>
             const cyanBox2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "box", gl, cyan);
 
-            const ids = renderer.addHeterogenoeusDynamicShapesArrayToScene([
+            const ids = renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
                 redTriangle2,
                 orangeSquare,
@@ -1317,7 +1317,7 @@ describe("webglRenderer:", () =>
             const cyanBox2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "box", gl, cyan);
 
-            const ids = renderer.addHeterogenoeusDynamicShapesArrayToScene([
+            const ids = renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
                 redTriangle2,
                 orangeSquare,
@@ -1455,7 +1455,7 @@ describe("webglRenderer:", () =>
 
         it("removeShape with wrong id returns false, but true if successful", () =>
         {
-            let id = renderer.addDynamicShapeToScene(redTriangle);
+            let id = renderer.addShapeToScene(redTriangle);
             let wasRemoved = renderer.updateShapeColor("someOtherId", blue);
             expect(wasRemoved).toBe(false);
             wasRemoved = renderer.updateShapeColor(id, blue);
@@ -1487,7 +1487,7 @@ describe("webglRenderer:", () =>
             }).Spy;
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            renderer.addDynamicShapeToScene(redTriangle);
+            renderer.addShapeToScene(redTriangle);
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
@@ -1514,7 +1514,7 @@ describe("webglRenderer:", () =>
             }).Spy;
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            renderer.addDynamicShapeToScene(redTriangle);
+            renderer.addShapeToScene(redTriangle);
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +
@@ -1541,7 +1541,7 @@ describe("webglRenderer:", () =>
             }).Spy;
 
             let renderer = new WebGLRendererMock(canvas, defaultOptions);
-            renderer.addDynamicShapeToScene(redTriangle);
+            renderer.addShapeToScene(redTriangle);
 
             const expectedErrorString =
             `cannot find uniform in shader program\n` +

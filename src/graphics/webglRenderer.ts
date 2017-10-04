@@ -5,6 +5,7 @@ import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shape/shapeMode";
+import { Point } from "./shape/shape2d/point";
 import { Triangle } from "./shape/shape2d/triangle";
 import { RGBColor } from "./color/rgbColor";
 import { Camera } from "./camera";
@@ -16,13 +17,15 @@ import { ShaderType } from "./shaderType";
 import { Line } from "./shape/shape2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
-import { DynamicShapeBuffer } from "./shape/shapeBuffer";
+import { ShapeBuffer } from "./shape/shapeBuffer";
 import { Rectangle } from "./shape/shape2d/rectangle";
 import { Hexagon } from "./shape/shape2d/hexagon";
 import { Octogon } from "./shape/shape2d/octogon";
 import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
+import { Shape } from "./shape/shape";
 import { DynamicShape } from "./shape/dynamicShape";
+import { StaticShape } from "./shape/staticShape";
 //#endregion
 
 export class WebGLRenderer
@@ -40,37 +43,46 @@ export class WebGLRenderer
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-    private _trianglesShapeBuffer: DynamicShapeBuffer<Triangle>;
-    private _rectanglesShapeBuffer: DynamicShapeBuffer<Rectangle>;
-    private _hexagonsShapeBuffer: DynamicShapeBuffer<Hexagon>;
-    private _octogonsShapeBuffer: DynamicShapeBuffer<Octogon>;
-    private _ellipsesShapeBuffer: DynamicShapeBuffer<Ellipse>;
-    private _boxShapeBuffer: DynamicShapeBuffer<Box>;
-    private _shapeBuffers: Array<DynamicShapeBuffer<DynamicShape>>;
-    private _shaderProgram: WebGLShader;
+    private _pointsShapeBuffer: ShapeBuffer<Point>;
+    private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
+    private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
+    private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
+    private _octogonsShapeBuffer: ShapeBuffer<Octogon>;
+    private _ellipsesShapeBuffer: ShapeBuffer<Ellipse>;
+    private _boxShapeBuffer: ShapeBuffer<Box>;
+    private _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
+    private _pointShaderProgram: WebGLShader;
+    private _dynamicShapeShaderProgram: WebGLShader;
     private _a_position: number;
     private _a_color: number;
     private _a_modelMatrixRow0: number;
     private _a_modelMatrixRow1: number;
     private _a_modelMatrixRow2: number;
     private _a_modelMatrixRow3: number;
-    private _u_pointSize: WebGLUniformLocation  | null;
     private _u_vpMatrix: WebGLUniformLocation  | null;
-    private _instancedArraysExt: ANGLE_instanced_arrays;
     //#endregion
 
     //#region: shaders
-    private _vertexShaderSource: string =
+    private _dynamicVertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
     attribute mat4 ${ShaderSettings.modelMatrixAttributeName};
     uniform mat4 ${ShaderSettings.vpMatrixUniformName};
-    uniform float ${ShaderSettings.pointSizeUniformName};
     varying vec4 v_color;
     void main(void)
     {
         gl_Position = ${ShaderSettings.vpMatrixUniformName} * ${ShaderSettings.modelMatrixAttributeName} * ${ShaderSettings.positionAttributeName};
-        gl_PointSize = ${ShaderSettings.pointSizeUniformName};
+        v_color = ${ShaderSettings.colorAttributeName};
+    }`;
+
+    private _staticVertexShaderSource: string =
+    `    attribute vec4 ${ShaderSettings.positionAttributeName};
+    attribute vec4 ${ShaderSettings.colorAttributeName};
+    uniform mat4 ${ShaderSettings.vpMatrixUniformName};
+    varying vec4 v_color;
+    void main(void)
+    {
+        gl_Position = ${ShaderSettings.vpMatrixUniformName} * ${ShaderSettings.positionAttributeName};
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
 
@@ -163,10 +175,12 @@ export class WebGLRenderer
         this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    public addDynamicShapeToScene(shape: DynamicShape): string
+    public addShapeToScene(shape: Shape): string
     {
         switch (shape.shapeMode)
         {
+            case "points":
+                return this._pointsShapeBuffer.addShape(shape as Point);
             case "triangles":
                 return this._trianglesShapeBuffer.addShape(shape as Triangle);
             case "rectangles":
@@ -184,7 +198,7 @@ export class WebGLRenderer
         return "";
     }
 
-    public addHomogenoeusDynamicShapesArrayToScene(shapes: Array<DynamicShape>): Array<string>
+    public addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>
     {
         const shape = shapes[0];
 
@@ -212,13 +226,13 @@ export class WebGLRenderer
         return new Array<string>();
     }
 
-    public addHeterogenoeusDynamicShapesArrayToScene<S extends DynamicShape>(shapes: Array<S>): Array<string>
+    public addHeterogenoeusShapesArrayToScene<S extends Shape>(shapes: Array<S>): Array<string>
     {
         let shapeIds = new Array<string>();
 
         for (let shape of shapes)
         {
-            shapeIds.push(this.addDynamicShapeToScene(shape));
+            shapeIds.push(this.addShapeToScene(shape));
         }
 
         return shapeIds;
@@ -291,7 +305,16 @@ export class WebGLRenderer
             this._backgroundColor.blue, Settings.defaultBackgroundAlpha);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-        for (let sb of this._shapeBuffers)
+        // switch shader program
+        // look for shader variables
+        if (this._pointsShapeBuffer.count > 0)
+        {
+            this.drawPointShapeBuffer(this._pointsShapeBuffer);
+        }
+
+        // switch shader program
+        // look for shader variables
+        for (let sb of this._dynamicShapeBuffers)
         {
             if (sb.count > 0)
             {
@@ -375,13 +398,13 @@ export class WebGLRenderer
 
     private initializaShapeBuffers()
     {
-        this._trianglesShapeBuffer = new DynamicShapeBuffer<Triangle>(this.gl);
-        this._rectanglesShapeBuffer = new DynamicShapeBuffer<Rectangle>(this.gl);
-        this._hexagonsShapeBuffer = new DynamicShapeBuffer<Hexagon>(this.gl);
-        this._octogonsShapeBuffer = new DynamicShapeBuffer<Octogon>(this.gl);
-        this._ellipsesShapeBuffer = new DynamicShapeBuffer<Ellipse>(this.gl);
-        this._boxShapeBuffer = new DynamicShapeBuffer<Box>(this.gl);
-        this._shapeBuffers = [
+        this._trianglesShapeBuffer = new ShapeBuffer<Triangle>(this.gl);
+        this._rectanglesShapeBuffer = new ShapeBuffer<Rectangle>(this.gl);
+        this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>(this.gl);
+        this._octogonsShapeBuffer = new ShapeBuffer<Octogon>(this.gl);
+        this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>(this.gl);
+        this._boxShapeBuffer = new ShapeBuffer<Box>(this.gl);
+        this._dynamicShapeBuffers = [
             this._trianglesShapeBuffer,
             this._rectanglesShapeBuffer,
             this._hexagonsShapeBuffer,
@@ -389,26 +412,26 @@ export class WebGLRenderer
             this._ellipsesShapeBuffer,
             this._boxShapeBuffer
         ];
+
+        this._pointsShapeBuffer = new ShapeBuffer<Point>(this.gl);
     }
 
     private getShaderVariables(): void
     {
-        this._a_position = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.positionAttributeName);
-        this._a_color = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.colorAttributeName);
-        this._a_modelMatrixRow0 = this.gl.getAttribLocation(this._shaderProgram, ShaderSettings.modelMatrixAttributeName);
+        this._a_position = this.gl.getAttribLocation(this._dynamicShapeShaderProgram, ShaderSettings.positionAttributeName);
+        this._a_color = this.gl.getAttribLocation(this._dynamicShapeShaderProgram, ShaderSettings.colorAttributeName);
+        this._a_modelMatrixRow0 = this.gl.getAttribLocation(this._dynamicShapeShaderProgram, ShaderSettings.modelMatrixAttributeName);
         this._a_modelMatrixRow1 = this._a_modelMatrixRow0 + 1;
         this._a_modelMatrixRow2 = this._a_modelMatrixRow0 + 2;
         this._a_modelMatrixRow3 = this._a_modelMatrixRow0 + 3;
-        this._u_pointSize = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.pointSizeUniformName);
-        this._u_vpMatrix = this.gl.getUniformLocation(this._shaderProgram, ShaderSettings.vpMatrixUniformName);
+        this._u_vpMatrix = this.gl.getUniformLocation(this._dynamicShapeShaderProgram, ShaderSettings.vpMatrixUniformName);
     }
 
-    private drawDynamicShapeBuffer(shapeBuffer: DynamicShapeBuffer<DynamicShape>): void
+    private drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void
     {
-        if (!this._u_pointSize || !this._u_vpMatrix)
+        if (!this._u_vpMatrix)
         {
             const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
-            uniformsMap[ShaderSettings.pointSizeUniformName] = this._u_pointSize;
             uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
@@ -419,7 +442,32 @@ export class WebGLRenderer
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
-        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPoint, this.gl.FLOAT,
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+            false, Constants.bytesPerVertex, 0);
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+            false, Constants.bytesPerVertex, Constants.bytesPerPoint);
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerStaticVertex));
+    }
+
+    private drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
+    {
+        if (!this._u_vpMatrix)
+        {
+            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
+            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
+            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
+            throw errorMessage;
+        }
+
+        const verticies = shapeBuffer.verticies;
+        const shapePrototype = shapeBuffer.first;
+
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
             false, Constants.bytesPerVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
         this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
@@ -438,14 +486,13 @@ export class WebGLRenderer
             false, Constants.bytesPerVertex, Constants.modelMatrixRow3Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
-        this.gl.uniform1f(this._u_pointSize, this._pointSize);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
     private initShaders(): void
     {
         const fragmentShader = this.createShader(this._fragmentShaderSource, "fragment");
-        const vertexShader = this.createShader(this._vertexShaderSource, "vertex");
+        const vertexShader = this.createShader(this._dynamicVertexShaderSource, "vertex");
 
         let shader: WebGLProgram | null = this.gl.createProgram();
         if (shader === null)
@@ -453,17 +500,17 @@ export class WebGLRenderer
             throw "could not create shader program";
         }
 
-        this._shaderProgram = shader;
-        this.gl.attachShader(this._shaderProgram, vertexShader);
-        this.gl.attachShader(this._shaderProgram, fragmentShader);
-        this.gl.linkProgram(this._shaderProgram);
+        this._dynamicShapeShaderProgram = shader;
+        this.gl.attachShader(this._dynamicShapeShaderProgram, vertexShader);
+        this.gl.attachShader(this._dynamicShapeShaderProgram, fragmentShader);
+        this.gl.linkProgram(this._dynamicShapeShaderProgram);
 
-        if (!this.gl.getProgramParameter(this._shaderProgram, this.gl.LINK_STATUS))
+        if (!this.gl.getProgramParameter(this._dynamicShapeShaderProgram, this.gl.LINK_STATUS))
         {
             throw "could not link shader program";
         }
 
-        this.gl.useProgram(this._shaderProgram);
+        this.gl.useProgram(this._dynamicShapeShaderProgram);
     }
 
     private createShader(shaderSource: string, type: ShaderType): WebGLShader | null
@@ -536,7 +583,7 @@ export class WebGLRenderer
 
     private removeShapeFromUnspecifiedBuffer(id: string): boolean
     {
-        for (let shapeBuffer of this._shapeBuffers)
+        for (let shapeBuffer of this._dynamicShapeBuffers)
         {
             if (shapeBuffer.removeShape(id))
             {
@@ -549,7 +596,7 @@ export class WebGLRenderer
 
     private updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean
     {
-        for (let shapeBuffer of this._shapeBuffers)
+        for (let shapeBuffer of this._dynamicShapeBuffers)
         {
             if (shapeBuffer.updateColor(id, newColor))
             {
