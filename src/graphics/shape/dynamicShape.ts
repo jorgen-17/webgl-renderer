@@ -13,7 +13,8 @@ export abstract class DynamicShape extends Shape {
     constructor(numberOfVerticies: number, point1: Vec3, point2: Vec3,
         rgbColor: RGBColor = Settings.defaultColor)
     {
-        super(numberOfVerticies, rgbColor, point1, point2);
+        super(numberOfVerticies, Constants.floatsPerDynamicVertex,
+             rgbColor, point1, point2);
 
         this._modelMatrix = new Mat4().setIdentity();
     }

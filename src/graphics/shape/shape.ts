@@ -10,16 +10,19 @@ import { ShapeMode } from "./shapeMode";
 export abstract class Shape {
     public glRenderMode: number;
     public numberOfVerticies: number;
+    public numberOfFloatsPerVertex: number;
     public abstract shapeMode: ShapeMode;
     protected _verticies: Float32Array;
     protected _boundingRect: BoundingRectangle;
     protected _rgbColor: RGBColor;
-    constructor(numberOfVerticies: number, rgbColor: RGBColor = Settings.defaultColor,
+    constructor(numberOfVerticies: number, numberOfFloatsPerVertex: number,
+        rgbColor: RGBColor = Settings.defaultColor,
         point1: Vec3 | null = null, point2: Vec3 | null = null)
     {
         this.numberOfVerticies = numberOfVerticies;
+        this.numberOfFloatsPerVertex = numberOfFloatsPerVertex;
         this._rgbColor = rgbColor;
-        this._verticies = new Float32Array(numberOfVerticies * Constants.floatsPerDynamicVertex);
+        this._verticies = new Float32Array(numberOfVerticies * this.numberOfFloatsPerVertex);
 
         if (point1 && point2)
         {

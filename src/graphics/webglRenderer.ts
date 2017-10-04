@@ -25,7 +25,6 @@ import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
 import { Shape } from "./shape/shape";
 import { DynamicShape } from "./shape/dynamicShape";
-import { StaticShape } from "./shape/staticShape";
 //#endregion
 
 export class WebGLRenderer
@@ -209,6 +208,8 @@ export class WebGLRenderer
 
         switch (shape.shapeMode)
         {
+            case "points":
+                return this._pointsShapeBuffer.addShapes(shapes as Array<Point>);
             case "triangles":
                 return this._trianglesShapeBuffer.addShapes(shapes as Array<Triangle>);
             case "rectangles":
@@ -247,6 +248,8 @@ export class WebGLRenderer
     {
         switch (shapeMode)
         {
+            case "points":
+                return this._pointsShapeBuffer.removeShape(id);
             case "triangles":
                 return this._trianglesShapeBuffer.removeShape(id);
             case "rectangles":
@@ -269,6 +272,8 @@ export class WebGLRenderer
     {
         switch (shapeMode)
         {
+            case "points":
+                return this._pointsShapeBuffer.updateColor(id, newColor);
             case "triangles":
                 return this._trianglesShapeBuffer.updateColor(id, newColor);
             case "rectangles":
@@ -449,7 +454,7 @@ export class WebGLRenderer
             false, Constants.bytesPerVertex, Constants.bytesPerPoint);
         this.gl.enableVertexAttribArray(this._a_color);
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
-        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerStaticVertex));
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerLineVertex));
     }
 
     private drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void

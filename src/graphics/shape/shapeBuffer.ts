@@ -66,7 +66,7 @@ export class ShapeBuffer<S extends Shape>
         }
 
         const exampleShape = shapes[0];
-        const numberOfFloatsPerShape = exampleShape.numberOfVerticies * Constants.floatsPerDynamicVertex;
+        const numberOfFloatsPerShape = exampleShape.numberOfVerticies * exampleShape.numberOfFloatsPerVertex;
         const numberOfFloatsBeingAdded = numberOfFloatsPerShape * shapes.length;
         this._verticies.resize(numberOfFloatsBeingAdded);
 
@@ -90,7 +90,7 @@ export class ShapeBuffer<S extends Shape>
             const shape = this._shapes[id].shape;
             const index = this._shapes[id].index;
 
-            const verticiesCount = shape.numberOfVerticies * Constants.floatsPerDynamicVertex;
+            const verticiesCount = shape.numberOfVerticies * shape.numberOfFloatsPerVertex;
             const verticiesIndex = index * verticiesCount;
 
             this._verticies.remove(verticiesIndex, verticiesCount);
@@ -116,7 +116,7 @@ export class ShapeBuffer<S extends Shape>
 
             shape.rgbColor = newColor;
 
-            const verticiesCount = shape.numberOfVerticies * Constants.floatsPerDynamicVertex;
+            const verticiesCount = shape.numberOfVerticies * shape.numberOfFloatsPerVertex;
             const verticiesIndex = index * verticiesCount;
 
             this._verticies.overwrite(verticiesIndex, shape.verticies);
