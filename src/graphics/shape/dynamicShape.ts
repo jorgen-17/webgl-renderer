@@ -11,7 +11,7 @@ import { Shape } from "./shape";
 export abstract class DynamicShape extends Shape {
     private _modelMatrix: Mat4;
     constructor(numberOfVerticies: number, point1: Vec3, point2: Vec3,
-        rgbColor: RGBColor = Settings.defaultColor)
+        rgbColor?: RGBColor)
     {
         super(numberOfVerticies, Constants.floatsPerDynamicVertex,
              rgbColor, point1, point2);

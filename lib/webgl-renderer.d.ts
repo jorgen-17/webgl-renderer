@@ -475,7 +475,7 @@ declare module 'graphics/webglRenderer' {
 	    private getShaderVariables(shader);
 	    private drawPointShapeBuffer(shapeBuffer);
 	    private drawDynamicShapeBuffer(shapeBuffer);
-	    private initShaders(vertexSource, fragmentSource, shaderProgram);
+	    private initShaders(vertexSource, fragmentSource);
 	    private createShader(shaderSource, type);
 	    private createUniforNotFoundErrorMessage(uniformsMap);
 	    private renderLoop;
@@ -499,7 +499,9 @@ declare module 'graphics/shape/shapeFactory' {
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
 	import { RGBColor } from 'graphics/color/rgbColor';
+	import { Point } from 'graphics/shape/shape2d/point';
 	export class ShapeFactory {
+	    static createPoint(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
 	    static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
 	    private static createTriangle(point1, point2, gl, rgbColor?);
 	    private static createRectangle(point1, point2, gl, rgbColor?);
@@ -517,7 +519,7 @@ declare module 'utils/mouseHelper' {
 	}
 
 }
-declare module 'webgl-renderer' {
+declare module 'webgl-renderer/index' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/color/rgbColor';

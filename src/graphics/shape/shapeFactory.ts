@@ -10,14 +10,25 @@ import { Octogon } from "./shape2d/octogon";
 import { RGBColor } from "../color/rgbColor";
 import { Precision } from "../precision";
 import { Box } from "./shape3d/box";
+import { Point } from "./shape2d/point";
 
 export class ShapeFactory
 {
+    public static createPoint(location: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor, pointSize?: number): Point
+    {
+        return new Point(location, gl, rgbColor, pointSize);
+    }
+
     public static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
         gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape
     {
         switch (shapeMode)
         {
+            case "points":
+                throw Error(`cannot create a point with this method, please use createPoint`);
+            case "lines":
+                throw Error(`cannot create a line with this method, please use createLine`);
             case "triangles":
                 return this.createTriangle(point1, point2, gl, rgbColor);
             case "rectangles":
