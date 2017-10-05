@@ -340,10 +340,10 @@ export class WebGLRenderer
 
         this.setViewPortDimensions(this._canvas.width, this._canvas.height);
 
-        this.initShaders(this._dynamicVertexShaderSource,
-            this._fragmentShaderSource, this._dynamicShapeShaderProgram);
-        this.initShaders(this._pointVertexShaderSource,
-            this._fragmentShaderSource, this._pointShaderProgram);
+        this._dynamicShapeShaderProgram = this.initShaders(this._dynamicVertexShaderSource,
+            this._fragmentShaderSource);
+        this._pointShaderProgram = this.initShaders(this._pointVertexShaderSource,
+            this._fragmentShaderSource);
     }
 
     private getContext (): void
@@ -507,8 +507,7 @@ export class WebGLRenderer
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
-    private initShaders(vertexSource: string, fragmentSource: string,
-        shaderProgram: WebGLShader): void
+    private initShaders(vertexSource: string, fragmentSource: string): WebGLShader
     {
         const vertexShader = this.createShader(vertexSource, "vertex");
         const fragmentShader = this.createShader(fragmentSource, "fragment");
@@ -519,7 +518,7 @@ export class WebGLRenderer
             throw "could not create shader program";
         }
 
-        shaderProgram = shader;
+        const shaderProgram = shader;
         this.gl.attachShader(shaderProgram, vertexShader);
         this.gl.attachShader(shaderProgram, fragmentShader);
         this.gl.linkProgram(shaderProgram);
@@ -528,6 +527,8 @@ export class WebGLRenderer
         {
             throw "could not link shader program";
         }
+
+        return shaderProgram;
     }
 
     private createShader(shaderSource: string, type: ShaderType): WebGLShader | null
