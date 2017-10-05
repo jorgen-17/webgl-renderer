@@ -432,7 +432,7 @@ export class WebGLRenderer
     private getPointShaderVariables(): void
     {
         this.getShaderVariables(this._pointShaderProgram);
-        this._a_pointSize = this.gl.getAttribLocation(this._pointShaderProgram, ShaderSettings.positionAttributeName);
+        this._a_pointSize = this.gl.getAttribLocation(this._pointShaderProgram, ShaderSettings.pointSizeAttributeName);
     }
 
     private getShaderVariables(shader: WebGLShader): void
