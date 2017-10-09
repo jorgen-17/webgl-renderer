@@ -270,6 +270,73 @@ export abstract class WebGLRenderer
         return result;
     }
 
+    protected drawPointShapeBufferBase(shapeBuffer: ShapeBuffer<Point>,
+        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
+    {
+        if (!this._u_vpMatrix)
+        {
+            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
+            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
+            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
+            throw errorMessage;
+        }
+
+        const verticies = shapeBuffer.verticies;
+        const shapePrototype = shapeBuffer.first;
+
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+            false, Constants.bytesPerPointVertex, 0);
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+            false, Constants.bytesPerPointVertex, Constants.bytesPerPosition);
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.vertexAttribPointer(this._a_pointSize, Constants.floatsPerPointSize, this.gl.FLOAT,
+            false, Constants.bytesPerPointVertex, Constants.bytesPerPositionColor);
+        this.gl.enableVertexAttribArray(this._a_pointSize);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, mvpMatrix.elements);
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerPointVertex));
+    }
+
+    protected drawDynamicShapeBufferBase(shapeBuffer: ShapeBuffer<DynamicShape>,
+        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
+    {
+        if (!this._u_vpMatrix)
+        {
+            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
+            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
+            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
+            throw errorMessage;
+        }
+
+        const verticies = shapeBuffer.verticies;
+        const shapePrototype = shapeBuffer.first;
+
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+            false, Constants.bytesPerDynamicVertex, 0);
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+            false, Constants.bytesPerDynamicVertex, Constants.bytesPerPosition);
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4Row, this.gl.FLOAT,
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow0Offset);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4Row, this.gl.FLOAT,
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow1Offset);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4Row, this.gl.FLOAT,
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow2Offset);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
+        this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4Row, this.gl.FLOAT,
+            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow3Offset);
+        this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, mvpMatrix.elements);
+        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
+    }
+
     protected resizeCanvasBase = (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) =>
     {

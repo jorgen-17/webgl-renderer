@@ -410,40 +410,39 @@ declare module 'graphics/shape/pointBuffer' {
 
 }
 declare module 'graphics/webglRenderer' {
+	import { Mat4 } from "cuon-matrix-ts";
 	import { ShapeMode } from 'graphics/shape/shapeMode';
+	import { Point } from 'graphics/shape/shape2d/point';
 	import { RGBColor } from 'graphics/color/rgbColor';
-	import { Camera } from 'graphics/camera';
 	import { RenderingOptions } from 'graphics/renderingOptions';
+	import { StringDictionary } from 'utils/dictionary';
+	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
 	import { Shape } from 'graphics/shape/shape';
-	export class WebGLRenderer {
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	import { PointBuffer } from 'graphics/shape/pointBuffer';
+	export abstract class WebGLRenderer {
 	    gl: WebGLRenderingContext;
+	    protected _canvas: HTMLCanvasElement;
+	    protected _pointsShapeBuffer: PointBuffer;
+	    protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
+	    protected _a_position: number;
+	    protected _a_color: number;
+	    protected _a_pointSize: number;
+	    protected _a_modelMatrixRow0: number;
+	    protected _a_modelMatrixRow1: number;
+	    protected _a_modelMatrixRow2: number;
+	    protected _a_modelMatrixRow3: number;
+	    protected _u_vpMatrix: WebGLUniformLocation | null;
+	    protected abstract resizeCanvas: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    private _isContextLost;
-	    private _canvas;
 	    private _browserHelper;
 	    private _backgroundColor;
-	    private _camera;
 	    private _window;
 	    private _isFullscreen;
 	    private _animationFrameRequestId;
 	    private _resizeCallback;
-	    private _pointsShapeBuffer;
-	    private _trianglesShapeBuffer;
-	    private _rectanglesShapeBuffer;
-	    private _hexagonsShapeBuffer;
-	    private _octogonsShapeBuffer;
-	    private _ellipsesShapeBuffer;
-	    private _boxShapeBuffer;
-	    private _dynamicShapeBuffers;
 	    private _pointShaderProgram;
 	    private _dynamicShapeShaderProgram;
-	    private _a_position;
-	    private _a_color;
-	    private _a_pointSize;
-	    private _a_modelMatrixRow0;
-	    private _a_modelMatrixRow1;
-	    private _a_modelMatrixRow2;
-	    private _a_modelMatrixRow3;
-	    private _u_vpMatrix;
 	    private _dynamicVertexShaderSource;
 	    private _pointVertexShaderSource;
 	    private _fragmentShaderSource;
@@ -451,18 +450,26 @@ declare module 'graphics/webglRenderer' {
 	    backgroundColor: RGBColor;
 	    isFullscreen: boolean;
 	    resizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
-	    camera: Camera;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
-	    addShapeToScene(shape: Shape): string;
-	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
+	    abstract addShapeToScene(shape: Shape): string;
+	    abstract addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addHeterogenoeusShapesArrayToScene<S extends Shape>(shapes: Array<S>): Array<string>;
 	    removeAllShapes(): void;
-	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
-	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
+	    abstract removeShape(id: string, shapeMode?: ShapeMode): boolean;
+	    abstract updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
 	    updatePointSize(id: string, newPointSize: number): boolean;
 	    start(): void;
 	    stop(): void;
 	    protected draw(): void;
+	    protected abstract drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+	    protected abstract drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
+	    protected abstract initializaDynamicShapeBuffers(): void;
+	    protected removeShapeFromUnspecifiedBuffer(id: string): boolean;
+	    protected updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean;
+	    protected createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string;
+	    protected drawPointShapeBufferBase(shapeBuffer: ShapeBuffer<Point>, mvpMatrix?: Mat4): void;
+	    protected drawDynamicShapeBufferBase(shapeBuffer: ShapeBuffer<DynamicShape>, mvpMatrix?: Mat4): void;
+	    protected resizeCanvasBase: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    private setCanvasEventHandlers();
 	    private setupGlResources();
 	    private getContext();
@@ -473,16 +480,68 @@ declare module 'graphics/webglRenderer' {
 	    private getDynamicShapeShaderVariables();
 	    private getPointShaderVariables();
 	    private getShaderVariables(shader);
-	    private drawPointShapeBuffer(shapeBuffer);
-	    private drawDynamicShapeBuffer(shapeBuffer);
 	    private initShaders(vertexSource, fragmentSource);
 	    private createShader(shaderSource, type);
-	    private createUniforNotFoundErrorMessage(uniformsMap);
 	    private renderLoop;
 	    private setupWindowCallbacks();
-	    private resizeCanvas;
-	    private removeShapeFromUnspecifiedBuffer(id);
-	    private updateShapeColorFromUnspecifiedBuffer(id, newColor);
+	}
+
+}
+declare module 'graphics/webgl2dRenderer' {
+	import { WebGLRenderer } from 'graphics/webglRenderer';
+	import { Shape } from 'graphics/shape/shape';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { RenderingOptions } from 'graphics/renderingOptions';
+	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
+	import { Point } from 'graphics/shape/shape2d/point';
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	export class WebGL2dRenderer extends WebGLRenderer {
+	    protected resizeCanvas: (canvas: HTMLCanvasElement, window: Window, renderer: WebGL2dRenderer) => void;
+	    private _trianglesShapeBuffer;
+	    private _rectanglesShapeBuffer;
+	    private _hexagonsShapeBuffer;
+	    private _octogonsShapeBuffer;
+	    private _ellipsesShapeBuffer;
+	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
+	    addShapeToScene(shape: Shape): string;
+	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
+	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
+	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
+	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+	    protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
+	    protected initializaDynamicShapeBuffers(): void;
+	}
+
+}
+declare module 'graphics/webgl3dRenderer' {
+	import { WebGLRenderer } from 'graphics/webglRenderer';
+	import { Camera } from 'graphics/camera';
+	import { Shape } from 'graphics/shape/shape';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { RenderingOptions } from 'graphics/renderingOptions';
+	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
+	import { Point } from 'graphics/shape/shape2d/point';
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	export class WebGL3dRenderer extends WebGLRenderer {
+	    protected resizeCanvas: (canvas: HTMLCanvasElement, window: Window, renderer: WebGL3dRenderer) => void;
+	    private _camera;
+	    private _trianglesShapeBuffer;
+	    private _rectanglesShapeBuffer;
+	    private _hexagonsShapeBuffer;
+	    private _octogonsShapeBuffer;
+	    private _ellipsesShapeBuffer;
+	    private _boxShapeBuffer;
+	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
+	    camera: Camera;
+	    addShapeToScene(shape: Shape): string;
+	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
+	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
+	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
+	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+	    protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
+	    protected initializaDynamicShapeBuffers(): void;
 	}
 
 }
@@ -519,8 +578,9 @@ declare module 'utils/mouseHelper' {
 	}
 
 }
-declare module 'webgl-renderer/index' {
-	import { WebGLRenderer } from 'graphics/webglRenderer';
+declare module 'webgl-renderer' {
+	import { WebGL2dRenderer } from 'graphics/webgl2dRenderer';
+	import { WebGL3dRenderer } from 'graphics/webgl3dRenderer';
 	import { Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { Color, ColorMapper } from 'graphics/color/colorMapper';
@@ -541,6 +601,6 @@ declare module 'webgl-renderer/index' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { BrowserHelper } from 'utils/browserHelper';
 	import { MouseHelper } from 'utils/mouseHelper';
-	export { WebGLRenderer, RenderingOptions, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
+	export { WebGL2dRenderer, WebGL3dRenderer, RenderingOptions, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
 
 }
