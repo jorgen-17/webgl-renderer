@@ -1,6 +1,6 @@
-import { WebGLRenderer } from "../../../src/graphics/webglRenderer";
+import { WebGL3dRenderer } from "../../../src/graphics/webgl3dRenderer";
 
-export class WebGLRendererMock extends WebGLRenderer
+export class WebGL3dRendererMock extends WebGL3dRenderer
 {
     public mockDraw()
     {

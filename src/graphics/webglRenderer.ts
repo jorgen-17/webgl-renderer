@@ -28,39 +28,34 @@ import { DynamicShape } from "./shape/dynamicShape";
 import { PointBuffer } from "./shape/pointBuffer";
 //#endregion
 
-export class WebGLRenderer
+export abstract class WebGLRenderer
 {
     //#region: member variables
     public gl: WebGLRenderingContext;
+    protected _canvas: HTMLCanvasElement;
+    protected _pointsShapeBuffer: PointBuffer;
+    protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
+    protected _a_position: number;
+    protected _a_color: number;
+    protected _a_pointSize: number;
+    protected _a_modelMatrixRow0: number;
+    protected _a_modelMatrixRow1: number;
+    protected _a_modelMatrixRow2: number;
+    protected _a_modelMatrixRow3: number;
+    protected _u_vpMatrix: WebGLUniformLocation  | null;
+    protected abstract resizeCanvas: (canvas: HTMLCanvasElement, window: Window,
+        renderer: WebGLRenderer) => void;
     private _isContextLost: boolean;
-    private _canvas: HTMLCanvasElement;
     private _browserHelper: BrowserHelper;
     private _backgroundColor: RGBColor;
-    private _camera: Camera;
     private _window: Window;
     private _isFullscreen: boolean;
     private _animationFrameRequestId: number;
     private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
-    private _pointsShapeBuffer: PointBuffer;
-    private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
-    private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
-    private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
-    private _octogonsShapeBuffer: ShapeBuffer<Octogon>;
-    private _ellipsesShapeBuffer: ShapeBuffer<Ellipse>;
-    private _boxShapeBuffer: ShapeBuffer<Box>;
-    private _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
     private _pointShaderProgram: WebGLShader;
     private _dynamicShapeShaderProgram: WebGLShader;
-    private _a_position: number;
-    private _a_color: number;
-    private _a_pointSize: number;
-    private _a_modelMatrixRow0: number;
-    private _a_modelMatrixRow1: number;
-    private _a_modelMatrixRow2: number;
-    private _a_modelMatrixRow3: number;
-    private _u_vpMatrix: WebGLUniformLocation  | null;
-    //#endregion
+    //#endregion: member variables
 
     //#region: shaders
     private _dynamicVertexShaderSource: string =
@@ -150,15 +145,6 @@ export class WebGLRenderer
         this.setupWindowCallbacks();
     }
 
-    public get camera(): Camera
-    {
-        return this._camera;
-    }
-
-    public set camera(value: Camera)
-    {
-        this._camera = value;
-    }
     //#endregion: getters and setters
 
     //#region: public methods
@@ -167,58 +153,9 @@ export class WebGLRenderer
         this.gl.viewport(0, 0, newWidth, newHeight);
     }
 
-    public addShapeToScene(shape: Shape): string
-    {
-        switch (shape.shapeMode)
-        {
-            case "points":
-                return this._pointsShapeBuffer.addShape(shape as Point);
-            case "triangles":
-                return this._trianglesShapeBuffer.addShape(shape as Triangle);
-            case "rectangles":
-                return this._rectanglesShapeBuffer.addShape(shape as Rectangle);
-            case "hexagons":
-                return this._hexagonsShapeBuffer.addShape(shape as Hexagon);
-            case "octogons":
-                return this._octogonsShapeBuffer.addShape(shape as Octogon);
-            case "ellipses":
-                return this._ellipsesShapeBuffer.addShape(shape as Ellipse);
-            case "box":
-                return this._boxShapeBuffer.addShape(shape as Box);
-        }
+    public abstract addShapeToScene(shape: Shape): string;
 
-        return "";
-    }
-
-    public addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>
-    {
-        const shape = shapes[0];
-
-        if (!shape)
-        {
-            return new Array<string>();
-        }
-
-        switch (shape.shapeMode)
-        {
-            case "points":
-                return this._pointsShapeBuffer.addShapes(shapes as Array<Point>);
-            case "triangles":
-                return this._trianglesShapeBuffer.addShapes(shapes as Array<Triangle>);
-            case "rectangles":
-                return this._rectanglesShapeBuffer.addShapes(shapes as Array<Rectangle>);
-            case "hexagons":
-                return this._hexagonsShapeBuffer.addShapes(shapes as Array<Hexagon>);
-            case "octogons":
-                return this._octogonsShapeBuffer.addShapes(shapes as Array<Octogon>);
-            case "ellipses":
-                return this._ellipsesShapeBuffer.addShapes(shapes as Array<Ellipse>);
-            case "box":
-                return this._boxShapeBuffer.addShapes(shapes as Array<Box>);
-        }
-
-        return new Array<string>();
-    }
+    public abstract addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 
     public addHeterogenoeusShapesArrayToScene<S extends Shape>(shapes: Array<S>): Array<string>
     {
@@ -237,52 +174,10 @@ export class WebGLRenderer
         this.initializaShapeBuffers();
     }
 
-    public removeShape(id: string, shapeMode?: ShapeMode): boolean
-    {
-        switch (shapeMode)
-        {
-            case "points":
-                return this._pointsShapeBuffer.removeShape(id);
-            case "triangles":
-                return this._trianglesShapeBuffer.removeShape(id);
-            case "rectangles":
-                return this._rectanglesShapeBuffer.removeShape(id);
-            case "hexagons":
-                return this._hexagonsShapeBuffer.removeShape(id);
-            case "octogons":
-                return this._octogonsShapeBuffer.removeShape(id);
-            case "ellipses":
-                return this._ellipsesShapeBuffer.removeShape(id);
-            case "box":
-                return this._boxShapeBuffer.removeShape(id);
-        }
+    public abstract removeShape(id: string, shapeMode?: ShapeMode): boolean;
 
-        return this.removeShapeFromUnspecifiedBuffer(id);
-    }
-
-    public updateShapeColor(id: string, newColor: RGBColor,
-        shapeMode?: ShapeMode): boolean
-    {
-        switch (shapeMode)
-        {
-            case "points":
-                return this._pointsShapeBuffer.updateColor(id, newColor);
-            case "triangles":
-                return this._trianglesShapeBuffer.updateColor(id, newColor);
-            case "rectangles":
-                return this._rectanglesShapeBuffer.updateColor(id, newColor);
-            case "hexagons":
-                return this._hexagonsShapeBuffer.updateColor(id, newColor);
-            case "octogons":
-                return this._octogonsShapeBuffer.updateColor(id, newColor);
-            case "ellipses":
-                return this._ellipsesShapeBuffer.updateColor(id, newColor);
-            case "box":
-                return this._boxShapeBuffer.updateColor(id, newColor);
-        }
-
-        return this.updateShapeColorFromUnspecifiedBuffer(id, newColor);
-    }
+    public abstract updateShapeColor(id: string, newColor: RGBColor,
+        shapeMode?: ShapeMode): boolean;
 
     public updatePointSize(id: string, newPointSize: number): boolean
     {
@@ -301,7 +196,7 @@ export class WebGLRenderer
     //#endregion: public methods
 
     //#region: protected methods
-    protected draw()
+    protected draw(): void
     {
         this.gl.clearColor(this._backgroundColor.red,
             this._backgroundColor.green,
@@ -325,6 +220,63 @@ export class WebGLRenderer
             }
         }
     }
+
+    protected abstract drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+
+    protected abstract drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
+
+    protected abstract initializaDynamicShapeBuffers(): void;
+
+    protected removeShapeFromUnspecifiedBuffer(id: string): boolean
+    {
+        for (let shapeBuffer of this._dynamicShapeBuffers)
+        {
+            if (shapeBuffer.removeShape(id))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean
+    {
+        for (let shapeBuffer of this._dynamicShapeBuffers)
+        {
+            if (shapeBuffer.updateColor(id, newColor))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string
+    {
+        let result = `cannot find uniform in shader program\n`;
+
+        result += `potential culprits:\n`;
+
+        for (let key in uniformsMap)
+        {
+            if (uniformsMap.hasOwnProperty(key))
+            {
+                result += `\t${key}: ${uniformsMap[key]}\n`;
+            }
+        }
+
+        return result;
+    }
+
+    protected resizeCanvasBase = (canvas: HTMLCanvasElement, window: Window,
+        renderer: WebGLRenderer) =>
+    {
+        renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
     //#endregion: protected methods
 
     //#region: private methods
@@ -334,7 +286,7 @@ export class WebGLRenderer
         this._canvas.addEventListener("webglcontextrestored", this.handleContextRestored, false);
     }
 
-    private setupGlResources()
+    private setupGlResources(): void
     {
         this.getContext();
 
@@ -391,34 +343,21 @@ export class WebGLRenderer
         this.start();
     }
 
-    private initializeRenderingOptions(renderingOptions: RenderingOptions | null)
+    private initializeRenderingOptions(renderingOptions: RenderingOptions | null): void
     {
         this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
-        this._camera = (renderingOptions && renderingOptions.camera) || new Camera((this._canvas.width / this._canvas.height));
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
         this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
     }
 
-    private initializaShapeBuffers()
+    private  initializaShapeBuffers(): void
     {
-        this._trianglesShapeBuffer = new ShapeBuffer<Triangle>(this.gl);
-        this._rectanglesShapeBuffer = new ShapeBuffer<Rectangle>(this.gl);
-        this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>(this.gl);
-        this._octogonsShapeBuffer = new ShapeBuffer<Octogon>(this.gl);
-        this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>(this.gl);
-        this._boxShapeBuffer = new ShapeBuffer<Box>(this.gl);
-        this._dynamicShapeBuffers = [
-            this._trianglesShapeBuffer,
-            this._rectanglesShapeBuffer,
-            this._hexagonsShapeBuffer,
-            this._octogonsShapeBuffer,
-            this._ellipsesShapeBuffer,
-            this._boxShapeBuffer
-        ];
+        this.initializaDynamicShapeBuffers();
 
         this._pointsShapeBuffer = new PointBuffer(this.gl);
     }
+
 
     private getDynamicShapeShaderVariables(): void
     {
@@ -440,71 +379,6 @@ export class WebGLRenderer
         this._a_position = this.gl.getAttribLocation(shader, ShaderSettings.positionAttributeName);
         this._a_color = this.gl.getAttribLocation(shader, ShaderSettings.colorAttributeName);
         this._u_vpMatrix = this.gl.getUniformLocation(shader, ShaderSettings.vpMatrixUniformName);
-    }
-
-    private drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void
-    {
-        if (!this._u_vpMatrix)
-        {
-            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
-            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
-            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
-            throw errorMessage;
-        }
-
-        const verticies = shapeBuffer.verticies;
-        const shapePrototype = shapeBuffer.first;
-
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
-        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
-            false, Constants.bytesPerPointVertex, 0);
-        this.gl.enableVertexAttribArray(this._a_position);
-        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, Constants.bytesPerPointVertex, Constants.bytesPerPosition);
-        this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.vertexAttribPointer(this._a_pointSize, Constants.floatsPerPointSize, this.gl.FLOAT,
-            false, Constants.bytesPerPointVertex, Constants.bytesPerPositionColor);
-        this.gl.enableVertexAttribArray(this._a_pointSize);
-        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
-        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerPointVertex));
-    }
-
-    private drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
-    {
-        if (!this._u_vpMatrix)
-        {
-            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
-            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
-            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
-            throw errorMessage;
-        }
-
-        const verticies = shapeBuffer.verticies;
-        const shapePrototype = shapeBuffer.first;
-
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
-        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
-            false, Constants.bytesPerDynamicVertex, 0);
-        this.gl.enableVertexAttribArray(this._a_position);
-        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, Constants.bytesPerDynamicVertex, Constants.bytesPerPosition);
-        this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow0, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow0Offset);
-        this.gl.enableVertexAttribArray(this._a_modelMatrixRow0);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow1, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow1Offset);
-        this.gl.enableVertexAttribArray(this._a_modelMatrixRow1);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow2, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow2Offset);
-        this.gl.enableVertexAttribArray(this._a_modelMatrixRow2);
-        this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4Row, this.gl.FLOAT,
-            false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow3Offset);
-        this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
-        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, this._camera.vpMatrix.elements);
-        this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
     private initShaders(vertexSource: string, fragmentSource: string): WebGLShader
@@ -552,23 +426,6 @@ export class WebGLRenderer
         return shader;
     }
 
-    private createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string
-    {
-        let result = `cannot find uniform in shader program\n`;
-
-        result += `potential culprits:\n`;
-
-        for (let key in uniformsMap)
-        {
-            if (uniformsMap.hasOwnProperty(key))
-            {
-                result += `\t${key}: ${uniformsMap[key]}\n`;
-            }
-        }
-
-        return result;
-    }
-
     private renderLoop = () =>
     {
         this.draw();
@@ -588,41 +445,6 @@ export class WebGLRenderer
                 }, false);
             this._resizeCallback(this._canvas, this._window, this);
         }
-    }
-
-    private resizeCanvas = (canvas: HTMLCanvasElement, window: Window,
-        renderer: WebGLRenderer) =>
-    {
-        renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        renderer.camera.aspectRatio = (this._canvas.width / this._canvas.height);
-    }
-
-    private removeShapeFromUnspecifiedBuffer(id: string): boolean
-    {
-        for (let shapeBuffer of this._dynamicShapeBuffers)
-        {
-            if (shapeBuffer.removeShape(id))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean
-    {
-        for (let shapeBuffer of this._dynamicShapeBuffers)
-        {
-            if (shapeBuffer.updateColor(id, newColor))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
     //#endregion: private methods
 }
