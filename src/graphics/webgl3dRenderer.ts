@@ -36,14 +36,15 @@ export class WebGL3dRenderer extends WebGLRenderer
     //#region: constructor
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
-        const postResize = (leCanvas: HTMLCanvasElement, window: Window,
-            renderer: WebGL3dRenderer) =>
-        {
-            renderer.camera.aspectRatio = (this._canvas.width / this._canvas.height);
-        };
-        super(canvas, renderingOptions, postResize);
+        super(canvas, renderingOptions);
 
         this._camera = new Camera((this._canvas.width / this._canvas.height));
+        this.postResizeCallback = (leCanvas: HTMLCanvasElement, window: Window,
+            renderer: WebGL3dRenderer) =>
+        {
+            this.camera.aspectRatio = (leCanvas.width / leCanvas.height);
+        };
+
         this._shapeFactory = new ShapeFactory3d();
     }
     //#endregion: constructor

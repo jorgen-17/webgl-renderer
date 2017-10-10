@@ -409,6 +409,30 @@ declare module 'graphics/shape/pointBuffer' {
 	}
 
 }
+declare module 'graphics/shape/shapeFactory' {
+	import { Vec3 } from "cuon-matrix-ts";
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	import { Ellipse } from 'graphics/shape/shape2d/ellipse';
+	import { Triangle } from 'graphics/shape/shape2d/triangle';
+	import { Rectangle } from 'graphics/shape/shape2d/rectangle';
+	import { Hexagon } from 'graphics/shape/shape2d/hexagon';
+	import { Octogon } from 'graphics/shape/shape2d/octogon';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { Box } from 'graphics/shape/shape3d/box';
+	import { Point } from 'graphics/shape/shape2d/point';
+	export abstract class ShapeFactory {
+	    createPoint(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
+	    abstract createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
+	    protected createTriangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Triangle;
+	    protected createRectangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Rectangle;
+	    protected createHexagon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Hexagon;
+	    protected createOctogon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Octogon;
+	    protected createEllipse(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Ellipse;
+	    protected createBox(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Box;
+	}
+
+}
 declare module 'graphics/webglRenderer' {
 	import { Mat4 } from "cuon-matrix-ts";
 	import { ShapeMode } from 'graphics/shape/shapeMode';
@@ -420,8 +444,10 @@ declare module 'graphics/webglRenderer' {
 	import { Shape } from 'graphics/shape/shape';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { PointBuffer } from 'graphics/shape/pointBuffer';
+	import { ShapeFactory } from 'graphics/shape/shapeFactory';
 	export abstract class WebGLRenderer {
 	    gl: WebGLRenderingContext;
+	    abstract shapeFactory: ShapeFactory;
 	    protected _canvas: HTMLCanvasElement;
 	    protected _pointsShapeBuffer: PointBuffer;
 	    protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
@@ -450,6 +476,7 @@ declare module 'graphics/webglRenderer' {
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions, postResizeCalllback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void);
 	    backgroundColor: RGBColor;
 	    isFullscreen: boolean;
+	    protected postResizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    abstract addShapeToScene(shape: Shape): string;
 	    abstract addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
@@ -483,9 +510,20 @@ declare module 'graphics/webglRenderer' {
 	    private createShader(shaderSource, type);
 	    private renderLoop;
 	    private setupWindowCallbacks();
-	    private calcWidth;
-	    private calcHeight;
+	    private defaultCalcWidth;
+	    private defultCalcHeight;
 	    private resizeCanvas;
+	}
+
+}
+declare module 'graphics/shape/shapeFactory2d' {
+	import { Vec3 } from "cuon-matrix-ts";
+	import { ShapeFactory } from 'graphics/shape/shapeFactory';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	export class ShapeFactory2d extends ShapeFactory {
+	    createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
 	}
 
 }
@@ -498,13 +536,16 @@ declare module 'graphics/webgl2dRenderer' {
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
 	import { Point } from 'graphics/shape/shape2d/point';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	import { ShapeFactory2d } from 'graphics/shape/shapeFactory2d';
 	export class WebGL2dRenderer extends WebGLRenderer {
+	    private _shapeFactory;
 	    private _trianglesShapeBuffer;
 	    private _rectanglesShapeBuffer;
 	    private _hexagonsShapeBuffer;
 	    private _octogonsShapeBuffer;
 	    private _ellipsesShapeBuffer;
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
+	    readonly shapeFactory: ShapeFactory2d;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
@@ -512,6 +553,17 @@ declare module 'graphics/webgl2dRenderer' {
 	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
 	    protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
 	    protected initializaDynamicShapeBuffers(): void;
+	}
+
+}
+declare module 'graphics/shape/shapeFactory3d' {
+	import { Vec3 } from "cuon-matrix-ts";
+	import { ShapeFactory } from 'graphics/shape/shapeFactory';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	export class ShapeFactory3d extends ShapeFactory {
+	    createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
 	}
 
 }
@@ -525,7 +577,9 @@ declare module 'graphics/webgl3dRenderer' {
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
 	import { Point } from 'graphics/shape/shape2d/point';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	import { ShapeFactory3d } from 'graphics/shape/shapeFactory3d';
 	export class WebGL3dRenderer extends WebGLRenderer {
+	    private _shapeFactory;
 	    private _camera;
 	    private _trianglesShapeBuffer;
 	    private _rectanglesShapeBuffer;
@@ -535,6 +589,7 @@ declare module 'graphics/webgl3dRenderer' {
 	    private _boxShapeBuffer;
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
 	    camera: Camera;
+	    readonly shapeFactory: ShapeFactory3d;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
@@ -550,24 +605,6 @@ declare module 'graphics/color/colorMapper' {
 	export type Color = "red" | "orange" | "yellow" | "green" | "cyan" | "blue" | "indigo" | "fuchsia" | "white";
 	export class ColorMapper {
 	    static colorToRGBColor(color: Color): RGBColor;
-	}
-
-}
-declare module 'graphics/shape/shapeFactory' {
-	import { Vec3 } from "cuon-matrix-ts";
-	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { ShapeMode } from 'graphics/shape/shapeMode';
-	import { RGBColor } from 'graphics/color/rgbColor';
-	import { Point } from 'graphics/shape/shape2d/point';
-	export class ShapeFactory {
-	    static createPoint(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
-	    static createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
-	    private static createTriangle(point1, point2, gl, rgbColor?);
-	    private static createRectangle(point1, point2, gl, rgbColor?);
-	    private static createHexagon(point1, point2, gl, rgbColor?);
-	    private static createOctogon(point1, point2, gl, rgbColor?);
-	    private static createEllipse(point1, point2, gl, rgbColor?);
-	    private static createBox(point1, point2, gl, rgbColor?);
 	}
 
 }

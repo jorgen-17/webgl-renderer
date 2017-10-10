@@ -10,6 +10,7 @@ node_modules/**/*
 !karma.conf.js
 !webgl-renderer.min.js
 !webgl-renderer.js
+!type-generator.js
 
 node_modules/
 *debug.log
