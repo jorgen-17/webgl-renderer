@@ -13,7 +13,7 @@ require("dts-generator").default({
 
 const fs = require("fs")
 
-// i know this is stupid, but this is a build utility so ¯\_(ツ)_/¯
+// super lame i ended up using just setTimeout, but this is a build utility so ¯\_(ツ)_/¯
 setTimeout(function() {
     fs.readFile("./lib/webgl-renderer.d.ts", "utf8", function (err,data) {
         if (err) {
@@ -22,6 +22,7 @@ setTimeout(function() {
         let result = data.replace(/\/\/\/ <reference path="cuon-matrix-ts" \/>/g,
             '/// <reference path="../node_modules/cuon-matrix-ts/index.d.ts" />');
         result = result.replace(/webgl-renderer\/src\//g, "");
+        result = result.replace(/\/index\'/g, "\'");
 
         fs.writeFile("./lib/webgl-renderer.d.ts", result, "utf8", function (err) {
             if (err) return console.log(err);

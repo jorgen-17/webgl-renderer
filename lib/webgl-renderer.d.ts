@@ -450,6 +450,7 @@ declare module 'graphics/webglRenderer' {
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions, postResizeCalllback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void);
 	    backgroundColor: RGBColor;
 	    isFullscreen: boolean;
+	    protected postResizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    abstract addShapeToScene(shape: Shape): string;
 	    abstract addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;

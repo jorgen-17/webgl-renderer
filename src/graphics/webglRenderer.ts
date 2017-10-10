@@ -136,6 +136,19 @@ export abstract class WebGLRenderer
         this.setupWindowCallbacks();
     }
 
+    protected get postResizeCallback(): (canvas: HTMLCanvasElement,
+        window: Window, renderer: WebGLRenderer) => void
+    {
+        return this._postResizeCallback;
+    }
+
+    protected set postResizeCallback(value: (canvas: HTMLCanvasElement,
+        window: Window, renderer: WebGLRenderer) => void)
+    {
+        this._postResizeCallback = value;
+        this.setupWindowCallbacks();
+    }
+
     //#endregion: getters and setters
 
     //#region: public methods
