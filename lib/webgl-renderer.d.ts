@@ -484,8 +484,8 @@ declare module 'graphics/webglRenderer' {
 	    private createShader(shaderSource, type);
 	    private renderLoop;
 	    private setupWindowCallbacks();
-	    private calcWidth;
-	    private calcHeight;
+	    private defaultCalcWidth;
+	    private defultCalcHeight;
 	    private resizeCanvas;
 	}
 

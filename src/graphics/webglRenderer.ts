@@ -411,8 +411,8 @@ export abstract class WebGLRenderer
         this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
-        this._calcWidth = (renderingOptions && renderingOptions.calcWidth) || this.calcWidth;
-        this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.calcHeight;
+        this._calcWidth = (renderingOptions && renderingOptions.calcWidth) || this.defaultCalcWidth;
+        this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.defultCalcHeight;
     }
 
     private  initializaShapeBuffers(): void
@@ -511,12 +511,12 @@ export abstract class WebGLRenderer
         }
     }
 
-    private calcWidth = (newWidth) =>
+    private defaultCalcWidth = (newWidth) =>
     {
         return newWidth;
     }
 
-    private calcHeight = (newHeight) =>
+    private defultCalcHeight = (newHeight) =>
     {
         return newHeight;
     }
@@ -524,8 +524,8 @@ export abstract class WebGLRenderer
     private resizeCanvas = (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) =>
     {
-        const newWidth = this.calcWidth(window.innerWidth);
-        const newHeight = this.calcHeight(window.innerHeight);
+        const newWidth = this._calcWidth(window.innerWidth);
+        const newHeight = this._calcHeight(window.innerHeight);
 
         renderer.setViewPortDimensions(newWidth, newHeight);
         canvas.width = newWidth;
