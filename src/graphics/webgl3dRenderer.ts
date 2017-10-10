@@ -22,8 +22,6 @@ import { DynamicShape } from "./shape/dynamicShape";
 export class WebGL3dRenderer extends WebGLRenderer
 {
     //#region: member variables
-    protected resizeCanvas: (canvas: HTMLCanvasElement, window: Window,
-        renderer: WebGL3dRenderer) => void;
     private _camera: Camera;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
@@ -36,16 +34,14 @@ export class WebGL3dRenderer extends WebGLRenderer
     //#region: constructor
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
-        super(canvas, renderingOptions);
-
-        this._camera = new Camera((this._canvas.width / this._canvas.height));
-        this.resizeCanvas = (leCanvas: HTMLCanvasElement, window: Window,
+        const postResize = (leCanvas: HTMLCanvasElement, window: Window,
             renderer: WebGL3dRenderer) =>
         {
-            this.resizeCanvasBase(leCanvas, window, renderer);
-
             renderer.camera.aspectRatio = (this._canvas.width / this._canvas.height);
         };
+        super(canvas, renderingOptions, postResize);
+
+        this._camera = new Camera((this._canvas.width / this._canvas.height));
     }
     //#endregion: constructor
 

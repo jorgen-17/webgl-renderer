@@ -43,15 +43,15 @@ export abstract class WebGLRenderer
     protected _a_modelMatrixRow2: number;
     protected _a_modelMatrixRow3: number;
     protected _u_vpMatrix: WebGLUniformLocation  | null;
-    protected abstract resizeCanvas: (canvas: HTMLCanvasElement, window: Window,
-        renderer: WebGLRenderer) => void;
     private _isContextLost: boolean;
     private _browserHelper: BrowserHelper;
     private _backgroundColor: RGBColor;
     private _window: Window;
     private _isFullscreen: boolean;
     private _animationFrameRequestId: number;
-    private _resizeCallback: (canvas: HTMLCanvasElement, window: Window,
+    private _calcWidth: (newWidth: number) => number;
+    private _calcHeight: (newHeight: number) => number;
+    private _postResizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
     private _pointShaderProgram: WebGLShader;
     private _dynamicShapeShaderProgram: WebGLShader;
@@ -94,9 +94,13 @@ export abstract class WebGLRenderer
     //#endregion: shaders
 
     //#region: constructor
-    constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
+    constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {},
+        postResizeCalllback: (canvas: HTMLCanvasElement, window: Window,
+            renderer: WebGLRenderer) => void = () => { /* do nothing */ })
     {
         this._canvas = canvas;
+        this._postResizeCallback = postResizeCalllback;
+
         this.setCanvasEventHandlers();
         this._browserHelper = renderingOptions.browserHelper || new BrowserHelper();
 
@@ -129,19 +133,6 @@ export abstract class WebGLRenderer
     public set isFullscreen(value: boolean)
     {
         this._isFullscreen = value;
-        this.setupWindowCallbacks();
-    }
-
-    public get resizeCallback(): (canvas: HTMLCanvasElement,
-        window: Window, renderer: WebGLRenderer) => void
-    {
-        return this._resizeCallback;
-    }
-
-    public set resizeCallback(value: (canvas: HTMLCanvasElement,
-        window: Window, renderer: WebGLRenderer) => void)
-    {
-        this._resizeCallback = value;
         this.setupWindowCallbacks();
     }
 
@@ -336,14 +327,6 @@ export abstract class WebGLRenderer
         this.gl.uniformMatrix4fv(this._u_vpMatrix, false, mvpMatrix.elements);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
-
-    protected resizeCanvasBase = (canvas: HTMLCanvasElement, window: Window,
-        renderer: WebGLRenderer) =>
-    {
-        renderer.setViewPortDimensions(window.innerWidth, window.innerHeight);
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
     //#endregion: protected methods
 
     //#region: private methods
@@ -415,7 +398,8 @@ export abstract class WebGLRenderer
         this._backgroundColor = (renderingOptions && renderingOptions.backgroundColor) || Settings.defaultBackgroundColor;
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
-        this._resizeCallback = (renderingOptions && renderingOptions.resizeCallback) || this.resizeCanvas;
+        this._calcWidth = (renderingOptions && renderingOptions.calcWidth) || this.calcWidth;
+        this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.calcHeight;
     }
 
     private  initializaShapeBuffers(): void
@@ -507,11 +491,34 @@ export abstract class WebGLRenderer
                 () => {
                     if (!this._isContextLost)
                     {
-                        this._resizeCallback(this._canvas, this._window, this);
+                        this.resizeCanvas(this._canvas, this._window, this);
                     }
                 }, false);
-            this._resizeCallback(this._canvas, this._window, this);
+            this.resizeCanvas(this._canvas, this._window, this);
         }
+    }
+
+    private calcWidth = (newWidth) =>
+    {
+        return newWidth;
+    }
+
+    private calcHeight = (newHeight) =>
+    {
+        return newHeight;
+    }
+
+    private resizeCanvas = (canvas: HTMLCanvasElement, window: Window,
+        renderer: WebGLRenderer) =>
+    {
+        const newWidth = this.calcWidth(window.innerWidth);
+        const newHeight = this.calcHeight(window.innerHeight);
+
+        renderer.setViewPortDimensions(newWidth, newHeight);
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        this._postResizeCallback(canvas, window, renderer);
     }
     //#endregion: private methods
 }

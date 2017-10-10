@@ -13,6 +13,6 @@ export interface RenderingOptions
     camera?: Camera;
     window?: Window;
     fullscreen?: boolean;
-    resizeCallback?: (canvas: HTMLCanvasElement, window: Window,
-        renderer: WebGLRenderer) => void;
+    calcWidth?: (newWidth: number) => number;
+    calcHeight?: (newHeight: number) => number;
 }

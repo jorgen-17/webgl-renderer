@@ -235,14 +235,14 @@ declare module 'graphics/renderingOptions' {
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { Camera } from 'graphics/camera';
 	import { BrowserHelper } from 'utils/browserHelper';
-	import { WebGLRenderer } from 'graphics/webglRenderer';
 	export interface RenderingOptions {
 	    browserHelper?: BrowserHelper;
 	    backgroundColor?: RGBColor;
 	    camera?: Camera;
 	    window?: Window;
 	    fullscreen?: boolean;
-	    resizeCallback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
+	    calcWidth?: (newWidth: number) => number;
+	    calcHeight?: (newHeight: number) => number;
 	}
 
 }
@@ -433,23 +433,23 @@ declare module 'graphics/webglRenderer' {
 	    protected _a_modelMatrixRow2: number;
 	    protected _a_modelMatrixRow3: number;
 	    protected _u_vpMatrix: WebGLUniformLocation | null;
-	    protected abstract resizeCanvas: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    private _isContextLost;
 	    private _browserHelper;
 	    private _backgroundColor;
 	    private _window;
 	    private _isFullscreen;
 	    private _animationFrameRequestId;
-	    private _resizeCallback;
+	    private _calcWidth;
+	    private _calcHeight;
+	    private _postResizeCallback;
 	    private _pointShaderProgram;
 	    private _dynamicShapeShaderProgram;
 	    private _dynamicVertexShaderSource;
 	    private _pointVertexShaderSource;
 	    private _fragmentShaderSource;
-	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
+	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions, postResizeCalllback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void);
 	    backgroundColor: RGBColor;
 	    isFullscreen: boolean;
-	    resizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    abstract addShapeToScene(shape: Shape): string;
 	    abstract addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
@@ -469,7 +469,6 @@ declare module 'graphics/webglRenderer' {
 	    protected createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string;
 	    protected drawPointShapeBufferBase(shapeBuffer: ShapeBuffer<Point>, mvpMatrix?: Mat4): void;
 	    protected drawDynamicShapeBufferBase(shapeBuffer: ShapeBuffer<DynamicShape>, mvpMatrix?: Mat4): void;
-	    protected resizeCanvasBase: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
 	    private setCanvasEventHandlers();
 	    private setupGlResources();
 	    private getContext();
@@ -484,6 +483,9 @@ declare module 'graphics/webglRenderer' {
 	    private createShader(shaderSource, type);
 	    private renderLoop;
 	    private setupWindowCallbacks();
+	    private calcWidth;
+	    private calcHeight;
+	    private resizeCanvas;
 	}
 
 }
@@ -497,7 +499,6 @@ declare module 'graphics/webgl2dRenderer' {
 	import { Point } from 'graphics/shape/shape2d/point';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	export class WebGL2dRenderer extends WebGLRenderer {
-	    protected resizeCanvas: (canvas: HTMLCanvasElement, window: Window, renderer: WebGL2dRenderer) => void;
 	    private _trianglesShapeBuffer;
 	    private _rectanglesShapeBuffer;
 	    private _hexagonsShapeBuffer;
@@ -525,7 +526,6 @@ declare module 'graphics/webgl3dRenderer' {
 	import { Point } from 'graphics/shape/shape2d/point';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	export class WebGL3dRenderer extends WebGLRenderer {
-	    protected resizeCanvas: (canvas: HTMLCanvasElement, window: Window, renderer: WebGL3dRenderer) => void;
 	    private _camera;
 	    private _trianglesShapeBuffer;
 	    private _rectanglesShapeBuffer;

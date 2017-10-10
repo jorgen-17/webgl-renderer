@@ -22,8 +22,6 @@ import { DynamicShape } from "./shape/dynamicShape";
 export class WebGL2dRenderer extends WebGLRenderer
 {
     //#region: member variables
-    protected resizeCanvas: (canvas: HTMLCanvasElement, window: Window,
-        renderer: WebGL2dRenderer) => void;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
@@ -35,12 +33,6 @@ export class WebGL2dRenderer extends WebGLRenderer
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
         super(canvas, renderingOptions);
-
-        this.resizeCanvas = (leCanvas: HTMLCanvasElement, window: Window,
-            renderer: WebGL2dRenderer) =>
-        {
-            this.resizeCanvasBase(leCanvas, window, renderer);
-        };
     }
     //#endregion: constructor
 
