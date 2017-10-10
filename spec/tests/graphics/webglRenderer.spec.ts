@@ -476,7 +476,7 @@ describe("webglRenderer:", () =>
 
         it("sets the uniform variable u_viewMatrix", () =>
         {
-            const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
             renderer.addShapeToScene(redTriangle);
 
@@ -529,17 +529,17 @@ describe("webglRenderer:", () =>
 
             line = WebglRendererTestHelper.getRandomLine(gl);
             point = WebglRendererTestHelper.getRandomPoint(gl);
-            redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, red);
-            orangeSquare = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            orangeSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "rectangles", gl, orange);
-            yellowHexagon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(-1, -1),
+            yellowHexagon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(-1, -1),
                 "hexagons", gl, yellow);
-            greenOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            greenOctogon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "octogons", gl, green);
-            blueEllipse = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            blueEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "ellipses", gl, blue);
-            cyanBox = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
+            cyanBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
                 "box", gl, cyan);
         });
 
@@ -1058,17 +1058,17 @@ describe("webglRenderer:", () =>
 
         it("updateShapeColor with shapeMode changes the color of the shape drawn", () =>
         {
-            const redTriangle2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const redTriangle2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, red);
-            const orangeSquare2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const orangeSquare2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "rectangles", gl, orange);
-            const yellowHexagon2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const yellowHexagon2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "hexagons", gl, yellow);
-            const greenOctogon2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const greenOctogon2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "octogons", gl, green);
-            const blueEllipse2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const blueEllipse2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "ellipses", gl, blue);
-            const cyanBox2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const cyanBox2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "box", gl, cyan);
 
             const ids = renderer.addHeterogenoeusShapesArrayToScene([
@@ -1096,17 +1096,17 @@ describe("webglRenderer:", () =>
             renderer.updateShapeColor(ids[11], yellow, cyanBox2.shapeMode);
 
             // prepare expected verticies
-            const blueTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const blueTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, blue);
-            const redSquare = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const redSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "rectangles", gl, red);
-            const greenHexagon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const greenHexagon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "hexagons", gl, green);
-            const cyanOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const cyanOctogon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "octogons", gl, cyan);
-            const orangeEllipse = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const orangeEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "ellipses", gl, orange);
-            const yellowBox = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const yellowBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "box", gl, yellow);
 
 
@@ -1210,17 +1210,17 @@ describe("webglRenderer:", () =>
 
         it("updateShapeColor without shapeMode changes the color of the shape drawn", () =>
         {
-            const redTriangle2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const redTriangle2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, red);
-            const orangeSquare2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const orangeSquare2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "rectangles", gl, orange);
-            const yellowHexagon2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const yellowHexagon2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "hexagons", gl, yellow);
-            const greenOctogon2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const greenOctogon2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "octogons", gl, green);
-            const blueEllipse2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const blueEllipse2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "ellipses", gl, blue);
-            const cyanBox2 = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const cyanBox2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "box", gl, cyan);
 
             const ids = renderer.addHeterogenoeusShapesArrayToScene([
@@ -1247,17 +1247,17 @@ describe("webglRenderer:", () =>
             renderer.updateShapeColor(ids[11], yellow);
 
             // prepare expected verticies
-            const blueTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const blueTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, blue);
-            const redSquare = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const redSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "rectangles", gl, red);
-            const greenHexagon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const greenHexagon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "hexagons", gl, green);
-            const cyanOctogon = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const cyanOctogon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "octogons", gl, cyan);
-            const orangeEllipse = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const orangeEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "ellipses", gl, orange);
-            const yellowBox = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            const yellowBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "box", gl, yellow);
 
 
@@ -1402,7 +1402,8 @@ describe("webglRenderer:", () =>
 
         describe("and when drawing dynamic shapes", () =>
         {
-            const redTriangle = ShapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+            let renderer = new WebGL3dRendererMock(canvas, defaultOptions);
+            const redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
             "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
 
             it("when u_vpMatrix is missing", () =>
@@ -1417,7 +1418,6 @@ describe("webglRenderer:", () =>
                     return null;
                 }).Spy;
 
-                let renderer = new WebGL3dRendererMock(canvas, defaultOptions);
                 renderer.addShapeToScene(redTriangle);
 
                 const expectedErrorString =

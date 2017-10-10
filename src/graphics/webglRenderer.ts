@@ -26,12 +26,14 @@ import { Box } from "./shape/shape3d/box";
 import { Shape } from "./shape/shape";
 import { DynamicShape } from "./shape/dynamicShape";
 import { PointBuffer } from "./shape/pointBuffer";
+import { ShapeFactory } from "./shape/shapeFactory";
 //#endregion
 
 export abstract class WebGLRenderer
 {
     //#region: member variables
     public gl: WebGLRenderingContext;
+    public abstract shapeFactory: ShapeFactory;
     protected _canvas: HTMLCanvasElement;
     protected _pointsShapeBuffer: PointBuffer;
     protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;

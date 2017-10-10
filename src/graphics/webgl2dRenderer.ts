@@ -17,11 +17,13 @@ import { StringDictionary } from "../utils/dictionary";
 import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
+import { ShapeFactory2d } from "./shape/shapeFactory2d";
 //#endregion: imports
 
 export class WebGL2dRenderer extends WebGLRenderer
 {
     //#region: member variables
+    private _shapeFactory: ShapeFactory2d;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
@@ -33,8 +35,17 @@ export class WebGL2dRenderer extends WebGLRenderer
     constructor(canvas: HTMLCanvasElement, renderingOptions: RenderingOptions = {})
     {
         super(canvas, renderingOptions);
+
+        this._shapeFactory = new ShapeFactory2d();
     }
     //#endregion: constructor
+
+    //#region: getters and setters
+    public get shapeFactory(): ShapeFactory2d
+    {
+        return this._shapeFactory;
+    }
+    //#endregion: getters and setters
 
     //#region: public methods
     public addShapeToScene(shape: Shape): string

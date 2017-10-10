@@ -5,11 +5,11 @@ import { Ellipse } from "../../../../src/graphics/shape/shape2d/ellipse";
 import { Precision } from "../../../../src/graphics/precision";
 import { RGBColor } from "../../../../src/graphics/color/rgbColor";
 import { Triangle } from "../../../../src/graphics/shape/shape2d/triangle";
-import { ShapeFactory } from "../../../../src/graphics/shape/shapeFactory";
+import { ShapeFactory3d } from "../../../../src/graphics/shape/shapeFactory3d";
 import { Constants } from "../../../../src/constants";
 import { ShapeMode } from "../../../../src/graphics/shape/shapeMode";
 
-describe("shapeFactory:", () =>
+describe("shapeFactory3d:", () =>
 {
     const point1 = new Vec3(0.5, 0.5);
     const point2 = new Vec3(1, 1);
@@ -17,6 +17,8 @@ describe("shapeFactory:", () =>
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
     const gl = glMock.Object;
+
+    let shapeFactory = new ShapeFactory3d();
 
     beforeAll(() =>
     {
@@ -28,42 +30,42 @@ describe("shapeFactory:", () =>
     {
         it("creates triangle", () =>
         {
-            const triangle = ShapeFactory.createShape(point1, point2, "triangles", gl, color);
+            const triangle = shapeFactory.createShape(point1, point2, "triangles", gl, color);
             expect(3 * Constants.floatsPerDynamicVertex).toBe(triangle.verticies.length);
             expect(gl.TRIANGLES).toBe(triangle.glRenderMode);
             expect(color).toBe(triangle.rgbColor);
         });
         it("creates rectangle", () =>
         {
-            const rectangle = ShapeFactory.createShape(point1, point2, "rectangles", gl, color);
+            const rectangle = shapeFactory.createShape(point1, point2, "rectangles", gl, color);
             expect(6 * Constants.floatsPerDynamicVertex).toBe(rectangle.verticies.length);
             expect(gl.TRIANGLES).toBe(rectangle.glRenderMode);
             expect(color).toBe(rectangle.rgbColor);
         });
         it("creates hexagon", () =>
         {
-            const hexagon = ShapeFactory.createShape(point1, point2, "hexagons", gl, color);
+            const hexagon = shapeFactory.createShape(point1, point2, "hexagons", gl, color);
             expect(12 * Constants.floatsPerDynamicVertex).toBe(hexagon.verticies.length);
             expect(gl.TRIANGLES).toBe(hexagon.glRenderMode);
             expect(color).toBe(hexagon.rgbColor);
         });
         it("creates octogon", () =>
         {
-            const octogon = ShapeFactory.createShape(point1, point2, "octogons", gl, color);
+            const octogon = shapeFactory.createShape(point1, point2, "octogons", gl, color);
             expect(18 * Constants.floatsPerDynamicVertex).toBe(octogon.verticies.length);
             expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
             expect(color).toBe(octogon.rgbColor);
         });
         it("creates ellipse", () =>
         {
-            const ellipse = ShapeFactory.createShape(point1, point2, "ellipses", gl, color);
+            const ellipse = shapeFactory.createShape(point1, point2, "ellipses", gl, color);
             expect(1206 * Constants.floatsPerDynamicVertex).toBe(ellipse.verticies.length);
             expect(gl.TRIANGLES).toBe(ellipse.glRenderMode);
             expect(color).toBe(ellipse.rgbColor);
         });
         it("creates box", () =>
         {
-            const box = ShapeFactory.createShape(point1, point2, "box", gl, color);
+            const box = shapeFactory.createShape(point1, point2, "box", gl, color);
             expect(36 * Constants.floatsPerDynamicVertex).toBe(box.verticies.length);
             expect(gl.TRIANGLES).toBe(box.glRenderMode);
             expect(color).toBe(box.rgbColor);
@@ -72,7 +74,7 @@ describe("shapeFactory:", () =>
         {
             const createShape = () =>
             {
-                const notShape = ShapeFactory.createShape(point1, point2, "notShape" as ShapeMode,
+                const notShape = shapeFactory.createShape(point1, point2, "notShape" as ShapeMode,
                     gl, color);
             };
 

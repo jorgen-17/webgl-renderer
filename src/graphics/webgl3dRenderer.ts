@@ -17,11 +17,13 @@ import { StringDictionary } from "../utils/dictionary";
 import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
+import { ShapeFactory3d } from "./shape/shapeFactory3d";
 //#endregion: imports
 
 export class WebGL3dRenderer extends WebGLRenderer
 {
     //#region: member variables
+    private _shapeFactory: ShapeFactory3d;
     private _camera: Camera;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
@@ -42,6 +44,7 @@ export class WebGL3dRenderer extends WebGLRenderer
         super(canvas, renderingOptions, postResize);
 
         this._camera = new Camera((this._canvas.width / this._canvas.height));
+        this._shapeFactory = new ShapeFactory3d();
     }
     //#endregion: constructor
 
@@ -54,6 +57,11 @@ export class WebGL3dRenderer extends WebGLRenderer
     public set camera(value: Camera)
     {
         this._camera = value;
+    }
+
+    public get shapeFactory(): ShapeFactory3d
+    {
+        return this._shapeFactory;
     }
     //#endregion: getters and setters
 
