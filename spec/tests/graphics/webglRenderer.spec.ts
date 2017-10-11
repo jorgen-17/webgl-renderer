@@ -52,17 +52,24 @@ describe("webglRenderer:", () =>
     let windowCancelAnimationFrameSpy: jasmine.Spy;
     let windowAddEventListenerSpy: jasmine.Spy;
 
-    // replace this with calcheight/width callbacks
-    // const resizeCallbackSpy = jasmine.createSpy("resizeCallback");
-    // const resizeCallback = (canvasCB: HTMLCanvasElement, windowCB: Window,
-    //     rendererCB: WebGLRenderer) =>
-    // {
-    //     resizeCallbackSpy(canvasCB, windowCB, rendererCB);
-    // };
+    const calcHeightSpy = jasmine.createSpy("calcHeight");
+    const calcHeight = (newHeight: number) =>
+    {
+        calcHeightSpy(newHeight);
+        return 0;
+    };
+    const calcWidthSpy = jasmine.createSpy("calcWidth");
+    const calcWidth = (newWidth: number) =>
+    {
+        calcWidthSpy(newWidth);
+        return 0;
+    };
 
     const defaultOptions: RenderingOptions = {
         browserHelper: browserHelper,
-        window: leWindow
+        window: leWindow,
+        calcHeight: calcHeight,
+        calcWidth: calcWidth
     };
     //#endregion: member variables
 
@@ -100,7 +107,8 @@ describe("webglRenderer:", () =>
         {
             windowAddEventListenerSpy.calls.reset();
 
-            // resizeCallbackSpy.calls.reset();
+            calcHeightSpy.calls.reset();
+            calcWidthSpy.calls.reset();
         });
         it("settings are used when passed in", () =>
         {
@@ -164,23 +172,29 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
-            expect(leWindow.addEventListener).toHaveBeenCalledTimes(1);
+            // once in super ctor, another when setting the postResizeCallback
+            expect(leWindow.addEventListener).toHaveBeenCalledTimes(2);
             expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[0].args[0]);
             expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
             expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
+            expect("resize").toEqual(windowAddEventListenerSpy.calls.all()[1].args[0]);
+            expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[1].args[1]);
+            expect(false).toEqual(windowAddEventListenerSpy.calls.all()[1].args[2]);
         });
         it("passing in resizeCallback adds it as resize event handler on window", () =>
         {
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 fullscreen: true,
-                // resizeCallback: resizeCallback,
+                calcHeight: calcHeight,
+                calcWidth: calcWidth,
                 window: leWindow
             };
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
-            // expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(2);
+            expect(calcWidthSpy).toHaveBeenCalledTimes(2);
         });
         it("not passing in resizeCallback does not add it as resize event handler on window", () =>
         {
@@ -347,7 +361,6 @@ describe("webglRenderer:", () =>
         {
             windowAddEventListenerSpy.calls.reset();
 
-            // resizeCallbackSpy.calls.reset();
         });
 
         it("is set-able and get-able", () =>
@@ -355,7 +368,8 @@ describe("webglRenderer:", () =>
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 fullscreen: false,
-                // resizeCallback: resizeCallback,
+                calcHeight: calcHeight,
+                calcWidth: calcWidth,
                 window: leWindow
             };
 
@@ -375,7 +389,8 @@ describe("webglRenderer:", () =>
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 fullscreen: false,
-                // resizeCallback: resizeCallback,
+                calcHeight: calcHeight,
+                calcWidth: calcWidth,
                 window: leWindow
             };
 
@@ -390,18 +405,18 @@ describe("webglRenderer:", () =>
             expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
             expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
 
-            // expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(2);
+            expect(calcWidthSpy).toHaveBeenCalledTimes(2);
         });
     });
 
     // replace with calcheight/width
-    describe("resizeCallback:", () =>
+    xdescribe("resizeCallback:", () =>
     {
         beforeEach(() =>
         {
             windowAddEventListenerSpy.calls.reset();
 
-            // resizeCallbackSpy.calls.reset();
         });
 
         it("is set-able and get-able", () =>
@@ -409,18 +424,17 @@ describe("webglRenderer:", () =>
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 fullscreen: true,
-                // resizeCallback: resizeCallback,
+                calcHeight: calcHeight,
+                calcWidth: calcWidth,
                 window: leWindow
             };
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
-            // resizeCallbackSpy.calls.reset();
 
             // let resizeCB = renderer.resizeCallback;
             // resizeCB(canvas, leWindow, renderer);
-            // expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
-            // resizeCallbackSpy.calls.reset();
+            // expect(resizeCallbackSpy
 
             const resizeCallbackSpy2 = jasmine.createSpy("resizeCallback2");
             const resizeCallback2 = (canvasCB: HTMLCanvasElement, windowCB: Window,
@@ -445,9 +459,9 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
-            // resizeCallbackSpy.calls.reset();
             // window.dispatchEvent(new CustomEvent("resize"));
-            // expect(resizeCallbackSpy).toHaveBeenCalledTimes(1);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(1);
+            expect(calcWidthSpy).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -1373,9 +1387,21 @@ describe("webglRenderer:", () =>
         "draw throws and createUniforNotFoundErrorMessage " +
         "generates the correct error message", () =>
     {
+        let renderer: WebGL3dRendererMock;
+
+        beforeEach(() =>
+        {
+            renderer = new WebGL3dRendererMock(canvas, defaultOptions);
+        });
+
         describe("and when drawing points", () =>
         {
-            const point = new Point(new Vec3(0.5, 0.5), gl);
+            let point: Point;
+
+            beforeEach(() =>
+            {
+                point = renderer.shapeFactory.createPoint(new Vec3(0.5, 0.5), gl);
+            });
 
             it("when u_vpMatrix is missing", () =>
             {
@@ -1389,7 +1415,6 @@ describe("webglRenderer:", () =>
                     return null;
                 }).Spy;
 
-                let renderer = new WebGL3dRendererMock(canvas, defaultOptions);
                 renderer.addShapeToScene(point);
 
                 const expectedErrorString =
@@ -1402,9 +1427,13 @@ describe("webglRenderer:", () =>
 
         describe("and when drawing dynamic shapes", () =>
         {
-            let renderer = new WebGL3dRendererMock(canvas, defaultOptions);
-            const redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-            "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+            let redTriangle: DynamicShape;
+
+            beforeEach(() =>
+            {
+                redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
+                "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+            });
 
             it("when u_vpMatrix is missing", () =>
             {
