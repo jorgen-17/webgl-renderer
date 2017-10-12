@@ -235,6 +235,11 @@ export abstract class WebGLRenderer
 
     protected removeShapeFromUnspecifiedBuffer(id: string): boolean
     {
+        if (this._pointsShapeBuffer.removeShape(id))
+        {
+            return true;
+        }
+
         for (let shapeBuffer of this._dynamicShapeBuffers)
         {
             if (shapeBuffer.removeShape(id))
@@ -248,6 +253,11 @@ export abstract class WebGLRenderer
 
     protected updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean
     {
+        if (this._pointsShapeBuffer.updateColor(id, newColor))
+        {
+            return true;
+        }
+
         for (let shapeBuffer of this._dynamicShapeBuffers)
         {
             if (shapeBuffer.updateColor(id, newColor))
