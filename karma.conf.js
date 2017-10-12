@@ -34,6 +34,7 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/shape/shapeBuffer.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeFactory3d.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
+        { pattern: "spec/tests/graphics/webgl2dRenderer.spec.ts" },
         { pattern: "spec/tests/graphics/colorMapper.spec.ts" },
         { pattern: "spec/tests/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/tests/graphics/camera.spec.ts" },
@@ -50,7 +51,7 @@ module.exports = function(config) {
 
     karmaTypescriptConfig: {
         coverageOptions: {
-            instrumentation: false, // set to false if you need to debug though source ts
+            instrumentation: true, // set to false if you need to debug though source ts
             exclude: [
                 /\.(d|spec|test|tests|mock|snapshot)\.ts/i,
                 /spec\/helpers\//i,
@@ -85,9 +86,9 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
         "Chrome",
-        // "Firefox",
-        // "IE",
-        // "Edge"
+        "Firefox",
+        "IE",
+        "Edge"
     ],
 
 

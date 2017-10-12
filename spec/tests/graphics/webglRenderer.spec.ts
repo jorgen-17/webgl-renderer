@@ -557,7 +557,7 @@ describe("webglRenderer:", () =>
                 "box", gl, cyan);
         });
 
-        it("addDynamicShapeToScene sends their verticies to webgl", () =>
+        it("addShapeToScene sends their verticies to webgl", () =>
         {
             renderer.addShapeToScene(redTriangle);
             renderer.addShapeToScene(orangeSquare);
@@ -647,7 +647,7 @@ describe("webglRenderer:", () =>
             ]);
         });
 
-        it("addDynamicShapeToScene with unrecognized shapemode doesnt draw anything", () =>
+        it("addShapeToScene with unrecognized shapemode doesnt draw anything", () =>
         {
             redTriangle.shapeMode = "notShape" as ShapeMode;
             const id = renderer.addShapeToScene(redTriangle);
@@ -662,7 +662,7 @@ describe("webglRenderer:", () =>
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
         });
 
-        it("addHeterogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
+        it("addHeterogenoeusShapesArrayToScene sends their verticies to webgl", () =>
         {
             renderer.addHeterogenoeusShapesArrayToScene([
                 redTriangle,
@@ -759,7 +759,7 @@ describe("webglRenderer:", () =>
             ]);
         });
 
-        it("addHomogenoeusDynamicShapesArrayToScene sends their verticies to webgl", () =>
+        it("addHomogenoeusShapesArrayToScene sends their verticies to webgl", () =>
         {
             renderer.addHomogenoeusShapesArrayToScene([
                 redTriangle,
@@ -887,7 +887,7 @@ describe("webglRenderer:", () =>
             ]);
         });
 
-        it("addHomogenoeusDynamicShapesArrayToScene with unrecognized shapemode doesnt draw anything", () =>
+        it("addHomogenoeusShapesArrayToScene with unrecognized shapemode doesnt draw anything", () =>
         {
             redTriangle.shapeMode = "notShape" as ShapeMode;
             const id = renderer.addHomogenoeusShapesArrayToScene([redTriangle]);
@@ -902,7 +902,7 @@ describe("webglRenderer:", () =>
             expect(gl.drawArrays).toHaveBeenCalledTimes(0);
         });
 
-        it("addHomogenoeusDynamicShapesArrayToScene with empty array doesnt draw anything", () =>
+        it("addHomogenoeusShapesArrayToScene with empty array doesnt draw anything", () =>
         {
             const id = renderer.addHomogenoeusShapesArrayToScene([]);
             expect(id).toEqual([]);
