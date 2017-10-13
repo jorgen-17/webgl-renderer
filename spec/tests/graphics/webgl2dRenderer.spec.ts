@@ -519,8 +519,9 @@ describe("webglRenderer:", () =>
 
         describe("updateShapeColor:", () =>
         {
-            xit("with shapeMode changes the color of the shape drawn", () =>
+            it("with shapeMode changes the color of the shape drawn", () =>
             {
+                const orangePoint2 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, orange);
                 const redTriangle2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "triangles", gl, red);
                 const orangeSquare2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
@@ -531,10 +532,10 @@ describe("webglRenderer:", () =>
                     "octogons", gl, green);
                 const blueEllipse2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "ellipses", gl, blue);
-                const cyanBox2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "box", gl, cyan);
 
                 const ids = renderer.addHeterogenoeusShapesArrayToScene([
+                    orangePoint,
+                    orangePoint2,
                     redTriangle,
                     redTriangle2,
                     orangeSquare,
@@ -544,21 +545,19 @@ describe("webglRenderer:", () =>
                     greenOctogon,
                     greenOctogon2,
                     blueEllipse,
-                    blueEllipse2,
-                    cyanBox,
-                    cyanBox2
+                    blueEllipse2
                 ]);
 
-
                 // modify shape colors
-                renderer.updateShapeColor(ids[1], blue, redTriangle2.shapeMode);
-                renderer.updateShapeColor(ids[3], red, orangeSquare2.shapeMode);
-                renderer.updateShapeColor(ids[5], green, yellowHexagon2.shapeMode);
-                renderer.updateShapeColor(ids[7], cyan, greenOctogon2.shapeMode);
-                renderer.updateShapeColor(ids[9], orange, blueEllipse2.shapeMode);
-                renderer.updateShapeColor(ids[11], yellow, cyanBox2.shapeMode);
+                renderer.updateShapeColor(ids[1], green, orangePoint2.shapeMode);
+                renderer.updateShapeColor(ids[3], blue, redTriangle2.shapeMode);
+                renderer.updateShapeColor(ids[5], red, orangeSquare2.shapeMode);
+                renderer.updateShapeColor(ids[7], green, yellowHexagon2.shapeMode);
+                renderer.updateShapeColor(ids[9], cyan, greenOctogon2.shapeMode);
+                renderer.updateShapeColor(ids[11], orange, blueEllipse2.shapeMode);
 
                 // prepare expected verticies
+                const greenPoint = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green);
                 const blueTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "triangles", gl, blue);
                 const redSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
@@ -569,9 +568,6 @@ describe("webglRenderer:", () =>
                     "octogons", gl, cyan);
                 const orangeEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "ellipses", gl, orange);
-                const yellowBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "box", gl, yellow);
-
 
                 const bufferDataSpy = glSpiesDictionary["bufferData"];
                 const drawArraysSpy = glSpiesDictionary["drawArrays"];
@@ -579,9 +575,23 @@ describe("webglRenderer:", () =>
                 expect(gl.bufferData).toHaveBeenCalledTimes(6);
                 expect(gl.drawArrays).toHaveBeenCalledTimes(6);
 
+                // points drawn
+                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                    gl.ARRAY_BUFFER,
+                    WebglRendererTestHelper.concatFloat32Arrays([
+                        orangePoint.verticies,
+                        greenPoint.verticies
+                    ]),
+                    gl.STATIC_DRAW
+                ]);
+                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                    gl.POINTS,
+                    0,
+                    2
+                ]);
 
                 // triangles drawn
-                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                expect(bufferDataSpy.calls.all()[1].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         redTriangle.verticies,
@@ -589,14 +599,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                expect(drawArraysSpy.calls.all()[1].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     6
                 ]);
 
                 // rectangles drawn
-                expect(bufferDataSpy.calls.all()[1].args).toEqual([
+                expect(bufferDataSpy.calls.all()[2].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         orangeSquare.verticies,
@@ -604,14 +614,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[1].args).toEqual([
+                expect(drawArraysSpy.calls.all()[2].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     12
                 ]);
 
                 // hexagons drawn
-                expect(bufferDataSpy.calls.all()[2].args).toEqual([
+                expect(bufferDataSpy.calls.all()[3].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         yellowHexagon.verticies,
@@ -619,14 +629,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[2].args).toEqual([
+                expect(drawArraysSpy.calls.all()[3].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     24
                 ]);
 
                 // octogons drawn
-                expect(bufferDataSpy.calls.all()[3].args).toEqual([
+                expect(bufferDataSpy.calls.all()[4].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         greenOctogon.verticies,
@@ -634,14 +644,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[3].args).toEqual([
+                expect(drawArraysSpy.calls.all()[4].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     36
                 ]);
 
                 // ellipses drawn
-                expect(bufferDataSpy.calls.all()[4].args).toEqual([
+                expect(bufferDataSpy.calls.all()[5].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         blueEllipse.verticies,
@@ -649,29 +659,15 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[4].args).toEqual([
+                expect(drawArraysSpy.calls.all()[5].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     2412
                 ]);
-
-                // boxes drawn
-                expect(bufferDataSpy.calls.all()[5].args).toEqual([
-                    gl.ARRAY_BUFFER,
-                    WebglRendererTestHelper.concatFloat32Arrays([
-                        cyanBox.verticies,
-                        yellowBox.verticies
-                    ]),
-                    gl.STATIC_DRAW
-                ]);
-                expect(drawArraysSpy.calls.all()[5].args).toEqual([
-                    gl.TRIANGLES,
-                    0,
-                    72
-                ]);
             });
-            xit("without shapeMode changes the color of the shape drawn", () =>
+            it("without shapeMode changes the color of the shape drawn", () =>
             {
+                const orangePoint2 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, orange);
                 const redTriangle2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "triangles", gl, red);
                 const orangeSquare2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
@@ -682,10 +678,10 @@ describe("webglRenderer:", () =>
                     "octogons", gl, green);
                 const blueEllipse2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "ellipses", gl, blue);
-                const cyanBox2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "box", gl, cyan);
 
                 const ids = renderer.addHeterogenoeusShapesArrayToScene([
+                    orangePoint,
+                    orangePoint2,
                     redTriangle,
                     redTriangle2,
                     orangeSquare,
@@ -695,20 +691,19 @@ describe("webglRenderer:", () =>
                     greenOctogon,
                     greenOctogon2,
                     blueEllipse,
-                    blueEllipse2,
-                    cyanBox,
-                    cyanBox2
+                    blueEllipse2
                 ]);
 
                 // modify shape colors
-                renderer.updateShapeColor(ids[1], blue);
-                renderer.updateShapeColor(ids[3], red);
-                renderer.updateShapeColor(ids[5], green);
-                renderer.updateShapeColor(ids[7], cyan);
-                renderer.updateShapeColor(ids[9], orange);
-                renderer.updateShapeColor(ids[11], yellow);
+                renderer.updateShapeColor(ids[1], green);
+                renderer.updateShapeColor(ids[3], blue);
+                renderer.updateShapeColor(ids[5], red);
+                renderer.updateShapeColor(ids[7], green);
+                renderer.updateShapeColor(ids[9], cyan);
+                renderer.updateShapeColor(ids[11], orange);
 
                 // prepare expected verticies
+                const greenPoint = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green);
                 const blueTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "triangles", gl, blue);
                 const redSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
@@ -719,9 +714,6 @@ describe("webglRenderer:", () =>
                     "octogons", gl, cyan);
                 const orangeEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     "ellipses", gl, orange);
-                const yellowBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "box", gl, yellow);
-
 
                 const bufferDataSpy = glSpiesDictionary["bufferData"];
                 const drawArraysSpy = glSpiesDictionary["drawArrays"];
@@ -729,9 +721,23 @@ describe("webglRenderer:", () =>
                 expect(gl.bufferData).toHaveBeenCalledTimes(6);
                 expect(gl.drawArrays).toHaveBeenCalledTimes(6);
 
+                // points drawn
+                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                    gl.ARRAY_BUFFER,
+                    WebglRendererTestHelper.concatFloat32Arrays([
+                        orangePoint.verticies,
+                        greenPoint.verticies
+                    ]),
+                    gl.STATIC_DRAW
+                ]);
+                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                    gl.POINTS,
+                    0,
+                    2
+                ]);
 
                 // triangles drawn
-                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                expect(bufferDataSpy.calls.all()[1].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         redTriangle.verticies,
@@ -739,14 +745,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                expect(drawArraysSpy.calls.all()[1].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     6
                 ]);
 
                 // rectangles drawn
-                expect(bufferDataSpy.calls.all()[1].args).toEqual([
+                expect(bufferDataSpy.calls.all()[2].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         orangeSquare.verticies,
@@ -754,14 +760,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[1].args).toEqual([
+                expect(drawArraysSpy.calls.all()[2].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     12
                 ]);
 
                 // hexagons drawn
-                expect(bufferDataSpy.calls.all()[2].args).toEqual([
+                expect(bufferDataSpy.calls.all()[3].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         yellowHexagon.verticies,
@@ -769,14 +775,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[2].args).toEqual([
+                expect(drawArraysSpy.calls.all()[3].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     24
                 ]);
 
                 // octogons drawn
-                expect(bufferDataSpy.calls.all()[3].args).toEqual([
+                expect(bufferDataSpy.calls.all()[4].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         greenOctogon.verticies,
@@ -784,14 +790,14 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[3].args).toEqual([
+                expect(drawArraysSpy.calls.all()[4].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     36
                 ]);
 
                 // ellipses drawn
-                expect(bufferDataSpy.calls.all()[4].args).toEqual([
+                expect(bufferDataSpy.calls.all()[5].args).toEqual([
                     gl.ARRAY_BUFFER,
                     WebglRendererTestHelper.concatFloat32Arrays([
                         blueEllipse.verticies,
@@ -799,28 +805,13 @@ describe("webglRenderer:", () =>
                     ]),
                     gl.STATIC_DRAW
                 ]);
-                expect(drawArraysSpy.calls.all()[4].args).toEqual([
+                expect(drawArraysSpy.calls.all()[5].args).toEqual([
                     gl.TRIANGLES,
                     0,
                     2412
                 ]);
-
-                // boxes drawn
-                expect(bufferDataSpy.calls.all()[5].args).toEqual([
-                    gl.ARRAY_BUFFER,
-                    WebglRendererTestHelper.concatFloat32Arrays([
-                        cyanBox.verticies,
-                        yellowBox.verticies
-                    ]),
-                    gl.STATIC_DRAW
-                ]);
-                expect(drawArraysSpy.calls.all()[5].args).toEqual([
-                    gl.TRIANGLES,
-                    0,
-                    72
-                ]);
             });
-            xit("with wrong id returns false, but true if successful", () =>
+            it("with wrong id returns false, but true if successful", () =>
             {
                 let id = renderer.addShapeToScene(redTriangle);
                 let wasRemoved = renderer.updateShapeColor("someOtherId", blue);
@@ -830,4 +821,5 @@ describe("webglRenderer:", () =>
             });
         });
     });
+    //#endregion: tests
 });
