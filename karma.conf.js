@@ -35,6 +35,7 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/shape/shapeFactory3d.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
         { pattern: "spec/tests/graphics/webgl2dRenderer.spec.ts" },
+        { pattern: "spec/tests/graphics/webgl3dRenderer.spec.ts" },
         { pattern: "spec/tests/graphics/colorMapper.spec.ts" },
         { pattern: "spec/tests/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/tests/graphics/camera.spec.ts" },
