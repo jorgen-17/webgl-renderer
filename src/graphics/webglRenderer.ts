@@ -138,10 +138,26 @@ export abstract class WebGLRenderer
         this.setupWindowCallbacks();
     }
 
-    protected get postResizeCallback(): (canvas: HTMLCanvasElement,
-        window: Window, renderer: WebGLRenderer) => void
+    public get calcWidth(): (newWidth: number) => number
     {
-        return this._postResizeCallback;
+        return this._calcWidth;
+    }
+
+    public set calcWidth(value: (newWidth: number) => number)
+    {
+        this._calcWidth = value;
+        this.setupWindowCallbacks();
+    }
+
+    public get calcHeight(): (newHeight: number) => number
+    {
+        return this._calcHeight;
+    }
+
+    public set calcHeight(value: (newHeight: number) => number)
+    {
+        this._calcHeight = value;
+        this.setupWindowCallbacks();
     }
 
     protected set postResizeCallback(value: (canvas: HTMLCanvasElement,

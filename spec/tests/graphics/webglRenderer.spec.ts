@@ -56,20 +56,18 @@ describe("webglRenderer:", () =>
     const calcHeight = (newHeight: number) =>
     {
         calcHeightSpy(newHeight);
-        return 0;
+        return 10;
     };
     const calcWidthSpy = jasmine.createSpy("calcWidth");
     const calcWidth = (newWidth: number) =>
     {
         calcWidthSpy(newWidth);
-        return 0;
+        return 10;
     };
 
     const defaultOptions: RenderingOptions = {
         browserHelper: browserHelper,
-        window: leWindow,
-        calcHeight: calcHeight,
-        calcWidth: calcWidth
+        window: leWindow
     };
     //#endregion: member variables
 
@@ -121,12 +119,17 @@ describe("webglRenderer:", () =>
                 backgroundColor: backgroundColor,
                 window: leWindow,
                 fullscreen: isFullScreen,
+                calcWidth: calcWidth,
+                calcHeight: calcHeight,
             };
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
             expect(backgroundColor).toEqual(renderer.backgroundColor);
             expect(isFullScreen).toEqual(renderer.isFullscreen);
+
+            expect(calcWidthSpy).toHaveBeenCalledTimes(2);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(2);
         });
         it("defaults are used when settings not passed in", () =>
         {
@@ -196,7 +199,7 @@ describe("webglRenderer:", () =>
             expect(calcHeightSpy).toHaveBeenCalledTimes(2);
             expect(calcWidthSpy).toHaveBeenCalledTimes(2);
         });
-        it("not passing in resizeCallback does not add it as resize event handler on window", () =>
+        it("not passing in calcWidth and calcHeight does not add it as resize event handler on window", () =>
         {
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
@@ -206,7 +209,8 @@ describe("webglRenderer:", () =>
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
-            // expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
+            expect(calcWidthSpy).toHaveBeenCalledTimes(0);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -410,13 +414,112 @@ describe("webglRenderer:", () =>
         });
     });
 
-    // replace with calcheight/width
-    xdescribe("resizeCallback:", () =>
+    describe("backgroundColor:", () =>
+    {
+        const backgroundColor = new RGBColor(0.666, 0.666, 0.666);
+        let renderer: WebGL3dRendererMock;
+
+        beforeEach(() =>
+        {
+            renderer = new WebGL3dRendererMock(canvas, defaultOptions);
+        });
+
+        it("is set-able and get-able", () =>
+        {
+            renderer.backgroundColor = backgroundColor;
+
+            expect(backgroundColor).toBe(renderer.backgroundColor);
+        });
+
+        it("sets the color that the renderer passes in when calling gl.clearColor", () =>
+        {
+            const clearColorSpy = glSpiesDictionary["clearColor"];
+            clearColorSpy.calls.reset();
+
+            renderer.mockDraw();
+
+            expect(gl.clearColor).toHaveBeenCalledTimes(1);
+            expect(clearColorSpy.calls.all()[0].args).toEqual([
+                Settings.defaultBackgroundColor.red,
+                Settings.defaultBackgroundColor.green,
+                Settings.defaultBackgroundColor.blue,
+                Settings.defaultBackgroundAlpha,
+            ]);
+            clearColorSpy.calls.reset();
+
+            renderer.backgroundColor = backgroundColor;
+
+            renderer.mockDraw();
+
+            expect(gl.clearColor).toHaveBeenCalledTimes(1);
+            expect(clearColorSpy.calls.all()[0].args).toEqual([
+                backgroundColor.red,
+                backgroundColor.green,
+                backgroundColor.blue,
+                Settings.defaultBackgroundAlpha,
+            ]);
+        });
+    });
+
+    describe("calcWidth:", () =>
     {
         beforeEach(() =>
         {
             windowAddEventListenerSpy.calls.reset();
+        });
 
+        it("is set-able and get-able", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                calcWidth: calcWidth,
+                window: leWindow
+            };
+
+            let renderer = new WebGL3dRendererMock(canvas, options);
+
+            calcWidthSpy.calls.reset();
+            let calcWidthCB = renderer.calcWidth;
+            calcWidthCB(5);
+            expect(calcWidthSpy).toHaveBeenCalledTimes(1);
+            expect(calcWidthSpy).toHaveBeenCalledWith(5);
+            calcWidthSpy.calls.reset();
+
+            const calcWidthCBSpy2 = jasmine.createSpy("calcWidthCB2");
+            const calcWidthCB2 = (newWidth: number) =>
+            {
+                calcWidthCBSpy2(newWidth);
+                return 0;
+            };
+
+            renderer.calcWidth = calcWidthCB2;
+
+            expect(calcWidthSpy).toHaveBeenCalledTimes(0);
+            expect(calcWidthCBSpy2).toHaveBeenCalledTimes(1);
+        });
+
+        it("is actually called when window resize event is fired", () =>
+        {
+            const options: RenderingOptions = {
+                browserHelper: browserHelper,
+                fullscreen: true,
+                calcWidth: calcWidth
+            };
+
+            let renderer = new WebGL3dRendererMock(canvas, options);
+
+            calcWidthSpy.calls.reset();
+            window.dispatchEvent(new CustomEvent("resize"));
+            expect(calcWidthSpy).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe("calcHeight:", () =>
+    {
+        beforeEach(() =>
+        {
+            windowAddEventListenerSpy.calls.reset();
         });
 
         it("is set-able and get-able", () =>
@@ -425,28 +528,29 @@ describe("webglRenderer:", () =>
                 browserHelper: browserHelper,
                 fullscreen: true,
                 calcHeight: calcHeight,
-                calcWidth: calcWidth,
                 window: leWindow
             };
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
+            calcHeightSpy.calls.reset();
+            let calcHeightCB = renderer.calcHeight;
+            calcHeightCB(5);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(1);
+            expect(calcHeightSpy).toHaveBeenCalledWith(5);
+            calcHeightSpy.calls.reset();
 
-            // let resizeCB = renderer.resizeCallback;
-            // resizeCB(canvas, leWindow, renderer);
-            // expect(resizeCallbackSpy
-
-            const resizeCallbackSpy2 = jasmine.createSpy("resizeCallback2");
-            const resizeCallback2 = (canvasCB: HTMLCanvasElement, windowCB: Window,
-                rendererCB: WebGLRenderer) =>
+            const calcHeightCBSpy2 = jasmine.createSpy("calcHeightCB2");
+            const calcHeightCB2 = (newHeight: number) =>
             {
-                resizeCallbackSpy2(canvasCB, windowCB, rendererCB);
+                calcHeightCBSpy2(newHeight);
+                return 0;
             };
 
-            // renderer.resizeCallback = resizeCallback2;
+            renderer.calcHeight = calcHeightCB2;
 
-            // expect(resizeCallbackSpy).toHaveBeenCalledTimes(0);
-            expect(resizeCallbackSpy2).toHaveBeenCalledTimes(1);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(0);
+            expect(calcHeightCBSpy2).toHaveBeenCalledTimes(1);
         });
 
         it("is actually called when window resize event is fired", () =>
@@ -454,14 +558,14 @@ describe("webglRenderer:", () =>
             const options: RenderingOptions = {
                 browserHelper: browserHelper,
                 fullscreen: true,
-                // resizeCallback: resizeCallback
+                calcHeight: calcHeight
             };
 
             let renderer = new WebGL3dRendererMock(canvas, options);
 
-            // window.dispatchEvent(new CustomEvent("resize"));
-            expect(calcHeightSpy).toHaveBeenCalledTimes(1);
-            expect(calcWidthSpy).toHaveBeenCalledTimes(1);
+            calcHeightSpy.calls.reset();
+            window.dispatchEvent(new CustomEvent("resize"));
+            expect(calcHeightSpy).toHaveBeenCalledTimes(2);
         });
     });
 
@@ -529,7 +633,7 @@ describe("webglRenderer:", () =>
         const cyan = new RGBColor(0.0, 1.0, 1.0);
         const blue = new RGBColor(0.0, 0.0, 1.0);
         let line: Line;
-        let point: Point;
+        let orangePoint: Point;
         let redTriangle: DynamicShape;
         let orangeSquare: DynamicShape;
         let yellowHexagon: DynamicShape;
@@ -542,7 +646,7 @@ describe("webglRenderer:", () =>
             renderer = new WebGL3dRendererMock(canvas, defaultOptions);
 
             line = WebglRendererTestHelper.getRandomLine(gl);
-            point = WebglRendererTestHelper.getRandomPoint(gl);
+            orangePoint = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, orange);
             redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                 "triangles", gl, red);
             orangeSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
@@ -560,6 +664,7 @@ describe("webglRenderer:", () =>
         it("addHeterogenoeusShapesArrayToScene sends their verticies to webgl", () =>
         {
             renderer.addHeterogenoeusShapesArrayToScene([
+                orangePoint,
                 redTriangle,
                 redTriangle,
                 orangeSquare,
@@ -574,29 +679,28 @@ describe("webglRenderer:", () =>
             const bufferDataSpy = glSpiesDictionary["bufferData"];
             const drawArraysSpy = glSpiesDictionary["drawArrays"];
 
-            expect(gl.bufferData).toHaveBeenCalledTimes(6);
-            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
+            expect(gl.bufferData).toHaveBeenCalledTimes(7);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(7);
+
+            // orangePoint drawn
+            expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                gl.ARRAY_BUFFER,
+                orangePoint.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                gl.POINTS,
+                0,
+                1
+            ]);
 
             // redTriangle drawn
-            expect(bufferDataSpy.calls.all()[0].args).toEqual([
+            expect(bufferDataSpy.calls.all()[1].args).toEqual([
                 gl.ARRAY_BUFFER,
                 WebglRendererTestHelper.concatFloat32Arrays([
                     redTriangle.verticies,
                     redTriangle.verticies
                 ]),
-                gl.STATIC_DRAW
-            ]);
-            expect(drawArraysSpy.calls.all()[0].args).toEqual([
-                gl.TRIANGLES,
-                0,
-                6
-            ]);
-
-
-            // orangeSquare drawn
-            expect(bufferDataSpy.calls.all()[1].args).toEqual([
-                gl.ARRAY_BUFFER,
-                orangeSquare.verticies,
                 gl.STATIC_DRAW
             ]);
             expect(drawArraysSpy.calls.all()[1].args).toEqual([
@@ -605,53 +709,220 @@ describe("webglRenderer:", () =>
                 6
             ]);
 
-            // yellowHexagon drawn
+            // orangeSquare drawn
             expect(bufferDataSpy.calls.all()[2].args).toEqual([
+                gl.ARRAY_BUFFER,
+                orangeSquare.verticies,
+                gl.STATIC_DRAW
+            ]);
+            expect(drawArraysSpy.calls.all()[2].args).toEqual([
+                gl.TRIANGLES,
+                0,
+                6
+            ]);
+
+            // yellowHexagon drawn
+            expect(bufferDataSpy.calls.all()[3].args).toEqual([
                 gl.ARRAY_BUFFER,
                 yellowHexagon.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[2].args).toEqual([
+            expect(drawArraysSpy.calls.all()[3].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 12
             ]);
 
             // greenOctogon drawn
-            expect(bufferDataSpy.calls.all()[3].args).toEqual([
+            expect(bufferDataSpy.calls.all()[4].args).toEqual([
                 gl.ARRAY_BUFFER,
                 greenOctogon.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[3].args).toEqual([
+            expect(drawArraysSpy.calls.all()[4].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 18
             ]);
 
             // blueEllipse drawn
-            expect(bufferDataSpy.calls.all()[4].args).toEqual([
+            expect(bufferDataSpy.calls.all()[5].args).toEqual([
                 gl.ARRAY_BUFFER,
                 blueEllipse.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[4].args).toEqual([
+            expect(drawArraysSpy.calls.all()[5].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 1206
             ]);
 
             // cyanBox drawn
-            expect(bufferDataSpy.calls.all()[5].args).toEqual([
+            expect(bufferDataSpy.calls.all()[6].args).toEqual([
                 gl.ARRAY_BUFFER,
                 cyanBox.verticies,
                 gl.STATIC_DRAW
             ]);
-            expect(drawArraysSpy.calls.all()[5].args).toEqual([
+            expect(drawArraysSpy.calls.all()[6].args).toEqual([
                 gl.TRIANGLES,
                 0,
                 36
             ]);
+        });
+
+        it("removeAllShapes, removes all shapes", () =>
+        {
+            renderer.addHeterogenoeusShapesArrayToScene([
+                redTriangle,
+                orangeSquare,
+                yellowHexagon,
+                greenOctogon,
+                blueEllipse,
+                cyanBox
+            ]);
+             renderer.mockDraw();
+             const bufferDataSpy = glSpiesDictionary["bufferData"];
+            const drawArraysSpy = glSpiesDictionary["drawArrays"];
+             expect(gl.bufferData).toHaveBeenCalledTimes(6);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(6);
+            bufferDataSpy.calls.reset();
+            drawArraysSpy.calls.reset();
+             renderer.removeAllShapes();
+             renderer.mockDraw();
+             expect(gl.bufferData).toHaveBeenCalledTimes(0);
+            expect(gl.drawArrays).toHaveBeenCalledTimes(0);
+        });
+
+        describe("updatePointSize:", () =>
+        {
+            it("if found, returns true and updates pointSize", () =>
+            {
+                const point4 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 4);
+                const point16 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 16);
+                const point10 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 10);
+
+                const ids = renderer.addHeterogenoeusShapesArrayToScene([
+                    point4,
+                    point16,
+                    point10
+                ]);
+
+                renderer.mockDraw();
+
+                const bufferDataSpy = glSpiesDictionary["bufferData"];
+                const drawArraysSpy = glSpiesDictionary["drawArrays"];
+
+                expect(gl.bufferData).toHaveBeenCalledTimes(1);
+                expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+
+                // points drawn
+                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                    gl.ARRAY_BUFFER,
+                    WebglRendererTestHelper.concatFloat32Arrays([
+                        point4.verticies,
+                        point16.verticies,
+                        point10.verticies
+                    ]),
+                    gl.STATIC_DRAW
+                ]);
+                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                    gl.POINTS,
+                    0,
+                    3
+                ]);
+
+                renderer.updatePointSize(ids[1], 25);
+
+                const point25 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 25);
+
+                bufferDataSpy.calls.reset();
+                drawArraysSpy.calls.reset();
+
+                renderer.mockDraw();
+
+                expect(gl.bufferData).toHaveBeenCalledTimes(1);
+                expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+
+                // points drawn
+                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                    gl.ARRAY_BUFFER,
+                    WebglRendererTestHelper.concatFloat32Arrays([
+                        point4.verticies,
+                        point25.verticies,
+                        point10.verticies
+                    ]),
+                    gl.STATIC_DRAW
+                ]);
+                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                    gl.POINTS,
+                    0,
+                    3
+                ]);
+            });
+            it("if not found, returns false and doesnt update pointSize", () =>
+            {
+                const point4 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 4);
+                const point16 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 16);
+                const point10 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 10);
+
+                const ids = renderer.addHeterogenoeusShapesArrayToScene([
+                    point4,
+                    point16,
+                    point10
+                ]);
+
+                renderer.mockDraw();
+
+                const bufferDataSpy = glSpiesDictionary["bufferData"];
+                const drawArraysSpy = glSpiesDictionary["drawArrays"];
+
+                expect(gl.bufferData).toHaveBeenCalledTimes(1);
+                expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+
+                // points drawn
+                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                    gl.ARRAY_BUFFER,
+                    WebglRendererTestHelper.concatFloat32Arrays([
+                        point4.verticies,
+                        point16.verticies,
+                        point10.verticies
+                    ]),
+                    gl.STATIC_DRAW
+                ]);
+                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                    gl.POINTS,
+                    0,
+                    3
+                ]);
+
+                renderer.updatePointSize("notId", 25);
+
+                const point25 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green, 25);
+
+                bufferDataSpy.calls.reset();
+                drawArraysSpy.calls.reset();
+
+                renderer.mockDraw();
+
+                expect(gl.bufferData).toHaveBeenCalledTimes(1);
+                expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+
+                // points drawn
+                expect(bufferDataSpy.calls.all()[0].args).toEqual([
+                    gl.ARRAY_BUFFER,
+                    WebglRendererTestHelper.concatFloat32Arrays([
+                        point4.verticies,
+                        point16.verticies,
+                        point10.verticies
+                    ]),
+                    gl.STATIC_DRAW
+                ]);
+                expect(drawArraysSpy.calls.all()[0].args).toEqual([
+                    gl.POINTS,
+                    0,
+                    3
+                ]);
+            });
         });
     });
 
