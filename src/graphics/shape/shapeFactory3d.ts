@@ -4,9 +4,16 @@ import { ShapeFactory } from "./shapeFactory";
 import { ShapeMode } from "./shapeMode";
 import { RGBColor } from "../color/rgbColor";
 import { DynamicShape } from "./dynamicShape";
+import { Point } from "./shape2d/point";
 
 export class ShapeFactory3d extends ShapeFactory
 {
+    public createPoint(location: Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor, pointSize?: number): Point
+    {
+        return new Point(location, gl, rgbColor, pointSize);
+    }
+
     public createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
         gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape
     {

@@ -1,15 +1,27 @@
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec2, Vec3 } from "cuon-matrix-ts";
 
 import { ShapeFactory } from "./shapeFactory";
 import { ShapeMode } from "./shapeMode";
 import { RGBColor } from "../color/rgbColor";
 import { DynamicShape } from "./dynamicShape";
+import { Point } from "./shape2d/point";
 
 export class ShapeFactory2d extends ShapeFactory
 {
-    public createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
-        gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape
+    public createPoint(location: Vec2, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor, pointSize?: number): Point
     {
+        const locationVec3 = new Vec3(location.x, location.y, 0);
+
+        return new Point(locationVec3, gl, rgbColor, pointSize);
+    }
+
+    public createShape(point1: Vec2, point2: Vec2, shapeMode: ShapeMode,
+        gl: WebGLRenderingContext, rgbColor?: RGBColor, somenum?: number): DynamicShape
+    {
+        const point1Vec3 = new Vec3(point1.x, point1.y, 0);
+        const point2Vec3 = new Vec3(point2.x, point2.y, 0);
+
         switch (shapeMode)
         {
             case "points":
@@ -17,15 +29,15 @@ export class ShapeFactory2d extends ShapeFactory
             case "lines":
                 throw Error(`cannot create a line with this method, please use createLine`);
             case "triangles":
-                return this.createTriangle(point1, point2, gl, rgbColor);
+                return this.createTriangle(point1Vec3, point2Vec3, gl, rgbColor);
             case "rectangles":
-                return this.createRectangle(point1, point2, gl, rgbColor);
+                return this.createRectangle(point1Vec3, point2Vec3, gl, rgbColor);
             case "hexagons":
-                return this.createHexagon(point1, point2, gl, rgbColor);
+                return this.createHexagon(point1Vec3, point2Vec3, gl, rgbColor);
             case "octogons":
-                return this.createOctogon(point1, point2, gl, rgbColor);
+                return this.createOctogon(point1Vec3, point2Vec3, gl, rgbColor);
             case "ellipses":
-                return this.createEllipse(point1, point2, gl, rgbColor);
+                return this.createEllipse(point1Vec3, point2Vec3, gl, rgbColor);
             case "box":
                 throw Error(`cannot create 3d shape(${shapeMode}), use WebGL3dRenderer instead`);
             default:

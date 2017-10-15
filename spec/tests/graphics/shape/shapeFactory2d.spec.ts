@@ -1,25 +1,26 @@
 import { Mock } from "ts-mocks";
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec3, Vec2 } from "cuon-matrix-ts";
 
 import { Ellipse } from "../../../../src/graphics/shape/shape2d/ellipse";
 import { Precision } from "../../../../src/graphics/precision";
 import { RGBColor } from "../../../../src/graphics/color/rgbColor";
 import { Triangle } from "../../../../src/graphics/shape/shape2d/triangle";
-import { ShapeFactory3d } from "../../../../src/graphics/shape/shapeFactory3d";
+import { ShapeFactory2d } from "../../../../src/graphics/shape/shapeFactory2d";
 import { Constants } from "../../../../src/constants";
 import { ShapeMode } from "../../../../src/graphics/shape/shapeMode";
+import { Point } from "../../../../src/graphics/shape/shape2d/point";
 import { Settings } from "../../../../src/settings";
 
 describe("shapeFactory3d:", () =>
 {
-    const point1 = new Vec3(0.5, 0.5);
-    const point2 = new Vec3(1, 1);
+    const point1 = new Vec2(0.5, 0.5);
+    const point2 = new Vec2(1, 1);
 
     const color = new RGBColor(1.0, 1.0, 1.0);
     const glMock = new Mock<WebGLRenderingContext>();
     const gl = glMock.Object;
 
-    let shapeFactory = new ShapeFactory3d();
+    let shapeFactory = new ShapeFactory2d();
 
     beforeAll(() =>
     {
@@ -104,18 +105,21 @@ describe("shapeFactory3d:", () =>
             expect(gl.TRIANGLES).toBe(ellipse.glRenderMode);
             expect(color).toBe(ellipse.rgbColor);
         });
-        it("creates box", () =>
-        {
-            const box = shapeFactory.createShape(point1, point2, "box", gl, color);
-            expect(36 * Constants.floatsPerDynamicVertex).toBe(box.verticies.length);
-            expect(gl.TRIANGLES).toBe(box.glRenderMode);
-            expect(color).toBe(box.rgbColor);
-        });
-        it("creates unknown shape", () =>
+        it("cannot create box", () =>
         {
             const createShape = () =>
             {
-                shapeFactory.createShape(point1, point2, "notShape" as ShapeMode, gl, color);
+                shapeFactory.createShape(point1, point2, "box", gl, color);
+            };
+
+            expect(createShape).toThrow(new Error("cannot create 3d shape(box), use WebGL3dRenderer instead"));
+        });
+        it("cannot create unknown shape", () =>
+        {
+            const createShape = () =>
+            {
+                const notShape = shapeFactory.createShape(point1, point2, "notShape" as ShapeMode,
+                    gl, color);
             };
 
             expect(createShape).toThrow(new Error("cannot recognize shape type notShape"));

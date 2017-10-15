@@ -1,4 +1,4 @@
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec3, Vec2 } from "cuon-matrix-ts";
 
 import { DynamicShape } from "./dynamicShape";
 import { ShapeMode } from "./shapeMode";
@@ -14,14 +14,12 @@ import { Point } from "./shape2d/point";
 
 export abstract class ShapeFactory
 {
-    public createPoint(location: Vec3, gl: WebGLRenderingContext,
-        rgbColor?: RGBColor, pointSize?: number): Point
-    {
-        return new Point(location, gl, rgbColor, pointSize);
-    }
+    public abstract createPoint(location: Vec2 | Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor, pointSize?: number): Point;
 
-    public abstract createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode,
-        gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
+    public abstract createShape(point1: Vec2 | Vec3, point2: Vec2 | Vec3,
+        shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor)
+        : DynamicShape;
 
     protected createTriangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,
         rgbColor?: RGBColor): Triangle

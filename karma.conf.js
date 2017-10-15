@@ -32,6 +32,7 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/shape/midpoint.spec.ts" },
         { pattern: "spec/tests/graphics/shape/boundingRectangle.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeBuffer.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shapeFactory2d.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeFactory3d.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
         { pattern: "spec/tests/graphics/webgl2dRenderer.spec.ts" },
