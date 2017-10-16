@@ -50,6 +50,24 @@ describe("shapeFactory3d:", () =>
         });
     });
 
+    describe("createline", () =>
+    {
+        it("creates a line", () =>
+        {
+            const line = shapeFactory.createLine(point1, gl, color);
+            expect(Constants.floatsPerPositionColor).toBe(line.verticies.length);
+            expect(gl.LINE_STRIP).toBe(line.glRenderMode);
+            expect(color).toBe(line.rgbColor);
+        });
+        it("uses defaults if they are not passed in", () =>
+        {
+            const line = shapeFactory.createLine(point1, gl, color);
+            expect(Constants.floatsPerPositionColor).toBe(line.verticies.length);
+            expect(gl.LINE_STRIP).toBe(line.glRenderMode);
+            expect(color).toBe(line.rgbColor);
+        });
+    });
+
     describe("createShape", () =>
     {
         it("cannot create point", () =>

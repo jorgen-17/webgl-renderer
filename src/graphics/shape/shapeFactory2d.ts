@@ -5,6 +5,7 @@ import { ShapeMode } from "./shapeMode";
 import { RGBColor } from "../color/rgbColor";
 import { DynamicShape } from "./dynamicShape";
 import { Point } from "./shape2d/point";
+import { Line } from "./shape2d/line";
 
 export class ShapeFactory2d extends ShapeFactory
 {
@@ -14,6 +15,14 @@ export class ShapeFactory2d extends ShapeFactory
         const locationVec3 = new Vec3(location.x, location.y, 0);
 
         return new Point(locationVec3, gl, rgbColor, pointSize);
+    }
+
+    public createLine(firstPoint: Vec2, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Line
+    {
+        const locationVec3 = new Vec3(firstPoint.x, firstPoint.y, 0);
+
+        return new Line(locationVec3, gl, rgbColor);
     }
 
     public createShape(point1: Vec2, point2: Vec2, shapeMode: ShapeMode,

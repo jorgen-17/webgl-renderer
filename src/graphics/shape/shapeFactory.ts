@@ -11,11 +11,15 @@ import { RGBColor } from "../color/rgbColor";
 import { Precision } from "../precision";
 import { Box } from "./shape3d/box";
 import { Point } from "./shape2d/point";
+import { Line } from "./shape2d/line";
 
 export abstract class ShapeFactory
 {
     public abstract createPoint(location: Vec2 | Vec3, gl: WebGLRenderingContext,
         rgbColor?: RGBColor, pointSize?: number): Point;
+
+    public abstract createLine(firstPoint: Vec2 | Vec3, gl: WebGLRenderingContext,
+        rgbColor?: RGBColor): Line;
 
     public abstract createShape(point1: Vec2 | Vec3, point2: Vec2 | Vec3,
         shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor)
