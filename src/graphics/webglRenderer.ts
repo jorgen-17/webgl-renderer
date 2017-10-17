@@ -38,6 +38,7 @@ export abstract class WebGLRenderer
     protected _canvas: HTMLCanvasElement;
     protected _pointsShapeBuffer: PointBuffer;
     protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
+    protected _vertexBuffers: Array<VertexBuffer>;
     protected _a_position: number;
     protected _a_color: number;
     protected _a_pointSize: number;
@@ -63,12 +64,25 @@ export abstract class WebGLRenderer
     private _trianglesVertexBuffer: VertexBuffer;
     private _triangleStripVertexBuffer: VertexBuffer;
     private _triangleFanVertexBuffer: VertexBuffer;
-    private _vertexBuffers: Array<VertexBuffer>;
     private _pointShaderProgram: WebGLShader;
     private _dynamicShapeShaderProgram: WebGLShader;
+    private _positionColorShaderProgram: WebGLShader;
     //#endregion: member variables
 
     //#region: shaders
+    private _pointVertexShaderSource: string =
+    `    attribute vec4 ${ShaderSettings.positionAttributeName};
+    attribute vec4 ${ShaderSettings.colorAttributeName};
+    attribute float ${ShaderSettings.pointSizeAttributeName};
+    uniform mat4 ${ShaderSettings.vpMatrixUniformName};
+    varying vec4 v_color;
+    void main(void)
+    {
+        gl_Position = ${ShaderSettings.vpMatrixUniformName} * ${ShaderSettings.positionAttributeName};
+        gl_PointSize = ${ShaderSettings.pointSizeAttributeName};
+        v_color = ${ShaderSettings.colorAttributeName};
+    }`;
+
     private _dynamicVertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
@@ -81,16 +95,14 @@ export abstract class WebGLRenderer
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
 
-    private _pointVertexShaderSource: string =
+    private _positionColorVertexShaderSource: string =
     `    attribute vec4 ${ShaderSettings.positionAttributeName};
     attribute vec4 ${ShaderSettings.colorAttributeName};
-    attribute float ${ShaderSettings.pointSizeAttributeName};
     uniform mat4 ${ShaderSettings.vpMatrixUniformName};
     varying vec4 v_color;
     void main(void)
     {
         gl_Position = ${ShaderSettings.vpMatrixUniformName} * ${ShaderSettings.positionAttributeName};
-        gl_PointSize = ${ShaderSettings.pointSizeAttributeName};
         v_color = ${ShaderSettings.colorAttributeName};
     }`;
 
@@ -205,6 +217,11 @@ export abstract class WebGLRenderer
         this.initializaShapeBuffers();
     }
 
+    public removeAllVerticies(): void
+    {
+        this.initializeVertexBuffers();
+    }
+
     public abstract removeShape(id: string, shapeMode?: ShapeMode): boolean;
 
     public abstract updateShapeColor(id: string, newColor: RGBColor,
@@ -251,6 +268,8 @@ export abstract class WebGLRenderer
             }
         }
 
+        this.gl.useProgram(this._positionColorShaderProgram);
+        this.getShaderVariables(this._positionColorShaderProgram);
         for (let vb of this._vertexBuffers)
         {
             for (let verts of vb.verticiesStack)
@@ -264,7 +283,9 @@ export abstract class WebGLRenderer
     }
 
     protected abstract drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+
     protected abstract drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
+
     protected abstract drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 
     protected abstract initializaDynamicShapeBuffers(): void;
@@ -376,6 +397,25 @@ export abstract class WebGLRenderer
         this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
+
+    protected drawGlArray(arr: Float32Array, renderMode: number,
+        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
+    {
+        this.checkForUniforms();
+
+        let vertexBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+            false, Constants.bytesPerPositionColor, 0);
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+            false, Constants.bytesPerPositionColor, Constants.bytesPerPosition);
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
+        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerPositionColor));
+        this.gl.deleteBuffer(vertexBuffer);
+    }
     //#endregion: protected methods
 
     //#region: private methods
@@ -391,9 +431,11 @@ export abstract class WebGLRenderer
 
         this.setViewPortDimensions(this._canvas.width, this._canvas.height);
 
+        this._pointShaderProgram = this.initShaders(this._pointVertexShaderSource,
+            this._fragmentShaderSource);
         this._dynamicShapeShaderProgram = this.initShaders(this._dynamicVertexShaderSource,
             this._fragmentShaderSource);
-        this._pointShaderProgram = this.initShaders(this._pointVertexShaderSource,
+        this._positionColorShaderProgram = this.initShaders(this._positionColorVertexShaderSource,
             this._fragmentShaderSource);
     }
 
@@ -449,6 +491,14 @@ export abstract class WebGLRenderer
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
         this._calcWidth = (renderingOptions && renderingOptions.calcWidth) || this.defaultCalcWidth;
         this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.defaultCalcHeight;
+    }
+
+
+    private initializaBuffers(): void
+    {
+        this.initializaShapeBuffers();
+
+        this.initializeVertexBuffers();
     }
 
     private initializaShapeBuffers(): void
@@ -561,25 +611,6 @@ export abstract class WebGLRenderer
             const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
             throw errorMessage;
         }
-    }
-
-    private drawGlArray(arr: Float32Array, renderMode: number,
-        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
-    {
-        this.checkForUniforms();
-
-        let vertexBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
-            false, Constants.bytesPerPositionColor, 0);
-        this.gl.enableVertexAttribArray(this._a_position);
-        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, Constants.bytesPerPositionColor, Constants.bytesPerPosition);
-        this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
-        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerPositionColor));
-        this.gl.deleteBuffer(vertexBuffer);
     }
 
     private setupWindowCallbacks()
