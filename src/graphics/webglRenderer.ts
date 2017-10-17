@@ -27,6 +27,7 @@ import { Shape } from "./shape/shape";
 import { DynamicShape } from "./shape/dynamicShape";
 import { PointBuffer } from "./shape/pointBuffer";
 import { ShapeFactory } from "./shape/shapeFactory";
+import { VertexBuffer } from "./vertexBuffer";
 //#endregion
 
 export abstract class WebGLRenderer
@@ -55,6 +56,14 @@ export abstract class WebGLRenderer
     private _calcHeight: (newHeight: number) => number;
     private _postResizeCallback: (canvas: HTMLCanvasElement, window: Window,
         renderer: WebGLRenderer) => void;
+    private _pointsVertexBuffer: VertexBuffer;
+    private _linesVertexBuffer: VertexBuffer;
+    private _lineStripVertexBuffer: VertexBuffer;
+    private _lineLoopVertexBuffer: VertexBuffer;
+    private _trianglesVertexBuffer: VertexBuffer;
+    private _triangleStripVertexBuffer: VertexBuffer;
+    private _triangleFanVertexBuffer: VertexBuffer;
+    private _vertexBuffers: Array<VertexBuffer>;
     private _pointShaderProgram: WebGLShader;
     private _dynamicShapeShaderProgram: WebGLShader;
     //#endregion: member variables
@@ -241,11 +250,22 @@ export abstract class WebGLRenderer
                 this.drawDynamicShapeBuffer(sb);
             }
         }
+
+        for (let vb of this._vertexBuffers)
+        {
+            for (let verts of vb.verticiesStack)
+            {
+                if (verts.size > 0)
+                {
+                    this.drawVertexBuffer(vb);
+                }
+            }
+        }
     }
 
     protected abstract drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
-
     protected abstract drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
+    protected abstract drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 
     protected abstract initializaDynamicShapeBuffers(): void;
 
@@ -305,13 +325,7 @@ export abstract class WebGLRenderer
     protected drawPointShapeBufferBase(shapeBuffer: ShapeBuffer<Point>,
         mvpMatrix: Mat4 = new Mat4().setIdentity()): void
     {
-        if (!this._u_vpMatrix)
-        {
-            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
-            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
-            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
-            throw errorMessage;
-        }
+        this.checkForUniforms();
 
         const verticies = shapeBuffer.verticies;
         const shapePrototype = shapeBuffer.first;
@@ -327,20 +341,14 @@ export abstract class WebGLRenderer
         this.gl.vertexAttribPointer(this._a_pointSize, Constants.floatsPerPointSize, this.gl.FLOAT,
             false, Constants.bytesPerPointVertex, Constants.bytesPerPositionColor);
         this.gl.enableVertexAttribArray(this._a_pointSize);
-        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, mvpMatrix.elements);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerPointVertex));
     }
 
     protected drawDynamicShapeBufferBase(shapeBuffer: ShapeBuffer<DynamicShape>,
         mvpMatrix: Mat4 = new Mat4().setIdentity()): void
     {
-        if (!this._u_vpMatrix)
-        {
-            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
-            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
-            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
-            throw errorMessage;
-        }
+        this.checkForUniforms();
 
         const verticies = shapeBuffer.verticies;
         const shapePrototype = shapeBuffer.first;
@@ -365,7 +373,7 @@ export abstract class WebGLRenderer
         this.gl.vertexAttribPointer(this._a_modelMatrixRow3, Constants.floatsPerMat4Row, this.gl.FLOAT,
             false, Constants.bytesPerDynamicVertex, Constants.modelMatrixRow3Offset);
         this.gl.enableVertexAttribArray(this._a_modelMatrixRow3);
-        this.gl.uniformMatrix4fv(this._u_vpMatrix, false, mvpMatrix.elements);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
     //#endregion: protected methods
@@ -440,16 +448,36 @@ export abstract class WebGLRenderer
         this._window = (renderingOptions && renderingOptions.window) || window;
         this._isFullscreen = (renderingOptions && renderingOptions.fullscreen) || Settings.defaultIsFullScreen;
         this._calcWidth = (renderingOptions && renderingOptions.calcWidth) || this.defaultCalcWidth;
-        this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.defultCalcHeight;
+        this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.defaultCalcHeight;
     }
 
-    private  initializaShapeBuffers(): void
+    private initializaShapeBuffers(): void
     {
         this.initializaDynamicShapeBuffers();
+        this.initializeVertexBuffers();
 
         this._pointsShapeBuffer = new PointBuffer(this.gl);
     }
 
+    private initializeVertexBuffers(): void
+    {
+        this._pointsVertexBuffer = new VertexBuffer(this.gl.POINTS, this.gl);
+        this._linesVertexBuffer = new VertexBuffer(this.gl.LINES, this.gl);
+        this._lineStripVertexBuffer = new VertexBuffer(this.gl.LINE_STRIP, this.gl);
+        this._lineLoopVertexBuffer = new VertexBuffer(this.gl.LINE_LOOP, this.gl);
+        this._trianglesVertexBuffer = new VertexBuffer(this.gl.TRIANGLES, this.gl);
+        this._triangleStripVertexBuffer = new VertexBuffer(this.gl.TRIANGLE_STRIP, this.gl);
+        this._triangleFanVertexBuffer = new VertexBuffer(this.gl.TRIANGLE_FAN, this.gl);
+        this._vertexBuffers = [
+            this._pointsVertexBuffer,
+            this._linesVertexBuffer,
+            this._lineStripVertexBuffer,
+            this._lineLoopVertexBuffer,
+            this._trianglesVertexBuffer,
+            this._triangleStripVertexBuffer,
+            this._triangleFanVertexBuffer
+        ];
+    }
 
     private getDynamicShapeShaderVariables(): void
     {
@@ -524,6 +552,36 @@ export abstract class WebGLRenderer
         this._animationFrameRequestId = this._window.requestAnimationFrame(this.renderLoop);
     }
 
+    private checkForUniforms(): void
+    {
+        if (!this._u_vpMatrix)
+        {
+            const uniformsMap: StringDictionary<WebGLUniformLocation | null> = {};
+            uniformsMap[ShaderSettings.vpMatrixUniformName] = this._u_vpMatrix;
+            const errorMessage = this.createUniforNotFoundErrorMessage(uniformsMap);
+            throw errorMessage;
+        }
+    }
+
+    private drawGlArray(arr: Float32Array, renderMode: number,
+        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
+    {
+        this.checkForUniforms();
+
+        let vertexBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+            false, Constants.bytesPerPositionColor, 0);
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+            false, Constants.bytesPerPositionColor, Constants.bytesPerPosition);
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
+        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerPositionColor));
+        this.gl.deleteBuffer(vertexBuffer);
+    }
+
     private setupWindowCallbacks()
     {
         if (this._isFullscreen)
@@ -544,7 +602,7 @@ export abstract class WebGLRenderer
         return newWidth;
     }
 
-    private defultCalcHeight = (newHeight) =>
+    private defaultCalcHeight = (newHeight) =>
     {
         return newHeight;
     }

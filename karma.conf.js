@@ -40,6 +40,7 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/colorMapper.spec.ts" },
         { pattern: "spec/tests/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/tests/graphics/camera.spec.ts" },
+        { pattern: "spec/tests/graphics/vertexBuffer.spec.ts" },
         { pattern: "spec/tests/utils/float32ArrayUtils.spec.ts" },
         { pattern: "spec/tests/utils/vector.spec.ts" },
         { pattern: "spec/tests/utils/mouseHelper.spec.ts" }

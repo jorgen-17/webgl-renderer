@@ -9,10 +9,11 @@ import { WebGLRenderer } from "../../../src/graphics/webglRenderer";
 import { RenderMode, RenderModeMapper } from "../../../src/graphics/renderModeMapper";
 import { Point } from "../../../src/graphics/shape/shape2d/point";
 import { Settings } from "../../../src/settings";
+import { VertexBuffer } from "../../../src/graphics/vertexBuffer";
 
 export class WebglRendererTestHelper
 {
-    public static setupGlMockFunctions (glMock: Mock<WebGLRenderingContext>,
+    public static setupGlMockFunctions(glMock: Mock<WebGLRenderingContext>,
         instancedArrayExtension: ANGLE_instanced_arrays)
         : StringDictionary<jasmine.Spy>
     {
@@ -70,9 +71,9 @@ export class WebglRendererTestHelper
         spyDictionary["createProgram"] = glMock.setup(x => x.createProgram)
             .is(() => shaderProgram.Object).Spy;
         spyDictionary["attatchShader"] = glMock.setup(x => x.attachShader)
-            .is((program: WebGLProgram, shader: WebGLShader) => { /* noop */}).Spy;
+            .is((program: WebGLProgram, shader: WebGLShader) => { /* noop */ }).Spy;
         spyDictionary["linkProgramt"] = glMock.setup(x => x.linkProgram)
-            .is((shader: WebGLShader) => { /* noop */}).Spy;
+            .is((shader: WebGLShader) => { /* noop */ }).Spy;
         spyDictionary["getProgramParameter"] = glMock.setup(x => x.getProgramParameter)
             .is((shader: WebGLShader, pName: number) => true).Spy;
         spyDictionary["getShaderInfoLog"] = glMock.setup(x => x.getShaderInfoLog)
@@ -94,8 +95,8 @@ export class WebglRendererTestHelper
             .is((shader: WebGLShader, name: string) => 1).Spy;
         spyDictionary["bufferData"] = glMock.setup(x => x.bufferData)
             .is(
-                (target: number, size: number | ArrayBufferView | ArrayBuffer, usage: number) =>
-                {/* noop */}
+            (target: number, size: number | ArrayBufferView | ArrayBuffer, usage: number) =>
+            {/* noop */ }
             ).Spy;
         const webglBuffer = new Mock<WebGLBuffer>();
         spyDictionary["createBuffer"] = glMock.setup(x => x.createBuffer)
@@ -104,21 +105,21 @@ export class WebglRendererTestHelper
             .is((target: number, buffer: WebGLBuffer) => { /* noop */ }).Spy;
         spyDictionary["vertexAttribPointer"] = glMock.setup(x => x.vertexAttribPointer)
             .is(
-                (index: number, size: number, type: number, normalized: boolean,
+            (index: number, size: number, type: number, normalized: boolean,
                 stride: number, offset: number) =>
-                { /* noop */ }
+            { /* noop */ }
             ).Spy;
         spyDictionary["enableVertexAttribArray"] = glMock.setup(x => x.enableVertexAttribArray)
             .is((index: number) => { /* noop */ }).Spy;
         spyDictionary["uniformMatrix4fv"] = glMock.setup(x => x.uniformMatrix4fv)
             .is(
-                (uniformLocation: WebGLUniformLocation, transpose: boolean,
+            (uniformLocation: WebGLUniformLocation, transpose: boolean,
                 value: Float32Array | number[]) =>
-                { /* noop */ }).Spy;
+            { /* noop */ }).Spy;
         spyDictionary["uniform1f"] = glMock.setup(x => x.uniform1f)
             .is(
-                (uniformLocation: WebGLUniformLocation, value: number) =>
-                { /* noop */ }).Spy;
+            (uniformLocation: WebGLUniformLocation, value: number) =>
+            { /* noop */ }).Spy;
         spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays)
             .is((mode: number, first: number, count: number) => { /* noop */ }).Spy;
         spyDictionary["deleteBuffer"] = glMock.setup(x => x.deleteBuffer)
@@ -154,7 +155,7 @@ export class WebglRendererTestHelper
         return new Point(location, gl);
     }
 
-    public static getRandomDynamicVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
+    public static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
         color: RGBColor = Settings.defaultColor): Float32Array
     {
         let arr = new Float32Array(numberOfVerticies * Constants.floatsPerDynamicVertex);
@@ -192,15 +193,35 @@ export class WebglRendererTestHelper
         return new Vec3(randX, randY);
     }
 
+    public static addVerticiesToVertexBuffer(vertexBuffer: VertexBuffer, arr: Float32Array)
+    {
+        if (arr.length % 6 !== 0)
+        {
+            throw `incorrect number of floats, must be divisible by ${Constants.floatsPerPositionColor}`;
+        }
+        const numberOfVerticies = (arr.length / Constants.floatsPerPositionColor);
+        for (let i = 0; i < numberOfVerticies; i++)
+        {
+            const x = arr[i * Constants.floatsPerPositionColor];
+            const y = arr[(i * Constants.floatsPerPositionColor) + 1];
+            const z = arr[(i * Constants.floatsPerPositionColor) + 2];
+            const r = arr[(i * Constants.floatsPerPositionColor) + 3];
+            const g = arr[(i * Constants.floatsPerPositionColor) + 4];
+            const b = arr[(i * Constants.floatsPerPositionColor) + 5];
+            vertexBuffer.addVertex(new Float32Array([x, y, z, r, g, b]));
+        }
+    }
+
     public static plusOrMinus(): number
     {
-        return ((((Math.random() *  100) / 100) % 2) === 0) ? 1 : -1;
+        return ((((Math.random() * 100) / 100) % 2) === 0) ? 1 : -1;
     }
 
     public static concatFloat32Arrays(arrs: Array<Float32Array>): Float32Array
     {
         let newArrayLength = 0;
-        arrs.forEach(arr => {
+        arrs.forEach(arr =>
+        {
             newArrayLength += arr.length;
         });
 
