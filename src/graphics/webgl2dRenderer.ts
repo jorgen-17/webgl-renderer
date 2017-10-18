@@ -18,7 +18,7 @@ import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
 import { ShapeFactory2d } from "./shape/shapeFactory2d";
-import { VertexBuffer } from './vertexBuffer';
+import { VertexBuffer } from "./vertexBuffer";
 //#endregion: imports
 
 export class WebGL2dRenderer extends WebGLRenderer
