@@ -18,6 +18,7 @@ import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
 import { ShapeFactory3d } from "./shape/shapeFactory3d";
+import { VertexBuffer } from './vertexBuffer';
 //#endregion: imports
 
 export class WebGL3dRenderer extends WebGLRenderer
@@ -177,6 +178,11 @@ export class WebGL3dRenderer extends WebGLRenderer
     protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
     {
         this.drawDynamicShapeBufferBase(shapeBuffer, this._camera.vpMatrix);
+    }
+
+    protected drawVertexBuffer(vertexBuffer: VertexBuffer): void
+    {
+        this.drawVertexBufferBase(vertexBuffer, this._camera.vpMatrix);
     }
 
     protected initializaDynamicShapeBuffers(): void

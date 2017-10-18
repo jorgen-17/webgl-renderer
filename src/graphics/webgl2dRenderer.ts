@@ -18,6 +18,7 @@ import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
 import { ShapeFactory2d } from "./shape/shapeFactory2d";
+import { VertexBuffer } from './vertexBuffer';
 //#endregion: imports
 
 export class WebGL2dRenderer extends WebGLRenderer
@@ -154,6 +155,11 @@ export class WebGL2dRenderer extends WebGLRenderer
     protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
     {
         this.drawDynamicShapeBufferBase(shapeBuffer);
+    }
+
+    protected drawVertexBuffer(vertexBuffer: VertexBuffer): void
+    {
+        this.drawVertexBufferBase(vertexBuffer);
     }
 
     protected initializaDynamicShapeBuffers(): void

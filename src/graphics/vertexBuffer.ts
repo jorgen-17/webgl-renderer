@@ -1,7 +1,8 @@
 import { Float32Vector } from "../utils/float32Vector";
 import { Constants } from "../constants";
+import { GlBufferWrapper } from "./glBufferWrapper";
 
-export class VertexBuffer
+export class VertexBuffer extends GlBufferWrapper
 {
     public glRenderMode: number;
     public verticiesStack: Array<Float32Vector>;
@@ -11,6 +12,8 @@ export class VertexBuffer
     constructor(glRenderMode: number, gl: WebGLRenderingContext,
         vectorSizeLimit: number = 0)
     {
+        super(gl);
+
         if (this.glRenderModeValidator(glRenderMode, gl))
         {
             this.glRenderMode = glRenderMode;
@@ -45,6 +48,8 @@ export class VertexBuffer
             this._topVertexVector = new Float32Vector(vertex, this._vectorSizeLimit);
             this.verticiesStack.push(this._topVertexVector);
         }
+
+        this.refreshWebglBuffer();
     }
 
     private glRenderModeValidator(glRenderMode: number, gl: WebGLRenderingContext): boolean

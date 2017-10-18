@@ -8,22 +8,21 @@ import { Settings } from "../../settings";
 import { Constants } from "../../constants";
 import { RGBColor } from "../color/rgbColor";
 import { Shape } from "./shape";
+import { GlBufferWrapper } from "../glBufferWrapper";
 
-export class ShapeBuffer<S extends Shape>
+export class ShapeBuffer<S extends Shape> extends GlBufferWrapper
 {
     protected _verticies: Float32Vector;
     protected _trimmedArray: Float32Array;
     protected _shapes: StringDictionary<{shape: S, index: number}>;
-    private _gl: WebGLRenderingContext;
-    private _webglBuffer: WebGLBuffer | null;
 
     constructor(gl: WebGLRenderingContext)
     {
+        super(gl);
+
         this._verticies = new Float32Vector();
         this._trimmedArray = new Float32Array(0);
         this._shapes = {};
-        this._gl = gl;
-        this._webglBuffer = this._gl.createBuffer();
     }
 
     public get verticies(): Float32Array
@@ -40,11 +39,6 @@ export class ShapeBuffer<S extends Shape>
     {
         const firstKey = Object.keys(this._shapes)[0];
         return this._shapes[firstKey].shape;
-    }
-
-    public get webglBuffer(): WebGLBuffer | null
-    {
-        return this._webglBuffer;
     }
 
     public addShape(shape: S): string
@@ -127,13 +121,6 @@ export class ShapeBuffer<S extends Shape>
         }
 
         return false;
-    }
-
-
-    protected refreshWebglBuffer()
-    {
-        this._gl.deleteBuffer(this._webglBuffer);
-        this._webglBuffer = this._gl.createBuffer();
     }
 
     private reorderIndicies(deletedIndex: number) {

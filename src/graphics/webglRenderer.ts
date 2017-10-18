@@ -351,7 +351,7 @@ export abstract class WebGLRenderer
         const verticies = shapeBuffer.verticies;
         const shapePrototype = shapeBuffer.first;
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.glBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
             false, Constants.bytesPerPointVertex, 0);
@@ -374,7 +374,7 @@ export abstract class WebGLRenderer
         const verticies = shapeBuffer.verticies;
         const shapePrototype = shapeBuffer.first;
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.webglBuffer);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.glBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
             false, Constants.bytesPerDynamicVertex, 0);
@@ -398,23 +398,24 @@ export abstract class WebGLRenderer
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
-    protected drawGlArray(arr: Float32Array, renderMode: number,
-        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
+    protected drawVertexBufferBase(vb: VertexBuffer, mvpMatrix: Mat4 = new Mat4().setIdentity()): void
     {
         this.checkForUniforms();
 
-        let vertexBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
-            false, Constants.bytesPerPositionColor, 0);
-        this.gl.enableVertexAttribArray(this._a_position);
-        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
-            false, Constants.bytesPerPositionColor, Constants.bytesPerPosition);
-        this.gl.enableVertexAttribArray(this._a_color);
-        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
-        this.gl.drawArrays(renderMode, 0, (arr.length / Constants.floatsPerPositionColor));
-        this.gl.deleteBuffer(vertexBuffer);
+        for (const vec of vb.verticiesStack)
+        {
+            const arr = vec.arr;
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vb.glBuffer);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);
+            this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+                false, Constants.bytesPerPositionColor, 0);
+            this.gl.enableVertexAttribArray(this._a_position);
+            this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+                false, Constants.bytesPerPositionColor, Constants.bytesPerPosition);
+            this.gl.enableVertexAttribArray(this._a_color);
+            this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
+            this.gl.drawArrays(vb.glRenderMode, 0, (arr.length / Constants.floatsPerPositionColor));
+        }
     }
     //#endregion: protected methods
 
