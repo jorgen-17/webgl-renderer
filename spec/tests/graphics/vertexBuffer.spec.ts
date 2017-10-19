@@ -18,6 +18,10 @@ describe("vertexBuffer:", () =>
         glMock.setup(x => x.TRIANGLES).is(0x0004);
         glMock.setup(x => x.TRIANGLE_STRIP).is(0x0005);
         glMock.setup(x => x.TRIANGLE_FAN).is(0x0006);
+        glMock.setup(x => x.createBuffer)
+        .is(() => 1);
+        glMock.setup(x => x.deleteBuffer)
+        .is((buffer: WebGLBuffer) => { /* noop */ });
     });
 
     describe("constructor:", () =>

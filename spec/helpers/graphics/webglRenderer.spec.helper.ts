@@ -181,8 +181,7 @@ export class WebglRendererTestHelper
 
         return arr;
     }
-
-    public static getRandomXYPoint(): Vec3
+     public static getRandomXYPoint(): Vec3
     {
         const plusOrMinusX = this.plusOrMinus();
         const randX = Math.random() * plusOrMinusX;

@@ -336,7 +336,7 @@ describe("webglRenderer:", () =>
         windowRequestAnimationFrameSpy.calls.reset();
         realCanvas.dispatchEvent(new CustomEvent("webglcontextrestored"));
         expect(gl.viewport).toHaveBeenCalledTimes(1);
-        expect(gl.createProgram).toHaveBeenCalledTimes(2);
+        expect(gl.createProgram).toHaveBeenCalledTimes(3);
         expect(windowRequestAnimationFrameSpy).toHaveBeenCalledTimes(1);
     });
 
