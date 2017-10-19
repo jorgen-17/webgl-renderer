@@ -54,7 +54,7 @@ module.exports = function(config) {
 
     karmaTypescriptConfig: {
         coverageOptions: {
-            instrumentation: true, // set to false if you need to debug though source ts
+            instrumentation: false, // set to false if you need to debug though source ts
             exclude: [
                 /\.(d|spec|test|tests|mock|snapshot)\.ts/i,
                 /spec\/helpers\//i,
@@ -89,9 +89,9 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
         "Chrome",
-        "Firefox",
-        "IE",
-        "Edge"
+        // "Firefox",
+        // "IE",
+        // "Edge"
     ],
 
 

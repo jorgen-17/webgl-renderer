@@ -158,7 +158,7 @@ export class WebglRendererTestHelper
     public static getRandomVerticies(gl: WebGLRenderingContext, numberOfVerticies: number = 10,
         color: RGBColor = Settings.defaultColor): Float32Array
     {
-        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerDynamicVertex);
+        let arr = new Float32Array(numberOfVerticies * Constants.floatsPerPositionColor);
 
         for (let i = 0; i < numberOfVerticies; i++)
         {
@@ -171,12 +171,8 @@ export class WebglRendererTestHelper
                 color.green,
                 color.blue
             ]);
-            const xyzRGBModelMatrix = this.concatFloat32Arrays([
-                xyzRGB,
-                new Mat4().setIdentity().elements
-            ]);
 
-            arr.set(xyzRGBModelMatrix, (i * Constants.floatsPerDynamicVertex));
+            arr.set(xyzRGB, (i * Constants.floatsPerPositionColor));
         }
 
         return arr;
