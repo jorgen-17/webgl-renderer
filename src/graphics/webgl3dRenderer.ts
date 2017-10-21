@@ -19,6 +19,7 @@ import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
 import { ShapeFactory3d } from "./shape/shapeFactory3d";
 import { VertexBuffer } from "./vertexBuffer";
+import { Vec3 } from "cuon-matrix-ts";
 //#endregion: imports
 
 export class WebGL3dRenderer extends WebGLRenderer
@@ -119,6 +120,11 @@ export class WebGL3dRenderer extends WebGLRenderer
         }
 
         return new Array<string>();
+    }
+
+    public addVertexToScene(position: Vec3, renderMode: number, color?: RGBColor): void
+    {
+        this.addVertexToSceneBase(position, renderMode, color);
     }
 
     public removeShape(id: string, shapeMode?: ShapeMode): boolean

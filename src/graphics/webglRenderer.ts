@@ -1,5 +1,5 @@
 ﻿//#region imports
-import { Vec3, Mat4 } from "cuon-matrix-ts";
+import { Vec3, Mat4, Vec2 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
@@ -212,6 +212,8 @@ export abstract class WebGLRenderer
         return shapeIds;
     }
 
+    public abstract addVertexToScene(position: Vec2 | Vec3, renderMode: number, color: RGBColor): void;
+
     public removeAllShapes(): void
     {
         this.initializaShapeBuffers();
@@ -289,6 +291,56 @@ export abstract class WebGLRenderer
     protected abstract drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 
     protected abstract initializaDynamicShapeBuffers(): void;
+
+
+    protected addVertexToSceneBase(position: Vec3, renderMode: number, color: RGBColor = Settings.defaultColor): void
+    {
+        switch (renderMode)
+        {
+            case this.gl.POINTS:
+                this._pointsVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+            case this.gl.LINES:
+                this._linesVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+            case this.gl.LINE_STRIP:
+                this._lineStripVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+            case this.gl.LINE_LOOP:
+                this._lineLoopVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+            case this.gl.TRIANGLES:
+                this._trianglesVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+            case this.gl.TRIANGLE_STRIP:
+                this._triangleStripVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+            case this.gl.TRIANGLE_FAN:
+                this._triangleFanVertexBuffer.addVertex(new Float32Array([
+                    position.x, position.y, position.z,
+                    color.red, color.green, color.blue
+                ]));
+                break;
+        }
+    }
 
     protected removeShapeFromUnspecifiedBuffer(id: string): boolean
     {
