@@ -212,7 +212,7 @@ export abstract class WebGLRenderer
         return shapeIds;
     }
 
-    public abstract addVertexToScene(position: Vec2 | Vec3, renderMode: number, color: RGBColor): void;
+    public abstract addVertexToScene(position: Vec2 | Vec3, renderMode: RenderMode, color: RGBColor): void;
 
     public removeAllShapes(): void
     {
@@ -293,9 +293,11 @@ export abstract class WebGLRenderer
     protected abstract initializaDynamicShapeBuffers(): void;
 
 
-    protected addVertexToSceneBase(position: Vec3, renderMode: number, color: RGBColor = Settings.defaultColor): void
+    protected addVertexToSceneBase(position: Vec3, renderMode: RenderMode, color: RGBColor = Settings.defaultColor): void
     {
-        switch (renderMode)
+        const glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
+
+        switch (glRenderMode)
         {
             case this.gl.POINTS:
                 this._pointsVertexBuffer.addVertex(new Float32Array([

@@ -20,6 +20,7 @@ import { DynamicShape } from "./shape/dynamicShape";
 import { ShapeFactory2d } from "./shape/shapeFactory2d";
 import { VertexBuffer } from "./vertexBuffer";
 import { Vec2, Vec3 } from "cuon-matrix-ts";
+import { RenderMode } from "./renderModeMapper";
 //#endregion: imports
 
 export class WebGL2dRenderer extends WebGLRenderer
@@ -103,7 +104,7 @@ export class WebGL2dRenderer extends WebGLRenderer
         return new Array<string>();
     }
 
-    public addVertexToScene(position: Vec2, renderMode: number, color?: RGBColor): void
+    public addVertexToScene(position: Vec2, renderMode: RenderMode, color?: RGBColor): void
     {
         const positionVec3 = new Vec3(position.x, position.y, 0);
 

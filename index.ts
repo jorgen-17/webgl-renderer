@@ -3,7 +3,7 @@ import { WebGL3dRenderer } from "./src/graphics/webgl3dRenderer";
 import { Vec2, Vec3, Mat4 } from "cuon-matrix-ts";
 import { RGBColor } from "./src/graphics/color/rgbColor";
 import { Color, ColorMapper } from "./src/graphics/color/colorMapper";
-import { RenderMode } from "./src/graphics/renderModeMapper";
+import { RenderMode, RenderModeMapper } from "./src/graphics/renderModeMapper";
 import { Shape } from "./src/graphics/shape/shape";
 import { DynamicShape } from "./src/graphics/shape/dynamicShape";
 import { ShapeFactory } from "./src/graphics/shape/shapeFactory";
@@ -33,6 +33,7 @@ export
     Color,
     ColorMapper,
     RenderMode,
+    RenderModeMapper,
     Shape,
     DynamicShape,
     ShapeFactory,

@@ -9,36 +9,75 @@ describe("renderModeMapper:", () =>
     const glMock = new Mock<WebGLRenderingContext>();
     const gl = glMock.Object;
 
-    describe("maps RenderMode to glRenderMode:", () =>
+    describe("maps RenderMode as string to glRenderMode:", () =>
     {
         it("points", () =>
         {
-            expect(gl.POINTS).toEqual(RenderModeMapper.renderModeToWebGlConstant("points", gl));
+            expect(gl.POINTS).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["points"], gl));
         });
         it("lines", () =>
         {
-            expect(gl.LINES).toEqual(RenderModeMapper.renderModeToWebGlConstant("lines", gl));
+            expect(gl.LINES).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["lines"], gl));
         });
         it("lineStrip", () =>
         {
-            expect(gl.LINE_STRIP).toEqual(RenderModeMapper.renderModeToWebGlConstant("lineStrip", gl));
+            expect(gl.LINE_STRIP).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["lineStrip"], gl));
         });
         it("lineLoop", () =>
         {
-            expect(gl.LINE_LOOP).toEqual(RenderModeMapper.renderModeToWebGlConstant("lineLoop", gl));
+            expect(gl.LINE_LOOP).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["lineLoop"], gl));
         });
         it("triangles", () =>
         {
-            expect(gl.TRIANGLES).toEqual(RenderModeMapper.renderModeToWebGlConstant("triangles", gl));
+            expect(gl.TRIANGLES).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["triangles"], gl));
         });
         it("triangleStrip", () =>
         {
-            expect(gl.TRIANGLE_STRIP).toEqual(RenderModeMapper.renderModeToWebGlConstant("triangleStrip", gl));
+            expect(gl.TRIANGLE_STRIP).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["triangleStrip"], gl));
         });
         it("triangleFan", () =>
         {
-            expect(gl.TRIANGLE_FAN).toEqual(RenderModeMapper.renderModeToWebGlConstant("triangleFan", gl));
+            expect(gl.TRIANGLE_FAN).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode["triangleFan"], gl));
         });
+    });
+
+    describe("maps RenderMode enum to glRenderMode:", () =>
+    {
+        it("points", () =>
+        {
+            expect(gl.POINTS).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.points, gl));
+        });
+        it("lines", () =>
+        {
+            expect(gl.LINES).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.lines, gl));
+        });
+        it("lineStrip", () =>
+        {
+            expect(gl.LINE_STRIP).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.lineStrip, gl));
+        });
+        it("lineLoop", () =>
+        {
+            expect(gl.LINE_LOOP).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.lineLoop, gl));
+        });
+        it("triangles", () =>
+        {
+            expect(gl.TRIANGLES).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.triangles, gl));
+        });
+        it("triangleStrip", () =>
+        {
+            expect(gl.TRIANGLE_STRIP).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.triangleStrip, gl));
+        });
+        it("triangleFan", () =>
+        {
+            expect(gl.TRIANGLE_FAN).toEqual(RenderModeMapper.renderModeToWebGlConstant(RenderMode.triangleFan, gl));
+        });
+    });
+
+    it("throws if unexpected renderMode string", () =>
+    {
+        const expectedErrorString = "could not find renderMode named undefined";
+        expect(() => RenderModeMapper.renderModeToWebGlConstant(RenderMode["triangleLoop"], gl))
+            .toThrow(expectedErrorString);
     });
 
     it("throws if unexpected renderMode", () =>
