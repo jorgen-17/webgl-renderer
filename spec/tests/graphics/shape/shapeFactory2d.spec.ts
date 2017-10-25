@@ -74,7 +74,7 @@ describe("shapeFactory3d:", () =>
         {
             const createShape = () =>
             {
-                shapeFactory.createShape(point1, point2, "points", gl, color);
+                shapeFactory.createShape(point1, point2, ShapeMode.points, gl, color);
             };
 
             expect(createShape).toThrow(new Error("cannot create a point with this method, please use createPoint"));
@@ -83,42 +83,42 @@ describe("shapeFactory3d:", () =>
         {
             const createShape = () =>
             {
-                shapeFactory.createShape(point1, point2, "lines", gl, color);
+                shapeFactory.createShape(point1, point2, ShapeMode.lines, gl, color);
             };
 
             expect(createShape).toThrow(new Error("cannot create a line with this method, please use createLine"));
         });
         it("creates triangle", () =>
         {
-            const triangle = shapeFactory.createShape(point1, point2, "triangles", gl, color);
+            const triangle = shapeFactory.createShape(point1, point2, ShapeMode.triangles, gl, color);
             expect(3 * Constants.floatsPerDynamicVertex).toBe(triangle.verticies.length);
             expect(gl.TRIANGLES).toBe(triangle.glRenderMode);
             expect(color).toBe(triangle.rgbColor);
         });
         it("creates rectangle", () =>
         {
-            const rectangle = shapeFactory.createShape(point1, point2, "rectangles", gl, color);
+            const rectangle = shapeFactory.createShape(point1, point2, ShapeMode.rectangles, gl, color);
             expect(6 * Constants.floatsPerDynamicVertex).toBe(rectangle.verticies.length);
             expect(gl.TRIANGLES).toBe(rectangle.glRenderMode);
             expect(color).toBe(rectangle.rgbColor);
         });
         it("creates hexagon", () =>
         {
-            const hexagon = shapeFactory.createShape(point1, point2, "hexagons", gl, color);
+            const hexagon = shapeFactory.createShape(point1, point2, ShapeMode.hexagons, gl, color);
             expect(12 * Constants.floatsPerDynamicVertex).toBe(hexagon.verticies.length);
             expect(gl.TRIANGLES).toBe(hexagon.glRenderMode);
             expect(color).toBe(hexagon.rgbColor);
         });
         it("creates octogon", () =>
         {
-            const octogon = shapeFactory.createShape(point1, point2, "octogons", gl, color);
+            const octogon = shapeFactory.createShape(point1, point2, ShapeMode.octogons, gl, color);
             expect(18 * Constants.floatsPerDynamicVertex).toBe(octogon.verticies.length);
             expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
             expect(color).toBe(octogon.rgbColor);
         });
         it("creates ellipse", () =>
         {
-            const ellipse = shapeFactory.createShape(point1, point2, "ellipses", gl, color);
+            const ellipse = shapeFactory.createShape(point1, point2, ShapeMode.ellipses, gl, color);
             expect(1206 * Constants.floatsPerDynamicVertex).toBe(ellipse.verticies.length);
             expect(gl.TRIANGLES).toBe(ellipse.glRenderMode);
             expect(color).toBe(ellipse.rgbColor);
@@ -127,7 +127,7 @@ describe("shapeFactory3d:", () =>
         {
             const createShape = () =>
             {
-                shapeFactory.createShape(point1, point2, "box", gl, color);
+                shapeFactory.createShape(point1, point2, ShapeMode.box, gl, color);
             };
 
             expect(createShape).toThrow(new Error("cannot create 3d shape(box), use WebGL3dRenderer instead"));

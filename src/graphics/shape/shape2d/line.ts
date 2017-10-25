@@ -9,7 +9,7 @@ import { ShapeMode } from "../shapeMode";
 
 export class Line extends Shape
 {
-    public shapeMode: ShapeMode = "lines";
+    public shapeMode: ShapeMode = ShapeMode.lines;
     private _vertexPositions: Array<Vec3>;
     private _verticiesVector: Float32Vector;
 

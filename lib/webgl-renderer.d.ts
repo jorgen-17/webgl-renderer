@@ -68,7 +68,16 @@ declare module 'graphics/drawingMode' {
 
 }
 declare module 'graphics/shape/shapeMode' {
-	export type ShapeMode = "points" | "lines" | "triangles" | "rectangles" | "hexagons" | "octogons" | "ellipses" | "box";
+	export enum ShapeMode {
+	    points = "points",
+	    lines = "lines",
+	    triangles = "triangles",
+	    rectangles = "rectangles",
+	    hexagons = "hexagons",
+	    octogons = "octogons",
+	    ellipses = "ellipses",
+	    box = "box",
+	}
 
 }
 declare module 'graphics/color/rgbColor' {
@@ -131,10 +140,11 @@ declare module 'graphics/camera' {
 declare module 'settings' {
 	import { Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RenderMode } from 'graphics/renderModeMapper';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
 	import { RGBColor } from 'graphics/color/rgbColor';
 	export let Settings: {
 	    defaultRendereMode: RenderMode;
-	    defaultShapeMode: "points";
+	    defaultShapeMode: ShapeMode;
 	    defaultPointSize: number;
 	    defaultBackgroundColor: RGBColor;
 	    defaultBackgroundAlpha: number;
@@ -275,7 +285,10 @@ declare module 'shaderSettings' {
 
 }
 declare module 'graphics/shaderType' {
-	export type ShaderType = "fragment" | "vertex";
+	export enum ShaderType {
+	    fragment = "fragment",
+	    vertex = "vertex",
+	}
 
 }
 declare module 'graphics/shape/shape2d/line' {
@@ -674,7 +687,17 @@ declare module 'graphics/webgl3dRenderer' {
 }
 declare module 'graphics/color/colorMapper' {
 	import { RGBColor } from 'graphics/color/rgbColor';
-	export type Color = "red" | "orange" | "yellow" | "green" | "cyan" | "blue" | "indigo" | "fuchsia" | "white";
+	export enum Color {
+	    red = "red",
+	    orange = "orange",
+	    yellow = "yellow",
+	    green = "green",
+	    cyan = "cyan",
+	    blue = "blue",
+	    indigo = "indigo",
+	    fuchsia = "fuchsia",
+	    white = "white",
+	}
 	export class ColorMapper {
 	    static colorToRGBColor(color: Color): RGBColor;
 	}
@@ -693,7 +716,7 @@ declare module 'webgl-renderer' {
 	import { Vec2, Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { Color, ColorMapper } from 'graphics/color/colorMapper';
-	import { RenderMode } from 'graphics/renderModeMapper';
+	import { RenderMode, RenderModeMapper } from 'graphics/renderModeMapper';
 	import { Shape } from 'graphics/shape/shape';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeFactory } from 'graphics/shape/shapeFactory';
@@ -710,6 +733,6 @@ declare module 'webgl-renderer' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { BrowserHelper } from 'utils/browserHelper';
 	import { MouseHelper } from 'utils/mouseHelper';
-	export { WebGL2dRenderer, WebGL3dRenderer, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
+	export { WebGL2dRenderer, WebGL3dRenderer, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
 
 }

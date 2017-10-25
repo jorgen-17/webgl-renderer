@@ -7,7 +7,7 @@ import { RGBColor } from "./graphics/color/rgbColor";
 import { Camera } from "./graphics/camera";
 
 const defaultRenderMode: RenderMode = RenderMode.points;
-const defaultShapeMode: ShapeMode = "points";
+const defaultShapeMode: ShapeMode = ShapeMode.points;
 const defaultBackgroundColor: RGBColor = { red: 0.9, green: 0.9, blue: 0.9 };
 const defaultColor: RGBColor = { red: 0.0, green: 0.0, blue: 0.0 };
 const defaultEyePosition = new Vec3(0, 0, 0.9);

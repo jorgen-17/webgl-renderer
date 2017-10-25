@@ -11,7 +11,7 @@ import { ShapeMode } from "../shapeMode";
 export class Hexagon extends DynamicShape
 {
     private static readonly numberOfVerticies = 12;
-    public shapeMode: ShapeMode = "hexagons";
+    public shapeMode: ShapeMode = ShapeMode.hexagons;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(Hexagon.numberOfVerticies, point1, point2, rgbColor);

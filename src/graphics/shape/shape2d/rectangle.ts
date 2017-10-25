@@ -10,7 +10,7 @@ import { ShapeMode } from "../shapeMode";
 export class Rectangle extends DynamicShape
 {
     private static readonly numberOfVerticies = 6;
-    public shapeMode: ShapeMode = "rectangles";
+    public shapeMode: ShapeMode = ShapeMode.rectangles;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(Rectangle.numberOfVerticies, point1, point2, rgbColor);

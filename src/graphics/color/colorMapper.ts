@@ -1,14 +1,17 @@
 import { RGBColor } from "../color/rgbColor";
 
-export type Color = "red" |
-                    "orange" |
-                    "yellow" |
-                    "green" |
-                    "cyan" |
-                    "blue" |
-                    "indigo" |
-                    "fuchsia" |
-                    "white";
+export enum Color
+{
+    red = "red",
+    orange = "orange",
+    yellow = "yellow",
+    green = "green",
+    cyan = "cyan",
+    blue = "blue",
+    indigo = "indigo",
+    fuchsia = "fuchsia",
+    white = "white"
+}
 
 export class ColorMapper
 {

@@ -10,7 +10,7 @@ import { ShapeMode } from "../shapeMode";
 export class Box extends DynamicShape
 {
     private static readonly numberOfVerticies = 36;
-    public shapeMode: ShapeMode = "box";
+    public shapeMode: ShapeMode = ShapeMode.box;
     private _backFaceZ: number;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
@@ -25,7 +25,6 @@ export class Box extends DynamicShape
         this.computeVerticies();
 
         this.glRenderMode = gl.TRIANGLES;
-        this.shapeMode = "box";
     }
     protected computeVerticies(): void
     {

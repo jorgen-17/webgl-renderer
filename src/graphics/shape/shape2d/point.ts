@@ -11,7 +11,7 @@ import { Settings } from "../../../settings";
 export class Point extends Shape
 {
     private static readonly numberOfVerticies = 1;
-    public shapeMode: ShapeMode = "points";
+    public shapeMode: ShapeMode = ShapeMode.points;
     private _location: Vec3;
     private _pointSize: number;
 

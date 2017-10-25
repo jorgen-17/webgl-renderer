@@ -608,8 +608,8 @@ export abstract class WebGLRenderer
 
     private initShaders(vertexSource: string, fragmentSource: string): WebGLShader
     {
-        const vertexShader = this.createShader(vertexSource, "vertex");
-        const fragmentShader = this.createShader(fragmentSource, "fragment");
+        const vertexShader = this.createShader(vertexSource, ShaderType.vertex);
+        const fragmentShader = this.createShader(fragmentSource, ShaderType.fragment);
 
         let shader: WebGLProgram | null = this.gl.createProgram();
         if (shader === null)

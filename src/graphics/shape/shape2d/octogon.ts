@@ -11,7 +11,7 @@ import { ShapeMode } from "../shapeMode";
 export class Octogon extends DynamicShape
 {
     private static readonly numberOfVerticies = 18;
-    public shapeMode: ShapeMode = "octogons";
+    public shapeMode: ShapeMode = ShapeMode.octogons;
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
         super(Octogon.numberOfVerticies, point1, point2, rgbColor);

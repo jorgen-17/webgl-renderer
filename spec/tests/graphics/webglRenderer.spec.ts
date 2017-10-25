@@ -595,7 +595,7 @@ describe("webglRenderer:", () =>
         it("sets the uniform variable u_viewMatrix", () =>
         {
             const redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+                ShapeMode.triangles, gl, new RGBColor(1.0, 0.0, 0.0));
             renderer.addShapeToScene(redTriangle);
 
             renderer.mockDraw();
@@ -648,17 +648,17 @@ describe("webglRenderer:", () =>
             line = WebglRendererTestHelper.getRandomLine(gl);
             orangePoint = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, orange);
             redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                "triangles", gl, red);
+                ShapeMode.triangles, gl, red);
             orangeSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "rectangles", gl, orange);
+                ShapeMode.rectangles, gl, orange);
             yellowHexagon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(-1, -1),
-                "hexagons", gl, yellow);
+                ShapeMode.hexagons, gl, yellow);
             greenOctogon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "octogons", gl, green);
+                ShapeMode.octogons, gl, green);
             blueEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "ellipses", gl, blue);
+                ShapeMode.ellipses, gl, blue);
             cyanBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "box", gl, cyan);
+                ShapeMode.box, gl, cyan);
         });
 
         it("addHeterogenoeusShapesArrayToScene sends their verticies to webgl", () =>
@@ -975,7 +975,7 @@ describe("webglRenderer:", () =>
             beforeEach(() =>
             {
                 redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                "triangles", gl, new RGBColor(1.0, 0.0, 0.0));
+                ShapeMode.triangles, gl, new RGBColor(1.0, 0.0, 0.0));
             });
 
             it("when u_vpMatrix is missing", () =>

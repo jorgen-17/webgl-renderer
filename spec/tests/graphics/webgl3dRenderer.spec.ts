@@ -127,15 +127,15 @@ describe("webgl3dRenderer:", () =>
             line = WebglRendererTestHelper.getRandomLine(gl);
             orangePoint = renderer.shapeFactory.createPoint(new Vec3(0.25, 0.25), gl, orange, 4);
             redTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                "triangles", gl, red);
+                ShapeMode.triangles, gl, red);
             orangeSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "rectangles", gl, orange);
+                ShapeMode.rectangles, gl, orange);
             yellowHexagon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(-1, -1),
-                "hexagons", gl, yellow);
+                ShapeMode.hexagons, gl, yellow);
             greenOctogon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "octogons", gl, green);
+                ShapeMode.octogons, gl, green);
             blueEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, -1),
-                "ellipses", gl, blue);
+                ShapeMode.ellipses, gl, blue);
             cyanBox = new Box(new Vec3(0, 0), new Vec3(1, -1), gl, cyan);
         });
 
@@ -585,31 +585,31 @@ describe("webgl3dRenderer:", () =>
             {
                 orangePoint2 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, orange);
                 redTriangle2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "triangles", gl, red);
+                    ShapeMode.triangles, gl, red);
                 orangeSquare2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "rectangles", gl, orange);
+                    ShapeMode.rectangles, gl, orange);
                 yellowHexagon2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "hexagons", gl, yellow);
+                    ShapeMode.hexagons, gl, yellow);
                 greenOctogon2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "octogons", gl, green);
+                    ShapeMode.octogons, gl, green);
                 blueEllipse2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "ellipses", gl, blue);
+                    ShapeMode.ellipses, gl, blue);
                 cyanBox2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "box", gl, cyan);
+                    ShapeMode.box, gl, cyan);
 
                 greenPoint = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, green);
                 blueTriangle = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "triangles", gl, blue);
+                    ShapeMode.triangles, gl, blue);
                 redSquare = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "rectangles", gl, red);
+                    ShapeMode.rectangles, gl, red);
                 greenHexagon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "hexagons", gl, green);
+                    ShapeMode.hexagons, gl, green);
                 cyanOctogon = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "octogons", gl, cyan);
+                    ShapeMode.octogons, gl, cyan);
                 orangeEllipse = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "ellipses", gl, orange);
+                    ShapeMode.ellipses, gl, orange);
                 yellowBox = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
-                    "box", gl, yellow);
+                    ShapeMode.box, gl, yellow);
             });
 
             let ids: Array<string> = [];

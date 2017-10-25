@@ -11,7 +11,7 @@ import { ShapeMode } from "../shapeMode";
 export class Triangle extends DynamicShape
 {
     public static readonly numberOfVerticies = 3;
-    public shapeMode: ShapeMode = "triangles";
+    public shapeMode: ShapeMode = ShapeMode.triangles;
 
     constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
