@@ -48,7 +48,7 @@ export class ShapeFactory2d extends ShapeFactory
             case "ellipses":
                 return this.createEllipse(point1Vec3, point2Vec3, gl, rgbColor);
             case "box":
-                throw Error(`cannot create 3d shape(${shapeMode}), use WebGL3dRenderer instead`);
+                throw Error(`cannot create 3d shape(${shapeMode}), use WebGLRenderer3d instead`);
             default:
                 throw Error(`cannot recognize shape type ${shapeMode}`);
         }

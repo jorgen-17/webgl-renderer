@@ -1,5 +1,5 @@
-import { WebGL2dRenderer } from "./src/graphics/webgl2dRenderer";
-import { WebGL3dRenderer } from "./src/graphics/webgl3dRenderer";
+import { WebGLRenderer2d } from "./src/graphics/webglRenderer2d";
+import { WebGLRenderer3d } from "./src/graphics/webglRenderer3d";
 import { Vec2, Vec3, Mat4 } from "cuon-matrix-ts";
 import { RGBColor } from "./src/graphics/color/rgbColor";
 import { Color, ColorMapper } from "./src/graphics/color/colorMapper";
@@ -23,8 +23,8 @@ import { MouseHelper } from "./src/utils/mouseHelper";
 
 export
 {
-    WebGL2dRenderer,
-    WebGL3dRenderer,
+    WebGLRenderer2d,
+    WebGLRenderer3d,
     RenderingOptions,
     Vec2,
     Vec3,

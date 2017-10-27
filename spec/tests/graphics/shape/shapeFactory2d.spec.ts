@@ -130,7 +130,7 @@ describe("shapeFactory3d:", () =>
                 shapeFactory.createShape(point1, point2, ShapeMode.box, gl, color);
             };
 
-            expect(createShape).toThrow(new Error("cannot create 3d shape(box), use WebGL3dRenderer instead"));
+            expect(createShape).toThrow(new Error("cannot create 3d shape(box), use WebGLRenderer3d instead"));
         });
         it("cannot create unknown shape", () =>
         {

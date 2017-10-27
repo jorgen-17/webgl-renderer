@@ -1,7 +1,7 @@
-import { WebGL3dRenderer } from "../../../src/graphics/webgl3dRenderer";
-import { WebGL2dRenderer } from "../../../src/graphics/webgl2dRenderer";
+import { WebGLRenderer3d } from "../../../src/graphics/webglRenderer3d";
+import { WebGLRenderer2d } from "../../../src/graphics/webglRenderer2d";
 
-export class WebGL3dRendererMock extends WebGL3dRenderer
+export class WebGLRenderer3dMock extends WebGLRenderer3d
 {
     public mockDraw()
     {
@@ -9,7 +9,7 @@ export class WebGL3dRendererMock extends WebGL3dRenderer
     }
 }
 
-export class WebGL2dRendererMock extends WebGL2dRenderer
+export class WebGLRenderer2dMock extends WebGLRenderer2d
 {
     public mockDraw()
     {

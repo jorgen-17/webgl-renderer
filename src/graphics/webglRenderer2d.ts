@@ -17,23 +17,21 @@ import { StringDictionary } from "../utils/dictionary";
 import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
-import { ShapeFactory3d } from "./shape/shapeFactory3d";
+import { ShapeFactory2d } from "./shape/shapeFactory2d";
 import { VertexBuffer } from "./vertexBuffer";
-import { Vec3 } from "cuon-matrix-ts";
+import { Vec2, Vec3 } from "cuon-matrix-ts";
 import { RenderMode } from "./renderModeMapper";
 //#endregion: imports
 
-export class WebGL3dRenderer extends WebGLRenderer
+export class WebGLRenderer2d extends WebGLRenderer
 {
     //#region: member variables
-    private _shapeFactory: ShapeFactory3d;
-    private _camera: Camera;
+    private _shapeFactory: ShapeFactory2d;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
     private _octogonsShapeBuffer: ShapeBuffer<Octogon>;
     private _ellipsesShapeBuffer: ShapeBuffer<Ellipse>;
-    private _boxShapeBuffer: ShapeBuffer<Box>;
     //#endregion: member variables
 
     //#region: constructor
@@ -41,29 +39,12 @@ export class WebGL3dRenderer extends WebGLRenderer
     {
         super(canvas, renderingOptions);
 
-        this._camera = new Camera((this._canvas.width / this._canvas.height));
-        this.postResizeCallback = (leCanvas: HTMLCanvasElement, window: Window,
-            renderer: WebGL3dRenderer) =>
-        {
-            this.camera.aspectRatio = (leCanvas.width / leCanvas.height);
-        };
-
-        this._shapeFactory = new ShapeFactory3d();
+        this._shapeFactory = new ShapeFactory2d();
     }
     //#endregion: constructor
 
     //#region: getters and setters
-    public get camera(): Camera
-    {
-        return this._camera;
-    }
-
-    public set camera(value: Camera)
-    {
-        this._camera = value;
-    }
-
-    public get shapeFactory(): ShapeFactory3d
+    public get shapeFactory(): ShapeFactory2d
     {
         return this._shapeFactory;
     }
@@ -87,7 +68,7 @@ export class WebGL3dRenderer extends WebGLRenderer
             case "ellipses":
                 return this._ellipsesShapeBuffer.addShape(shape as Ellipse);
             case "box":
-                return this._boxShapeBuffer.addShape(shape as Box);
+                throw `adding 3d shape(${shape.shapeMode}) to 2d scene is not supported`;
         }
 
         return "";
@@ -117,16 +98,19 @@ export class WebGL3dRenderer extends WebGLRenderer
             case "ellipses":
                 return this._ellipsesShapeBuffer.addShapes(shapes as Array<Ellipse>);
             case "box":
-                return this._boxShapeBuffer.addShapes(shapes as Array<Box>);
+                throw `adding 3d shape(${shape.shapeMode}) to 2d scene is not supported`;
         }
 
         return new Array<string>();
     }
 
-    public addVertexToScene(position: Vec3, renderMode: RenderMode, color?: RGBColor): void
+    public addVertexToScene(position: Vec2, renderMode: RenderMode, color?: RGBColor): void
     {
-        this.addVertexToSceneBase(position, renderMode, color);
+        const positionVec3 = new Vec3(position.x, position.y, 0);
+
+        this.addVertexToSceneBase(positionVec3, renderMode, color);
     }
+
 
     public removeShape(id: string, shapeMode?: ShapeMode): boolean
     {
@@ -144,8 +128,6 @@ export class WebGL3dRenderer extends WebGLRenderer
                 return this._octogonsShapeBuffer.removeShape(id);
             case "ellipses":
                 return this._ellipsesShapeBuffer.removeShape(id);
-            case "box":
-                return this._boxShapeBuffer.removeShape(id);
         }
 
         return this.removeShapeFromUnspecifiedBuffer(id);
@@ -168,8 +150,6 @@ export class WebGL3dRenderer extends WebGLRenderer
                 return this._octogonsShapeBuffer.updateColor(id, newColor);
             case "ellipses":
                 return this._ellipsesShapeBuffer.updateColor(id, newColor);
-            case "box":
-                return this._boxShapeBuffer.updateColor(id, newColor);
         }
 
         return this.updateShapeColorFromUnspecifiedBuffer(id, newColor);
@@ -179,17 +159,17 @@ export class WebGL3dRenderer extends WebGLRenderer
     //#region: protected methods
     protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void
     {
-        this.drawPointShapeBufferBase(shapeBuffer, this._camera.vpMatrix);
+        this.drawPointShapeBufferBase(shapeBuffer);
     }
 
     protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
     {
-        this.drawDynamicShapeBufferBase(shapeBuffer, this._camera.vpMatrix);
+        this.drawDynamicShapeBufferBase(shapeBuffer);
     }
 
     protected drawVertexBuffer(vertexBuffer: VertexBuffer): void
     {
-        this.drawVertexBufferBase(vertexBuffer, this._camera.vpMatrix);
+        this.drawVertexBufferBase(vertexBuffer);
     }
 
     protected initializaDynamicShapeBuffers(): void
@@ -199,14 +179,12 @@ export class WebGL3dRenderer extends WebGLRenderer
         this._hexagonsShapeBuffer = new ShapeBuffer<Hexagon>(this.gl);
         this._octogonsShapeBuffer = new ShapeBuffer<Octogon>(this.gl);
         this._ellipsesShapeBuffer = new ShapeBuffer<Ellipse>(this.gl);
-        this._boxShapeBuffer = new ShapeBuffer<Box>(this.gl);
         this._dynamicShapeBuffers = [
             this._trianglesShapeBuffer,
             this._rectanglesShapeBuffer,
             this._hexagonsShapeBuffer,
             this._octogonsShapeBuffer,
-            this._ellipsesShapeBuffer,
-            this._boxShapeBuffer
+            this._ellipsesShapeBuffer
         ];
     }
     //#endregion: protected methods
