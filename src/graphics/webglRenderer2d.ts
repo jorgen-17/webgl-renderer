@@ -7,6 +7,7 @@ import { RGBColor } from "./color/rgbColor";
 import { RenderingOptions } from "./renderingOptions";
 import { ShapeBuffer } from "./shape/shapeBuffer";
 import { Point } from "./shape/shape2d/point";
+import { Line } from "./shape/shape2d/line";
 import { Triangle } from "./shape/shape2d/triangle";
 import { Rectangle } from "./shape/shape2d/rectangle";
 import { Hexagon } from "./shape/shape2d/hexagon";
@@ -57,6 +58,8 @@ export class WebGLRenderer2d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.addShape(shape as Point);
+            case "lines":
+                return this.addLine(shape as Line);
             case "triangles":
                 return this._trianglesShapeBuffer.addShape(shape as Triangle);
             case "rectangles":
@@ -87,6 +90,8 @@ export class WebGLRenderer2d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.addShapes(shapes as Array<Point>);
+            case "lines":
+                return this.addLines(shapes as Array<Line>);
             case "triangles":
                 return this._trianglesShapeBuffer.addShapes(shapes as Array<Triangle>);
             case "rectangles":
@@ -111,6 +116,12 @@ export class WebGLRenderer2d extends WebGLRenderer
         this.addVertexToSceneBase(positionVec3, renderMode, color);
     }
 
+    public addPointToLine(id: string, point: Vec2): boolean
+    {
+        const pointVec3 = new Vec3(point.x, point.y, 0);
+
+        return this.addPointToLineBase(id, pointVec3);
+    }
 
     public removeShape(id: string, shapeMode?: ShapeMode): boolean
     {
@@ -118,6 +129,8 @@ export class WebGLRenderer2d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.removeShape(id);
+            case "lines":
+                return this.removeLine(id);
             case "triangles":
                 return this._trianglesShapeBuffer.removeShape(id);
             case "rectangles":
@@ -140,6 +153,8 @@ export class WebGLRenderer2d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.updateColor(id, newColor);
+            case "lines":
+                return this.updateLineColor(id, newColor);
             case "triangles":
                 return this._trianglesShapeBuffer.updateColor(id, newColor);
             case "rectangles":

@@ -486,6 +486,7 @@ declare module 'graphics/webglRenderer' {
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { StringDictionary } from 'utils/dictionary';
+	import { Line } from 'graphics/shape/shape2d/line';
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
 	import { Shape } from 'graphics/shape/shape';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
@@ -497,6 +498,7 @@ declare module 'graphics/webglRenderer' {
 	    abstract shapeFactory: ShapeFactory;
 	    protected _canvas: HTMLCanvasElement;
 	    protected _pointsShapeBuffer: PointBuffer;
+	    protected _lineBuffer: StringDictionary<Line>;
 	    protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
 	    protected _vertexBuffers: Array<VertexBuffer>;
 	    protected _a_position: number;
@@ -546,6 +548,7 @@ declare module 'graphics/webglRenderer' {
 	    abstract removeShape(id: string, shapeMode?: ShapeMode): boolean;
 	    abstract updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
 	    updatePointSize(id: string, newPointSize: number): boolean;
+	    abstract addPointToLine(id: string, point: Vec2 | Vec3): boolean;
 	    start(): void;
 	    stop(): void;
 	    protected draw(): void;
@@ -554,6 +557,11 @@ declare module 'graphics/webglRenderer' {
 	    protected abstract drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 	    protected abstract initializaDynamicShapeBuffers(): void;
 	    protected addVertexToSceneBase(position: Vec3, renderMode: RenderMode, color?: RGBColor): void;
+	    protected addLine(line: Line): string;
+	    protected addLines(lines: Array<Line>): Array<string>;
+	    protected removeLine(id: string): boolean;
+	    protected updateLineColor(id: string, newColor: RGBColor): boolean;
+	    protected addPointToLineBase(id: string, point: Vec3): boolean;
 	    protected removeShapeFromUnspecifiedBuffer(id: string): boolean;
 	    protected updateShapeColorFromUnspecifiedBuffer(id: string, newColor: RGBColor): boolean;
 	    protected createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string;
@@ -598,7 +606,7 @@ declare module 'graphics/shape/shapeFactory2d' {
 	}
 
 }
-declare module 'graphics/webgl2dRenderer' {
+declare module 'graphics/webglRenderer2d' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Shape } from 'graphics/shape/shape';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
@@ -611,7 +619,7 @@ declare module 'graphics/webgl2dRenderer' {
 	import { VertexBuffer } from 'graphics/vertexBuffer';
 	import { Vec2 } from "cuon-matrix-ts";
 	import { RenderMode } from 'graphics/renderModeMapper';
-	export class WebGL2dRenderer extends WebGLRenderer {
+	export class WebGLRenderer2d extends WebGLRenderer {
 	    private _shapeFactory;
 	    private _trianglesShapeBuffer;
 	    private _rectanglesShapeBuffer;
@@ -623,6 +631,7 @@ declare module 'graphics/webgl2dRenderer' {
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addVertexToScene(position: Vec2, renderMode: RenderMode, color?: RGBColor): void;
+	    addPointToLine(id: string, point: Vec2): boolean;
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
 	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
 	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
@@ -647,7 +656,7 @@ declare module 'graphics/shape/shapeFactory3d' {
 	}
 
 }
-declare module 'graphics/webgl3dRenderer' {
+declare module 'graphics/webglRenderer3d' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Camera } from 'graphics/camera';
 	import { Shape } from 'graphics/shape/shape';
@@ -661,7 +670,7 @@ declare module 'graphics/webgl3dRenderer' {
 	import { VertexBuffer } from 'graphics/vertexBuffer';
 	import { Vec3 } from "cuon-matrix-ts";
 	import { RenderMode } from 'graphics/renderModeMapper';
-	export class WebGL3dRenderer extends WebGLRenderer {
+	export class WebGLRenderer3d extends WebGLRenderer {
 	    private _shapeFactory;
 	    private _camera;
 	    private _trianglesShapeBuffer;
@@ -676,6 +685,7 @@ declare module 'graphics/webgl3dRenderer' {
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addVertexToScene(position: Vec3, renderMode: RenderMode, color?: RGBColor): void;
+	    addPointToLine(id: string, point: Vec3): boolean;
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
 	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
 	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
@@ -711,8 +721,8 @@ declare module 'utils/mouseHelper' {
 
 }
 declare module 'webgl-renderer' {
-	import { WebGL2dRenderer } from 'graphics/webgl2dRenderer';
-	import { WebGL3dRenderer } from 'graphics/webgl3dRenderer';
+	import { WebGLRenderer2d } from 'graphics/webglRenderer2d';
+	import { WebGLRenderer3d } from 'graphics/webglRenderer3d';
 	import { Vec2, Vec3, Mat4 } from "cuon-matrix-ts";
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { Color, ColorMapper } from 'graphics/color/colorMapper';
@@ -733,6 +743,6 @@ declare module 'webgl-renderer' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { BrowserHelper } from 'utils/browserHelper';
 	import { MouseHelper } from 'utils/mouseHelper';
-	export { WebGL2dRenderer, WebGL3dRenderer, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
+	export { WebGLRenderer2d, WebGLRenderer3d, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
 
 }

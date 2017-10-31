@@ -1,4 +1,6 @@
 //#region: imports
+import * as cuid from "cuid";
+
 import { WebGLRenderer } from "./webglRenderer";
 import { Camera } from "./camera";
 import { Shape } from "./shape/shape";
@@ -6,6 +8,7 @@ import { ShapeMode } from "./shape/shapeMode";
 import { RGBColor } from "./color/rgbColor";
 import { RenderingOptions } from "./renderingOptions";
 import { ShapeBuffer } from "./shape/shapeBuffer";
+import { Line } from "./shape/shape2d/line";
 import { Point } from "./shape/shape2d/point";
 import { Triangle } from "./shape/shape2d/triangle";
 import { Rectangle } from "./shape/shape2d/rectangle";
@@ -76,6 +79,8 @@ export class WebGLRenderer3d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.addShape(shape as Point);
+            case "lines":
+                return this.addLine(shape as Line);
             case "triangles":
                 return this._trianglesShapeBuffer.addShape(shape as Triangle);
             case "rectangles":
@@ -106,6 +111,8 @@ export class WebGLRenderer3d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.addShapes(shapes as Array<Point>);
+            case "lines":
+                return this.addLines(shapes as Array<Line>);
             case "triangles":
                 return this._trianglesShapeBuffer.addShapes(shapes as Array<Triangle>);
             case "rectangles":
@@ -128,12 +135,19 @@ export class WebGLRenderer3d extends WebGLRenderer
         this.addVertexToSceneBase(position, renderMode, color);
     }
 
+    public addPointToLine(id: string, point: Vec3): boolean
+    {
+        return this.addPointToLineBase(id, point);
+    }
+
     public removeShape(id: string, shapeMode?: ShapeMode): boolean
     {
         switch (shapeMode)
         {
             case "points":
                 return this._pointsShapeBuffer.removeShape(id);
+            case "lines":
+                return this.removeLine(id);
             case "triangles":
                 return this._trianglesShapeBuffer.removeShape(id);
             case "rectangles":
@@ -158,6 +172,8 @@ export class WebGLRenderer3d extends WebGLRenderer
         {
             case "points":
                 return this._pointsShapeBuffer.updateColor(id, newColor);
+            case "lines":
+                return this.updateLineColor(id, newColor);
             case "triangles":
                 return this._trianglesShapeBuffer.updateColor(id, newColor);
             case "rectangles":

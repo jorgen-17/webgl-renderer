@@ -1,5 +1,6 @@
 ﻿//#region imports
 import { Vec3, Mat4, Vec2 } from "cuon-matrix-ts";
+import * as cuid from "cuid";
 
 import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
@@ -37,6 +38,7 @@ export abstract class WebGLRenderer
     public abstract shapeFactory: ShapeFactory;
     protected _canvas: HTMLCanvasElement;
     protected _pointsShapeBuffer: PointBuffer;
+    protected _lineBuffer: StringDictionary<Line>;
     protected _dynamicShapeBuffers: Array<ShapeBuffer<DynamicShape>>;
     protected _vertexBuffers: Array<VertexBuffer>;
     protected _a_position: number;
@@ -234,6 +236,8 @@ export abstract class WebGLRenderer
         return this._pointsShapeBuffer.updatePointSize(id, newPointSize);
     }
 
+    public abstract addPointToLine(id: string, point: Vec2 | Vec3): boolean;
+
     public start()
     {
         this.renderLoop();
@@ -292,7 +296,6 @@ export abstract class WebGLRenderer
 
     protected abstract initializaDynamicShapeBuffers(): void;
 
-
     protected addVertexToSceneBase(position: Vec3, renderMode: RenderMode, color: RGBColor = Settings.defaultColor): void
     {
         const glRenderMode = RenderModeMapper.renderModeToWebGlConstant(renderMode, this.gl);
@@ -342,6 +345,58 @@ export abstract class WebGLRenderer
                 ]));
                 break;
         }
+    }
+
+    protected addLine(line: Line): string
+    {
+        const id = cuid();
+        this._lineBuffer[id] = line;
+        return id;
+    }
+
+    protected addLines(lines: Array<Line>): Array<string>
+    {
+        let ids: Array<string> = [];
+
+        for (let line of lines)
+        {
+            ids.push(this.addLine(line));
+        }
+
+        return ids;
+    }
+
+    protected removeLine(id: string): boolean
+    {
+        if (this._lineBuffer[id])
+        {
+            delete this._lineBuffer[id];
+            return true;
+        }
+
+        return false;
+    }
+
+    protected updateLineColor(id: string, newColor: RGBColor): boolean
+    {
+        if (this._lineBuffer[id])
+        {
+            this._lineBuffer[id].rgbColor = newColor;
+            return true;
+        }
+
+        return false;
+    }
+
+    protected addPointToLineBase(id: string, point: Vec3): boolean
+    {
+        if (this._lineBuffer[id])
+        {
+            this._lineBuffer[id].addVertex(point);
+            return true;
+        }
+
+        return false;
     }
 
     protected removeShapeFromUnspecifiedBuffer(id: string): boolean
