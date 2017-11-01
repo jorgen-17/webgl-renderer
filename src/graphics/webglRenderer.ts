@@ -274,6 +274,14 @@ export abstract class WebGLRenderer
             }
         }
 
+        for (let lb of this._dynamicShapeBuffers)
+        {
+            if (lb.count > 0)
+            {
+                this.drawDynamicShapeBuffer(lb);
+            }
+        }
+
         this.gl.useProgram(this._positionColorShaderProgram);
         this.getShaderVariables(this._positionColorShaderProgram);
         for (let vb of this._vertexBuffers)
@@ -507,6 +515,25 @@ export abstract class WebGLRenderer
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
+    protected drawLineShapeBufferBase(line: Line,
+        mvpMatrix: Mat4 = new Mat4().setIdentity()): void
+    {
+        this.checkForUniforms();
+
+        const verticies = line.verticies;
+
+        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, line.glBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
+            false, Constants.bytesPerPointVertex, 0);
+        this.gl.enableVertexAttribArray(this._a_position);
+        this.gl.vertexAttribPointer(this._a_color, Constants.floatsPerColor, this.gl.FLOAT,
+            false, Constants.bytesPerPointVertex, Constants.bytesPerPosition);
+        this.gl.enableVertexAttribArray(this._a_color);
+        this.gl.uniformMatrix4fv(this._u_vpMatrix as WebGLUniformLocation, false, mvpMatrix.elements);
+        this.gl.drawArrays(line.glRenderMode, 0, (verticies.length / Constants.floatsPerPointVertex));
+    }
+
     protected drawVertexBufferBase(vb: VertexBuffer, mvpMatrix: Mat4 = new Mat4().setIdentity()): void
     {
         this.checkForUniforms();
@@ -602,7 +629,6 @@ export abstract class WebGLRenderer
         this._calcWidth = (renderingOptions && renderingOptions.calcWidth) || this.defaultCalcWidth;
         this._calcHeight = (renderingOptions && renderingOptions.calcHeight) || this.defaultCalcHeight;
     }
-
 
     private initializaBuffers(): void
     {
