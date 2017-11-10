@@ -1,3 +1,8 @@
+export interface GlBufferWrapper
+{
+    
+}
+
 export abstract class GlBufferWrapper
 {
     protected _glBuffer: WebGLBuffer | null;

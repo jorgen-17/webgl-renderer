@@ -177,6 +177,11 @@ export class WebGLRenderer2d extends WebGLRenderer
         this.drawPointShapeBufferBase(shapeBuffer);
     }
 
+    protected drawLine(line: Line): void
+    {
+        this.drawLineBase(line);
+    }
+
     protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
     {
         this.drawDynamicShapeBufferBase(shapeBuffer);

@@ -12,6 +12,8 @@ export class Line extends Shape
     public shapeMode: ShapeMode = ShapeMode.lines;
     private _vertexPositions: Array<Vec3>;
     private _verticiesVector: Float32Vector;
+    private _glBuffer: WebGLBuffer | null;
+    private _gl: WebGLRenderingContext;
 
     constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor)
     {
@@ -25,12 +27,19 @@ export class Line extends Shape
         this.computeVerticies();
 
         this.glRenderMode = gl.LINE_STRIP;
+        this._gl = gl;
+        this._glBuffer = this._gl.createBuffer();
     }
 
     public get verticies(): Float32Array
 
     {
         return this._verticiesVector.getTrimmedArray();
+    }
+
+    public get glBuffer(): WebGLBuffer | null
+    {
+        return this._glBuffer;
     }
 
     protected computeVerticies(): void
@@ -55,6 +64,8 @@ export class Line extends Shape
         let array = new Float32Array(Constants.floatsPerPositionColor);
         this.addXYZAndColorToFloat32Array(array, 0, vertex.x, vertex.y, vertex.z);
         this._verticiesVector.addArray(array);
+
+        this.refreshWebglBuffer();
     }
 
     private addXYZAndColorToFloat32Array(array: Float32Array, index: number,
@@ -66,5 +77,11 @@ export class Line extends Shape
         array[index + 3] = this.rgbColor.red;
         array[index + 4] = this.rgbColor.green;
         array[index + 5] = this.rgbColor.blue;
+    }
+
+    private refreshWebglBuffer()
+    {
+        this._gl.deleteBuffer(this._glBuffer);
+        this._glBuffer = this._gl.createBuffer();
     }
 }

@@ -198,6 +198,11 @@ export class WebGLRenderer3d extends WebGLRenderer
         this.drawPointShapeBufferBase(shapeBuffer, this._camera.vpMatrix);
     }
 
+    protected drawLine(line: Line): void
+    {
+        this.drawLineBase(line, this._camera.vpMatrix);
+    }
+
     protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void
     {
         this.drawDynamicShapeBufferBase(shapeBuffer, this._camera.vpMatrix);

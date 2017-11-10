@@ -264,6 +264,15 @@ export abstract class WebGLRenderer
             this.drawPointShapeBuffer(this._pointsShapeBuffer);
         }
 
+        for (let key in this._lineBuffer)
+        {
+            if (this._lineBuffer[key])
+            {
+                let line = this._lineBuffer[key];
+                this.drawLine(line);
+            }
+        }
+
         this.gl.useProgram(this._dynamicShapeShaderProgram);
         this.getDynamicShapeShaderVariables();
         for (let sb of this._dynamicShapeBuffers)
@@ -271,14 +280,6 @@ export abstract class WebGLRenderer
             if (sb.count > 0)
             {
                 this.drawDynamicShapeBuffer(sb);
-            }
-        }
-
-        for (let lb of this._dynamicShapeBuffers)
-        {
-            if (lb.count > 0)
-            {
-                this.drawDynamicShapeBuffer(lb);
             }
         }
 
@@ -297,6 +298,8 @@ export abstract class WebGLRenderer
     }
 
     protected abstract drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+
+    protected abstract drawLine(line: Line): void;
 
     protected abstract drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
 
@@ -515,15 +518,15 @@ export abstract class WebGLRenderer
         this.gl.drawArrays(shapePrototype.glRenderMode, 0, (verticies.length / Constants.floatsPerDynamicVertex));
     }
 
-    protected drawLineShapeBufferBase(line: Line,
+    protected drawLineBase(line: Line,
         mvpMatrix: Mat4 = new Mat4().setIdentity()): void
     {
         this.checkForUniforms();
 
         const verticies = line.verticies;
 
-        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, line.glBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, line.glBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
             false, Constants.bytesPerPointVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
