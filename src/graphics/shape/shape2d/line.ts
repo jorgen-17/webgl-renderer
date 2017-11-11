@@ -42,6 +42,12 @@ export class Line extends Shape
         return this._glBuffer;
     }
 
+    public refreshWebglBuffer()
+    {
+        this._gl.deleteBuffer(this._glBuffer);
+        this._glBuffer = this._gl.createBuffer();
+    }
+
     protected computeVerticies(): void
     {
         let arr = new Float32Array(this._vertexPositions.length * Constants.floatsPerPositionColor);
@@ -77,11 +83,5 @@ export class Line extends Shape
         array[index + 3] = this.rgbColor.red;
         array[index + 4] = this.rgbColor.green;
         array[index + 5] = this.rgbColor.blue;
-    }
-
-    private refreshWebglBuffer()
-    {
-        this._gl.deleteBuffer(this._glBuffer);
-        this._glBuffer = this._gl.createBuffer();
     }
 }

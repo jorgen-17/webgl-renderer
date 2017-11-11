@@ -133,7 +133,7 @@ export abstract class WebGLRenderer
 
         this.initializeRenderingOptions(renderingOptions);
 
-        this.initializaShapeBuffers();
+        this.initializaBuffers();
 
         this.setupWindowCallbacks();
     }
@@ -621,6 +621,7 @@ export abstract class WebGLRenderer
     {
         this._isContextLost = false;
         this.setupGlResources();
+        this.refreshAllWebGlBuffers();
         this.start();
     }
 
@@ -667,6 +668,30 @@ export abstract class WebGLRenderer
             this._triangleStripVertexBuffer,
             this._triangleFanVertexBuffer
         ];
+    }
+
+    private refreshAllWebGlBuffers()
+    {
+        this._pointsShapeBuffer.refreshWebglBuffer();
+
+        for (let key in this._lineBuffer)
+        {
+            if (this._lineBuffer[key])
+            {
+                let line = this._lineBuffer[key];
+                line.refreshWebglBuffer();
+            }
+        }
+
+        for (let sb of this._dynamicShapeBuffers)
+        {
+            sb.refreshWebglBuffer();
+        }
+
+        for (let vb of this._vertexBuffers)
+        {
+            vb.refreshWebglBuffer();
+        }
     }
 
     private getDynamicShapeShaderVariables(): void

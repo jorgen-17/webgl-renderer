@@ -1,6 +1,6 @@
 export interface GlBufferWrapper
 {
-    
+
 }
 
 export abstract class GlBufferWrapper
@@ -19,7 +19,7 @@ export abstract class GlBufferWrapper
         return this._glBuffer;
     }
 
-    protected refreshWebglBuffer()
+    public refreshWebglBuffer()
     {
         this._gl.deleteBuffer(this._glBuffer);
         this._glBuffer = this._gl.createBuffer();
