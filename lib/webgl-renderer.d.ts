@@ -300,15 +300,21 @@ declare module 'graphics/shape/shape2d/line' {
 	    shapeMode: ShapeMode;
 	    private _vertexPositions;
 	    private _verticiesVector;
+	    private _glBuffer;
+	    private _gl;
 	    constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
 	    readonly verticies: Float32Array;
+	    readonly glBuffer: WebGLBuffer | null;
 	    protected computeVerticies(): void;
 	    addVertex(vertex: Vec3): void;
 	    private addXYZAndColorToFloat32Array(array, index, x, y, z);
+	    private refreshWebglBuffer();
 	}
 
 }
 declare module 'graphics/glBufferWrapper' {
+	export interface GlBufferWrapper {
+	}
 	export abstract class GlBufferWrapper {
 	    protected _glBuffer: WebGLBuffer | null;
 	    private _gl;
@@ -553,6 +559,7 @@ declare module 'graphics/webglRenderer' {
 	    stop(): void;
 	    protected draw(): void;
 	    protected abstract drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+	    protected abstract drawLine(line: Line): void;
 	    protected abstract drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
 	    protected abstract drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 	    protected abstract initializaDynamicShapeBuffers(): void;
@@ -567,6 +574,7 @@ declare module 'graphics/webglRenderer' {
 	    protected createUniforNotFoundErrorMessage(uniformsMap: StringDictionary<WebGLUniformLocation | null>): string;
 	    protected drawPointShapeBufferBase(shapeBuffer: ShapeBuffer<Point>, mvpMatrix?: Mat4): void;
 	    protected drawDynamicShapeBufferBase(shapeBuffer: ShapeBuffer<DynamicShape>, mvpMatrix?: Mat4): void;
+	    protected drawLineBase(line: Line, mvpMatrix?: Mat4): void;
 	    protected drawVertexBufferBase(vb: VertexBuffer, mvpMatrix?: Mat4): void;
 	    private setCanvasEventHandlers();
 	    private setupGlResources();
@@ -614,6 +622,7 @@ declare module 'graphics/webglRenderer2d' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
 	import { Point } from 'graphics/shape/shape2d/point';
+	import { Line } from 'graphics/shape/shape2d/line';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeFactory2d } from 'graphics/shape/shapeFactory2d';
 	import { VertexBuffer } from 'graphics/vertexBuffer';
@@ -635,6 +644,7 @@ declare module 'graphics/webglRenderer2d' {
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
 	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
 	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+	    protected drawLine(line: Line): void;
 	    protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
 	    protected drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 	    protected initializaDynamicShapeBuffers(): void;
@@ -664,6 +674,7 @@ declare module 'graphics/webglRenderer3d' {
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
+	import { Line } from 'graphics/shape/shape2d/line';
 	import { Point } from 'graphics/shape/shape2d/point';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeFactory3d } from 'graphics/shape/shapeFactory3d';
@@ -689,6 +700,7 @@ declare module 'graphics/webglRenderer3d' {
 	    removeShape(id: string, shapeMode?: ShapeMode): boolean;
 	    updateShapeColor(id: string, newColor: RGBColor, shapeMode?: ShapeMode): boolean;
 	    protected drawPointShapeBuffer(shapeBuffer: ShapeBuffer<Point>): void;
+	    protected drawLine(line: Line): void;
 	    protected drawDynamicShapeBuffer(shapeBuffer: ShapeBuffer<DynamicShape>): void;
 	    protected drawVertexBuffer(vertexBuffer: VertexBuffer): void;
 	    protected initializaDynamicShapeBuffers(): void;
