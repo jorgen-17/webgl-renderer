@@ -646,6 +646,7 @@ export abstract class WebGLRenderer
         this.initializeVertexBuffers();
 
         this._pointsShapeBuffer = new PointBuffer(this.gl);
+        this._lineBuffer = {};
     }
 
     private initializeVertexBuffers(): void
