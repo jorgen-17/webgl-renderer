@@ -7,7 +7,7 @@ declare module 'graphics/renderModeMapper' {
 	    lineLoop = "lineLoop",
 	    triangles = "triangles",
 	    triangleStrip = "triangleStrip",
-	    triangleFan = "triangleFan",
+	    triangleFan = "triangleFan"
 	}
 	export class RenderModeMapper {
 	    static renderModeToWebGlConstant(mode: RenderMode, gl: WebGLRenderingContext): number;
@@ -63,7 +63,7 @@ declare module 'utils/float32Vector' {
 declare module 'graphics/drawingMode' {
 	export enum DrawingMode {
 	    Shapes = 0,
-	    Verticies = 1,
+	    Verticies = 1
 	}
 
 }
@@ -76,7 +76,7 @@ declare module 'graphics/shape/shapeMode' {
 	    hexagons = "hexagons",
 	    octogons = "octogons",
 	    ellipses = "ellipses",
-	    box = "box",
+	    box = "box"
 	}
 
 }
@@ -97,9 +97,9 @@ declare module 'graphics/shape/boundingRectangle' {
 	    bottomRight: Vec3;
 	    bottomLeft: Vec3;
 	    constructor(point1: Vec3, point2: Vec3);
-	    private isTopLeftBottomRight(point1, point2);
-	    private isBottomRightTopLeft(point1, point2);
-	    private isBottomLeftTopRight(point1, point2);
+	    private isTopLeftBottomRight;
+	    private isBottomRightTopLeft;
+	    private isBottomLeftTopRight;
 	}
 
 }
@@ -131,9 +131,9 @@ declare module 'graphics/camera' {
 	    panY(yOffset: number): void;
 	    zoomIn(zOffset?: number): void;
 	    zoomOut(zOffset?: number): void;
-	    private updateView();
-	    private updatePerspective();
-	    private updateViewProjectionMatrix();
+	    private updateView;
+	    private updatePerspective;
+	    private updateViewProjectionMatrix;
 	}
 
 }
@@ -194,7 +194,7 @@ declare module 'graphics/shape/shape2d/point' {
 	    constructor(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number);
 	    pointSize: number;
 	    protected computeVerticies(): void;
-	    private addXYZColorAndPointSize(index, x, y, z);
+	    private addXYZColorAndPointSize;
 	}
 
 }
@@ -287,7 +287,7 @@ declare module 'shaderSettings' {
 declare module 'graphics/shaderType' {
 	export enum ShaderType {
 	    fragment = "fragment",
-	    vertex = "vertex",
+	    vertex = "vertex"
 	}
 
 }
@@ -305,10 +305,10 @@ declare module 'graphics/shape/shape2d/line' {
 	    constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
 	    readonly verticies: Float32Array;
 	    readonly glBuffer: WebGLBuffer | null;
+	    refreshWebglBuffer(): void;
 	    protected computeVerticies(): void;
 	    addVertex(vertex: Vec3): void;
-	    private addXYZAndColorToFloat32Array(array, index, x, y, z);
-	    private refreshWebglBuffer();
+	    private addXYZAndColorToFloat32Array;
 	}
 
 }
@@ -320,7 +320,7 @@ declare module 'graphics/glBufferWrapper' {
 	    private _gl;
 	    constructor(gl: WebGLRenderingContext);
 	    readonly glBuffer: WebGLBuffer | null;
-	    protected refreshWebglBuffer(): void;
+	    refreshWebglBuffer(): void;
 	}
 
 }
@@ -345,8 +345,8 @@ declare module 'graphics/shape/shapeBuffer' {
 	    addShapes(shapes: Array<S>): Array<string>;
 	    removeShape(id: string): boolean;
 	    updateColor(id: string, newColor: RGBColor): boolean;
-	    private reorderIndicies(deletedIndex);
-	    private introduceShape(shape);
+	    private reorderIndicies;
+	    private introduceShape;
 	}
 
 }
@@ -392,7 +392,7 @@ declare module 'graphics/shape/shape2d/octogon' {
 declare module 'graphics/precision' {
 	export enum Precision {
 	    Low = 0,
-	    High = 1,
+	    High = 1
 	}
 
 }
@@ -418,7 +418,7 @@ declare module 'graphics/shape/shape2d/ellipse' {
 	    private precision;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, precision?: Precision, rgbColor?: RGBColor);
 	    protected computeVerticies(): void;
-	    private getYDistanceFromCenterForX(x);
+	    private getYDistanceFromCenterForX;
 	}
 
 }
@@ -480,7 +480,7 @@ declare module 'graphics/vertexBuffer' {
 	    private _topVertexVector;
 	    constructor(glRenderMode: number, gl: WebGLRenderingContext, vectorSizeLimit?: number);
 	    addVertex(vertex: Float32Array): void;
-	    private glRenderModeValidator(glRenderMode, gl);
+	    private glRenderModeValidator;
 	}
 
 }
@@ -576,23 +576,24 @@ declare module 'graphics/webglRenderer' {
 	    protected drawDynamicShapeBufferBase(shapeBuffer: ShapeBuffer<DynamicShape>, mvpMatrix?: Mat4): void;
 	    protected drawLineBase(line: Line, mvpMatrix?: Mat4): void;
 	    protected drawVertexBufferBase(vb: VertexBuffer, mvpMatrix?: Mat4): void;
-	    private setCanvasEventHandlers();
-	    private setupGlResources();
-	    private getContext();
+	    private setCanvasEventHandlers;
+	    private setupGlResources;
+	    private getContext;
 	    private handleContextLost;
 	    private handleContextRestored;
-	    private initializeRenderingOptions(renderingOptions);
-	    private initializaBuffers();
-	    private initializaShapeBuffers();
-	    private initializeVertexBuffers();
-	    private getDynamicShapeShaderVariables();
-	    private getPointShaderVariables();
-	    private getShaderVariables(shader);
-	    private initShaders(vertexSource, fragmentSource);
-	    private createShader(shaderSource, type);
+	    private initializeRenderingOptions;
+	    private initializaBuffers;
+	    private initializaShapeBuffers;
+	    private initializeVertexBuffers;
+	    private refreshAllWebGlBuffers;
+	    private getDynamicShapeShaderVariables;
+	    private getPointShaderVariables;
+	    private getShaderVariables;
+	    private initShaders;
+	    private createShader;
 	    private renderLoop;
-	    private checkForUniforms();
-	    private setupWindowCallbacks();
+	    private checkForUniforms;
+	    private setupWindowCallbacks;
 	    private defaultCalcWidth;
 	    private defaultCalcHeight;
 	    private resizeCanvas;
@@ -718,7 +719,7 @@ declare module 'graphics/color/colorMapper' {
 	    blue = "blue",
 	    indigo = "indigo",
 	    fuchsia = "fuchsia",
-	    white = "white",
+	    white = "white"
 	}
 	export class ColorMapper {
 	    static colorToRGBColor(color: Color): RGBColor;
@@ -742,6 +743,8 @@ declare module 'webgl-renderer' {
 	import { Shape } from 'graphics/shape/shape';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeFactory } from 'graphics/shape/shapeFactory';
+	import { ShapeFactory2d } from 'graphics/shape/shapeFactory2d';
+	import { ShapeFactory3d } from 'graphics/shape/shapeFactory3d';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
 	import { Line } from 'graphics/shape/shape2d/line';
 	import { Ellipse } from 'graphics/shape/shape2d/ellipse';
@@ -755,6 +758,6 @@ declare module 'webgl-renderer' {
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { BrowserHelper } from 'utils/browserHelper';
 	import { MouseHelper } from 'utils/mouseHelper';
-	export { WebGLRenderer2d, WebGLRenderer3d, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
+	export { WebGLRenderer2d, WebGLRenderer3d, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeFactory2d, ShapeFactory3d, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
 
 }

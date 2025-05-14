@@ -32,24 +32,24 @@ export class WebglRendererTestHelper
         // shader constants
         glMock.setup(x => x.FRAGMENT_SHADER).is(0x8B30);
         glMock.setup(x => x.VERTEX_SHADER).is(0x8B31); // cutie patootie);
-        glMock.setup(x => x.COMPILE_STATUS).is(0x8B82);
+        glMock.setup(x => x.COMPILE_STATUS).is(0x8B81);
         glMock.setup(x => x.LINK_STATUS).is(0x8B82);
 
         // draw constants
-        glMock.setup(x => x.COLOR_BUFFER_BIT).is(0x8892);
+        glMock.setup(x => x.COLOR_BUFFER_BIT).is(0x00004000);
         glMock.setup(x => x.ARRAY_BUFFER).is(0x8892);
         glMock.setup(x => x.STATIC_DRAW).is(0x88E4);
         glMock.setup(x => x.FLOAT).is(0x1406);
 
         // getExtensions
         spyDictionary["getExtension"] = glMock.setup(x => x.getExtension).is(
-            (extensionName: string) =>
-            {
-                if (extensionName === Settings.instancedArrayExtensionName)
-                {
+            ((extensionName: string) => {
+                if (extensionName === Settings.instancedArrayExtensionName) {
                     return instancedArrayExtension;
                 }
-            }).Spy;
+                return null;
+            }) as any
+        ).Spy;
 
 
         // init viewport
@@ -95,7 +95,7 @@ export class WebglRendererTestHelper
             .is((shader: WebGLShader, name: string) => 1).Spy;
         spyDictionary["bufferData"] = glMock.setup(x => x.bufferData)
             .is(
-            (target: number, size: number | ArrayBufferView | ArrayBuffer, usage: number) =>
+            (_target: number, _dataOrSize: number | ArrayBufferView | ArrayBuffer | null, _usage: number) =>
             {/* noop */ }
             ).Spy;
         const webglBuffer = new Mock<WebGLBuffer>();
