@@ -594,7 +594,7 @@ export abstract class WebGLRenderer
                     alpha: false,
                     antialias: false,
                     depth: true
-                });
+                }) as WebGLRenderingContext | null;
         }
         catch (e)
         {
@@ -721,6 +721,10 @@ export abstract class WebGLRenderer
         const vertexShader = this.createShader(vertexSource, ShaderType.vertex);
         const fragmentShader = this.createShader(fragmentSource, ShaderType.fragment);
 
+        if (vertexShader === null || fragmentShader === null) {
+            throw "could not create shaders";
+        }
+
         let shader: WebGLProgram | null = this.gl.createProgram();
         if (shader === null)
         {
@@ -750,6 +754,10 @@ export abstract class WebGLRenderer
         else if (type === "vertex")
         {
             shader = this.gl.createShader(this.gl.VERTEX_SHADER);
+        }
+
+        if (shader === null) {
+            throw `could not create ${type} shader`;
         }
 
         this.gl.shaderSource(shader, shaderSource);

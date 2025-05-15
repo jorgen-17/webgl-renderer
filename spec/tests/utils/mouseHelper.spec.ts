@@ -5,7 +5,7 @@ import { MouseHelper } from "../../../src/utils/mouseHelper";
 
 describe("MouseHelper:", () =>
 {
-    const clientRectMock = new Mock<ClientRect>();
+    const clientRectMock = new Mock<DOMRect>();
     const clientRect = clientRectMock.Object;
     const canvasMock = new Mock<HTMLCanvasElement>();
     const canvas = canvasMock.Object;
@@ -16,6 +16,9 @@ describe("MouseHelper:", () =>
     {
         clientRectMock.setup(cr => cr.top).is(0);
         clientRectMock.setup(cr => cr.left).is(0);
+        clientRectMock.setup(cr => cr.x).is(0);
+        clientRectMock.setup(cr => cr.y).is(0);
+        clientRectMock.setup(cr => cr.toJSON).is(() => ({}));
 
         canvasMock.setup(c => c.width).is(800);
         canvasMock.setup(c => c.height).is(600);
