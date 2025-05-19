@@ -15,6 +15,11 @@ export class Camera
     private _far: number;
     private _lookAtPoint: Vec3;
     private _upPosition: Vec3;
+
+    private _initialEyePosition: Vec3;
+    private _initialLookAtPoint: Vec3;
+    private _initialUpPosition: Vec3;
+
     //#endregion: instance variables
 
     //#region: constructor
@@ -30,11 +35,11 @@ export class Camera
         this._projectionMatrix = new Mat4();
         this._vpMatrix = new Mat4();
 
-        this._eyePosition = eyePosition;
-        this._lookAtPoint = lookAtPoint;
-        this._upPosition = upPosition;
+        console.log("jorgen patch 1")
+        this._eyePosition = this._initialEyePosition = eyePosition;
+        this._lookAtPoint = this._initialLookAtPoint = lookAtPoint;
+        this._upPosition = this._initialUpPosition = upPosition;
         this.updateView();
-
 
         this._aspectRatio = aspectRatio;
         this._fieldOfView = fieldOfView;
@@ -176,6 +181,16 @@ export class Camera
         this._lookAtPoint = new Vec3(this._eyePosition.x, this._eyePosition.y, this._eyePosition.z - 1);
 
         this.updateView();
+    }
+
+    public reset(): void
+    {
+        this._eyePosition = this._initialEyePosition;
+        this._lookAtPoint = this._initialLookAtPoint;
+        this._upPosition = this._initialUpPosition;
+
+        this.updateView();
+        this.updatePerspective();
     }
     //#endregion: public methods
 

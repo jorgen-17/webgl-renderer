@@ -116,21 +116,32 @@ declare module 'graphics/camera' {
 	    private _far;
 	    private _lookAtPoint;
 	    private _upPosition;
+	    private _initialEyePosition;
+	    private _initialLookAtPoint;
+	    private _initialUpPosition;
 	    constructor(aspectRatio: number, fieldOfView?: number, near?: number, far?: number, eyePosition?: Vec3, lookAtPoint?: Vec3, upPosition?: Vec3);
-	    readonly vpMatrix: Mat4;
-	    readonly viewMatrix: Mat4;
-	    readonly projectionMatrix: Mat4;
-	    aspectRatio: number;
-	    fieldOfView: number;
-	    near: number;
-	    far: number;
-	    eyePosition: Vec3;
-	    lookAtPoint: Vec3;
-	    upPosition: Vec3;
+	    get vpMatrix(): Mat4;
+	    get viewMatrix(): Mat4;
+	    get projectionMatrix(): Mat4;
+	    get aspectRatio(): number;
+	    set aspectRatio(value: number);
+	    get fieldOfView(): number;
+	    set fieldOfView(value: number);
+	    get near(): number;
+	    set near(value: number);
+	    get far(): number;
+	    set far(value: number);
+	    get eyePosition(): Vec3;
+	    set eyePosition(value: Vec3);
+	    get lookAtPoint(): Vec3;
+	    set lookAtPoint(value: Vec3);
+	    get upPosition(): Vec3;
+	    set upPosition(value: Vec3);
 	    panX(xOffset: number): void;
 	    panY(yOffset: number): void;
 	    zoomIn(zOffset?: number): void;
 	    zoomOut(zOffset?: number): void;
+	    reset(): void;
 	    private updateView;
 	    private updatePerspective;
 	    private updateViewProjectionMatrix;
@@ -143,8 +154,8 @@ declare module 'settings' {
 	import { ShapeMode } from 'graphics/shape/shapeMode';
 	import { RGBColor } from 'graphics/color/rgbColor';
 	export let Settings: {
-	    defaultRendereMode: RenderMode;
-	    defaultShapeMode: ShapeMode;
+	    defaultRendereMode: RenderMode.points;
+	    defaultShapeMode: ShapeMode.points;
 	    defaultPointSize: number;
 	    defaultBackgroundColor: RGBColor;
 	    defaultBackgroundAlpha: number;
@@ -175,8 +186,9 @@ declare module 'graphics/shape/shape' {
 	    protected _boundingRect: BoundingRectangle;
 	    protected _rgbColor: RGBColor;
 	    constructor(numberOfVerticies: number, numberOfFloatsPerVertex: number, rgbColor?: RGBColor, point1?: Vec3 | null, point2?: Vec3 | null);
-	    readonly verticies: Float32Array;
-	    rgbColor: RGBColor;
+	    get verticies(): Float32Array;
+	    get rgbColor(): RGBColor;
+	    set rgbColor(value: RGBColor);
 	    protected abstract computeVerticies(): void;
 	}
 
@@ -192,7 +204,8 @@ declare module 'graphics/shape/shape2d/point' {
 	    private _location;
 	    private _pointSize;
 	    constructor(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number);
-	    pointSize: number;
+	    get pointSize(): number;
+	    set pointSize(value: number);
 	    protected computeVerticies(): void;
 	    private addXYZColorAndPointSize;
 	}
@@ -205,7 +218,8 @@ declare module 'graphics/shape/dynamicShape' {
 	export abstract class DynamicShape extends Shape {
 	    private _modelMatrix;
 	    constructor(numberOfVerticies: number, point1: Vec3, point2: Vec3, rgbColor?: RGBColor);
-	    modelMatrix: Mat4;
+	    get modelMatrix(): Mat4;
+	    set modelMatrix(value: Mat4);
 	    protected abstract computeVerticies(): void;
 	    protected addXYZColorAndModelMatToVerticies(index: number, x: number, y: number, z: number): void;
 	    protected addTriangleToVerticies(index: number, vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3): void;
@@ -236,7 +250,7 @@ declare module 'graphics/shape/shape2d/triangle' {
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
 	export class Triangle extends DynamicShape {
-	    static readonly numberOfVerticies: number;
+	    static readonly numberOfVerticies = 3;
 	    shapeMode: ShapeMode;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
 	    protected computeVerticies(): void;
@@ -303,8 +317,8 @@ declare module 'graphics/shape/shape2d/line' {
 	    private _glBuffer;
 	    private _gl;
 	    constructor(point: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
-	    readonly verticies: Float32Array;
-	    readonly glBuffer: WebGLBuffer | null;
+	    get verticies(): Float32Array;
+	    get glBuffer(): WebGLBuffer | null;
 	    refreshWebglBuffer(): void;
 	    protected computeVerticies(): void;
 	    addVertex(vertex: Vec3): void;
@@ -319,7 +333,7 @@ declare module 'graphics/glBufferWrapper' {
 	    protected _glBuffer: WebGLBuffer | null;
 	    private _gl;
 	    constructor(gl: WebGLRenderingContext);
-	    readonly glBuffer: WebGLBuffer | null;
+	    get glBuffer(): WebGLBuffer | null;
 	    refreshWebglBuffer(): void;
 	}
 
@@ -338,9 +352,9 @@ declare module 'graphics/shape/shapeBuffer' {
 	        index: number;
 	    }>;
 	    constructor(gl: WebGLRenderingContext);
-	    readonly verticies: Float32Array;
-	    readonly count: number;
-	    readonly first: S;
+	    get verticies(): Float32Array;
+	    get count(): number;
+	    get first(): S;
 	    addShape(shape: S): string;
 	    addShapes(shapes: Array<S>): Array<string>;
 	    removeShape(id: string): boolean;
@@ -539,11 +553,15 @@ declare module 'graphics/webglRenderer' {
 	    private _positionColorVertexShaderSource;
 	    private _fragmentShaderSource;
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions, postResizeCalllback?: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void);
-	    backgroundColor: RGBColor;
-	    isFullscreen: boolean;
-	    calcWidth: (newWidth: number) => number;
-	    calcHeight: (newHeight: number) => number;
-	    protected postResizeCallback: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void;
+	    get backgroundColor(): RGBColor;
+	    set backgroundColor(backgroundColor: RGBColor);
+	    get isFullscreen(): boolean;
+	    set isFullscreen(value: boolean);
+	    get calcWidth(): (newWidth: number) => number;
+	    set calcWidth(value: (newWidth: number) => number);
+	    get calcHeight(): (newHeight: number) => number;
+	    set calcHeight(value: (newHeight: number) => number);
+	    protected set postResizeCallback(value: (canvas: HTMLCanvasElement, window: Window, renderer: WebGLRenderer) => void);
 	    setViewPortDimensions(newWidth: number, newHeight: number): void;
 	    abstract addShapeToScene(shape: Shape): string;
 	    abstract addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
@@ -637,7 +655,7 @@ declare module 'graphics/webglRenderer2d' {
 	    private _octogonsShapeBuffer;
 	    private _ellipsesShapeBuffer;
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
-	    readonly shapeFactory: ShapeFactory2d;
+	    get shapeFactory(): ShapeFactory2d;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addVertexToScene(position: Vec2, renderMode: RenderMode, color?: RGBColor): void;
@@ -692,8 +710,9 @@ declare module 'graphics/webglRenderer3d' {
 	    private _ellipsesShapeBuffer;
 	    private _boxShapeBuffer;
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
-	    camera: Camera;
-	    readonly shapeFactory: ShapeFactory3d;
+	    get camera(): Camera;
+	    set camera(value: Camera);
+	    get shapeFactory(): ShapeFactory3d;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addVertexToScene(position: Vec3, renderMode: RenderMode, color?: RGBColor): void;
