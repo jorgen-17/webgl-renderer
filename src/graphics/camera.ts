@@ -35,7 +35,6 @@ export class Camera
         this._projectionMatrix = new Mat4();
         this._vpMatrix = new Mat4();
 
-        console.log("jorgen patch 1")
         this._eyePosition = this._initialEyePosition = eyePosition;
         this._lookAtPoint = this._initialLookAtPoint = lookAtPoint;
         this._upPosition = this._initialUpPosition = upPosition;
