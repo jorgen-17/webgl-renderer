@@ -15,3 +15,5 @@ On the upcoming versions I would like to add:
 11. reimplement shapes as triangle strps and fans to possibly be more efficient
 12. figure out more efficient way to reduce cycles for verticies added directly to vertexBuffers(i.e. no looping through every frame)
 13. look into instanced rendering
+14. potential optiization - multiplying the model matrix by viewProjMat once per frame before passing it into the shader so the shader doesnt have to computer it for every single vertex
+15. should I use drawElements instead of drawArrays? does this save anything or just a convenience?

@@ -182,6 +182,106 @@ export class Camera
         this.updateView();
     }
 
+    public moveForward(moveAmount: number = 0.01): void
+    {
+        const direction = new Vec3(
+            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
+            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
+            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
+        );
+
+        this._eyePosition = this._eyePosition.add(direction);
+        this._lookAtPoint = this._lookAtPoint.add(direction);
+
+        this.updateView();
+    }
+
+    public moveBackward(moveAmount: number = 0.01): void
+    {
+        const direction = new Vec3(
+            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
+            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
+            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
+        );
+
+        this._eyePosition = new Vec3(
+            this._eyePosition.x - direction.x,
+            this._eyePosition.y - direction.y,
+            this._eyePosition.z - direction.z
+        );
+        this._lookAtPoint = new Vec3(
+            this._lookAtPoint.x - direction.x,
+            this._lookAtPoint.y - direction.y,
+            this._lookAtPoint.z - direction.z
+        );
+
+        this.updateView();
+    }
+
+    public moveLeft(moveAmount: number = 0.01): void
+    {
+        const direction = new Vec3(
+            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
+            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
+            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
+        );
+        // eventually I want to rotate along the up vector
+        const left = this.rotateVector(direction, Math.PI / 2, 'y');
+
+        this._eyePosition = this._eyePosition = new Vec3(
+            this._eyePosition.x + left.x,
+            this._eyePosition.y, // dont want to go up or down
+            this._eyePosition.z + left.z
+        );
+        this._lookAtPoint = this._lookAtPoint = new Vec3(
+            this._lookAtPoint.x + left.x,
+            this._lookAtPoint.y, // dont want to go up or down
+            this._lookAtPoint.z + left.z
+        );
+
+        this.updateView();
+    }
+
+    public moveRight(moveAmount: number = 0.01): void
+    {
+        const direction = new Vec3(
+            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
+            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
+            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
+        );
+        // eventually I want to rotate along the up vector
+        const right = this.rotateVector(direction, - Math.PI / 2, 'y');
+
+        this._eyePosition = this._eyePosition = new Vec3(
+            this._eyePosition.x + right.x,
+            this._eyePosition.y, // dont want to go up or down
+            this._eyePosition.z + right.z
+        );
+        this._lookAtPoint = this._lookAtPoint = new Vec3(
+            this._lookAtPoint.x + right.x,
+            this._lookAtPoint.y, // dont want to go up or down
+            this._lookAtPoint.z + right.z
+        );
+
+        this.updateView();
+    }
+
+    public moveUp(moveAmount: number = 0.01): void
+    {
+        this._eyePosition.y += moveAmount;
+        this._lookAtPoint.y += moveAmount;
+
+        this.updateView();
+    }
+
+    public moveDown(moveAmount: number = 0.01): void
+    {
+        this._eyePosition.y -= moveAmount;
+        this._lookAtPoint.y -= moveAmount;
+
+        this.updateView();
+    }
+
     public reset(): void
     {
         this._eyePosition = this._initialEyePosition;
@@ -189,7 +289,62 @@ export class Camera
         this._upPosition = this._initialUpPosition;
 
         this.updateView();
-        this.updatePerspective();
+    }
+
+    // need to add this to cuon-matrix-ts
+    private rotateVector(vector, angle, axis) : Vec3 {
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      let x = vector.x, y = vector.y, z = vector.z;
+
+      switch (axis) {
+        case 'x':
+          y = vector.y * cos - vector.z * sin;
+          z = vector.y * sin + vector.z * cos;
+          break;
+        case 'y':
+          x = vector.x * cos + vector.z * sin;
+          z = -vector.x * sin + vector.z * cos;
+          break;
+        case 'z':
+          x = vector.x * cos - vector.y * sin;
+          y = vector.x * sin + vector.y * cos;
+          break;
+        default:
+          console.log('Invalid axis. Use "x", "y", or "z".');
+      }
+
+      return new Vec3(x, y, z);
+    }
+
+    public rotateView(xOffset: number, yOffset: number): void {
+        // Convert to radians
+        const xRadians = xOffset * (Math.PI / 180);
+        let yRadians = yOffset * (Math.PI / 180);
+        // for some reason y is getting inverted when the camera crosses the z-origin
+        yRadians = this._eyePosition.z > 0 ? yRadians : -yRadians;
+
+        // Calculate view direction vector (from eye to lookAt)
+        const direction = new Vec3(
+            this._lookAtPoint.x - this._eyePosition.x,
+            this._lookAtPoint.y - this._eyePosition.y,
+            this._lookAtPoint.z - this._eyePosition.z
+        );
+
+        // Rotate the direction vector
+        let rotatedDirection = this.rotateVector(direction, xRadians, 'y');
+        rotatedDirection = this.rotateVector(rotatedDirection, yRadians, 'x');
+        // seems fine to not update upPosition for now, but appeareantly can lead to
+        // gimbal lock for big rotations, lets say like a plane doing a loop
+
+        // Calculate new lookAt point = eye + rotated direction
+        this._lookAtPoint = new Vec3(
+            this._eyePosition.x + rotatedDirection.x,
+            this._eyePosition.y + rotatedDirection.y,
+            this._eyePosition.z + rotatedDirection.z
+        );
+
+        this.updateView();
     }
     //#endregion: public methods
 

@@ -31,7 +31,7 @@ export class WebglRendererTestHelper
 
         // shader constants
         glMock.setup(x => x.FRAGMENT_SHADER).is(0x8B30);
-        glMock.setup(x => x.VERTEX_SHADER).is(0x8B31); // cutie patootie);
+        glMock.setup(x => x.VERTEX_SHADER).is(0x8B31);
         glMock.setup(x => x.COMPILE_STATUS).is(0x8B81);
         glMock.setup(x => x.LINK_STATUS).is(0x8B82);
 

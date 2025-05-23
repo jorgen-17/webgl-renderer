@@ -1,0 +1,1 @@
+1. currently the shapes that get drawn last get drawn over shapes drawn previously regardless of camera position or perspective.

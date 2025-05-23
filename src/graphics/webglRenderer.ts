@@ -472,7 +472,7 @@ export abstract class WebGLRenderer
         const shapePrototype = shapeBuffer.first;
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.glBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
             false, Constants.bytesPerPointVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);
@@ -495,7 +495,7 @@ export abstract class WebGLRenderer
         const shapePrototype = shapeBuffer.first;
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, shapeBuffer.glBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW); // ur cutieful
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, verticies, this.gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(this._a_position, Constants.floatsPerPosition, this.gl.FLOAT,
             false, Constants.bytesPerDynamicVertex, 0);
         this.gl.enableVertexAttribArray(this._a_position);

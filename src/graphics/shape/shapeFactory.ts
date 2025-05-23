@@ -41,10 +41,6 @@ export abstract class ShapeFactory
         rgbColor?: RGBColor): Hexagon
     {
         return new Hexagon(point1, point2, gl, rgbColor);
-        // youre
-        // cute baby you know its true
-        // love,
-        // - your girlfriend
     }
 
     protected createOctogon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext,

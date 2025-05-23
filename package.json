@@ -1,11 +1,11 @@
 {
   "name": "webgl-renderer",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "webGl renderering engine",
   "main": "lib/webgl-renderer.js",
   "scripts": {
     "build": "npx webpack --env build",
-    "dev": "npx webpack --verbose --progress --colors --watch --env dev",
+    "dev": "npx tsc && npx webpack --verbose --progress --colors --env dev",
     "test": "npx karma start karma.conf.js",
     "ci-test": "npx karma start karma.conf.js --browsers ChromeHeadless --single-run",
     "type": "node type-generator.js",

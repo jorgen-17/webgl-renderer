@@ -12,8 +12,6 @@
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "watch": true,
         "noEmitOnError": true,
         "strictNullChecks": true,
         "types" : [
