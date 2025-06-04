@@ -222,23 +222,32 @@ export class Camera
 
     public moveLeft(moveAmount: number = 0.01): void
     {
-        const direction = new Vec3(
-            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
-            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
-            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
+        // Calculate view direction (normalized)
+        const viewDir = this.normalize(new Vec3(
+            this._lookAtPoint.x - this._eyePosition.x,
+            this._lookAtPoint.y - this._eyePosition.y,
+            this._lookAtPoint.z - this._eyePosition.z
+        ));
+
+        // Calculate the camera's local right vector
+        const rightVector = this.normalize(this.crossProduct(viewDir, this._worldUp));
+
+        // Calculate left vector (negative right vector) and scale by move amount
+        const leftMovement = new Vec3(
+            -rightVector.x * moveAmount,
+            -rightVector.y * moveAmount,
+            -rightVector.z * moveAmount
         );
-        // eventually I want to rotate along the up vector
-        const left = this.rotateVector(direction, Math.PI / 2, 'y');
 
         this._eyePosition = new Vec3(
-            this._eyePosition.x + left.x,
-            this._eyePosition.y, // dont want to go up or down
-            this._eyePosition.z + left.z
+            this._eyePosition.x + leftMovement.x,
+            this._eyePosition.y + leftMovement.y,
+            this._eyePosition.z + leftMovement.z
         );
         this._lookAtPoint = new Vec3(
-            this._lookAtPoint.x + left.x,
-            this._lookAtPoint.y, // dont want to go up or down
-            this._lookAtPoint.z + left.z
+            this._lookAtPoint.x + leftMovement.x,
+            this._lookAtPoint.y + leftMovement.y,
+            this._lookAtPoint.z + leftMovement.z
         );
 
         this.updateView();
@@ -246,23 +255,32 @@ export class Camera
 
     public moveRight(moveAmount: number = 0.01): void
     {
-        const direction = new Vec3(
-            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
-            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
-            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
+        // Calculate view direction (normalized)
+        const viewDir = this.normalize(new Vec3(
+            this._lookAtPoint.x - this._eyePosition.x,
+            this._lookAtPoint.y - this._eyePosition.y,
+            this._lookAtPoint.z - this._eyePosition.z
+        ));
+
+        // Calculate the camera's local right vector
+        const rightVector = this.normalize(this.crossProduct(viewDir, this._worldUp));
+
+        // Scale right vector by move amount
+        const rightMovement = new Vec3(
+            rightVector.x * moveAmount,
+            rightVector.y * moveAmount,
+            rightVector.z * moveAmount
         );
-        // eventually I want to rotate along the up vector
-        const right = this.rotateVector(direction, - Math.PI / 2, 'y');
 
         this._eyePosition = new Vec3(
-            this._eyePosition.x + right.x,
-            this._eyePosition.y, // dont want to go up or down
-            this._eyePosition.z + right.z
+            this._eyePosition.x + rightMovement.x,
+            this._eyePosition.y + rightMovement.y,
+            this._eyePosition.z + rightMovement.z
         );
         this._lookAtPoint = new Vec3(
-            this._lookAtPoint.x + right.x,
-            this._lookAtPoint.y, // dont want to go up or down
-            this._lookAtPoint.z + right.z
+            this._lookAtPoint.x + rightMovement.x,
+            this._lookAtPoint.y + rightMovement.y,
+            this._lookAtPoint.z + rightMovement.z
         );
 
         this.updateView();
