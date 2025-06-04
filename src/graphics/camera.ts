@@ -5,6 +5,8 @@ import { Constants } from "../constants";
 export class Camera
 {
     //#region: instance variables
+    private readonly _worldUp: Vec3 = new Vec3(0, 1, 0);
+
     private _vpMatrix: Mat4;
     private _viewMatrix: Mat4;
     private _projectionMatrix: Mat4;
@@ -228,12 +230,12 @@ export class Camera
         // eventually I want to rotate along the up vector
         const left = this.rotateVector(direction, Math.PI / 2, 'y');
 
-        this._eyePosition = this._eyePosition = new Vec3(
+        this._eyePosition = new Vec3(
             this._eyePosition.x + left.x,
             this._eyePosition.y, // dont want to go up or down
             this._eyePosition.z + left.z
         );
-        this._lookAtPoint = this._lookAtPoint = new Vec3(
+        this._lookAtPoint = new Vec3(
             this._lookAtPoint.x + left.x,
             this._lookAtPoint.y, // dont want to go up or down
             this._lookAtPoint.z + left.z
@@ -252,12 +254,12 @@ export class Camera
         // eventually I want to rotate along the up vector
         const right = this.rotateVector(direction, - Math.PI / 2, 'y');
 
-        this._eyePosition = this._eyePosition = new Vec3(
+        this._eyePosition = new Vec3(
             this._eyePosition.x + right.x,
             this._eyePosition.y, // dont want to go up or down
             this._eyePosition.z + right.z
         );
-        this._lookAtPoint = this._lookAtPoint = new Vec3(
+        this._lookAtPoint = new Vec3(
             this._lookAtPoint.x + right.x,
             this._lookAtPoint.y, // dont want to go up or down
             this._lookAtPoint.z + right.z
@@ -280,6 +282,22 @@ export class Camera
         this._lookAtPoint.y -= moveAmount;
 
         this.updateView();
+    }
+
+    // Helper method for cross product calculation
+    private crossProduct(a: Vec3, b: Vec3): Vec3 {
+        return new Vec3(
+            a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x
+        );
+    }
+
+    // Helper method to normalize a vector
+    private normalize(v: Vec3): Vec3 {
+        const length = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+        if (length === 0) return new Vec3(0, 1, 0); // fallback to world up
+        return new Vec3(v.x / length, v.y / length, v.z / length);
     }
 
     public reset(): void
@@ -320,22 +338,26 @@ export class Camera
     public rotateView(xOffset: number, yOffset: number): void {
         // Convert to radians
         const xRadians = xOffset * (Math.PI / 180);
-        let yRadians = yOffset * (Math.PI / 180);
-        // for some reason y is getting inverted when the camera crosses the z-origin
-        yRadians = this._eyePosition.z > 0 ? yRadians : -yRadians;
+        const yRadians = yOffset * (Math.PI / 180);
 
-        // Calculate view direction vector (from eye to lookAt)
-        const direction = new Vec3(
+        // Calculate current view direction vector (normalized)
+        const viewDir = this.normalize(new Vec3(
             this._lookAtPoint.x - this._eyePosition.x,
             this._lookAtPoint.y - this._eyePosition.y,
             this._lookAtPoint.z - this._eyePosition.z
-        );
+        ));
 
-        // Rotate the direction vector
-        let rotatedDirection = this.rotateVector(direction, xRadians, 'y');
-        rotatedDirection = this.rotateVector(rotatedDirection, yRadians, 'x');
-        // seems fine to not update upPosition for now, but appeareantly can lead to
-        // gimbal lock for big rotations, lets say like a plane doing a loop
+        // Calculate the camera's local right vector (perpendicular to view direction and world up)
+        const rightVector = this.normalize(this.crossProduct(viewDir, this._worldUp));
+
+        // Calculate the camera's local up vector (perpendicular to right and view direction)
+        const upVector = this.normalize(this.crossProduct(rightVector, viewDir));
+
+        // Rotate around world Y-axis for horizontal rotation (yaw)
+        let rotatedDirection = this.rotateAroundAxis(viewDir, upVector, xRadians);
+
+        // Rotate around camera's local right vector for vertical rotation (pitch)
+        rotatedDirection = this.rotateAroundAxis(rotatedDirection, rightVector, yRadians);
 
         // Calculate new lookAt point = eye + rotated direction
         this._lookAtPoint = new Vec3(
@@ -345,6 +367,27 @@ export class Camera
         );
 
         this.updateView();
+    }
+
+    // Helper method to rotate a vector around an arbitrary axis
+    private rotateAroundAxis(vector: Vec3, axis: Vec3, angle: number): Vec3 {
+        // Rodrigues' rotation formula
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        // Ensure axis is normalized
+        const normalizedAxis = this.normalize(axis);
+
+        // Calculate cross product and dot product
+        const crossProduct = this.crossProduct(normalizedAxis, vector);
+        const dotProduct = normalizedAxis.x * vector.x + normalizedAxis.y * vector.y + normalizedAxis.z * vector.z;
+
+        // Apply Rodrigues' formula: v*cos(θ) + (k×v)*sin(θ) + k*(k·v)*(1-cos(θ))
+        return new Vec3(
+            vector.x * cos + crossProduct.x * sin + normalizedAxis.x * dotProduct * (1 - cos),
+            vector.y * cos + crossProduct.y * sin + normalizedAxis.y * dotProduct * (1 - cos),
+            vector.z * cos + crossProduct.z * sin + normalizedAxis.z * dotProduct * (1 - cos)
+        );
     }
     //#endregion: public methods
 
