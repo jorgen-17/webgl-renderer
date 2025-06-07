@@ -54,7 +54,7 @@ describe("camera:", () =>
             expect(camera.far).toEqual(Settings.defaultFar);
             expect(camera.eyePosition).toEqual(Settings.defaultEyePosition);
             expect(camera.lookAtPoint).toEqual(Settings.defaultLookAtPoint);
-            expect(camera.upPosition).toEqual(Settings.defaultUpPosition);
+            expect(camera.up).toEqual(Settings.defaultUpPosition);
 
             expect(camera.viewMatrix.elements).toEqual(defaultViewMatrix.elements);
             expect(camera.projectionMatrix.elements).toEqual(defaultProjectionMatrix.elements);
@@ -200,13 +200,13 @@ describe("camera:", () =>
 
         it("is get-able and set-able", () =>
         {
-            camera.upPosition = newUpPosition;
-            expect(camera.upPosition).toEqual(newUpPosition);
+            camera.up = newUpPosition;
+            expect(camera.up).toEqual(newUpPosition);
         });
 
         it("sets the perspective and vpmatricies", () =>
         {
-            camera.upPosition = newUpPosition;
+            camera.up = newUpPosition;
 
             expectjs(camera.viewMatrix.elements).toMatchSnapshot();
             expect(camera.projectionMatrix.elements).toEqual(defaultProjectionMatrix.elements);

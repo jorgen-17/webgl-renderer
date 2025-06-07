@@ -9,11 +9,12 @@
     "test": "npx karma start karma.conf.js",
     "ci-test": "npx karma start karma.conf.js --browsers ChromeHeadless --single-run",
     "type": "node type-generator.js",
-    "cover": "npx codecov -f coverage/json/cover.json"
+    "cover": "npx codecov -f coverage/json/cover.json",
+    "rei": "rm -rf node_modules && npm install"
   },
   "dependencies": {
     "cuid": "^1.3.8",
-    "cuon-matrix-ts": "^1.1.0",
+    "cuon-matrix-ts": "^1.1.1",
     "generic-slice": "^0.0.1"
   },
   "devDependencies": {

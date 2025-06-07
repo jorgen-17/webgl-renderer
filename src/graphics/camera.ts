@@ -138,16 +138,26 @@ export class Camera
         this.updateView();
     }
 
-    public get upPosition(): Vec3
+    public get up(): Vec3
     {
         return this._upPosition;
     }
 
-    public set upPosition(value: Vec3)
+    public set up(value: Vec3)
     {
         this._upPosition = value;
 
         this.updateView();
+    }
+
+    public get forward(): Vec3
+    {
+        return Vec3.normalize(Vec3.sub(this._lookAtPoint, this._eyePosition));
+    }
+
+    public get right(): Vec3
+    {
+        return Vec3.normalize(Vec3.cross(this.forward, this._upPosition));
     }
     //#endregion: getters and setters
 
@@ -186,102 +196,30 @@ export class Camera
 
     public moveForward(moveAmount: number = 0.01): void
     {
-        const direction = new Vec3(
-            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
-            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
-            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
-        );
+        const direction = Vec3.scale(this.forward, moveAmount);
 
-        this._eyePosition = this._eyePosition.add(direction);
-        this._lookAtPoint = this._lookAtPoint.add(direction);
+        this._eyePosition.add(direction);
+        this._lookAtPoint.add(direction);
 
         this.updateView();
     }
 
     public moveBackward(moveAmount: number = 0.01): void
     {
-        const direction = new Vec3(
-            (this._lookAtPoint.x - this._eyePosition.x) * moveAmount,
-            (this._lookAtPoint.y - this._eyePosition.y) * moveAmount,
-            (this._lookAtPoint.z - this._eyePosition.z) * moveAmount
-        );
-
-        this._eyePosition = new Vec3(
-            this._eyePosition.x - direction.x,
-            this._eyePosition.y - direction.y,
-            this._eyePosition.z - direction.z
-        );
-        this._lookAtPoint = new Vec3(
-            this._lookAtPoint.x - direction.x,
-            this._lookAtPoint.y - direction.y,
-            this._lookAtPoint.z - direction.z
-        );
-
-        this.updateView();
+        this.moveForward(-moveAmount);
     }
 
     public moveLeft(moveAmount: number = 0.01): void
     {
-        // Calculate view direction (normalized)
-        const viewDir = this.normalize(new Vec3(
-            this._lookAtPoint.x - this._eyePosition.x,
-            this._lookAtPoint.y - this._eyePosition.y,
-            this._lookAtPoint.z - this._eyePosition.z
-        ));
-
-        // Calculate the camera's local right vector
-        const rightVector = this.normalize(this.crossProduct(viewDir, this._worldUp));
-
-        // Calculate left vector (negative right vector) and scale by move amount
-        const leftMovement = new Vec3(
-            -rightVector.x * moveAmount,
-            -rightVector.y * moveAmount,
-            -rightVector.z * moveAmount
-        );
-
-        this._eyePosition = new Vec3(
-            this._eyePosition.x + leftMovement.x,
-            this._eyePosition.y + leftMovement.y,
-            this._eyePosition.z + leftMovement.z
-        );
-        this._lookAtPoint = new Vec3(
-            this._lookAtPoint.x + leftMovement.x,
-            this._lookAtPoint.y + leftMovement.y,
-            this._lookAtPoint.z + leftMovement.z
-        );
-
-        this.updateView();
+        this.moveRight(-moveAmount);
     }
 
     public moveRight(moveAmount: number = 0.01): void
     {
-        // Calculate view direction (normalized)
-        const viewDir = this.normalize(new Vec3(
-            this._lookAtPoint.x - this._eyePosition.x,
-            this._lookAtPoint.y - this._eyePosition.y,
-            this._lookAtPoint.z - this._eyePosition.z
-        ));
+        const rightMovement = Vec3.scale(this.right, moveAmount);
 
-        // Calculate the camera's local right vector
-        const rightVector = this.normalize(this.crossProduct(viewDir, this._worldUp));
-
-        // Scale right vector by move amount
-        const rightMovement = new Vec3(
-            rightVector.x * moveAmount,
-            rightVector.y * moveAmount,
-            rightVector.z * moveAmount
-        );
-
-        this._eyePosition = new Vec3(
-            this._eyePosition.x + rightMovement.x,
-            this._eyePosition.y + rightMovement.y,
-            this._eyePosition.z + rightMovement.z
-        );
-        this._lookAtPoint = new Vec3(
-            this._lookAtPoint.x + rightMovement.x,
-            this._lookAtPoint.y + rightMovement.y,
-            this._lookAtPoint.z + rightMovement.z
-        );
+        this._eyePosition.add(rightMovement);
+        this._lookAtPoint.add(rightMovement);
 
         this.updateView();
     }
@@ -296,10 +234,7 @@ export class Camera
 
     public moveDown(moveAmount: number = 0.01): void
     {
-        this._eyePosition.y -= moveAmount;
-        this._lookAtPoint.y -= moveAmount;
-
-        this.updateView();
+        this.moveUp(-moveAmount);
     }
 
     // Helper method for cross product calculation
@@ -414,7 +349,7 @@ export class Camera
     {
         this._viewMatrix.setLookAt(this.eyePosition.x, this.eyePosition.y, this.eyePosition.z,
             this.lookAtPoint.x, this.lookAtPoint.y, this.lookAtPoint.z,
-            this.upPosition.x, this.upPosition.y, this.upPosition.z);
+            this.up.x, this.up.y, this.up.z);
 
         this.updateViewProjectionMatrix();
     }
