@@ -106,6 +106,8 @@ declare module 'graphics/shape/boundingRectangle' {
 declare module 'graphics/camera' {
 	import { Mat4, Vec3 } from "cuon-matrix-ts";
 	export class Camera {
+	    private _movementSpeed;
+	    private _lookSensitivity;
 	    private _vpMatrix;
 	    private _viewMatrix;
 	    private _projectionMatrix;
@@ -119,7 +121,7 @@ declare module 'graphics/camera' {
 	    private _initialEyePosition;
 	    private _initialLookAtPoint;
 	    private _initialUpPosition;
-	    constructor(aspectRatio: number, fieldOfView?: number, near?: number, far?: number, eyePosition?: Vec3, lookAtPoint?: Vec3, upPosition?: Vec3);
+	    constructor(aspectRatio: number, fieldOfView?: number, near?: number, far?: number, eyePosition?: Vec3, lookAtPoint?: Vec3, upPosition?: Vec3, movementSpeed?: number, lookSensitivity?: number);
 	    get vpMatrix(): Mat4;
 	    get viewMatrix(): Mat4;
 	    get projectionMatrix(): Mat4;
@@ -135,13 +137,27 @@ declare module 'graphics/camera' {
 	    set eyePosition(value: Vec3);
 	    get lookAtPoint(): Vec3;
 	    set lookAtPoint(value: Vec3);
-	    get upPosition(): Vec3;
-	    set upPosition(value: Vec3);
-	    panX(xOffset: number): void;
-	    panY(yOffset: number): void;
+	    get up(): Vec3;
+	    set up(value: Vec3);
+	    get forward(): Vec3;
+	    get right(): Vec3;
+	    get movementSpeed(): number;
+	    set movementSpeed(value: number);
+	    get lookSensitivity(): number;
+	    set lookSensitivity(value: number);
+	    panX(xOffset?: number): void;
+	    panY(yOffset?: number): void;
 	    zoomIn(zOffset?: number): void;
 	    zoomOut(zOffset?: number): void;
+	    moveForward(moveAmount?: number): void;
+	    moveBackward(moveAmount?: number): void;
+	    moveLeft(moveAmount?: number): void;
+	    moveRight(moveAmount?: number): void;
+	    moveUp(moveAmount?: number): void;
+	    moveDown(moveAmount?: number): void;
 	    reset(): void;
+	    rotatePitch(yOffset: number): void;
+	    rotateYaw(xOffset: number): void;
 	    private updateView;
 	    private updatePerspective;
 	    private updateViewProjectionMatrix;
@@ -169,6 +185,8 @@ declare module 'settings' {
 	    defaultModelMatrix: Mat4;
 	    defaultIsFullScreen: boolean;
 	    instancedArrayExtensionName: string;
+	    defaultMovementSpeed: number;
+	    defaultLookSensitivity: number;
 	};
 
 }

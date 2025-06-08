@@ -16,6 +16,8 @@ const defaultUpPosition = new Vec3(0, 1, 0);
 const defaultFieldOfView = 60;
 const defaultNear = 0.01;
 const defaultFar = 2;
+const defaultMovementSpeed = 0.01;
+const defaultLookSensitivity = 0.1;
 const defaultModelMatrix = new Mat4().setIdentity();
 const defaultIsFullscreen = false;
 const instancedArrayExtensionName = "ANGLE_instanced_arrays";
@@ -36,5 +38,7 @@ export let Settings =
     defaultFar: defaultFar,
     defaultModelMatrix: defaultModelMatrix,
     defaultIsFullScreen: defaultIsFullscreen,
-    instancedArrayExtensionName: instancedArrayExtensionName
+    instancedArrayExtensionName: instancedArrayExtensionName,
+    defaultMovementSpeed: defaultMovementSpeed,
+    defaultLookSensitivity: defaultLookSensitivity
 };
