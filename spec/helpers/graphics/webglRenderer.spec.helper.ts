@@ -49,88 +49,88 @@ export class WebglRendererTestHelper
                 }
                 return null;
             }) as any
-        ) as jasmine.SpyObj<any>;
+        ).Spy;
 
 
         // init viewport
         spyDictionary["viewport"] = glMock.setup(x => x.viewport).is(
-            (x: number, y: number, width: number, height: number) => { /* noop */ }) as jasmine.SpyObj<any>;
+            (x: number, y: number, width: number, height: number) => { /* noop */ }).Spy;
 
         // create shader
         spyDictionary["createShader"] = glMock.setup(x => x.createShader)
             .is((type: number) => {
                 const shader = new Mock<WebGLShader>();
                 return shader.Object;
-            }) as jasmine.SpyObj<any>;
+            }).Spy;
         spyDictionary["shaderSource"] = glMock.setup(x => x.shaderSource)
-            .is((shader: WebGLShader, source: string) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((shader: WebGLShader, source: string) => { /* noop */ }).Spy;
         spyDictionary["compileShader"] = glMock.setup(x => x.compileShader)
-            .is((shader: WebGLShader) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((shader: WebGLShader) => { /* noop */ }).Spy;
         spyDictionary["getShaderParameter"] = glMock.setup(x => x.getShaderParameter)
-            .is((shader: WebGLShader, pName: number) => true) as jasmine.SpyObj<any>;
+            .is((shader: WebGLShader, pName: number) => true).Spy;
 
         // init shaders
         const shaderProgram = new Mock<WebGLProgram>();
         spyDictionary["createProgram"] = glMock.setup(x => x.createProgram)
-            .is(() => shaderProgram.Object) as jasmine.SpyObj<any>;
+            .is(() => shaderProgram.Object).Spy;
         spyDictionary["attachShader"] = glMock.setup(x => x.attachShader)
-            .is((program: WebGLProgram, shader: WebGLShader) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((program: WebGLProgram, shader: WebGLShader) => { /* noop */ }).Spy;
         spyDictionary["linkProgram"] = glMock.setup(x => x.linkProgram)
-            .is((program: WebGLProgram) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((program: WebGLProgram) => { /* noop */ }).Spy;
         spyDictionary["getProgramParameter"] = glMock.setup(x => x.getProgramParameter)
-            .is((program: WebGLProgram, pName: number) => true) as jasmine.SpyObj<any>;
+            .is((program: WebGLProgram, pName: number) => true).Spy;
         spyDictionary["getShaderInfoLog"] = glMock.setup(x => x.getShaderInfoLog)
-            .is((shader: WebGLShader) => "theres some shady shit going on") as jasmine.SpyObj<any>;
+            .is((shader: WebGLShader) => "theres some shady shit going on").Spy;
         spyDictionary["useProgram"] = glMock.setup(x => x.useProgram)
-            .is((program: WebGLProgram) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((program: WebGLProgram) => { /* noop */ }).Spy;
 
         // draw
         spyDictionary["clearColor"] = glMock.setup(x => x.clearColor)
-            .is((red: number, green: number, blue: number, alpha: number) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((red: number, green: number, blue: number, alpha: number) => { /* noop */ }).Spy;
         spyDictionary["clear"] = glMock.setup(x => x.clear)
-            .is((mask: number) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((mask: number) => { /* noop */ }).Spy;
 
 
         // drawGlArrays
         spyDictionary["getAttribLocation"] = glMock.setup(x => x.getAttribLocation)
-            .is((shader: WebGLShader, name: string) => 1) as jasmine.SpyObj<any>;
+            .is((shader: WebGLShader, name: string) => 1).Spy;
         spyDictionary["getUniformLocation"] = glMock.setup(x => x.getUniformLocation)
-            .is((shader: WebGLShader, name: string) => 1) as jasmine.SpyObj<any>;
-        spyDictionary["bufferData"] = glMock.setup(x => x.bufferData)
-            .is(
+            .is((shader: WebGLShader, name: string) => 1).Spy;
+        spyDictionary["bufferData"] = glMock.setup(x => x.bufferData).is(
             (_target: number, _dataOrSize: number | ArrayBufferView | ArrayBuffer | null, _usage: number) =>
             {/* noop */ }
-            ) as jasmine.SpyObj<any>;
+        ).Spy;
         const webglBuffer = new Mock<WebGLBuffer>();
         spyDictionary["createBuffer"] = glMock.setup(x => x.createBuffer)
-            .is(() => webglBuffer.Object) as jasmine.SpyObj<any>;
+            .is(() => webglBuffer.Object).Spy;
         spyDictionary["bindBuffer"] = glMock.setup(x => x.bindBuffer)
-            .is((target: number, buffer: WebGLBuffer) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((target: number, buffer: WebGLBuffer) => { /* noop */ }).Spy;
         spyDictionary["vertexAttribPointer"] = glMock.setup(x => x.vertexAttribPointer)
             .is(
             (index: number, size: number, type: number, normalized: boolean,
                 stride: number, offset: number) =>
             { /* noop */ }
-            ) as jasmine.SpyObj<any>;
+            ).Spy;
         spyDictionary["enableVertexAttribArray"] = glMock.setup(x => x.enableVertexAttribArray)
-            .is((index: number) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((index: number) => { /* noop */ }).Spy;
         spyDictionary["uniformMatrix4fv"] = glMock.setup(x => x.uniformMatrix4fv)
             .is(
             (uniformLocation: WebGLUniformLocation, transpose: boolean,
                 value: Float32Array | number[]) =>
-            { /* noop */ }) as jasmine.SpyObj<any>;
+            { /* noop */ }).Spy;
         spyDictionary["uniform1f"] = glMock.setup(x => x.uniform1f)
             .is(
             (uniformLocation: WebGLUniformLocation, value: number) =>
-            { /* noop */ }) as jasmine.SpyObj<any>;
-        spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays)
-            .is((mode: number, first: number, count: number) => { /* noop */ }) as jasmine.SpyObj<any>;
+            { /* noop */ }).Spy;
+        spyDictionary["drawArrays"] = glMock.setup(x => x.drawArrays).is(
+            (mode: number, first: number, count: number) => { /* noop */ }
+        ).Spy;
         spyDictionary["deleteBuffer"] = glMock.setup(x => x.deleteBuffer)
-            .is((buffer: WebGLBuffer) => { /* noop */ }) as jasmine.SpyObj<any>;
+            .is((buffer: WebGLBuffer) => { /* noop */ }).Spy;
 
         // resize callback
         spyDictionary["isContextLost"] = glMock.setup(x => x.isContextLost)
-            .is(() => false) as jasmine.SpyObj<any>;
+            .is(() => false).Spy;
 
         return spyDictionary;
     }
