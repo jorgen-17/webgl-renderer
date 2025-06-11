@@ -15,6 +15,12 @@ describe("line:", () =>
     beforeAll(() =>
     {
         glMock.setup(x => x.LINE_STRIP).is(0x0003);
+
+        glMock.setup(x => x.createBuffer).is(() => {
+            const buffer = new Mock<WebGLBuffer>();
+            return buffer.Object;
+        });
+        glMock.setup(x => x.deleteBuffer).is((buffer: WebGLBuffer) => { /* noop */ }).Spy;
     });
 
     it("constructor should initialize correctly", () =>

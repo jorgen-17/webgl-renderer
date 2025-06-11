@@ -27,6 +27,11 @@ describe("shapeFactory3d:", () =>
         glMock.setup(x => x.POINTS).is(0x0000);
         glMock.setup(x => x.TRIANGLES).is(0x0004);
         glMock.setup(x => x.TRIANGLE_STRIP).is(0x0005);
+
+        glMock.setup(x => x.createBuffer).is(() => {
+            const buffer = new Mock<WebGLBuffer>();
+            return buffer.Object;
+        });
     });
 
     describe("createPoint", () =>

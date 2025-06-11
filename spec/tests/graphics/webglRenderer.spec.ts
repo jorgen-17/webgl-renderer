@@ -364,7 +364,8 @@ describe("webglRenderer:", () =>
         beforeEach(() =>
         {
             windowAddEventListenerSpy.calls.reset();
-
+            calcHeightSpy.calls.reset();
+            calcWidthSpy.calls.reset();
         });
 
         it("is set-able and get-able", () =>
@@ -409,8 +410,8 @@ describe("webglRenderer:", () =>
             expect("function").toEqual(typeof windowAddEventListenerSpy.calls.all()[0].args[1]);
             expect(false).toEqual(windowAddEventListenerSpy.calls.all()[0].args[2]);
 
-            expect(calcHeightSpy).toHaveBeenCalledTimes(2);
-            expect(calcWidthSpy).toHaveBeenCalledTimes(2);
+            expect(calcHeightSpy).toHaveBeenCalledTimes(1);
+            expect(calcWidthSpy).toHaveBeenCalledTimes(1);
         });
     });
 

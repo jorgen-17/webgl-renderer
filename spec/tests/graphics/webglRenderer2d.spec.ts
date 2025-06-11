@@ -535,6 +535,24 @@ describe("webglRenderer2d:", () =>
 
             beforeAll(() =>
             {
+                instancedArraysSpiesDictionary =
+                    WebglRendererTestHelper.setupInstancedArrayMocks(instancedArrayExtensionMock);
+                glSpiesDictionary = WebglRendererTestHelper.setupGlMockFunctions(glMock, instancedArrayExtension);
+
+                canvasMock.setup(c => c.width).is(800);
+                canvasMock.setup(c => c.height).is(600);
+                getContextSpy = canvasMock.setup<(contextId: "webgl" | "experimental-webgl",
+                        contextAttributes?: WebGLContextAttributes)
+                        => WebGLRenderingContext | null>(c => c.getContext)
+                    .is((contextName: string, contextAttributes: {}) => gl).Spy;
+                canvasAddEventListenerSpy = canvasMock.setup(c => c.addEventListener)
+                     .is((eventName: string) => { /* no-op */ }).Spy;
+
+                browserHelperMock.setup(bh => bh.isIE).is(() => false);
+                browserHelperMock.setup(bh => bh.isEdge).is(() => false);
+
+                renderer = new WebGLRenderer2dMock(canvas, defaultOptions);
+
                 orangePoint2 = renderer.shapeFactory.createPoint(new Vec3(0, 0), gl, orange);
                 redTriangle2 = renderer.shapeFactory.createShape(new Vec3(0, 0), new Vec3(1, 1),
                     ShapeMode.triangles, gl, red);
