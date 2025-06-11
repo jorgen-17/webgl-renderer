@@ -1,56 +1,60 @@
 {
-    "name": "webgl-renderer",
-    "version": "0.7.4",
-    "description": "webGl renderering engine",
-    "main": "lib/webgl-renderer.min.js",
-    "scripts": {
-        "build": "./node_modules/.bin/webpack --env build",
-        "dev": "./node_modules/.bin/webpack --verbose --progress --colors --watch --env dev",
-        "test": "./node_modules/.bin/karma start karma.conf.js",
-        "ci-test": "./node_modules/.bin/karma start karma.conf.js --browsers ChromeHeadless --single-run",
-        "type": "./node_modules/.bin/dts-generator --name webgl-renderer --project . --out lib/webgl-renderer.d.ts --exclude node_modules/**/*.d.ts --exclude specHelpers/**/*.ts --exclude spec/**/*.ts --extern cuon-matrix-ts",
-        "cover": "./node_modules/.bin/codecov -f coverage/json/cover.json"
-    },
-    "dependencies": {
-        "cuon-matrix-ts": "^1.0.1"
-    },
-    "devDependencies": {
-        "@types/jasmine": "^2.5.53",
-        "codecov": "^2.2.0",
-        "custom-event-polyfill": "^0.3.0",
-        "dts-generator": "^2.1.0",
-        "jasmine-core": "^2.6.4",
-        "karma": "^1.7.0",
-        "karma-jasmine": "^1.1.0",
-        "karma-chrome-launcher": "^2.2.0",
-        "karma-firefox-launcher": "^1.0.1",
-        "karma-ie-launcher": "^1.0.0",
-        "karma-edge-launcher": "^0.4.1",
-        "karma-typescript": "^3.0.4",
-        "source-map-loader": "^0.2.1",
-        "typescript": "^2.4.1",
-        "ts-loader": "^2.2.2",
-        "ts-mocks": "^0.2.2",
-        "tslint": "^5.5.0",
-        "webpack": "^3.2.0",
-        "yargs": "^8.0.2"
-    },
-    "keywords": [
-        "webgl",
-        "library",
-        "universal",
-        "umd",
-        "typescript",
-        "commonjs"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/typedefJorge/webgl-renderer.git"
-    },
-    "author": "typedefjorge",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/typedefJorge/webgl-renderer/issues"
-    },
-    "homepage": "https://github.com/typedefJorge/webgl-renderer#readme"
+  "name": "webgl-renderer",
+  "version": "0.7.9",
+  "description": "webGl renderering engine",
+  "main": "lib/webgl-renderer.min.js",
+  "scripts": {
+    "build": "npx webpack --env build",
+    "dev": "npx tsc && npx webpack --verbose --progress --colors --env dev",
+    "test": "npx karma start karma.conf.js",
+    "ci-test": "npx karma start karma.conf.js --browsers ChromeHeadless --single-run",
+    "type": "node type-generator.js",
+    "cover": "npx codecov -f coverage/json/cover.json",
+    "rei": "rm -rf node_modules && npm install"
+  },
+  "dependencies": {
+    "cuid": "^1.3.8",
+    "cuon-matrix-ts": "git+https://github.com/jorgen-17/cuon-matrix-ts.git#v1.1.2",
+    "generic-slice": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.8.9",
+    "codecov": "^2.2.0",
+    "custom-event-polyfill": "^0.3.0",
+    "dts-generator": "^2.1.0",
+    "jasmine-core": "^5.1.1",
+    "jasmine-snapshot": "^1.7.8",
+    "karma": "^6.4.2",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-edge-launcher": "^0.4.2",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^5.1.0",
+    "karma-typescript": "^5.5.4",
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.2.2",
+    "ts-mocks": "^0.2.2",
+    "tslint": "^5.5.0",
+    "typescript": "^3.9.10",
+    "webpack": "^3.2.0",
+    "yargs": "^8.0.2"
+  },
+  "keywords": [
+    "webgl",
+    "library",
+    "universal",
+    "umd",
+    "typescript",
+    "commonjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/typedefJorge/webgl-renderer.git"
+  },
+  "author": "typedefjorge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/typedefJorge/webgl-renderer/issues"
+  },
+  "homepage": "https://github.com/typedefJorge/webgl-renderer#readme"
 }

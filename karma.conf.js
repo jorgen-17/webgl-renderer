@@ -13,28 +13,37 @@ module.exports = function(config) {
         // software under test
         { pattern: "src/**/*.ts" },
 
+        // snapshots
+        { pattern: "spec/snapshots/**/*.ts" },
+
         // test helpers
-        { pattern: "specHelpers/**/*.ts" },
+        { pattern: "spec/helpers/**/*.ts" },
         { pattern: "node_modules/custom-event-polyfill/custom-event-polyfill.js", included: true },
 
         // tests
-        { pattern: "spec/graphics/shapes2d/boundingRectangle.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/midpoint.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/point.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/line.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/triangle.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/rectangle.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/hexagon.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/octogon.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/ellipse.spec.ts" },
-        { pattern: "spec/graphics/shapes2d/shapeFactory.spec.ts" },
-        { pattern: "spec/graphics/webglRenderer.spec.ts" },
-        { pattern: "spec/graphics/vertexBuffer.spec.ts" },
-        { pattern: "spec/graphics/colorMapper.spec.ts" },
-        { pattern: "spec/graphics/renderModeMapper.spec.ts" },
-        { pattern: "spec/graphics/camera.spec.ts" },
-        { pattern: "spec/utils/vector.spec.ts" },
-        { pattern: "spec/utils/mouseHelper.spec.ts" }
+        { pattern: "spec/tests/graphics/shape/shape2d/point.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape2d/line.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape2d/triangle.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape2d/rectangle.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape2d/hexagon.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape2d/octogon.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape2d/ellipse.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shape3d/box.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/midpoint.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/boundingRectangle.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shapeBuffer.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shapeFactory2d.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shapeFactory3d.spec.ts" },
+        { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
+        { pattern: "spec/tests/graphics/webglRenderer2d.spec.ts" },
+        { pattern: "spec/tests/graphics/webglRenderer3d.spec.ts" },
+        { pattern: "spec/tests/graphics/colorMapper.spec.ts" },
+        { pattern: "spec/tests/graphics/renderModeMapper.spec.ts" },
+        { pattern: "spec/tests/graphics/camera.spec.ts" },
+        { pattern: "spec/tests/graphics/vertexBuffer.spec.ts" },
+        { pattern: "spec/tests/utils/float32ArrayUtils.spec.ts" },
+        { pattern: "spec/tests/utils/vector.spec.ts" },
+        { pattern: "spec/tests/utils/mouseHelper.spec.ts" }
     ],
 
 
@@ -47,8 +56,8 @@ module.exports = function(config) {
         coverageOptions: {
             instrumentation: true, // set to false if you need to debug though source ts
             exclude: [
-                /\.(d|spec|test|mock|snapshots)\.ts/i,
-                /specHelpers\//i,
+                /\.(d|spec|test|tests|mock|snapshot)\.ts/i,
+                /spec\/helpers\//i,
                 /utils\/browserHelper\.ts/i
             ]
         },

@@ -1,33 +1,47 @@
-import { WebGLRenderer } from "./src/graphics/webglRenderer";
-import { Color, ColorMapper } from "./src/graphics/colorMapper";
-import { Line } from "./src/graphics/shapes2d/line";
-import { Shape2d } from "./src/graphics/shapes2d/shape2d";
-import { ShapeFactory } from "./src/graphics/shapes2d/shapeFactory";
-import { ShapeMode } from "./src/graphics/shapes2d/shapeMode";
-import { RenderMode } from "./src/graphics/renderModeMapper";
-import { Ellipse } from "./src/graphics/shapes2d/ellipse";
-import { Rectangle } from "./src/graphics/shapes2d/rectangle";
-import { Hexagon } from "./src/graphics/shapes2d/hexagon";
-import { Octogon } from "./src/graphics/shapes2d/octogon";
-import { Triangle } from "./src/graphics/shapes2d/triangle";
-import { RGBColor } from "./src/graphics/rgbColor";
+import { WebGLRenderer2d } from "./src/graphics/webglRenderer2d";
+import { WebGLRenderer3d } from "./src/graphics/webglRenderer3d";
+import { Vec2, Vec3, Mat4 } from "cuon-matrix-ts";
+import { RGBColor } from "./src/graphics/color/rgbColor";
+import { Color, ColorMapper } from "./src/graphics/color/colorMapper";
+import { RenderMode, RenderModeMapper } from "./src/graphics/renderModeMapper";
+import { Shape } from "./src/graphics/shape/shape";
+import { DynamicShape } from "./src/graphics/shape/dynamicShape";
+import { ShapeFactory } from "./src/graphics/shape/shapeFactory";
+import { ShapeFactory2d } from "./src/graphics/shape/shapeFactory2d";
+import { ShapeFactory3d } from "./src/graphics/shape/shapeFactory3d";
+import { ShapeMode } from "./src/graphics/shape/shapeMode";
+import { Line } from "./src/graphics/shape/shape2d/line";
+import { Ellipse } from "./src/graphics/shape/shape2d/ellipse";
+import { Rectangle } from "./src/graphics/shape/shape2d/rectangle";
+import { Hexagon } from "./src/graphics/shape/shape2d/hexagon";
+import { Octogon } from "./src/graphics/shape/shape2d/octogon";
+import { Triangle } from "./src/graphics/shape/shape2d/triangle";
+import { Point } from "./src/graphics/shape/shape2d/point";
+import { Box } from "./src/graphics/shape/shape3d/box";
 import { Camera } from "./src/graphics/camera";
-import { Point } from "./src/graphics/shapes2d/point";
 import { RenderingOptions } from "./src/graphics/renderingOptions";
-import { Vec3 } from "cuon-matrix-ts";
 import { BrowserHelper } from "./src/utils/browserHelper";
 import { MouseHelper } from "./src/utils/mouseHelper";
 
 export
 {
-    WebGLRenderer,
+    WebGLRenderer2d,
+    WebGLRenderer3d,
     RenderingOptions,
+    Vec2,
+    Vec3,
+    Mat4,
     RGBColor,
     Color,
     ColorMapper,
-    ShapeMode,
     RenderMode,
-    Shape2d,
+    RenderModeMapper,
+    Shape,
+    DynamicShape,
+    ShapeFactory,
+    ShapeFactory2d,
+    ShapeFactory3d,
+    ShapeMode,
     Ellipse,
     Triangle,
     Rectangle,
@@ -35,9 +49,8 @@ export
     Hexagon,
     Octogon,
     Point,
-    ShapeFactory,
+    Box,
     Camera,
-    Vec3,
     BrowserHelper,
     MouseHelper
 };

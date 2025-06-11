@@ -1,10 +1,13 @@
-export type RenderMode = "points" |
-                         "lines" |
-                         "lineStrip" |
-                         "lineLoop" |
-                         "triangles" |
-                         "triangleStrip" |
-                         "triangleFan";
+export enum RenderMode
+{
+    points = "points",
+    lines = "lines",
+    lineStrip = "lineStrip",
+    lineLoop = "lineLoop",
+    triangles = "triangles",
+    triangleStrip = "triangleStrip",
+    triangleFan = "triangleFan"
+}
 
 export class RenderModeMapper
 {

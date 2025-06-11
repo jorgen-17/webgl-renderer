@@ -1,1 +1,5 @@
-export type ShaderType = "fragment" | "vertex";
+export enum ShaderType
+{
+    fragment = "fragment",
+    vertex = "vertex"
+}
