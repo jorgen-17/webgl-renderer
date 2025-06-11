@@ -6,14 +6,13 @@ On the upcoming versions I would like to add:
         2. rainbow color, every vertex is a different color
 3. Shape preview: so users can see what they are drawring as they are drawing it
 4. Line thickness??
-5. Add rotate camera method to renderer
-6. make all browsers request "experimental-webgl", accordint to spec if "webgl" works so should "experimental-webgl"
-7. gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);???
-8. we should probably avoid creating new buffers each draw call, or maybe always delete buffer after its drawn
-9. should i use a framebuffer or renderbuffer?
-10. avoid rendering objects not in view of the camera?
-11. reimplement shapes as triangle strps and fans to possibly be more efficient
-12. figure out more efficient way to reduce cycles for verticies added directly to vertexBuffers(i.e. no looping through every frame)
-13. look into instanced rendering
-14. potential optiization - multiplying the model matrix by viewProjMat once per frame before passing it into the shader so the shader doesnt have to computer it for every single vertex
-15. should I use drawElements instead of drawArrays? does this save anything or just a convenience?
+5. make all browsers request "experimental-webgl", accordint to spec if "webgl" works so should "experimental-webgl"
+6. gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);???
+7. we should probably avoid creating new buffers each draw call, or maybe always delete buffer after its drawn
+8. should i use a framebuffer or renderbuffer?
+9. avoid rendering objects not in view of the camera?
+10. reimplement shapes as triangle strps and fans to possibly be more efficient
+11. figure out more efficient way to reduce cycles for verticies added directly to vertexBuffers(i.e. no looping through every frame)
+12. look into instanced rendering
+13. potential optiization - multiplying the model matrix by viewProjMat once per frame before passing it into the shader so the shader doesnt have to computer it for every single vertex
+14. should I use drawElements instead of drawArrays? does this save anything or just a convenience?
