@@ -14,6 +14,19 @@ declare module 'graphics/renderModeMapper' {
 	}
 
 }
+declare module 'graphics/shape/shapeMode' {
+	export enum ShapeMode {
+	    points = "points",
+	    lines = "lines",
+	    triangles = "triangles",
+	    rectangles = "rectangles",
+	    hexagons = "hexagons",
+	    octogons = "octogons",
+	    ellipses = "ellipses",
+	    box = "box"
+	}
+
+}
 declare module 'constants' {
 	export let Constants: {
 	    floatsPerPosition: number;
@@ -60,26 +73,6 @@ declare module 'utils/float32Vector' {
 	}
 
 }
-declare module 'graphics/drawingMode' {
-	export enum DrawingMode {
-	    Shapes = 0,
-	    Verticies = 1
-	}
-
-}
-declare module 'graphics/shape/shapeMode' {
-	export enum ShapeMode {
-	    points = "points",
-	    lines = "lines",
-	    triangles = "triangles",
-	    rectangles = "rectangles",
-	    hexagons = "hexagons",
-	    octogons = "octogons",
-	    ellipses = "ellipses",
-	    box = "box"
-	}
-
-}
 declare module 'graphics/color/rgbColor' {
 	export class RGBColor {
 	    red: number;
@@ -100,6 +93,13 @@ declare module 'graphics/shape/boundingRectangle' {
 	    private isTopLeftBottomRight;
 	    private isBottomRightTopLeft;
 	    private isBottomLeftTopRight;
+	}
+
+}
+declare module 'graphics/drawingMode' {
+	export enum DrawingMode {
+	    Shapes = 0,
+	    Verticies = 1
 	}
 
 }
@@ -229,52 +229,6 @@ declare module 'graphics/shape/shape2d/point' {
 	}
 
 }
-declare module 'graphics/shape/dynamicShape' {
-	import { Vec3, Mat4 } from "cuon-matrix-ts";
-	import { RGBColor } from 'graphics/color/rgbColor';
-	import { Shape } from 'graphics/shape/shape';
-	export abstract class DynamicShape extends Shape {
-	    private _modelMatrix;
-	    constructor(numberOfVerticies: number, point1: Vec3, point2: Vec3, rgbColor?: RGBColor);
-	    get modelMatrix(): Mat4;
-	    set modelMatrix(value: Mat4);
-	    protected abstract computeVerticies(): void;
-	    protected addXYZColorAndModelMatToVerticies(index: number, x: number, y: number, z: number): void;
-	    protected addTriangleToVerticies(index: number, vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3): void;
-	}
-
-}
-declare module 'utils/tuple' {
-	export interface Tuple<T1, T2> {
-	    first: T1;
-	    second: T2;
-	}
-
-}
-declare module 'graphics/shape/midpoint' {
-	import { Tuple } from 'utils/tuple';
-	import { Vec3 } from "cuon-matrix-ts";
-	export class Midpoint {
-	    static between(point1: Vec3, point2: Vec3): Vec3;
-	}
-	export class ThirdPoints {
-	    static between(point1: Vec3, point2: Vec3): Tuple<Vec3, Vec3>;
-	}
-
-}
-declare module 'graphics/shape/shape2d/triangle' {
-	import { Vec3 } from "cuon-matrix-ts";
-	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { RGBColor } from 'graphics/color/rgbColor';
-	import { ShapeMode } from 'graphics/shape/shapeMode';
-	export class Triangle extends DynamicShape {
-	    static readonly numberOfVerticies = 3;
-	    shapeMode: ShapeMode;
-	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
-	    protected computeVerticies(): void;
-	}
-
-}
 declare module 'utils/browserHelper' {
 	export class BrowserHelper {
 	    isIE(): boolean;
@@ -382,6 +336,93 @@ declare module 'graphics/shape/shapeBuffer' {
 	}
 
 }
+declare module 'graphics/shape/dynamicShape' {
+	import { Vec3, Mat4 } from "cuon-matrix-ts";
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { Shape } from 'graphics/shape/shape';
+	export abstract class DynamicShape extends Shape {
+	    private _modelMatrix;
+	    constructor(numberOfVerticies: number, point1: Vec3, point2: Vec3, rgbColor?: RGBColor);
+	    get modelMatrix(): Mat4;
+	    set modelMatrix(value: Mat4);
+	    protected abstract computeVerticies(): void;
+	    protected addXYZColorAndModelMatToVerticies(index: number, x: number, y: number, z: number): void;
+	    protected addTriangleToVerticies(index: number, vertex1Position: Vec3, vertex2Position: Vec3, vertex3Position: Vec3): void;
+	}
+
+}
+declare module 'graphics/shape/pointBuffer' {
+	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
+	import { Point } from 'graphics/shape/shape2d/point';
+	export class PointBuffer extends ShapeBuffer<Point> {
+	    updatePointSize(id: string, newPointSize: number): boolean;
+	}
+
+}
+declare module 'utils/tuple' {
+	export interface Tuple<T1, T2> {
+	    first: T1;
+	    second: T2;
+	}
+
+}
+declare module 'graphics/shape/midpoint' {
+	import { Tuple } from 'utils/tuple';
+	import { Vec3 } from "cuon-matrix-ts";
+	export class Midpoint {
+	    static between(point1: Vec3, point2: Vec3): Vec3;
+	}
+	export class ThirdPoints {
+	    static between(point1: Vec3, point2: Vec3): Tuple<Vec3, Vec3>;
+	}
+
+}
+declare module 'graphics/precision' {
+	export enum Precision {
+	    Low = 0,
+	    High = 1
+	}
+
+}
+declare module 'graphics/shape/shape2d/ellipse' {
+	import { Vec3 } from "cuon-matrix-ts";
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	import { Precision } from 'graphics/precision';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	export class Ellipse extends DynamicShape {
+	    private static readonly numberOfEndPoints;
+	    private static readonly highPrecisionNumberOfPointsAlongCurve;
+	    private static readonly highPrecisionNumberOfVerticies;
+	    private static readonly lowPrecisionNumberOfPointsAlongCurve;
+	    private static readonly lowPrecisionNumberOfVerticies;
+	    shapeMode: ShapeMode;
+	    numberOfVerticies: number;
+	    private center;
+	    private leftEndPoint;
+	    private rightEndPoint;
+	    private horizontalRadius;
+	    private verticalRadius;
+	    private precision;
+	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, precision?: Precision, rgbColor?: RGBColor);
+	    protected computeVerticies(): void;
+	    private getYDistanceFromCenterForX;
+	}
+
+}
+declare module 'graphics/shape/shape2d/triangle' {
+	import { Vec3 } from "cuon-matrix-ts";
+	import { DynamicShape } from 'graphics/shape/dynamicShape';
+	import { RGBColor } from 'graphics/color/rgbColor';
+	import { ShapeMode } from 'graphics/shape/shapeMode';
+	export class Triangle extends DynamicShape {
+	    static readonly numberOfVerticies = 3;
+	    shapeMode: ShapeMode;
+	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
+	    protected computeVerticies(): void;
+	}
+
+}
 declare module 'graphics/shape/shape2d/rectangle' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
@@ -421,39 +462,6 @@ declare module 'graphics/shape/shape2d/octogon' {
 	}
 
 }
-declare module 'graphics/precision' {
-	export enum Precision {
-	    Low = 0,
-	    High = 1
-	}
-
-}
-declare module 'graphics/shape/shape2d/ellipse' {
-	import { Vec3 } from "cuon-matrix-ts";
-	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { Precision } from 'graphics/precision';
-	import { RGBColor } from 'graphics/color/rgbColor';
-	import { ShapeMode } from 'graphics/shape/shapeMode';
-	export class Ellipse extends DynamicShape {
-	    private static readonly numberOfEndPoints;
-	    private static readonly highPrecisionNumberOfPointsAlongCurve;
-	    private static readonly highPrecisionNumberOfVerticies;
-	    private static readonly lowPrecisionNumberOfPointsAlongCurve;
-	    private static readonly lowPrecisionNumberOfVerticies;
-	    shapeMode: ShapeMode;
-	    numberOfVerticies: number;
-	    private center;
-	    private leftEndPoint;
-	    private rightEndPoint;
-	    private horizontalRadius;
-	    private verticalRadius;
-	    private precision;
-	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, precision?: Precision, rgbColor?: RGBColor);
-	    protected computeVerticies(): void;
-	    private getYDistanceFromCenterForX;
-	}
-
-}
 declare module 'graphics/shape/shape3d/box' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
@@ -465,14 +473,6 @@ declare module 'graphics/shape/shape3d/box' {
 	    private _backFaceZ;
 	    constructor(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor);
 	    protected computeVerticies(): void;
-	}
-
-}
-declare module 'graphics/shape/pointBuffer' {
-	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
-	import { Point } from 'graphics/shape/shape2d/point';
-	export class PointBuffer extends ShapeBuffer<Point> {
-	    updatePointSize(id: string, newPointSize: number): boolean;
 	}
 
 }
