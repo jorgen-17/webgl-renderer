@@ -1,6 +1,4 @@
 //#region: imports
-import * as cuid from "cuid";
-
 import { WebGLRenderer } from "./webglRenderer";
 import { Camera } from "./camera";
 import { Shape } from "./shape/shape";
@@ -16,9 +14,6 @@ import { Hexagon } from "./shape/shape2d/hexagon";
 import { Octogon } from "./shape/shape2d/octogon";
 import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
-import { StringDictionary } from "../utils/dictionary";
-import { ShaderSettings } from "../shaderSettings";
-import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
 import { ShapeFactory3d } from "./shape/shapeFactory3d";
 import { VertexBuffer } from "./vertexBuffer";

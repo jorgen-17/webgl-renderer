@@ -90,6 +90,15 @@ jobs:
         commit_message: "Applying built changes for new version ${{ steps.current-version.outputs.version }}"
         file_pattern: "lib/*"
 
+    - name: Get commit message
+      id: commit-message
+      if: steps.version-check.outputs.version-increased == 'true'
+      run: |
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        echo "message<<EOF" >> $GITHUB_OUTPUT
+        echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
     - name: Create version tag
       if: steps.version-check.outputs.version-increased == 'true'
       run: |
