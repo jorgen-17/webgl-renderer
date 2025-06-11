@@ -1,26 +1,17 @@
 //#region: imports
-import { Mock, Setup } from "ts-mocks";
+import { Mock } from "ts-mocks";
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Ellipse } from "../../../src/graphics/shape/shape2d/ellipse";
-import { Precision } from "../../../src/graphics/precision";
 import { RGBColor } from "../../../src/graphics/color/rgbColor";
-import { Triangle } from "../../../src/graphics/shape/shape2d/triangle";
-import { ShapeFactory } from "../../../src/graphics/shape/shapeFactory";
-import { Constants } from "../../../src/constants";
-import { ShaderSettings } from "../../../src/shaderSettings";
 import { ShapeMode } from "../../../src/graphics/shape/shapeMode";
-import { WebGLRenderer } from "../../../src/graphics/webglRenderer";
 import { WebglRendererTestHelper } from "../../helpers/graphics/webglRenderer.spec.helper";
-import { WebGLRenderer3dMock, WebGLRenderer2dMock } from "../../helpers/graphics/webglRendererMock";
+import { WebGLRenderer3dMock } from "../../helpers/graphics/webglRendererMock";
 import { DynamicShape } from "../../../src/graphics/shape/dynamicShape";
 import { StringDictionary } from "../../../src/utils/dictionary";
 import { Line } from "../../../src/graphics/shape/shape2d/line";
-import { Camera } from "../../../src/graphics/camera";
 import { RenderingOptions } from "../../../src/graphics/renderingOptions";
 import { Point } from "../../../src/graphics/shape/shape2d/point";
 import { Box } from "../../../src/graphics/shape/shape3d/box";
-import { Settings } from "../../../src/settings";
 import { BrowserHelper } from "../../../src/utils/browserHelper";
 //#endregion: imports
 

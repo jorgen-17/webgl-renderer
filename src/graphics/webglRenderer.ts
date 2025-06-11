@@ -2,14 +2,10 @@
 import { Vec3, Mat4, Vec2 } from "cuon-matrix-ts";
 import * as cuid from "cuid";
 
-import { Float32Vector } from "../utils/float32Vector";
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
-import { DrawingMode } from "./drawingMode";
 import { ShapeMode } from "./shape/shapeMode";
 import { Point } from "./shape/shape2d/point";
-import { Triangle } from "./shape/shape2d/triangle";
 import { RGBColor } from "./color/rgbColor";
-import { Camera } from "./camera";
 import { RenderingOptions } from "./renderingOptions";
 import { StringDictionary } from "../utils/dictionary";
 import { Constants } from "../constants";
@@ -19,11 +15,6 @@ import { Line } from "./shape/shape2d/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
 import { ShapeBuffer } from "./shape/shapeBuffer";
-import { Rectangle } from "./shape/shape2d/rectangle";
-import { Hexagon } from "./shape/shape2d/hexagon";
-import { Octogon } from "./shape/shape2d/octogon";
-import { Ellipse } from "./shape/shape2d/ellipse";
-import { Box } from "./shape/shape3d/box";
 import { Shape } from "./shape/shape";
 import { DynamicShape } from "./shape/dynamicShape";
 import { PointBuffer } from "./shape/pointBuffer";
