@@ -89,3 +89,11 @@ jobs:
       with:
         commit_message: "Applying built changes for new version ${{ steps.current-version.outputs.version }}"
         file_pattern: "lib/*"
+
+    - name: Create version tag
+      if: steps.version-check.outputs.version-increased == 'true'
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git tag -a "v${{ steps.current-version.outputs.version }}" -m "Release version ${{ steps.current-version.outputs.version }}"
+        git push origin "v${{ steps.current-version.outputs.version }}"
