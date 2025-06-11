@@ -95,5 +95,5 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git tag -a "v${{ steps.current-version.outputs.version }}" -m "Release version ${{ steps.current-version.outputs.version }}"
+        git tag -a "v${{ steps.current-version.outputs.version }}" -m "v${{ steps.current-version.outputs.version }}: ${{ steps.commit-message.outputs.message }}"
         git push origin "v${{ steps.current-version.outputs.version }}"
