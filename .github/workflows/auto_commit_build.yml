@@ -72,7 +72,7 @@ jobs:
         echo "Previous version: $PREVIOUS"
         echo "Version increased: $RESULT"
 
-   - name: Check for build output changes
+    - name: Check for build output changes
       id: build-changes
       if: steps.version-check.outputs.version-increased == 'true'
       run: |
