@@ -19,7 +19,7 @@ export class Ellipse extends DynamicShape
     private static readonly lowPrecisionNumberOfVerticies: number =
         Ellipse.lowPrecisionNumberOfPointsAlongCurve * Constants.verticiesPerTriangle;
     public shapeMode: ShapeMode = ShapeMode.ellipses;
-    public numberOfVerticies: number;
+    declare public numberOfVerticies: number;
     private center: Vec3;
     private leftEndPoint: Vec3;
     private rightEndPoint: Vec3;
