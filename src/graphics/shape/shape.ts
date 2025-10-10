@@ -1,13 +1,13 @@
-import { Vec3, Mat4 } from "cuon-matrix-ts";
+import { Vec3 } from "cuon-matrix-ts";
 
-import { Float32Vector } from "../../utils/float32Vector";
 import { RGBColor } from "./../color/rgbColor";
 import { BoundingRectangle } from "./boundingRectangle";
-import { Constants } from "../../constants";
 import { Settings } from "../../settings";
 import { ShapeMode } from "./shapeMode";
 
 export abstract class Shape {
+    public id: string;
+    public name: string;
     public glRenderMode: number;
     public numberOfVerticies: number;
     public numberOfFloatsPerVertex: number;

@@ -1,14 +1,12 @@
 //#region imports
 import * as cuid from "cuid";
-import { Vec3, Mat4 } from "cuon-matrix-ts";
 
 import { Float32Vector } from "../../utils/float32Vector";
 import { StringDictionary } from "../../utils/dictionary";
-import { Settings } from "../../settings";
-import { Constants } from "../../constants";
 import { RGBColor } from "../color/rgbColor";
 import { Shape } from "./shape";
 import { GlBufferWrapper } from "../glBufferWrapper";
+//#endregion
 
 export class ShapeBuffer<S extends Shape> extends GlBufferWrapper
 {
@@ -39,6 +37,11 @@ export class ShapeBuffer<S extends Shape> extends GlBufferWrapper
     {
         const firstKey = Object.keys(this._shapes)[0];
         return this._shapes[firstKey].shape;
+    }
+
+    public getShapes(): Array<S>
+    {
+        return Object.values(this._shapes).map(val => val.shape);
     }
 
     public addShape(shape: S): string
@@ -136,7 +139,9 @@ export class ShapeBuffer<S extends Shape> extends GlBufferWrapper
     private introduceShape(shape: S): string
     {
         const id = cuid();
+        shape.id = id;
         const index = this.count;
+        shape.name = shape.constructor.name + index;
         this._shapes[id] = {shape, index};
 
         this._verticies.addArray(shape.verticies);

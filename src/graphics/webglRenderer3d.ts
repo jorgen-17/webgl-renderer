@@ -68,7 +68,22 @@ export class WebGLRenderer3d extends WebGLRenderer
     //#endregion: getters and setters
 
     //#region: public methods
-    public addShapeToScene(shape: Shape): string
+    public getAllShapesInScene(): Array<Shape>
+    {
+        let arr = new Array<Shape>();
+
+        arr.push(...this._pointsShapeBuffer.getShapes())
+        arr.push(...this._trianglesShapeBuffer.getShapes())
+        arr.push(...this._rectanglesShapeBuffer.getShapes())
+        arr.push(...this._hexagonsShapeBuffer.getShapes())
+        arr.push(...this._octogonsShapeBuffer.getShapes())
+        arr.push(...this._ellipsesShapeBuffer.getShapes())
+        arr.push(...this._boxShapeBuffer.getShapes())
+
+        return arr;
+    }
+
+   public addShapeToScene(shape: Shape): string
     {
         switch (shape.shapeMode)
         {

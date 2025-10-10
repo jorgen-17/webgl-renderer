@@ -27,52 +27,6 @@ declare module 'graphics/shape/shapeMode' {
 	}
 
 }
-declare module 'constants' {
-	export let Constants: {
-	    floatsPerPosition: number;
-	    floatsPerColor: number;
-	    floatsPerPointSize: number;
-	    verticiesPerTriangle: number;
-	    floatsPerMat4Row: number;
-	    floatsPerMat4: number;
-	    floatsPerPositionColor: number;
-	    floatsPerPointVertex: number;
-	    floatsPerDynamicVertex: number;
-	    floatsPerTriangle: number;
-	    bytesPerPosition: number;
-	    bytesPerPositionColor: number;
-	    bytesPerPointVertex: number;
-	    bytesPerDynamicVertex: number;
-	    modelMatrixRow0Offset: number;
-	    modelMatrixRow1Offset: number;
-	    modelMatrixRow2Offset: number;
-	    modelMatrixRow3Offset: number;
-	    defaultAlpha: number;
-	};
-
-}
-declare module 'utils/float32ArrayUtils' {
-	export class Float32ArrayUtils {
-	    static fill(arr: Float32Array, start?: number, end?: number, value?: number): void;
-	}
-
-}
-declare module 'utils/float32Vector' {
-	export class Float32Vector {
-	    arr: Float32Array;
-	    size: number;
-	    private _sizeLimit;
-	    private _bestFit;
-	    constructor(arr?: Float32Array, sizeLimit?: number, bestFit?: boolean);
-	    resize(newSize: number): void;
-	    addNumber(number: number): boolean;
-	    addArray(arr: Float32Array | Array<number>): boolean;
-	    remove(start: number, count?: number): void;
-	    overwrite(start: number, values: Array<number> | Float32Array): void;
-	    getTrimmedArray(): Float32Array;
-	}
-
-}
 declare module 'graphics/color/rgbColor' {
 	export class RGBColor {
 	    red: number;
@@ -196,6 +150,8 @@ declare module 'graphics/shape/shape' {
 	import { BoundingRectangle } from 'graphics/shape/boundingRectangle';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
 	export abstract class Shape {
+	    id: string;
+	    name: string;
 	    glRenderMode: number;
 	    numberOfVerticies: number;
 	    numberOfFloatsPerVertex: number;
@@ -208,6 +164,52 @@ declare module 'graphics/shape/shape' {
 	    get rgbColor(): RGBColor;
 	    set rgbColor(value: RGBColor);
 	    protected abstract computeVerticies(): void;
+	}
+
+}
+declare module 'constants' {
+	export let Constants: {
+	    floatsPerPosition: number;
+	    floatsPerColor: number;
+	    floatsPerPointSize: number;
+	    verticiesPerTriangle: number;
+	    floatsPerMat4Row: number;
+	    floatsPerMat4: number;
+	    floatsPerPositionColor: number;
+	    floatsPerPointVertex: number;
+	    floatsPerDynamicVertex: number;
+	    floatsPerTriangle: number;
+	    bytesPerPosition: number;
+	    bytesPerPositionColor: number;
+	    bytesPerPointVertex: number;
+	    bytesPerDynamicVertex: number;
+	    modelMatrixRow0Offset: number;
+	    modelMatrixRow1Offset: number;
+	    modelMatrixRow2Offset: number;
+	    modelMatrixRow3Offset: number;
+	    defaultAlpha: number;
+	};
+
+}
+declare module 'utils/float32ArrayUtils' {
+	export class Float32ArrayUtils {
+	    static fill(arr: Float32Array, start?: number, end?: number, value?: number): void;
+	}
+
+}
+declare module 'utils/float32Vector' {
+	export class Float32Vector {
+	    arr: Float32Array;
+	    size: number;
+	    private _sizeLimit;
+	    private _bestFit;
+	    constructor(arr?: Float32Array, sizeLimit?: number, bestFit?: boolean);
+	    resize(newSize: number): void;
+	    addNumber(number: number): boolean;
+	    addArray(arr: Float32Array | Array<number>): boolean;
+	    remove(start: number, count?: number): void;
+	    overwrite(start: number, values: Array<number> | Float32Array): void;
+	    getTrimmedArray(): Float32Array;
 	}
 
 }
@@ -327,6 +329,7 @@ declare module 'graphics/shape/shapeBuffer' {
 	    get verticies(): Float32Array;
 	    get count(): number;
 	    get first(): S;
+	    getShapes(): Array<S>;
 	    addShape(shape: S): string;
 	    addShapes(shapes: Array<S>): Array<string>;
 	    removeShape(id: string): boolean;
@@ -731,6 +734,7 @@ declare module 'graphics/webglRenderer3d' {
 	    get camera(): Camera;
 	    set camera(value: Camera);
 	    get shapeFactory(): ShapeFactory3d;
+	    getAllShapesInScene(): Array<Shape>;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addVertexToScene(position: Vec3, renderMode: RenderMode, color?: RGBColor): void;
