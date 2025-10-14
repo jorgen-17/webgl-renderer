@@ -7,8 +7,6 @@ import { RenderMode, RenderModeMapper } from "./src/graphics/renderModeMapper";
 import { Shape } from "./src/graphics/shape/shape";
 import { DynamicShape } from "./src/graphics/shape/dynamicShape";
 import { ShapeFactory } from "./src/graphics/shape/shapeFactory";
-import { ShapeFactory2d } from "./src/graphics/shape/shapeFactory2d";
-import { ShapeFactory3d } from "./src/graphics/shape/shapeFactory3d";
 import { ShapeMode } from "./src/graphics/shape/shapeMode";
 import { Line } from "./src/graphics/shape/shape2d/line";
 import { Ellipse } from "./src/graphics/shape/shape2d/ellipse";
@@ -39,8 +37,6 @@ export
     Shape,
     DynamicShape,
     ShapeFactory,
-    ShapeFactory2d,
-    ShapeFactory3d,
     ShapeMode,
     Ellipse,
     Triangle,

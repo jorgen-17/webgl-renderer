@@ -6,7 +6,7 @@ import { Triangle } from "../../../../src/graphics/shape/shape2d/triangle";
 import { ShapeBuffer } from "../../../../src/graphics/shape/shapeBuffer";
 import { WebglRendererTestHelper } from "../../../helpers/graphics/webglRenderer.spec.helper";
 
-describe("shapeFactory:", () =>
+describe("shapeBuffer:", () =>
 {
     let triangleBuffer: ShapeBuffer<Triangle>;
 

@@ -15,7 +15,7 @@ import { Octogon } from "./shape/shape2d/octogon";
 import { Ellipse } from "./shape/shape2d/ellipse";
 import { Box } from "./shape/shape3d/box";
 import { DynamicShape } from "./shape/dynamicShape";
-import { ShapeFactory3d } from "./shape/shapeFactory3d";
+import { ShapeFactory } from "./shape/shapeFactory";
 import { VertexBuffer } from "./vertexBuffer";
 import { Vec3 } from "cuon-matrix-ts";
 import { RenderMode } from "./renderModeMapper";
@@ -24,7 +24,7 @@ import { RenderMode } from "./renderModeMapper";
 export class WebGLRenderer3d extends WebGLRenderer
 {
     //#region: member variables
-    private _shapeFactory: ShapeFactory3d;
+    private _shapeFactory: ShapeFactory;
     private _camera: Camera;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
@@ -46,7 +46,7 @@ export class WebGLRenderer3d extends WebGLRenderer
             this.camera.aspectRatio = (leCanvas.width / leCanvas.height);
         };
 
-        this._shapeFactory = new ShapeFactory3d();
+        this._shapeFactory = new ShapeFactory();
     }
     //#endregion: constructor
 
@@ -61,7 +61,7 @@ export class WebGLRenderer3d extends WebGLRenderer
         this._camera = value;
     }
 
-    public get shapeFactory(): ShapeFactory3d
+    public get shapeFactory(): ShapeFactory
     {
         return this._shapeFactory;
     }

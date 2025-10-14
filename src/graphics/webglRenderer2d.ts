@@ -18,7 +18,7 @@ import { StringDictionary } from "../utils/dictionary";
 import { ShaderSettings } from "../shaderSettings";
 import { Constants } from "../constants";
 import { DynamicShape } from "./shape/dynamicShape";
-import { ShapeFactory2d } from "./shape/shapeFactory2d";
+import { ShapeFactory } from "./shape/shapeFactory";
 import { VertexBuffer } from "./vertexBuffer";
 import { Vec2, Vec3 } from "cuon-matrix-ts";
 import { RenderMode } from "./renderModeMapper";
@@ -27,7 +27,7 @@ import { RenderMode } from "./renderModeMapper";
 export class WebGLRenderer2d extends WebGLRenderer
 {
     //#region: member variables
-    private _shapeFactory: ShapeFactory2d;
+    private _shapeFactory: ShapeFactory;
     private _trianglesShapeBuffer: ShapeBuffer<Triangle>;
     private _rectanglesShapeBuffer: ShapeBuffer<Rectangle>;
     private _hexagonsShapeBuffer: ShapeBuffer<Hexagon>;
@@ -40,12 +40,12 @@ export class WebGLRenderer2d extends WebGLRenderer
     {
         super(canvas, renderingOptions);
 
-        this._shapeFactory = new ShapeFactory2d();
+        this._shapeFactory = new ShapeFactory();
     }
     //#endregion: constructor
 
     //#region: getters and setters
-    public get shapeFactory(): ShapeFactory2d
+    public get shapeFactory(): ShapeFactory
     {
         return this._shapeFactory;
     }
