@@ -28,7 +28,7 @@ describe("rectangle:", () =>
             const rectangle = new Rectangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(rectangle.rgbColor);
-            expect(gl.TRIANGLES).toBe(rectangle.glRenderMode);
+            expect(gl.TRIANGLES as number).toBe(rectangle.glRenderMode);
         });
 
         it("should default color if not preovided", () =>

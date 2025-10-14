@@ -30,7 +30,7 @@ describe("ellipse:", () =>
                 Precision.Low, color);
 
             expect(color).toBe(ellipse.rgbColor);
-            expect(gl.TRIANGLES).toBe(ellipse.glRenderMode);
+            expect(gl.TRIANGLES as number).toBe(ellipse.glRenderMode);
         });
 
         it("should default color if not preovided", () =>

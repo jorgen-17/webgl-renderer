@@ -28,7 +28,7 @@ describe("triangle:", () =>
             const triangle = new Triangle(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(triangle.rgbColor);
-            expect(gl.TRIANGLES).toBe(triangle.glRenderMode);
+            expect(gl.TRIANGLES as number).toBe(triangle.glRenderMode);
         });
 
         it("should default color if not preovided", () =>

@@ -30,7 +30,7 @@ describe("line:", () =>
         const line = new Line(point, gl, color);
 
         expect(color).toBe(line.rgbColor);
-        expect(gl.LINE_STRIP).toBe(line.glRenderMode);
+        expect(gl.LINE_STRIP as number).toBe(line.glRenderMode);
 
         const expectedVerticies = new Float32Array(
             [point.x, point.y, point.z,

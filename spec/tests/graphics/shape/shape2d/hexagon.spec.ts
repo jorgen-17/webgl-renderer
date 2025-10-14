@@ -27,7 +27,7 @@ describe("hexagon:", () =>
             const hexagon = new Hexagon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(hexagon.rgbColor);
-            expect(gl.TRIANGLES).toBe(hexagon.glRenderMode);
+            expect(gl.TRIANGLES as number).toBe(hexagon.glRenderMode);
         });
 
         it("should default color if not preovided", () =>

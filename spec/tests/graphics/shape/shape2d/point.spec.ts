@@ -36,7 +36,7 @@ describe("point:", () =>
 
         expect(blue).toEqual(point.rgbColor);
         expect(expectedVertex).toEqual(point.verticies);
-        expect(gl.POINTS).toEqual(point.glRenderMode);
+        expect(gl.POINTS as number).toEqual(point.glRenderMode);
     });
 
     it("constructor uses defaults if parameters not passed in", () =>
@@ -59,7 +59,7 @@ describe("point:", () =>
         expect(Settings.defaultColor).toEqual(point.rgbColor);
         expect(Settings.defaultPointSize).toEqual(point.pointSize);
         expect(expectedVertex).toEqual(point.verticies);
-        expect(gl.POINTS).toEqual(point.glRenderMode);
+        expect(gl.POINTS as number).toEqual(point.glRenderMode);
     });
 
     it("changing color recalculates verticies", () =>
@@ -83,7 +83,7 @@ describe("point:", () =>
 
         expect(green).toEqual(point.rgbColor);
         expect(expectedVertex).toEqual(point.verticies);
-        expect(gl.POINTS).toEqual(point.glRenderMode);
+        expect(gl.POINTS as number).toEqual(point.glRenderMode);
     });
 
     it("changing pointSize recalculates verticies", () =>
@@ -107,6 +107,6 @@ describe("point:", () =>
 
         expect(newPointSize).toEqual(point.pointSize);
         expect(expectedVertex).toEqual(point.verticies);
-        expect(gl.POINTS).toEqual(point.glRenderMode);
+        expect(gl.POINTS as number).toEqual(point.glRenderMode);
     });
 });

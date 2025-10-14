@@ -27,7 +27,7 @@ describe("octogon:", () =>
             const octogon = new Octogon(new Vec3(0, 0), new Vec3(1.0, 1.0), gl, color);
 
             expect(color).toBe(octogon.rgbColor);
-            expect(gl.TRIANGLES).toBe(octogon.glRenderMode);
+            expect(gl.TRIANGLES as number).toBe(octogon.glRenderMode);
         });
 
         it("should default color if not preovided", () =>

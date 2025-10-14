@@ -31,49 +31,49 @@ describe("vertexBuffer:", () =>
             it("points", () =>
             {
                 vb = new VertexBuffer(gl.POINTS, gl);
-                expect(gl.POINTS).toEqual(vb.glRenderMode);
+                expect(gl.POINTS as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
             it("lines ", () =>
             {
                 vb = new VertexBuffer(gl.LINES, gl);
-                expect(gl.LINES).toEqual(vb.glRenderMode);
+                expect(gl.LINES as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
             it("lineStrip", () =>
             {
                 vb = new VertexBuffer(gl.LINE_STRIP, gl);
-                expect(gl.LINE_STRIP).toEqual(vb.glRenderMode);
+                expect(gl.LINE_STRIP as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
             it("lineLoop", () =>
             {
                 vb = new VertexBuffer(gl.LINE_LOOP, gl);
-                expect(gl.LINE_LOOP).toEqual(vb.glRenderMode);
+                expect(gl.LINE_LOOP as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
             it("triangles", () =>
             {
                 vb = new VertexBuffer(gl.TRIANGLES, gl);
-                expect(gl.TRIANGLES).toEqual(vb.glRenderMode);
+                expect(gl.TRIANGLES as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
             it("triangleStrip", () =>
             {
                 vb = new VertexBuffer(gl.TRIANGLE_STRIP, gl);
-                expect(gl.TRIANGLE_STRIP).toEqual(vb.glRenderMode);
+                expect(gl.TRIANGLE_STRIP as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
             it("triangleFan", () =>
             {
                 vb = new VertexBuffer(gl.TRIANGLE_FAN, gl);
-                expect(gl.TRIANGLE_FAN).toEqual(vb.glRenderMode);
+                expect(gl.TRIANGLE_FAN as number).toEqual(vb.glRenderMode);
                 expect(1).toEqual(vb.verticiesStack.length);
                 expect(0).toEqual(vb.verticiesStack[0].size);
             });
