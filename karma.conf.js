@@ -32,8 +32,7 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/shape/midpoint.spec.ts" },
         { pattern: "spec/tests/graphics/shape/boundingRectangle.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeBuffer.spec.ts" },
-        { pattern: "spec/tests/graphics/shape/shapeFactory2d.spec.ts" },
-        { pattern: "spec/tests/graphics/shape/shapeFactory3d.spec.ts" },
+        { pattern: "spec/tests/graphics/shape/shapeFactory.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer2d.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer3d.spec.ts" },
@@ -54,7 +53,7 @@ module.exports = function(config) {
 
     karmaTypescriptConfig: {
         compilerOptions: {
-            "target": "esnext",
+            "lib": ["dom", "es2017"],
         },
         coverageOptions: {
             instrumentation: true, // set to false if you need to debug though source ts
