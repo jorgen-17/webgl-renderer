@@ -2,16 +2,16 @@ import { Vec3 } from "cuon-matrix-ts";
 
 import { DynamicShape } from "./dynamicShape";
 import { ShapeMode } from "./shapeMode";
-import { Ellipse } from "./shape2d/ellipse";
-import { Triangle } from "./shape2d/triangle";
-import { Rectangle } from "./shape2d/rectangle";
-import { Hexagon } from "./shape2d/hexagon";
-import { Octogon } from "./shape2d/octogon";
+import { Ellipse } from "./ellipse";
+import { Triangle } from "./triangle";
+import { Rectangle } from "./rectangle";
+import { Hexagon } from "./hexagon";
+import { Octogon } from "./octogon";
 import { RGBColor } from "../color/rgbColor";
 import { Precision } from "../precision";
-import { Box } from "./shape3d/box";
-import { Point } from "./shape2d/point";
-import { Line } from "./shape2d/line";
+import { Box } from "./box";
+import { Point } from "./point";
+import { Line } from "./line";
 
 export class ShapeFactory
 {

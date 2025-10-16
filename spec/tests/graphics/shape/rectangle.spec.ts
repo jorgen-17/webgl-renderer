@@ -1,12 +1,11 @@
 import { Mock } from "ts-mocks";
-import { Vec3, Mat4 } from "cuon-matrix-ts";
+import { Vec3 } from "cuon-matrix-ts";
 import { expectjs, registerSnapshots } from "jasmine-snapshot";
 
-import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
-import { Rectangle } from "../../../../../src/graphics/shape/shape2d/rectangle";
-import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
-import { rectangleSnapshots } from "../../../../snapshots/graphics/shape/shape2d/rectangle.snapshot";
-import { Settings } from "../../../../../src/settings";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
+import { Rectangle } from "../../../../src/graphics/shape/rectangle";
+import { rectangleSnapshots } from "../../../snapshots/graphics/shape/rectangle.snapshot";
+import { Settings } from "../../../../src/settings";
 
 describe("rectangle:", () =>
 {

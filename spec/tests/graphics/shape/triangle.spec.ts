@@ -1,13 +1,11 @@
 import { Mock } from "ts-mocks";
-import { Vec3, Mat4 } from "cuon-matrix-ts";
+import { Vec3 } from "cuon-matrix-ts";
 import { expectjs, registerSnapshots } from "jasmine-snapshot";
 
-import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
-import { Triangle } from "../../../../../src/graphics/shape/shape2d/triangle";
-import { WebglRendererTestHelper } from "../../../../../spec/helpers/graphics/webglRenderer.spec.helper";
-import { triangleSnapshots } from "../../../../snapshots/graphics/shape/shape2d/triangle.snapshot";
-import { Settings } from "../../../../../src/settings";
-
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
+import { Triangle } from "../../../../src/graphics/shape/triangle";
+import { triangleSnapshots } from "../../../snapshots/graphics/shape/triangle.snapshot";
+import { Settings } from "../../../../src/settings";
 
 describe("triangle:", () =>
 {

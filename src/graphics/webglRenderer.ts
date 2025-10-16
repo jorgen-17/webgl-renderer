@@ -4,14 +4,14 @@ import * as cuid from "cuid";
 
 import { RenderMode, RenderModeMapper } from "./renderModeMapper";
 import { ShapeMode } from "./shape/shapeMode";
-import { Point } from "./shape/shape2d/point";
+import { Point } from "./shape/point";
 import { RGBColor } from "./color/rgbColor";
 import { RenderingOptions } from "./renderingOptions";
 import { StringDictionary } from "../utils/dictionary";
 import { Constants } from "../constants";
 import { ShaderSettings } from "../shaderSettings";
 import { ShaderType } from "./shaderType";
-import { Line } from "./shape/shape2d/line";
+import { Line } from "./shape/line";
 import { Settings } from "../settings";
 import { BrowserHelper } from "../utils/browserHelper";
 import { ShapeBuffer } from "./shape/shapeBuffer";
@@ -180,7 +180,6 @@ export abstract class WebGLRenderer
         this._postResizeCallback = value;
         this.setupWindowCallbacks();
     }
-
     //#endregion: getters and setters
 
     //#region: public methods

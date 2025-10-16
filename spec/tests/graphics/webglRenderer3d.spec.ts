@@ -8,10 +8,10 @@ import { WebglRendererTestHelper } from "../../helpers/graphics/webglRenderer.sp
 import { WebGLRenderer3dMock } from "../../helpers/graphics/webglRendererMock";
 import { DynamicShape } from "../../../src/graphics/shape/dynamicShape";
 import { StringDictionary } from "../../../src/utils/dictionary";
-import { Line } from "../../../src/graphics/shape/shape2d/line";
+import { Line } from "../../../src/graphics/shape/line";
 import { RenderingOptions } from "../../../src/graphics/renderingOptions";
-import { Point } from "../../../src/graphics/shape/shape2d/point";
-import { Box } from "../../../src/graphics/shape/shape3d/box";
+import { Point } from "../../../src/graphics/shape/point";
+import { Box } from "../../../src/graphics/shape/box";
 import { BrowserHelper } from "../../../src/utils/browserHelper";
 //#endregion: imports
 

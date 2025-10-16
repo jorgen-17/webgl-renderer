@@ -1,5 +1,5 @@
 import { ShapeBuffer } from "./shapeBuffer";
-import { Point } from "./shape2d/point";
+import { Point } from "./point";
 import { RGBColor } from "../color/rgbColor";
 
 export class PointBuffer extends ShapeBuffer<Point>

@@ -1,11 +1,11 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape } from "../shape";
-import { Float32Vector } from "../../../utils/float32Vector";
-import { RGBColor } from "../../color/rgbColor";
-import { Constants } from "../../../constants";
-import { RenderModeMapper } from "../../renderModeMapper";
-import { ShapeMode } from "../shapeMode";
+import { Shape } from "./shape";
+import { Float32Vector } from "../../utils/float32Vector";
+import { RGBColor } from "../color/rgbColor";
+import { Constants } from "../../constants";
+import { RenderModeMapper } from "../renderModeMapper";
+import { ShapeMode } from "./shapeMode";
 
 export class Line extends Shape
 {

@@ -1,14 +1,12 @@
 import { Mock } from "ts-mocks";
-import { Vec3, Mat4 } from "cuon-matrix-ts";
+import { Vec3 } from "cuon-matrix-ts";
 import { expectjs, registerSnapshots } from "jasmine-snapshot";
 
-import { Ellipse } from "../../../../../src/graphics/shape/shape2d/ellipse";
-import { Precision } from "../../../../../src/graphics/precision";
-import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
-import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
-import { ellipseSnapshots } from "../../../../snapshots/graphics/shape/shape2d/ellipse.snapshot";
-import { Constants } from "../../../../../src/constants";
-import { Settings } from "../../../../../src/settings";
+import { Ellipse } from "../../../../src/graphics/shape/ellipse";
+import { Precision } from "../../../../src/graphics/precision";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
+import { ellipseSnapshots } from "../../../snapshots/graphics/shape/ellipse.snapshot";
+import { Settings } from "../../../../src/settings";
 
 describe("ellipse:", () =>
 {

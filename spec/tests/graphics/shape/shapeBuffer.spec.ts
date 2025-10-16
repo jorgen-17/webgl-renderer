@@ -2,7 +2,7 @@ import { Vec3, Mat4 } from "cuon-matrix-ts";
 import { Mock } from "ts-mocks";
 
 import { RGBColor } from "../../../../src/graphics/color/rgbColor";
-import { Triangle } from "../../../../src/graphics/shape/shape2d/triangle";
+import { Triangle } from "../../../../src/graphics/shape/triangle";
 import { ShapeBuffer } from "../../../../src/graphics/shape/shapeBuffer";
 import { WebglRendererTestHelper } from "../../../helpers/graphics/webglRenderer.spec.helper";
 

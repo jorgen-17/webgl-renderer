@@ -2,11 +2,11 @@ import { Mock } from "ts-mocks";
 import { Vec3, Mat4 } from "cuon-matrix-ts";
 import { expectjs, registerSnapshots } from "jasmine-snapshot";
 
-import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
-import { Box } from "../../../../../src/graphics/shape/shape3d/box";
-import { WebglRendererTestHelper } from "../../../../helpers/graphics/webglRenderer.spec.helper";
-import { boxSnapshots } from "../../../../snapshots/graphics/shape/shape3d/box.snapshot";
-import { Settings } from "../../../../../src/settings";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
+import { Box } from "../../../../src/graphics/shape/box";
+import { WebglRendererTestHelper } from "../../../helpers/graphics/webglRenderer.spec.helper";
+import { boxSnapshots } from "../../../snapshots/graphics/shape/box.snapshot";
+import { Settings } from "../../../../src/settings";
 
 describe("box:", () =>
 {

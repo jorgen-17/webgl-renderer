@@ -191,29 +191,7 @@ declare module 'constants' {
 	};
 
 }
-declare module 'utils/float32ArrayUtils' {
-	export class Float32ArrayUtils {
-	    static fill(arr: Float32Array, start?: number, end?: number, value?: number): void;
-	}
-
-}
-declare module 'utils/float32Vector' {
-	export class Float32Vector {
-	    arr: Float32Array;
-	    size: number;
-	    private _sizeLimit;
-	    private _bestFit;
-	    constructor(arr?: Float32Array, sizeLimit?: number, bestFit?: boolean);
-	    resize(newSize: number): void;
-	    addNumber(number: number): boolean;
-	    addArray(arr: Float32Array | Array<number>): boolean;
-	    remove(start: number, count?: number): void;
-	    overwrite(start: number, values: Array<number> | Float32Array): void;
-	    getTrimmedArray(): Float32Array;
-	}
-
-}
-declare module 'graphics/shape/shape2d/point' {
+declare module 'graphics/shape/point' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape } from 'graphics/shape/shape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -279,7 +257,29 @@ declare module 'graphics/shaderType' {
 	}
 
 }
-declare module 'graphics/shape/shape2d/line' {
+declare module 'utils/float32ArrayUtils' {
+	export class Float32ArrayUtils {
+	    static fill(arr: Float32Array, start?: number, end?: number, value?: number): void;
+	}
+
+}
+declare module 'utils/float32Vector' {
+	export class Float32Vector {
+	    arr: Float32Array;
+	    size: number;
+	    private _sizeLimit;
+	    private _bestFit;
+	    constructor(arr?: Float32Array, sizeLimit?: number, bestFit?: boolean);
+	    resize(newSize: number): void;
+	    addNumber(number: number): boolean;
+	    addArray(arr: Float32Array | Array<number>): boolean;
+	    remove(start: number, count?: number): void;
+	    overwrite(start: number, values: Array<number> | Float32Array): void;
+	    getTrimmedArray(): Float32Array;
+	}
+
+}
+declare module 'graphics/shape/line' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { Shape } from 'graphics/shape/shape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -356,7 +356,7 @@ declare module 'graphics/shape/dynamicShape' {
 }
 declare module 'graphics/shape/pointBuffer' {
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
-	import { Point } from 'graphics/shape/shape2d/point';
+	import { Point } from 'graphics/shape/point';
 	export class PointBuffer extends ShapeBuffer<Point> {
 	    updatePointSize(id: string, newPointSize: number): boolean;
 	}
@@ -387,7 +387,7 @@ declare module 'graphics/precision' {
 	}
 
 }
-declare module 'graphics/shape/shape2d/ellipse' {
+declare module 'graphics/shape/ellipse' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { Precision } from 'graphics/precision';
@@ -413,7 +413,7 @@ declare module 'graphics/shape/shape2d/ellipse' {
 	}
 
 }
-declare module 'graphics/shape/shape2d/triangle' {
+declare module 'graphics/shape/triangle' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -426,7 +426,7 @@ declare module 'graphics/shape/shape2d/triangle' {
 	}
 
 }
-declare module 'graphics/shape/shape2d/rectangle' {
+declare module 'graphics/shape/rectangle' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -439,7 +439,7 @@ declare module 'graphics/shape/shape2d/rectangle' {
 	}
 
 }
-declare module 'graphics/shape/shape2d/hexagon' {
+declare module 'graphics/shape/hexagon' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -452,7 +452,7 @@ declare module 'graphics/shape/shape2d/hexagon' {
 	}
 
 }
-declare module 'graphics/shape/shape2d/octogon' {
+declare module 'graphics/shape/octogon' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -465,7 +465,7 @@ declare module 'graphics/shape/shape2d/octogon' {
 	}
 
 }
-declare module 'graphics/shape/shape3d/box' {
+declare module 'graphics/shape/box' {
 	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { RGBColor } from 'graphics/color/rgbColor';
@@ -480,28 +480,28 @@ declare module 'graphics/shape/shape3d/box' {
 
 }
 declare module 'graphics/shape/shapeFactory' {
-	import { Vec3, Vec2 } from "cuon-matrix-ts";
+	import { Vec3 } from "cuon-matrix-ts";
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
-	import { Ellipse } from 'graphics/shape/shape2d/ellipse';
-	import { Triangle } from 'graphics/shape/shape2d/triangle';
-	import { Rectangle } from 'graphics/shape/shape2d/rectangle';
-	import { Hexagon } from 'graphics/shape/shape2d/hexagon';
-	import { Octogon } from 'graphics/shape/shape2d/octogon';
+	import { Ellipse } from 'graphics/shape/ellipse';
+	import { Triangle } from 'graphics/shape/triangle';
+	import { Rectangle } from 'graphics/shape/rectangle';
+	import { Hexagon } from 'graphics/shape/hexagon';
+	import { Octogon } from 'graphics/shape/octogon';
 	import { RGBColor } from 'graphics/color/rgbColor';
-	import { Box } from 'graphics/shape/shape3d/box';
-	import { Point } from 'graphics/shape/shape2d/point';
-	import { Line } from 'graphics/shape/shape2d/line';
-	export abstract class ShapeFactory {
-	    abstract createPoint(location: Vec2 | Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
-	    abstract createLine(firstPoint: Vec2 | Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Line;
-	    abstract createShape(point1: Vec2 | Vec3, point2: Vec2 | Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
-	    protected createTriangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Triangle;
-	    protected createRectangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Rectangle;
-	    protected createHexagon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Hexagon;
-	    protected createOctogon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Octogon;
-	    protected createEllipse(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Ellipse;
-	    protected createBox(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Box;
+	import { Box } from 'graphics/shape/box';
+	import { Point } from 'graphics/shape/point';
+	import { Line } from 'graphics/shape/line';
+	export class ShapeFactory {
+	    createPoint(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
+	    createLine(firstPoint: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Line;
+	    createTriangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Triangle;
+	    createRectangle(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Rectangle;
+	    createHexagon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Hexagon;
+	    createOctogon(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Octogon;
+	    createEllipse(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Ellipse;
+	    createBox(point1: Vec3, point2: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Box;
+	    createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
 	}
 
 }
@@ -523,11 +523,11 @@ declare module 'graphics/webglRenderer' {
 	import { Vec3, Mat4, Vec2 } from "cuon-matrix-ts";
 	import { RenderMode } from 'graphics/renderModeMapper';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
-	import { Point } from 'graphics/shape/shape2d/point';
+	import { Point } from 'graphics/shape/point';
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { StringDictionary } from 'utils/dictionary';
-	import { Line } from 'graphics/shape/shape2d/line';
+	import { Line } from 'graphics/shape/line';
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
 	import { Shape } from 'graphics/shape/shape';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
@@ -639,21 +639,6 @@ declare module 'graphics/webglRenderer' {
 	}
 
 }
-declare module 'graphics/shape/shapeFactory2d' {
-	import { Vec2 } from "cuon-matrix-ts";
-	import { ShapeFactory } from 'graphics/shape/shapeFactory';
-	import { ShapeMode } from 'graphics/shape/shapeMode';
-	import { RGBColor } from 'graphics/color/rgbColor';
-	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { Point } from 'graphics/shape/shape2d/point';
-	import { Line } from 'graphics/shape/shape2d/line';
-	export class ShapeFactory2d extends ShapeFactory {
-	    createPoint(location: Vec2, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
-	    createLine(firstPoint: Vec2, gl: WebGLRenderingContext, rgbColor?: RGBColor): Line;
-	    createShape(point1: Vec2, point2: Vec2, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor, somenum?: number): DynamicShape;
-	}
-
-}
 declare module 'graphics/webglRenderer2d' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Shape } from 'graphics/shape/shape';
@@ -661,10 +646,10 @@ declare module 'graphics/webglRenderer2d' {
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
-	import { Point } from 'graphics/shape/shape2d/point';
-	import { Line } from 'graphics/shape/shape2d/line';
+	import { Point } from 'graphics/shape/point';
+	import { Line } from 'graphics/shape/line';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { ShapeFactory2d } from 'graphics/shape/shapeFactory2d';
+	import { ShapeFactory } from 'graphics/shape/shapeFactory';
 	import { VertexBuffer } from 'graphics/vertexBuffer';
 	import { Vec2 } from "cuon-matrix-ts";
 	import { RenderMode } from 'graphics/renderModeMapper';
@@ -676,7 +661,7 @@ declare module 'graphics/webglRenderer2d' {
 	    private _octogonsShapeBuffer;
 	    private _ellipsesShapeBuffer;
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
-	    get shapeFactory(): ShapeFactory2d;
+	    get shapeFactory(): ShapeFactory;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
 	    addVertexToScene(position: Vec2, renderMode: RenderMode, color?: RGBColor): void;
@@ -691,21 +676,6 @@ declare module 'graphics/webglRenderer2d' {
 	}
 
 }
-declare module 'graphics/shape/shapeFactory3d' {
-	import { Vec3 } from "cuon-matrix-ts";
-	import { ShapeFactory } from 'graphics/shape/shapeFactory';
-	import { ShapeMode } from 'graphics/shape/shapeMode';
-	import { RGBColor } from 'graphics/color/rgbColor';
-	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { Point } from 'graphics/shape/shape2d/point';
-	import { Line } from 'graphics/shape/shape2d/line';
-	export class ShapeFactory3d extends ShapeFactory {
-	    createPoint(location: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor, pointSize?: number): Point;
-	    createLine(firstPoint: Vec3, gl: WebGLRenderingContext, rgbColor?: RGBColor): Line;
-	    createShape(point1: Vec3, point2: Vec3, shapeMode: ShapeMode, gl: WebGLRenderingContext, rgbColor?: RGBColor): DynamicShape;
-	}
-
-}
 declare module 'graphics/webglRenderer3d' {
 	import { WebGLRenderer } from 'graphics/webglRenderer';
 	import { Camera } from 'graphics/camera';
@@ -714,10 +684,10 @@ declare module 'graphics/webglRenderer3d' {
 	import { RGBColor } from 'graphics/color/rgbColor';
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { ShapeBuffer } from 'graphics/shape/shapeBuffer';
-	import { Line } from 'graphics/shape/shape2d/line';
-	import { Point } from 'graphics/shape/shape2d/point';
+	import { Line } from 'graphics/shape/line';
+	import { Point } from 'graphics/shape/point';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
-	import { ShapeFactory3d } from 'graphics/shape/shapeFactory3d';
+	import { ShapeFactory } from 'graphics/shape/shapeFactory';
 	import { VertexBuffer } from 'graphics/vertexBuffer';
 	import { Vec3 } from "cuon-matrix-ts";
 	import { RenderMode } from 'graphics/renderModeMapper';
@@ -733,7 +703,7 @@ declare module 'graphics/webglRenderer3d' {
 	    constructor(canvas: HTMLCanvasElement, renderingOptions?: RenderingOptions);
 	    get camera(): Camera;
 	    set camera(value: Camera);
-	    get shapeFactory(): ShapeFactory3d;
+	    get shapeFactory(): ShapeFactory;
 	    getAllShapesInScene(): Array<Shape>;
 	    addShapeToScene(shape: Shape): string;
 	    addHomogenoeusShapesArrayToScene(shapes: Array<Shape>): Array<string>;
@@ -784,21 +754,19 @@ declare module 'webgl-renderer' {
 	import { Shape } from 'graphics/shape/shape';
 	import { DynamicShape } from 'graphics/shape/dynamicShape';
 	import { ShapeFactory } from 'graphics/shape/shapeFactory';
-	import { ShapeFactory2d } from 'graphics/shape/shapeFactory2d';
-	import { ShapeFactory3d } from 'graphics/shape/shapeFactory3d';
 	import { ShapeMode } from 'graphics/shape/shapeMode';
-	import { Line } from 'graphics/shape/shape2d/line';
-	import { Ellipse } from 'graphics/shape/shape2d/ellipse';
-	import { Rectangle } from 'graphics/shape/shape2d/rectangle';
-	import { Hexagon } from 'graphics/shape/shape2d/hexagon';
-	import { Octogon } from 'graphics/shape/shape2d/octogon';
-	import { Triangle } from 'graphics/shape/shape2d/triangle';
-	import { Point } from 'graphics/shape/shape2d/point';
-	import { Box } from 'graphics/shape/shape3d/box';
+	import { Line } from 'graphics/shape/line';
+	import { Ellipse } from 'graphics/shape/ellipse';
+	import { Rectangle } from 'graphics/shape/rectangle';
+	import { Hexagon } from 'graphics/shape/hexagon';
+	import { Octogon } from 'graphics/shape/octogon';
+	import { Triangle } from 'graphics/shape/triangle';
+	import { Point } from 'graphics/shape/point';
+	import { Box } from 'graphics/shape/box';
 	import { Camera } from 'graphics/camera';
 	import { RenderingOptions } from 'graphics/renderingOptions';
 	import { BrowserHelper } from 'utils/browserHelper';
 	import { MouseHelper } from 'utils/mouseHelper';
-	export { WebGLRenderer2d, WebGLRenderer3d, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeFactory2d, ShapeFactory3d, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
+	export { WebGLRenderer2d, WebGLRenderer3d, RenderingOptions, Vec2, Vec3, Mat4, RGBColor, Color, ColorMapper, RenderMode, RenderModeMapper, Shape, DynamicShape, ShapeFactory, ShapeMode, Ellipse, Triangle, Rectangle, Line, Hexagon, Octogon, Point, Box, Camera, BrowserHelper, MouseHelper };
 
 }

@@ -1,10 +1,9 @@
 import { Vec3 } from "cuon-matrix-ts";
 import { Mock } from "ts-mocks";
 
-import { Point } from "../../../../../src/graphics/shape/shape2d/point";
-import { RGBColor } from "../../../../../src/graphics/color/rgbColor";
-import { Constants } from "../../../../../src/constants";
-import { Settings } from "../../../../../src/settings";
+import { Point } from "../../../../src/graphics/shape/point";
+import { RGBColor } from "../../../../src/graphics/color/rgbColor";
+import { Settings } from "../../../../src/settings";
 
 describe("point:", () =>
 {

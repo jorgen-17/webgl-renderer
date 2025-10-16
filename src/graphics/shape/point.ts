@@ -1,11 +1,10 @@
 import { Vec3 } from "cuon-matrix-ts";
 
-import { Shape } from "../shape";
-import { RGBColor } from "../../color/rgbColor";
-import { Constants } from "../../../constants";
-import { Float32Vector } from "../../../utils/float32Vector";
-import { ShapeMode } from "../shapeMode";
-import { Settings } from "../../../settings";
+import { Shape } from "./shape";
+import { RGBColor } from "../color/rgbColor";
+import { Constants } from "../../constants";
+import { ShapeMode } from "./shapeMode";
+import { Settings } from "../../settings";
 
 
 export class Point extends Shape
