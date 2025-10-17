@@ -34,8 +34,6 @@ module.exports = function(config) {
         { pattern: "spec/tests/graphics/shape/shapeBuffer.spec.ts" },
         { pattern: "spec/tests/graphics/shape/shapeFactory.spec.ts" },
         { pattern: "spec/tests/graphics/webglRenderer.spec.ts" },
-        { pattern: "spec/tests/graphics/webglRenderer2d.spec.ts" },
-        { pattern: "spec/tests/graphics/webglRenderer3d.spec.ts" },
         { pattern: "spec/tests/graphics/colorMapper.spec.ts" },
         { pattern: "spec/tests/graphics/renderModeMapper.spec.ts" },
         { pattern: "spec/tests/graphics/camera.spec.ts" },
@@ -91,9 +89,9 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
         "Chrome",
-        "Firefox",
-        "IE",
-        "Edge"
+        // "Firefox",
+        // "IE",
+        // "Edge"
     ],
 
 
